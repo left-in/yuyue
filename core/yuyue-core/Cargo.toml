@@ -1,0 +1,35 @@
+[package]
+name = "yuyue-core"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+# lib: CLI and tests; staticlib: Apple (XCFramework); cdylib: Android (JNI) and Swift binding generation.
+crate-type = ["lib", "staticlib", "cdylib"]
+name = "yuyue_core"
+
+[dependencies]
+blake3 = "1.8.7"
+chardetng = "1.0.0"
+encoding_rs = "0.8.42"
+getrandom = "0.4.3"
+# markup5ever_rcdom 0.39 needs html5ever 0.39; keep them in step.
+html5ever = "0.39"
+markup5ever_rcdom = "0.39.0"
+icu_segmenter = "2.3.0"
+percent-encoding = "2.3.2"
+rars = { version = "0.10.2", default-features = false }
+regex = "1.13.1"
+roxmltree = "0.21.1"
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+thiserror = "2.0.21"
+uniffi = "0.32.2"
+zip = { version = "9.0.2", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+
+[dev-dependencies]
+# Tests write small RAR archives to import.
+rars = { version = "0.10.2", default-features = false, features = ["write"] }

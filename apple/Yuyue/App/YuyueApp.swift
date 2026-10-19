@@ -1,0 +1,64 @@
+import SwiftUI
+
+@main
+struct YuyueApp: App {
+    @State private var library = Result { try Library() }
+
+    var body: some Scene {
+        #if os(macOS)
+        // FEATURES §5: the shelf and each book get their own windows.
+        Window(String(localized: "书架"), id: "library") {
+            root
+        }
+        .defaultSize(width: 1040, height: 720)
+        .commands {
+            CommandGroup(replacing: .newItem) {}
+            ReaderCommands()
+        }
+
+        WindowGroup(String(localized: "读书"), id: "reader", for: String.self) { $bookID in
+            if let bookID, case .success(let library) = library {
+                // A window given another book starts over, rather than keep the last one's state.
+                ReaderScreen(library: library, bookID: bookID)
+                    .id(bookID)
+            }
+        }
+        // `.v-mac`: a landscape window, the column in the middle and room for the notes beside it.
+        .defaultSize(width: 1040, height: 720)
+        // `.v-mac-tb` is 58 high: the standard bar, not the compact one.
+        .windowToolbarStyle(.unified(showsTitle: true))
+
+        // 有声书 · Mac 上微调.
+        WindowGroup(String(localized: "对齐检查"), id: "align", for: AlignTarget.self) { $target in
+            if let target, case .success(let library) = library {
+                AlignCheckWindow(library: library, target: target)
+            }
+        }
+        .defaultSize(width: 1120, height: 740)
+        .windowToolbarStyle(.unifiedCompact(showsTitle: true))
+
+        Settings {
+            if case .success(let library) = library {
+                MacSettings(library: library)
+            }
+        }
+        #else
+        WindowGroup {
+            root
+        }
+        #endif
+    }
+
+    @ViewBuilder private var root: some View {
+        switch library {
+        case .success(let library):
+            #if os(macOS)
+            MacShelfView(library: library)
+            #else
+            PhoneRoot(library: library)
+            #endif
+        case .failure(let error):
+            ContentUnavailableView("打不开书库", systemImage: "exclamationmark.triangle", description: Text(Library.message(for: error)))
+        }
+    }
+}

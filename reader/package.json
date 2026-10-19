@@ -1,0 +1,22 @@
+{
+  "name": "yuyue-reader",
+  "private": true,
+  "version": "0.1.0",
+  "description": "语阅 reader: lays out a book section in pages inside the system WebView and reports geometry to native.",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "typecheck": "tsc --noEmit -p .",
+    "tokens": "node ../design/generate.mjs",
+    "fixtures": "node scripts/make-fixtures.mjs",
+    "serve": "node scripts/serve.mjs",
+    "test": "node scripts/build.mjs && playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@types/node": "^26.6.5",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}

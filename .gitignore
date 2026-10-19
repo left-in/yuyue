@@ -1,0 +1,26 @@
+.DS_Store
+
+# Rust
+core/target/
+
+# Node
+node_modules/
+reader/dist/
+reader/test-results/
+reader/playwright-report/
+
+# Apple
+apple/build/
+apple/*.xcodeproj/
+apple/YuyueCore/YuyueCoreFFI.xcframework/
+apple/YuyueCore/Sources/YuyueCore/yuyue_core.swift
+apple/YuyueCore/Sources/YuyueCoreFFI/
+DerivedData/
+xcuserdata/
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/app/src/main/jniLibs/

@@ -1,0 +1,13 @@
+[package]
+name = "yuyue-cli"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "yuyue"
+path = "src/main.rs"
+
+[dependencies]
+yuyue-core = { path = "../yuyue-core" }

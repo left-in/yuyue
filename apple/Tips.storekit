@@ -1,0 +1,64 @@
+{
+  "identifier" : "6E0B3A52-6C1B-4A0F-9C33-3B1E0F7C2A10",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "6.0",
+      "familyShareable" : false,
+      "internalID" : "6739000001",
+      "localizations" : [
+        {
+          "description" : "不解锁任何功能",
+          "displayName" : "一杯咖啡",
+          "locale" : "zh_CN"
+        }
+      ],
+      "productID" : "app.yuyue.tip.small",
+      "referenceName" : "Tip small",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "18.0",
+      "familyShareable" : false,
+      "internalID" : "6739000002",
+      "localizations" : [
+        {
+          "description" : "不解锁任何功能",
+          "displayName" : "一杯好咖啡",
+          "locale" : "zh_CN"
+        }
+      ],
+      "productID" : "app.yuyue.tip.medium",
+      "referenceName" : "Tip medium",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "45.0",
+      "familyShareable" : false,
+      "internalID" : "6739000003",
+      "localizations" : [
+        {
+          "description" : "不解锁任何功能",
+          "displayName" : "一顿早饭",
+          "locale" : "zh_CN"
+        }
+      ],
+      "productID" : "app.yuyue.tip.large",
+      "referenceName" : "Tip large",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_locale" : "zh_CN",
+    "_storefront" : "CHN"
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

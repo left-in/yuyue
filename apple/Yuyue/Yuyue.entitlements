@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<!-- Read-write for the iCloud Drive folder picked for 同步, kept as a bookmark. -->
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+	<key>com.apple.security.files.bookmarks.app-scope</key>
+	<true/>
+	<!-- WebKit's helper processes don't start in the sandbox without it. Books never go online:
+	     the reader's pages forbid it in their CSP. -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+</dict>
+</plist>

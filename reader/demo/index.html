@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reader demo</title>
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    --bg: #e8e6e0; --panel: #fbfaf7; --line: #dcd8cf; --ink: #26241f; --ink2: #6f6a60;
+    --accent: #2b4c7e; --on: #26241f; --onink: #fbfaf7;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161616; --panel: #1f1f1f; --line: #333; --ink: #e8e6e0; --ink2: #9a958b; --accent: #8fb0e0; --on: #e8e6e0; --onink: #1f1f1f; }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { display: flex; background: var(--bg); color: var(--ink); font: 13px/1.4 -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; }
+  #panel { width: 300px; flex: none; display: flex; flex-direction: column; gap: 12px; padding: 16px; background: var(--panel); border-right: 1px solid var(--line); overflow: auto; }
+  h1 { font-size: 15px; margin: 0; font-weight: 600; }
+  h1 small { color: var(--ink2); font-weight: 400; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field > span { color: var(--ink2); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+  select, button, input { font: inherit; color: inherit; }
+  select { padding: 5px 6px; border: 1px solid var(--line); border-radius: 6px; background: transparent; }
+  .seg { display: flex; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+  .seg button { flex: 1; padding: 5px 4px; border: 0; border-left: 1px solid var(--line); background: transparent; cursor: pointer; }
+  .seg button:first-child { border-left: 0; }
+  .seg button[aria-pressed="true"] { background: var(--on); color: var(--onink); }
+  .papers { display: flex; gap: 8px; }
+  .papers button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); cursor: pointer; padding: 0; }
+  .papers button[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .range { display: flex; align-items: center; gap: 8px; }
+  .range input { flex: 1; }
+  .range output { width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
+  .transport { display: flex; align-items: center; gap: 6px; }
+  .transport button { padding: 6px 10px; border: 1px solid var(--line); border-radius: 7px; background: transparent; cursor: pointer; }
+  .transport #play { flex: 1; background: var(--on); color: var(--onink); border-color: var(--on); }
+  #pageinfo { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; color: var(--ink2); }
+  .check { display: flex; align-items: center; gap: 6px; color: var(--ink2); }
+  #log { flex: 1; min-height: 120px; overflow: auto; border: 1px solid var(--line); border-radius: 7px; padding: 6px 8px; font: 11px/1.5 ui-monospace, Menlo, monospace; color: var(--ink2); white-space: pre-wrap; word-break: break-all; }
+  #log .warn { color: #b07a1c; } #log .error { color: #c0392b; } #log .ready { color: var(--accent); }
+  #stage { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 24px; }
+  #fit { flex: none; }
+  #device { transform-origin: 0 0; background: #1c1c1e; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+  #device .bar { display: none; height: 28px; background: linear-gradient(#ececec, #dcdcdc); border-bottom: 1px solid #c8c8c8; padding: 9px 12px; }
+  #device .bar i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; vertical-align: top; }
+  #device[data-preset="mac"] .bar { display: block; }
+  iframe { display: block; border: 0; background: #fff; }
+  @media (max-width: 760px) { body { flex-direction: column; } #panel { width: auto; border-right: 0; border-bottom: 1px solid var(--line); max-height: 45vh; } }
+</style>
+</head>
+<body>
+<aside id="panel">
+  <h1>语阅 reader <small id="version"></small></h1>
+  <label class="field"><span>Section</span><select id="section"></select></label>
+  <div class="field"><span>Device</span>
+    <div class="seg" data-key="preset">
+      <button data-v="iphone">iPhone</button><button data-v="ipad">iPad</button><button data-v="mac">Mac</button>
+    </div>
+  </div>
+  <div class="field"><span>Paper</span>
+    <div class="papers" data-key="paper">
+      <button data-v="plain" title="素白 plain" style="background:#ffffff"></button>
+      <button data-v="dark" title="暗黑 dark" style="background:#121314"></button>
+      <button data-v="kami" title="纸本 kami" style="background:#f5f4ed"></button>
+      <button data-v="kaminight" title="纸本·夜 kaminight" style="background:#1b1a17"></button>
+      <button data-v="eink" title="墨水屏 eink" style="background:#e9e8e3"></button>
+    </div>
+  </div>
+  <label class="field"><span>Font size</span>
+    <span class="range"><input type="range" id="fontSize" min="14" max="30" step="1"><output id="fontSizeOut"></output></span>
+  </label>
+  <label class="field"><span>Font</span>
+    <select id="font"><option value="">paper default</option><option value="sans">sans</option><option value="serif">serif</option><option value="kai">kai</option></select>
+  </label>
+  <div class="field"><span>Mode</span>
+    <div class="seg" data-key="mode"><button data-v="paginated">paginated</button><button data-v="scrolled">scrolled</button></div>
+  </div>
+  <div class="field"><span>Paging</span>
+    <div class="seg" data-key="paging"><button data-v="snap">snap</button><button data-v="native">native</button></div>
+  </div>
+  <div class="field"><span>Columns</span>
+    <div class="seg" data-key="cols"><button data-v="1">1</button><button data-v="2">2</button></div>
+  </div>
+  <div class="field"><span>Punctuation compression</span>
+    <div class="seg" data-key="compress"><button data-v="1">on</button><button data-v="0">off</button></div>
+  </div>
+  <div class="field"><span>Motion</span>
+    <div class="seg" data-key="motion"><button data-v="full">full</button><button data-v="reduced">reduced</button></div>
+  </div>
+  <div class="transport">
+    <button id="prev" title="Previous page (←)">‹</button>
+    <span id="pageinfo">–</span>
+    <button id="next" title="Next page (→)">›</button>
+    <button id="play" title="Play / pause (space)">Play</button>
+    <select id="speed" title="Playback speed"><option value="1">1×</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="4">4×</option></select>
+  </div>
+  <label class="check"><input type="checkbox" id="follow" checked> Turn pages with playback</label>
+  <div id="log"></div>
+</aside>
+<main id="stage">
+  <div id="fit"><div id="device"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div><iframe id="frame" title="section"></iframe></div></div>
+</main>
+<script src="demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+# The Xcode project is generated from this file: `cd apple && xcodegen`.
+# Build the core first: `apple/build-core.sh`. The reader bundle comes from `reader/dist`
+# (`cd reader && pnpm build`).
+name: Yuyue
+options:
+  bundleIdPrefix: app.yuyue
+  deploymentTarget:
+    iOS: "18.0"
+    macOS: "15.0"
+  developmentLanguage: zh-Hans
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+packages:
+  YuyueCore:
+    path: YuyueCore
+
+settings:
+  base:
+    MARKETING_VERSION: 0.1.0
+    CURRENT_PROJECT_VERSION: 1
+    SWIFT_VERSION: "6.0"
+    # 英文界面: every Chinese string is a key in Yuyue/Localizable.xcstrings.
+    SWIFT_EMIT_LOC_STRINGS: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    DEAD_CODE_STRIPPING: YES
+    # 关于 里那个"阅"字标：AppIcon 由脚本按同一套比例生成（见 docs/dev/app-icon.md）。
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+targets:
+  Yuyue:
+    type: application
+    supportedDestinations: [iOS, macOS]
+    sources:
+      - path: Yuyue
+        excludes:
+          - "**/.DS_Store"
+      # Served to the WebView as /app/… (docs/dev/reader-contract.md §1).
+      - path: ../reader/dist
+        type: folder
+        buildPhase: resources
+    dependencies:
+      - package: YuyueCore
+    # 请开发者喝咖啡's tips, for trying in Xcode before they exist in App Store Connect.
+    scheme:
+      storeKitConfiguration: Tips.storekit
+    info:
+      path: Yuyue/Info.plist
+      properties:
+        CFBundleDisplayName: 语阅
+        CFBundleName: 语阅
+        CFBundleDevelopmentRegion: zh-Hans
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSApplicationCategoryType: public.app-category.books
+        # 同步 · Google Drive: the iOS OAuth client of 语阅's Google Cloud project, once registered.
+        YYGoogleClientID: $(GOOGLE_CLIENT_ID)
+        ITSAppUsesNonExemptEncryption: false
+        UIBackgroundModes: [audio]
+        UILaunchScreen: {}
+        UIApplicationSupportsIndirectInputEvents: true
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        # Opened files are read where they are (security-scoped) and copied into the library.
+        LSSupportsOpeningDocumentsInPlace: true
+        # 数据快照 are kept in Documents, which 文件 shows as 语阅.
+        UIFileSharingEnabled: true
+        # Wi‑Fi 传书: a computer's browser on the same Wi‑Fi sends books to the phone.
+        # 远程书库 at home are plain http on a local address.
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+        NSLocalNetworkUsageDescription: 电脑浏览器给语阅传书时，要经过你的 Wi‑Fi 连到这台设备。
+        # 有声书: the recording is transcribed on the device to lay it against the e-book.
+        NSSpeechRecognitionUsageDescription: 有声书和电子书对齐时，要在这台设备上把录音转成文字，不上传。
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: EPUB
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [org.idpf.epub-container]
+          - CFBundleTypeName: Text
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [public.plain-text]
+          - CFBundleTypeName: PDF
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [com.adobe.pdf]
+          - CFBundleTypeName: Kindle 电子书
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [app.yuyue.mobi, app.yuyue.azw3]
+          - CFBundleTypeName: 漫画
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [app.yuyue.cbz, app.yuyue.cbr]
+          - CFBundleTypeName: 有声书
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [public.audio]
+          - CFBundleTypeName: 语阅快照
+            CFBundleTypeRole: Editor
+            LSHandlerRank: Owner
+            LSItemContentTypes: [app.yuyue.snapshot]
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: app.yuyue.snapshot
+            UTTypeDescription: 语阅快照
+            UTTypeConformsTo: [public.data, public.archive]
+            UTTypeTagSpecification:
+              public.filename-extension: [yuyue]
+        # Comic book archives: a ZIP of pictures named .cbz, a RAR named .cbr.
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: app.yuyue.cbz
+            UTTypeDescription: 漫画压缩包
+            UTTypeConformsTo: [public.zip-archive, public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [cbz]
+          - UTTypeIdentifier: app.yuyue.cbr
+            UTTypeDescription: 漫画压缩包
+            UTTypeConformsTo: [public.archive, public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [cbr]
+          # Kindle books: an old MOBI (also .azw, .prc), or KF8 (.azw3).
+          - UTTypeIdentifier: app.yuyue.mobi
+            UTTypeDescription: Kindle 电子书
+            UTTypeConformsTo: [public.data, public.content]
+            UTTypeTagSpecification:
+              public.filename-extension: [mobi, azw, prc]
+          - UTTypeIdentifier: app.yuyue.azw3
+            UTTypeDescription: Kindle 电子书
+            UTTypeConformsTo: [public.data, public.content]
+            UTTypeTagSpecification:
+              public.filename-extension: [azw3]
+    settings:
+      base:
+        PRODUCT_NAME: Yuyue
+        # Placeholder until the App Store identity is settled.
+        PRODUCT_BUNDLE_IDENTIFIER: app.yuyue.Yuyue
+        # Empty until 语阅 is registered with Google; 同步 · Google Drive waits for it.
+        GOOGLE_CLIENT_ID: ""
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTS_MACCATALYST: NO
+        CODE_SIGN_STYLE: Automatic
+        "CODE_SIGN_ENTITLEMENTS[sdk=macosx*]": Yuyue/Yuyue.entitlements
+        "CODE_SIGN_IDENTITY[sdk=macosx*]": "-"
+        "ENABLE_HARDENED_RUNTIME[sdk=macosx*]": YES

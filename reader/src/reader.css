@@ -1,0 +1,544 @@
+/* 语阅 reader stylesheet. Loaded after the publisher's CSS (contract §2).
+   Everything the reader injects is namespaced --yy-* / .yy-* / yy-* elements.
+   Body-text overrides are gated on classes that typography.ts assigns after comparing each
+   block with the publisher's dominant body style, so centred lines, poems, notes and other
+   deliberate deviations keep the publisher's look (same balance as Readium CSS). */
+@import "./generated/tokens.css";
+
+/* ---------- defaults that native always sets (contract §2) ---------- */
+html {
+  --yy-fs: 18px;
+  --yy-margin: 24px;
+  --yy-top: 56px;
+  --yy-bottom: 88px;
+  --yy-cols: 1;
+
+  /* Effective values: user setting if present, else the paper default. */
+  --yy-base: calc(var(--yy-fs) * var(--yy-p-fscale));
+  --yy-base-en: calc(var(--yy-fs) * var(--yy-lt-fscale));
+  --yy-lh-eff: var(--yy-lh, var(--yy-p-lh));
+  --yy-ps-eff: var(--yy-ps, var(--yy-p-ps));
+  --yy-font-eff: var(--yy-font, var(--yy-p-font));
+  --yy-ind: var(--yy-p-indent);
+  --yy-al: var(--yy-p-align);
+  --yy-al-en: var(--yy-lt-align);
+  --yy-p-title-font-en: var(--yy-sans);
+  --yy-colh: calc(var(--yy-ph, 100vh) - var(--yy-top) - var(--yy-bottom));
+}
+html[data-yy-paper="kami"], html[data-yy-paper="kaminight"], html[data-yy-paper="eink"] {
+  --yy-p-title-font-en: var(--yy-latin-serif);
+}
+html[data-yy-indent="1"] { --yy-ind: 2em; }
+html[data-yy-indent="0"] { --yy-ind: 0em; }
+html[data-yy-justify="1"] { --yy-al: justify; --yy-al-en: justify; }
+html[data-yy-justify="0"] { --yy-al: start; --yy-al-en: start; }
+
+/* ---------- root and page box ---------- */
+html {
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background-color: var(--yy-p-bg) !important;
+  background-image: var(--yy-p-texture) !important;
+  color: var(--yy-p-ink) !important;
+  writing-mode: horizontal-tb !important;
+  direction: ltr;
+  scroll-behavior: auto !important;
+  /* The reader restores the reading position itself (layout.ts anchors); Blink's scroll
+     anchoring would move it a second time. */
+  overflow-anchor: none;
+  scrollbar-width: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-font-smoothing: antialiased;
+}
+html::-webkit-scrollbar { display: none; width: 0; height: 0; }
+/* data-yy-raw is set for a moment while typography.ts reads the publisher's own sizes. */
+html:not([data-yy-raw]) { font-size: var(--yy-fs) !important; }
+body {
+  margin: 0 !important;
+  border: 0 !important;
+  box-sizing: border-box !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  max-height: none !important;
+  float: none !important;
+  position: static !important;
+  transform: none !important;
+  background: transparent !important;
+  color: var(--yy-p-ink) !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  text-spacing-trim: space-all;
+  overflow-anchor: none;
+}
+html:not([data-yy-raw]) body {
+  font-family: var(--yy-font-eff) !important;
+  font-size: var(--yy-base) !important;
+  line-height: var(--yy-lh-eff) !important;
+}
+html:not([data-yy-raw]) body:lang(en) {
+  font-family: var(--yy-font-en, var(--yy-lt-font)) !important;
+  font-size: var(--yy-base-en) !important;
+  line-height: var(--yy-lh, var(--yy-lt-lh)) !important;
+}
+#yy-content { display: block; margin: 0 !important; padding: 0 !important; border: 0 !important; }
+
+/* Paginated (contract §6): the columns live on <body>; <html> stays one page wide and is the
+   containing block for the page markers. Page width/height come from JS (--yy-pw/--yy-ph,
+   whole CSS pixels = innerWidth/innerHeight) so the column pitch is exactly W. */
+html[data-yy-mode="paginated"] {
+  width: var(--yy-pw, 100vw) !important;
+  height: var(--yy-ph, 100vh) !important;
+  max-width: none !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  position: relative !important;
+}
+html[data-yy-mode="paginated"] body {
+  width: var(--yy-pw, 100vw) !important;
+  height: var(--yy-ph, 100vh) !important;
+  padding: var(--yy-top) var(--yy-margin) var(--yy-bottom) var(--yy-margin) !important;
+  overflow: visible !important;
+  -webkit-column-count: var(--yy-cols);
+  column-count: var(--yy-cols) !important;
+  -webkit-column-width: auto;
+  column-width: auto !important;
+  -webkit-column-gap: calc(2 * var(--yy-margin));
+  column-gap: calc(2 * var(--yy-margin)) !important;
+  column-fill: auto !important;
+  column-rule: none !important;
+}
+/* Clip anything taller than a column instead of letting it make the page scroll vertically. */
+@supports (overflow: clip) {
+  html[data-yy-mode="paginated"] body { overflow-x: visible !important; overflow-y: clip !important; }
+}
+html[data-yy-mode="paginated"][data-yy-paging="snap"] {
+  -webkit-scroll-snap-type: x mandatory;
+  scroll-snap-type: x mandatory;
+}
+
+/* Scrolled (滚动). */
+html[data-yy-mode="scrolled"] {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+html[data-yy-mode="scrolled"] body {
+  padding: var(--yy-top) var(--yy-margin) var(--yy-bottom) var(--yy-margin) !important;
+  -webkit-column-count: auto;
+  column-count: auto !important;
+}
+html[data-yy-mode="scrolled"] yy-pages { display: none !important; }
+
+/* Page markers: one per page, absolutely placed at p*W. They make the scroll width exactly
+   pageCount*W (engines disagree about trailing column padding) and are the snap targets. */
+yy-pages {
+  display: block !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+yy-page {
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  width: var(--yy-pw, 100vw) !important;
+  height: var(--yy-ph, 100vh) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  pointer-events: none !important;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* ---------- nothing straddles two pages ---------- */
+#yy-content * { max-width: 100% !important; box-sizing: border-box; }
+#yy-content img, #yy-content svg, #yy-content video, #yy-content canvas, #yy-content object {
+  max-width: 100% !important;
+  max-height: var(--yy-colh) !important;
+  object-fit: contain;
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
+}
+#yy-content img { height: auto; }
+/* A picture in a figure leaves room for two lines of caption on the same page. */
+#yy-content figure img, #yy-content figure svg { max-height: calc(var(--yy-colh) - 6em) !important; }
+#yy-content .yy-hide { display: none !important; }
+
+/* Picture-only sections (core: data-kind="image": covers, full-page illustrations): one page,
+   the picture centred in the text area whatever the column setting. layout.ts sets --yy-imgh
+   when a caption or a second picture would not fit otherwise. */
+html[data-yy-kind="image"][data-yy-mode="paginated"] body { -webkit-column-count: 1; column-count: 1 !important; }
+#yy-content[data-kind="image"] {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--yy-colh);
+  text-align: center;
+}
+#yy-content[data-kind="image"] * { background-color: transparent !important; text-indent: 0 !important; }
+/* Block, not inline: an inline picture as tall as the column plus the line's descent would
+   spill onto a second page. */
+#yy-content[data-kind="image"] img {
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  max-height: var(--yy-imgh, var(--yy-colh)) !important;
+  margin: 0 auto !important;
+}
+#yy-content[data-kind="image"] svg {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: var(--yy-imgh, var(--yy-colh)) !important;
+  margin: 0 auto !important;
+}
+#yy-content figure, #yy-content table, #yy-content tr { -webkit-column-break-inside: avoid; break-inside: avoid; }
+#yy-content pre { white-space: pre-wrap !important; overflow-wrap: anywhere; }
+#yy-content table { table-layout: auto; width: auto; }
+
+/* ---------- body text (classes from typography.ts) ----------
+   yy-b  body size + line height     yy-r  relative size (--yy-fr) + line height
+   yy-f  font family                 yy-m  paragraph spacing (top 0, bottom --yy-ps)
+   yy-i  first-line indent           yy-j  alignment (justify per paper / setting)
+   yy-l  letter spacing              yy-c  text colour                                   */
+#yy-content .yy-b { font-size: var(--yy-base) !important; line-height: var(--yy-lh-eff) !important; }
+#yy-content .yy-r { font-size: calc(var(--yy-base) * var(--yy-fr, 1)) !important; line-height: var(--yy-lh-eff) !important; }
+#yy-content .yy-f { font-family: var(--yy-font-eff) !important; }
+#yy-content .yy-m { margin-top: 0 !important; margin-bottom: var(--yy-ps-eff) !important; }
+#yy-content .yy-i { text-indent: var(--yy-ind) !important; }
+#yy-content .yy-j { text-align: var(--yy-al) !important; }
+#yy-content .yy-l { letter-spacing: var(--yy-p-ls) !important; }
+#yy-content .yy-c { color: var(--yy-p-ink) !important; }
+#yy-content .yy-lh1 { line-height: 1 !important; }
+
+/* English (.r-text.en in the prototype): Georgia, ragged right, no tracking, taller lines. */
+#yy-content .yy-b:lang(en) { font-size: var(--yy-base-en) !important; line-height: var(--yy-lh, var(--yy-lt-lh)) !important; }
+#yy-content .yy-r:lang(en) { font-size: calc(var(--yy-base-en) * var(--yy-fr, 1)) !important; line-height: var(--yy-lh, var(--yy-lt-lh)) !important; }
+#yy-content .yy-f:lang(en) { font-family: var(--yy-font-en, var(--yy-lt-font)) !important; }
+#yy-content .yy-j:lang(en) { text-align: var(--yy-al-en) !important; }
+#yy-content .yy-l:lang(en) { letter-spacing: var(--yy-lt-ls) !important; }
+
+/* Headings inside the section keep their alignment, weight and margins; their size follows the
+   body size at the publisher's ratio. Family and colour come from yy-f / yy-c when they match. */
+#yy-content .yy-h { font-size: calc(var(--yy-base) * var(--yy-fr, 1.2)) !important; line-height: var(--yy-p-title-lh) !important; }
+#yy-content .yy-h:lang(en) { font-size: calc(var(--yy-base-en) * var(--yy-fr, 1.2)) !important; }
+
+/* Section title (.r-title / .r-rule). */
+#yy-content .yy-t {
+  font-family: var(--yy-font, var(--yy-p-title-font)) !important;
+  font-size: calc(var(--yy-fs) * var(--yy-p-title-size)) !important;
+  font-weight: var(--yy-p-title-weight) !important;
+  font-style: normal !important;
+  line-height: var(--yy-p-title-lh) !important;
+  letter-spacing: var(--yy-p-title-ls) !important;
+  color: var(--yy-p-ink) !important;
+  text-indent: 0 !important;
+  text-transform: none !important;
+  margin: 0 0 calc(var(--yy-fs) * 1.4286) 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  -webkit-column-break-after: avoid;
+  break-after: avoid;
+}
+#yy-content .yy-t:lang(en) { font-family: var(--yy-font-en, var(--yy-p-title-font-en)) !important; }
+#yy-content .yy-t.yy-t-m { margin-bottom: 0 !important; }
+#yy-content .yy-t:not(.yy-a) { text-align: start !important; }
+#yy-content .yy-t::after {
+  content: "";
+  display: var(--yy-p-title-rule);
+  width: calc(var(--yy-fs) * 3.1429);
+  height: 0;
+  border-top: .5px solid var(--yy-p-accent);
+  margin: calc(var(--yy-fs) * 1) 0 calc(var(--yy-fs) * .8571) 0;
+}
+#yy-content .yy-t.yy-a::after { margin-left: auto; margin-right: auto; }
+
+/* Chapter meta line (.r-meta): 读 X 分钟 · 听 X 分钟 with the eye / headphones icons. */
+#yy-content .yy-meta {
+  display: block !important;
+  font-family: var(--yy-p-meta-font) !important;
+  font-size: calc(var(--yy-fs) * var(--yy-p-meta-size)) !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  line-height: 1.6 !important;
+  letter-spacing: var(--yy-p-meta-ls) !important;
+  color: var(--yy-p-ink-2) !important;
+  text-indent: 0 !important;
+  text-align: start;
+  margin: calc(var(--yy-fs) * var(--yy-p-meta-mt)) 0 calc(var(--yy-fs) * 1) 0 !important;
+  padding: 0 0 calc(var(--yy-fs) * var(--yy-p-meta-pb)) 0 !important;
+  border: 0 !important;
+  border-bottom: var(--yy-p-meta-border) solid var(--yy-p-line) !important;
+  font-variant-numeric: tabular-nums;
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
+  -webkit-user-select: none;
+  user-select: none;
+}
+#yy-content .yy-meta.yy-a { text-align: center; }
+#yy-content .yy-meta > span { display: inline-block; vertical-align: middle; margin-right: calc(var(--yy-fs) * .4286); }
+#yy-content .yy-meta > span:last-child { margin-right: 0; }
+#yy-content .yy-meta .yy-rd::before, #yy-content .yy-meta .yy-ls::before {
+  content: "";
+  display: inline-block;
+  width: calc(var(--yy-fs) * .7857);
+  height: calc(var(--yy-fs) * .7857);
+  margin-right: calc(var(--yy-fs) * .2143);
+  vertical-align: -.12em;
+  background-color: currentColor;
+  -webkit-mask: var(--yy-ico) center / contain no-repeat;
+  mask: var(--yy-ico) center / contain no-repeat;
+}
+#yy-content .yy-meta .yy-rd {
+  --yy-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1.8 8S4 3.8 8 3.8 14.2 8 14.2 8 12 12.2 8 12.2 1.8 8 1.8 8z'/%3E%3Ccircle cx='8' cy='8' r='2'/%3E%3C/svg%3E");
+}
+#yy-content .yy-meta .yy-ls {
+  --yy-ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 10V8a5 5 0 0 1 10 0v2'/%3E%3Crect x='2.5' y='9.5' width='3' height='4' rx='1'/%3E%3Crect x='10.5' y='9.5' width='3' height='4' rx='1'/%3E%3C/svg%3E");
+}
+
+/* ---------- inline content ---------- */
+#yy-content rt {
+  font-family: var(--yy-sans) !important;
+  font-size: .5em !important;
+  letter-spacing: 0 !important;
+  text-indent: 0 !important;
+  color: var(--yy-p-ink-2);
+}
+#yy-content rt:lang(en), #yy-content :lang(en) rt { font-size: .7em !important; color: var(--yy-p-pa); }
+#yy-content a.yy-noteref {
+  font-family: var(--yy-sans) !important;
+  font-size: calc(var(--yy-fs) * .6786) !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+  color: var(--yy-p-pa) !important;
+  vertical-align: super;
+  line-height: 0 !important;
+  padding: 0 1px;
+  text-decoration: none !important;
+  text-indent: 0;
+  letter-spacing: 0 !important;
+}
+#yy-content sup a.yy-noteref { vertical-align: baseline; }
+#yy-content a[data-yy-target]:not(.yy-noteref), #yy-content a[data-yy-external] {
+  color: var(--yy-p-pa) !important;
+  text-decoration: none !important;
+}
+#yy-content a { background-color: transparent !important; -webkit-touch-callout: none; }
+#yy-content a, #yy-content img { -webkit-user-drag: none; }
+
+/* Footnotes (core: <aside class="yy-footnote">, no sentences). Native shows a note in a card when
+   its reference is tapped; in the flow they sit at the end of the section, set small and quiet. */
+#yy-content .yy-footnote {
+  display: block !important;
+  font-family: var(--yy-font-eff) !important;
+  font-size: calc(var(--yy-base) * .8) !important;
+  line-height: 1.8 !important;
+  color: var(--yy-p-ink-2) !important;
+  text-align: start !important;
+  margin: calc(var(--yy-fs) * 1.2) 0 0 0 !important;
+  padding: calc(var(--yy-fs) * .8) 0 0 0 !important;
+  border: 0 !important;
+  border-top: .5px solid var(--yy-p-line) !important;
+}
+#yy-content .yy-footnote:lang(en) { font-family: var(--yy-font-en, var(--yy-lt-font)) !important; font-size: calc(var(--yy-base-en) * .8) !important; }
+#yy-content .yy-footnote + .yy-footnote { margin-top: calc(var(--yy-fs) * .4) !important; padding-top: 0 !important; border-top: 0 !important; }
+#yy-content .yy-footnote * { font-size: inherit !important; line-height: inherit !important; color: inherit !important; text-indent: 0 !important; }
+#yy-content .yy-footnote p { margin: 0 !important; }
+
+/* Dark papers: publisher colours and backgrounds would be unreadable, so text inherits. */
+html[data-yy-paper="dark"] #yy-content *, html[data-yy-paper="kaminight"] #yy-content * {
+  color: inherit !important;
+  background-color: transparent !important;
+  border-color: var(--yy-p-line) !important;
+}
+html[data-yy-paper="dark"] #yy-content .yy-meta, html[data-yy-paper="kaminight"] #yy-content .yy-meta,
+html[data-yy-paper="dark"] #yy-content .yy-footnote, html[data-yy-paper="kaminight"] #yy-content .yy-footnote { color: var(--yy-p-ink-2) !important; }
+html[data-yy-paper="dark"] #yy-content a.yy-noteref, html[data-yy-paper="kaminight"] #yy-content a.yy-noteref,
+html[data-yy-paper="dark"] #yy-content a[data-yy-target], html[data-yy-paper="kaminight"] #yy-content a[data-yy-target],
+html[data-yy-paper="dark"] #yy-content a[data-yy-external], html[data-yy-paper="kaminight"] #yy-content a[data-yy-external] { color: var(--yy-p-pa) !important; }
+
+/* ---------- 中文标点挤压 (contract §3) ---------- */
+html[data-yy-compress="1"] #yy-content .pz-r { letter-spacing: -.5em !important; }
+html[data-yy-compress="1"] #yy-content .pz-l { margin-left: -.5em !important; }
+/* compress.ts: this font draws the glyph across the half that would be dropped. */
+html[data-yy-compress="1"] #yy-content .pz-r.yy-pz-keep { letter-spacing: inherit !important; }
+html[data-yy-compress="1"] #yy-content .pz-l.yy-pz-keep { margin-left: 0 !important; }
+
+/* ---------- marks inside the text ---------- */
+/* 墨线 (contract §7). ink.ts animates background-size with the Web Animations API; the
+   inline box is not cloned, so the line grows continuously across line and column breaks. */
+#yy-content .s {
+  background-image: linear-gradient(var(--yy-p-accent), var(--yy-p-accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% var(--yy-ink-w);
+  padding-bottom: 2px;
+  -webkit-box-decoration-break: slice;
+  box-decoration-break: slice;
+}
+#yy-content .s.yy-ink-full { background-size: 100% var(--yy-ink-w); }
+html[data-yy-paper="eink"] #yy-content .s.yy-ink-full { background-image: linear-gradient(#141414, #141414); }
+
+/* 有声书: a stretch the recording doesn't line up with. The margin and padding cancel out, so
+   nothing moves (headings too, whose box is otherwise fixed); the line is a background so it
+   repeats on every column the paragraph spans. */
+#yy-content .yy-flag {
+  margin-left: -13px !important;
+  padding-left: 13px !important;
+  max-width: calc(100% + 13px) !important;
+  background-image: linear-gradient(var(--yy-warn), var(--yy-warn)) !important;
+  background-repeat: no-repeat !important;
+  background-position: 0 .5em !important;
+  background-size: 2.5px calc(100% - 1.1em) !important;
+  -webkit-box-decoration-break: clone !important;
+  box-decoration-break: clone !important;
+}
+#yy-content .yy-t.yy-flag {
+  background-position: 0 .2em !important;
+  background-size: 2.5px calc(100% - .4em) !important;
+}
+
+html #yy-content .hl {
+  background-color: var(--yy-p-hl) !important;
+  border-radius: 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+html #yy-content .wave {
+  -webkit-text-decoration: underline wavy var(--yy-p-wave);
+  text-decoration: underline wavy var(--yy-p-wave);
+  text-decoration-thickness: 1px;
+  text-underline-offset: .357em;
+}
+html[data-yy-paper="eink"] #yy-content .hl {
+  background-color: transparent !important;
+  border-radius: 0;
+  box-shadow: inset 0 -2px 0 #141414;
+}
+/* 墨水屏: pictures in grey, as the screen would show them. */
+html[data-yy-paper="eink"] #yy-content img, html[data-yy-paper="eink"] #yy-content svg image, html[data-yy-paper="eink"] #yy-content video {
+  filter: grayscale(1) contrast(1.05);
+}
+html[data-yy-paper="eink"] *, html[data-yy-paper="eink"] *::before, html[data-yy-paper="eink"] *::after {
+  -webkit-animation: none !important;
+  animation: none !important;
+  -webkit-transition: none !important;
+  transition: none !important;
+}
+
+/* ---------- highlights and search hits (marks.ts, contract §8) ---------- */
+/* The colours: boxes behind the text, as tall as the letters (marks.ts placeFills). */
+yy-fills {
+  position: absolute !important;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  z-index: -1;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+yy-fills > i {
+  position: absolute !important;
+  display: block !important;
+  border-radius: 2px;
+}
+yy-fills > .yy-yellow { background-color: var(--yy-mk-y); }
+yy-fills > .yy-blue { background-color: var(--yy-mk-b); }
+yy-fills > .yy-pink { background-color: var(--yy-mk-p); }
+::highlight(yy-wave) {
+  text-decoration: underline wavy var(--yy-hl-r);
+  text-decoration-thickness: 1px;
+}
+::highlight(yy-underline) {
+  text-decoration: underline solid var(--yy-p-ink);
+  text-decoration-thickness: 1px;
+}
+::highlight(yy-dotted) {
+  text-decoration: underline dotted var(--yy-p-ink);
+  text-decoration-thickness: 1.5px;
+}
+::highlight(yy-source) { background-color: var(--yy-accent-soft); }
+/* 书伴's 出处 label, in the margin beside the sentence (marks.ts placeSource). */
+yy-from {
+  position: absolute !important;
+  z-index: 3;
+  transform: translate(-100%, -50%);
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  font: 600 10.5px/1 -apple-system, system-ui, sans-serif !important;
+  letter-spacing: 0 !important;
+  color: var(--yy-p-pa);
+  background: var(--yy-accent-soft);
+  white-space: nowrap;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+::highlight(yy-look) { background-color: var(--yy-accent-soft); text-decoration: underline solid var(--yy-p-pa); text-decoration-thickness: 1.5px; }
+::highlight(yy-vocab) { text-decoration: underline dotted var(--yy-p-pa); text-decoration-thickness: 1.5px; }
+/* 难词注释: meanings written in the leading above harder words (foreign.ts drawGlosses). */
+yy-glosses {
+  position: absolute !important;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  z-index: 2;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+yy-gl {
+  position: absolute !important;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font: 400 max(10.5px, calc(var(--yy-base-en) * .66))/1 var(--yy-sans) !important;
+  letter-spacing: 0 !important;
+  color: var(--yy-p-ink-2);
+}
+/* 译: the translation under a paragraph (foreign.ts). */
+yy-tr {
+  display: block !important;
+  margin: .15em 0 1.2em !important;
+  padding: 0 0 0 10px !important;
+  border-left: 2px solid var(--yy-p-line);
+  font-family: var(--yy-sans) !important;
+  font-size: .8em !important;
+  line-height: 1.85 !important;
+  letter-spacing: 0 !important;
+  text-indent: 0 !important;
+  text-align: left !important;
+  color: var(--yy-p-ink-2);
+  -webkit-user-select: none;
+  user-select: none;
+}
+::highlight(yy-hit) { background-color: var(--yy-accent-soft); }
+::highlight(yy-hit-now) { background-color: var(--yy-p-main); color: var(--yy-p-on-main); }
+html[data-yy-paper="dark"] ::highlight(yy-underline), html[data-yy-paper="kaminight"] ::highlight(yy-underline) { text-decoration-color: var(--yy-p-ink); }
+html[data-yy-paper="eink"] yy-fills > i {
+  background-color: rgba(0, 0, 0, .12);
+}
+/* The marks follow the paper, not the system appearance. */
+html[data-yy-paper="plain"], html[data-yy-paper="kami"], html[data-yy-paper="eink"] {
+  --yy-mk-y: #FBE7A0; --yy-mk-b: #CFE6F4; --yy-mk-p: #F6C7C0;
+}
+html[data-yy-paper="dark"], html[data-yy-paper="kaminight"] {
+  --yy-mk-y: rgba(251, 231, 160, .26); --yy-mk-b: rgba(196, 227, 244, .22); --yy-mk-p: rgba(246, 199, 192, .24);
+}

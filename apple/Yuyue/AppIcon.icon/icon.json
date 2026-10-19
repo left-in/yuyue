@@ -1,0 +1,32 @@
+{
+  "fill" : {
+    "solid" : "srgb:0.98431,0.98039,0.96863,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "glass" : false,
+          "image-name" : "glyph.png",
+          "name" : "glyph"
+        },
+        {
+          "glass" : false,
+          "image-name" : "rule.png",
+          "name" : "rule"
+        }
+      ],
+      "shadow" : {
+        "kind" : "none",
+        "opacity" : 0
+      },
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}
