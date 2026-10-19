@@ -110,6 +110,14 @@ final class ReaderModel {
     @ObservationIgnored let pager: ReaderPager
     @ObservationIgnored let core: YuyueCore
     @ObservationIgnored private(set) weak var library: Library?
+    @ObservationIgnored private var madeNoteSender: NoteSender?
+    /// 导出笔记's sends, told on the page.
+    var noteSender: NoteSender {
+        if let s = madeNoteSender { return s }
+        let s = NoteSender(core: core) { [weak self] in self?.show($0) }
+        madeNoteSender = s
+        return s
+    }
     /// After a page is turned by hand the pages stop following the voice for a while, so the
     /// reader can look back without being pulled along.
     @ObservationIgnored private var followFrom = Date.distantPast

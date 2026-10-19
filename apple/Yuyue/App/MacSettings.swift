@@ -705,6 +705,63 @@ private struct VoiceRow: View {
 
 // MARK: - 数据
 
+/// 笔记导出: where 笔记 › 导出 › 发到 sends. Obsidian is a folder (the vault, or one in it);
+/// Notion an integration's token and the page the books go under; flomo its API link.
+private struct NoteExportSettings: View {
+    @State private var folder = NoteExport.obsidianFolder
+    @State private var notionToken = Keychain.read(NoteExport.notionKey) ?? ""
+    @AppStorage(NoteExport.notionPageKey) private var notionPage = ""
+    @State private var flomo = Keychain.read(NoteExport.flomoKey) ?? ""
+
+    var body: some View {
+        SettingsHeading(String(localized: "笔记导出"))
+        SettingsCard {
+            SettingsRow("Obsidian", detail: String(localized: "每本书一篇笔记，写进你选的文件夹；再发一次就更新那一篇")) {
+                HStack(spacing: 8) {
+                    if let folder {
+                        Text(folder.lastPathComponent).font(.system(size: 12)).foregroundStyle(YYColor.t2).lineLimit(1)
+                    }
+                    Button(folder == nil ? String(localized: "选文件夹…") : String(localized: "换一个…")) { pick() }
+                }
+            }
+            SettingsRow("Notion", detail: String(localized: "在 notion.so/my-integrations 建一个集成，把令牌填在这里；再把要放书的页面共享给它，页面链接填在下面")) {
+                SecureField("", text: $notionToken, prompt: Text(verbatim: "ntn_…"))
+                    .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
+                    .frame(width: 240)
+                    .onChange(of: notionToken) { save(NoteExport.notionKey, notionToken) }
+            }
+            SettingsRow(String(localized: "Notion 页面"), detail: notionPage.isEmpty || NoteExport.pageID(from: notionPage) != nil ? nil : String(localized: "这不像一个 Notion 页面链接")) {
+                TextField("", text: $notionPage, prompt: Text(verbatim: "https://www.notion.so/…"))
+                    .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
+                    .frame(width: 240)
+            }
+            SettingsRow("flomo", detail: String(localized: "flomo 网页版 › 设置 › API，拷那条以 https://flomoapp.com/iwh/ 开头的链接；每条划线成一条笔记")) {
+                SecureField("", text: $flomo, prompt: Text(verbatim: "https://flomoapp.com/iwh/…"))
+                    .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
+                    .frame(width: 240)
+                    .onChange(of: flomo) { save(NoteExport.flomoKey, flomo) }
+            }
+        }
+    }
+
+    private func save(_ key: String, _ value: String) {
+        let v = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        if v.isEmpty { Keychain.delete(key) } else { Keychain.write(key, v) }
+    }
+
+    private func pick() {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.canCreateDirectories = true
+        panel.prompt = String(localized: "用这个文件夹")
+        panel.message = String(localized: "选 Obsidian 库，或库里的一个文件夹")
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        NoteExport.setObsidianFolder(url)
+        folder = NoteExport.obsidianFolder
+    }
+}
+
 /// 数据快照 and 导出阅读记录, as on iPhone (prototype 29): what goes in and how big, 生成快照,
 /// 导入快照…, and the ones made before.
 private struct DataSettings: View {
@@ -758,6 +815,7 @@ private struct DataSettings: View {
                     Button("导出…") { exporting = true }
                 }
             }
+            NoteExportSettings()
             if !snapshots.saved.isEmpty {
                 SettingsHeading(String(localized: "以前的快照"))
                 SettingsCard {

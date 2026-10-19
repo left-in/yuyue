@@ -39,6 +39,14 @@ final class Library {
     let watched = WatchedFolder()
     /// 有声书.
     let audiobooks: Audiobooks
+    @ObservationIgnored private var madeNoteSender: NoteSender?
+    /// 笔记 › 导出's sends, told in the library's notes.
+    var noteSender: NoteSender {
+        if let s = madeNoteSender { return s }
+        let s = NoteSender(core: core) { [weak self] t in self?.note(icon: t.icon, t.title, t.detail) }
+        madeNoteSender = s
+        return s
+    }
     /// What to do when a book's window opens: from the shelf's 听 / 从头听.
     @ObservationIgnored private var intents: [String: OpenIntent] = [:]
 

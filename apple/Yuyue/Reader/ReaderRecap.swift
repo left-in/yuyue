@@ -29,7 +29,7 @@ extension ReaderModel {
             你是「语阅」里的书伴。读者隔了 \(days) 天又打开《\(detail.summary.title)》，帮他想起之前读到哪、发生了什么。
             规则：
             1. 只根据下面的原文，不要提后面的情节，不要剧透。
-            2. 写三句话，每句一行，每句不超过 30 个字，用简体中文，按发生的先后。
+            2. 写三句话，每句一行，每句不超过 30 个字（英文不超过 20 个词），用\(Companion.replyLanguage)，按发生的先后。
             3. 只写这三行，不要标题，不要编号，不要别的话。
             """
             guard let reply = try? await Companion.answer(config, system: system, prompt: "原文（读者读过的最后一部分）：\n" + text),

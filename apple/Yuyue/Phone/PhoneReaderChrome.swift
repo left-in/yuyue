@@ -140,6 +140,7 @@ struct PhoneReaderChrome: View {
                 PhoneBookInfo(library: library, book: book)
             }
         }
+        .noteSender(model.noteSender)
         .sheet(item: Binding(get: { exported.map(Shared.init) }, set: { exported = $0?.url })) { item in
             ActivitySheet(items: [item.url]).ignoresSafeArea()
         }
@@ -180,7 +181,14 @@ struct PhoneReaderChrome: View {
                     if model.detail?.summary.format == .txt {
                         Button("编码和目录", systemImage: "doc.text.magnifyingglass") { model.txtShown = true }
                     }
-                    Button("导出笔记", systemImage: "square.and.arrow.up") { exportNotes() }
+                    Menu("导出笔记", systemImage: "square.and.arrow.up") {
+                        Button("Markdown", systemImage: "doc.plaintext") { exportNotes() }
+                        Divider()
+                        NoteSendItems(sender: model.noteSender, books: {
+                            guard let library = model.library else { return [] }
+                            return NotedBook.load(library, only: [model.bookID]).map(\.export)
+                        }, book: model.detail?.summary)
+                    }
                 } label: {
                     icon("ellipsis")
                         .background(paper.ink.opacity(0.09), in: .circle)

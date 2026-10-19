@@ -13,6 +13,7 @@ pub mod document;
 pub mod dom;
 pub mod epub;
 pub mod error;
+pub mod export;
 pub mod footnote;
 pub mod hard;
 pub mod i18n;

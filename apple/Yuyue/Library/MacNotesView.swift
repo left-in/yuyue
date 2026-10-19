@@ -152,7 +152,10 @@ struct MacNotesView: View {
             Segments(items: [(false, String(localized: "按时间")), (true, String(localized: "按书"))], selection: $byBook, small: true) { Text($1) }
                 .frame(width: 156)
             .onChange(of: byBook) { only = .all }
-            ShareLink(item: markdown, subject: Text("笔记"), preview: SharePreview(exportTitle)) {
+            NoteExportMenu(sender: library.noteSender,
+                           markdown: markdown, name: exportTitle + ".md",
+                           books: { exportBooks.map { NoteExport.Book(id: $0.book.id, title: $0.book.title, author: $0.book.author, chapters: chapters($0)) } },
+                           book: byBook ? exportBooks.first?.book : nil) {
                 Label("导出", systemImage: "square.and.arrow.up")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
@@ -160,7 +163,6 @@ struct MacNotesView: View {
                     .background(YYColor.card, in: .capsule)
                     .overlay(Capsule().strokeBorder(YYColor.line))
             }
-            .buttonStyle(.plain)
             .disabled(notes.isEmpty)
         }
     }
@@ -443,9 +445,12 @@ struct MacNotesView: View {
         byBook ? String(localized: "《\(notes.first { $0.id == chosen }?.book.title ?? "")》的笔记") : String(localized: "全部笔记")
     }
 
-    /// Markdown of what is shown: in 按书 only the chosen book.
+    /// What is shown: in 按书 only the chosen book.
+    private var exportBooks: [BookNotes] { byBook ? notes.filter { $0.id == chosen } : notes }
+
+    /// Markdown of what is shown.
     private var markdown: String {
-        let books = byBook ? notes.filter { $0.id == chosen } : notes
+        let books = exportBooks
         var out = byBook ? "# \(exportTitle)\n" : String(localized: "# 语阅笔记\n")
         for n in books {
             if !byBook { out += "\n## 《\(n.book.title)》\n" }

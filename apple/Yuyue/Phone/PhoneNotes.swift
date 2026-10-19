@@ -43,6 +43,11 @@ struct NotedBook: Identifiable {
         .sorted { $0.latest > $1.latest }
     }
 
+    /// For 发到 Obsidian, Notion, flomo.
+    var export: NoteExport.Book {
+        NoteExport.Book(id: book.id, title: book.title, author: book.author, chapters: chapters(marks))
+    }
+
     /// Markdown of the books' notes, chapter by chapter.
     static func markdown(_ books: [NotedBook], title: String) -> String {
         var out = "# \(title)\n"
@@ -143,9 +148,9 @@ struct PhoneNotes: View {
                         ToolbarItem(placement: .confirmationAction) { Button("完成") { stopSelecting() } }
                     } else {
                         ToolbarItem(placement: .primaryAction) {
-                            ShareLink(item: TextFile(text: NotedBook.markdown(shown, title: kind == .thoughts ? String(localized: "语阅 · 想法") : String(localized: "语阅笔记")),
-                                                     name: String(localized: "语阅笔记.md")),
-                                      preview: SharePreview(String(localized: "全部笔记"))) {
+                            NoteExportMenu(sender: library.noteSender,
+                                           markdown: NotedBook.markdown(shown, title: kind == .thoughts ? String(localized: "语阅 · 想法") : String(localized: "语阅笔记")),
+                                           name: String(localized: "语阅笔记.md"), books: { shown.map(\.export) }) {
                                 Label("导出", systemImage: "square.and.arrow.up")
                             }
                         }
@@ -457,9 +462,9 @@ struct PhoneBookNotes: View {
                             Button("回顾这本书", systemImage: "arrow.trianglehead.2.clockwise") {
                                 reviewing = Review(core: library.core, book: noted.book)
                             }
-                            ShareLink(item: TextFile(text: NotedBook.markdown([noted], title: String(localized: "《\(noted.book.title)》的笔记")),
-                                                     name: String(localized: "\(noted.book.title) 笔记.md")),
-                                      preview: SharePreview(String(localized: "《\(noted.book.title)》的笔记"))) {
+                            NoteExportMenu(sender: library.noteSender,
+                                           markdown: NotedBook.markdown([noted], title: String(localized: "《\(noted.book.title)》的笔记")),
+                                           name: String(localized: "\(noted.book.title) 笔记.md"), books: { [noted.export] }, book: noted.book) {
                                 Label("导出", systemImage: "square.and.arrow.up")
                             }
                         }
@@ -510,8 +515,9 @@ struct PhoneBookNotes: View {
             } label: {
                 Label("回顾这本书", systemImage: "arrow.trianglehead.2.clockwise")
             }
-            ShareLink(item: TextFile(text: NotedBook.markdown([n], title: String(localized: "《\(n.book.title)》的笔记")), name: String(localized: "\(n.book.title) 笔记.md")),
-                      preview: SharePreview(String(localized: "《\(n.book.title)》的笔记"))) {
+            NoteExportMenu(sender: library.noteSender,
+                           markdown: NotedBook.markdown([n], title: String(localized: "《\(n.book.title)》的笔记")),
+                           name: String(localized: "\(n.book.title) 笔记.md"), books: { [n.export] }, book: n.book) {
                 Label("导出", systemImage: "square.and.arrow.up")
             }
         }

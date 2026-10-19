@@ -998,14 +998,15 @@ private struct NotesPanel: View {
                 Text("笔记").font(.system(size: 15, weight: .bold)).foregroundStyle(YYColor.t1)
                 Text("按书里的顺序").font(.system(size: 11)).foregroundStyle(YYColor.t3)
                 Spacer()
-                ShareLink(item: markdown, subject: Text(model.detail?.summary.title ?? String(localized: "笔记")), preview: SharePreview(String(localized: "《\(model.detail?.summary.title ?? "")》的笔记"))) {
+                NoteExportMenu(sender: model.noteSender, markdown: markdown,
+                               name: String(localized: "\(model.detail?.summary.title ?? "") 笔记.md"),
+                               books: { exportBook.map { [$0] } ?? [] }, book: model.detail?.summary) {
                     Image(systemName: "square.and.arrow.up")
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(YYColor.t1)
                         .frame(width: 28, height: 28)
                         .background(YYColor.inset, in: .circle)
                 }
-                .buttonStyle(.plain)
                 .disabled(model.marks.isEmpty)
                 .help("导出笔记")
             }
@@ -1022,6 +1023,17 @@ private struct NotesPanel: View {
         // `-debugNotesTab words`.
         .onAppear { if let t = UserDefaults.standard.string(forKey: "debugNotesTab").flatMap(Tab.init) { tab = t } }
         #endif
+    }
+
+    /// The book's notes under their chapters, for 发到 Obsidian, Notion, flomo.
+    private var exportBook: NoteExport.Book? {
+        guard let book = model.detail?.summary else { return nil }
+        var chapters: [(String, [Mark])] = []
+        for m in model.marks {
+            let title = model.detail?.chapterTitle(for: m.section) ?? book.title
+            if chapters.last?.0 == title { chapters[chapters.count - 1].1.append(m) } else { chapters.append((title, [m])) }
+        }
+        return NoteExport.Book(id: book.id, title: book.title, author: book.author, chapters: chapters)
     }
 
     /// The notes as Markdown, for 导出.

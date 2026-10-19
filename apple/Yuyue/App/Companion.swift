@@ -164,6 +164,12 @@ enum Companion {
     }
 
     /// One answer: `system` says how to behave, `prompt` carries the excerpts and the question.
+    /// The language the companion answers in: the interface's. The prompts stay Chinese, and so
+    /// do the markers in them (没读到, 接着问) that the replies are read back by.
+    nonisolated static var replyLanguage: String {
+        (Bundle.main.preferredLocalizations.first ?? "zh").hasPrefix("zh") ? "简体中文" : "英文（English）"
+    }
+
     static func answer(_ config: CompanionConfig, system: String, prompt: String) async throws -> String {
         let text: String
         switch config.provider {

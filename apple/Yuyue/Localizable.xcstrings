@@ -403,6 +403,38 @@
         }
       }
     },
+    "%@ 回了 %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ returned %2$lld"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ 回了 %2$lld"
+          }
+        }
+      }
+    },
+    "%@ 回了 %lld：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ returned %2$lld: %3$@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ 回了 %2$lld：%3$@"
+          }
+        }
+      }
+    },
     "%@ 处 · %lld 本书": {
       "localizations": {
         "en": {
@@ -475,6 +507,16 @@
         }
       }
     },
+    "%@ 的令牌不对，去设置 · 数据 · 笔记导出里重新填": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The %@ token isn't right. Enter it again in Settings · Data · Note Export"
+          }
+        }
+      }
+    },
     "%@ 章": {
       "localizations": {
         "en": {
@@ -491,6 +533,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ Notes.md"
+          }
+        }
+      }
+    },
+    "%@ 说今天发得太多了，明天再发剩下的": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ says that's enough for today. Send the rest tomorrow"
           }
         }
       }
@@ -585,6 +637,16 @@
         }
       }
     },
+    "%@（带笔记）.epub": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ (with notes).epub"
+          }
+        }
+      }
+    },
     "%@，换一个看": {
       "localizations": {
         "en": {
@@ -606,16 +668,6 @@
       }
     },
     "%lld": {},
-    "%lld %@": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$lld %2$@"
-          }
-        }
-      }
-    },
     "%lld / %lld": {
       "localizations": {
         "zh-Hans": {
@@ -1686,6 +1738,16 @@
         }
       }
     },
+    "EPUB（书和笔记一起）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "EPUB (Book with Notes)"
+          }
+        }
+      }
+    },
     "Google 没让登录，再试一次": {
       "localizations": {
         "en": {
@@ -1806,6 +1868,27 @@
         }
       }
     },
+    "Markdown": {},
+    "Notion 页面": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notion page"
+          }
+        }
+      }
+    },
+    "Notion 页面还没共享给语阅：在那个页面右上角 ⋯ › 连接，选你建的集成": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Notion page isn't shared with Yuyue yet: on that page, choose ⋯ › Connections at the top right and pick your integration"
+          }
+        }
+      }
+    },
     "OPDS、WebDAV：Calibre、Kavita、Komga、坚果云": {
       "localizations": {
         "en": {
@@ -1868,6 +1951,16 @@
       }
     },
     "fixed": {},
+    "flomo 网页版 › 设置 › API，拷那条以 https://flomoapp.com/iwh/ 开头的链接；每条划线成一条笔记": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In flomo on the web, go to Settings › API and copy the link starting with https://flomoapp.com/iwh/. Each highlight becomes one memo"
+          }
+        }
+      }
+    },
     "http://192.168.1.8:8080/opds": {},
     "https://dav.jianguoyun.com/dav/": {},
     "http，密码明着传": {
@@ -2048,6 +2141,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Notes on %@"
+          }
+        }
+      }
+    },
+    "《%@》的页面在 Notion 里删掉了，再发一次会新建": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The page for %@ was deleted in Notion. Send again to make a new one"
           }
         }
       }
@@ -3294,6 +3397,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Read from this page"
+          }
+        }
+      }
+    },
+    "令牌": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token"
           }
         }
       }
@@ -4610,6 +4723,26 @@
         }
       }
     },
+    "发到 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send to %@"
+          }
+        }
+      }
+    },
+    "发到了 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sent to %@"
+          }
+        }
+      }
+    },
     "发邮件给开发者": {
       "localizations": {
         "en": {
@@ -5452,6 +5585,26 @@
         }
       }
     },
+    "在 notion.so/my-integrations 建一个集成，令牌填在上面；再把要放书的页面共享给它，页面链接填在下面。每本书在它下面一页。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create an integration at notion.so/my-integrations and enter its token above. Then share the page for your books with it and paste the page link below. Each book gets a page under it."
+          }
+        }
+      }
+    },
+    "在 notion.so/my-integrations 建一个集成，把令牌填在这里；再把要放书的页面共享给它，页面链接填在下面": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create an integration at notion.so/my-integrations and enter its token here. Then share the page for your books with it and paste the page link below"
+          }
+        }
+      }
+    },
     "在上面打字，回车或 ⌘G 下一处": {
       "localizations": {
         "en": {
@@ -5588,6 +5741,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "On the website, open "
+          }
+        }
+      }
+    },
+    "在设置 · 数据 · 笔记导出里填好": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set it up in Settings · Data · Note Export"
           }
         }
       }
@@ -7492,6 +7655,16 @@
         }
       }
     },
+    "换一个…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change…"
+          }
+        }
+      }
+    },
     "换一个文件夹": {
       "localizations": {
         "en": {
@@ -9208,6 +9381,26 @@
         }
       }
     },
+    "每本书一篇笔记，写进你选的文件夹；再发一次就更新那一篇": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One note per book, written to the folder you choose; sending again updates it"
+          }
+        }
+      }
+    },
+    "每本书一篇笔记，写进你选的文件夹；再发一次就更新那一篇。在“文件”里选 Obsidian 库，或库里的一个文件夹。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One note per book, written to the folder you choose; sending again updates it. In Files, choose your Obsidian vault or a folder in it."
+          }
+        }
+      }
+    },
     "每段下面跟着译文；关掉只剩原文，双击一句只翻这一句": {
       "localizations": {
         "en": {
@@ -9278,6 +9471,16 @@
         }
       }
     },
+    "没发出去": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't send"
+          }
+        }
+      }
+    },
     "没同步上": {
       "localizations": {
         "en": {
@@ -9294,6 +9497,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Not imported"
+          }
+        }
+      }
+    },
+    "没导出来": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't export"
           }
         }
       }
@@ -9394,6 +9607,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Not found"
+          }
+        }
+      }
+    },
+    "没有新的划线": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No new highlights"
           }
         }
       }
@@ -10170,6 +10393,16 @@
         }
       }
     },
+    "用这个文件夹": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use This Folder"
+          }
+        }
+      }
+    },
     "用这个文件夹同步": {
       "localizations": {
         "en": {
@@ -10702,6 +10935,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Notes and progress are kept"
+          }
+        }
+      }
+    },
+    "笔记导出": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note Export"
           }
         }
       }
@@ -13032,6 +13275,26 @@
         }
       }
     },
+    "还没设置 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ isn't set up"
+          }
+        }
+      }
+    },
+    "还没设置 %@：在设置 · 数据 · 笔记导出里填好": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ isn't set up. Set it up in Settings · Data · Note Export"
+          }
+        }
+      }
+    },
     "还没读": {
       "localizations": {
         "en": {
@@ -13210,6 +13473,16 @@
           "stringUnit": {
             "state": "new",
             "value": "这一页还剩 %1$lld 分钟 · %2$@×"
+          }
+        }
+      }
+    },
+    "这不像一个 Notion 页面链接": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That doesn't look like a Notion page link"
           }
         }
       }
@@ -13886,6 +14159,16 @@
         }
       }
     },
+    "选 Obsidian 库，或库里的一个文件夹": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose your Obsidian vault, or a folder in it"
+          }
+        }
+      }
+    },
     "选 iCloud 云盘里的一个文件夹": {
       "localizations": {
         "en": {
@@ -13972,6 +14255,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Select Books"
+          }
+        }
+      }
+    },
+    "选文件夹…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Folder…"
           }
         }
       }
@@ -14067,6 +14360,7 @@
       }
     },
     "部": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -14182,6 +14476,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Reread"
+          }
+        }
+      }
+    },
+    "链接": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Link"
           }
         }
       }
@@ -14422,6 +14726,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Margins follow the window width, keeping lines to a comfortable length."
+          }
+        }
+      }
+    },
+    "页面": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Page"
           }
         }
       }

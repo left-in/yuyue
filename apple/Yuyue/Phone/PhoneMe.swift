@@ -45,6 +45,7 @@ struct PhoneMe: View {
                 group {
                     link(String(localized: "存储空间"), "internaldrive", used.map(PhoneStorage.size)) { PhoneStorage(library: library) }
                     link(String(localized: "数据快照"), "shippingbox", lastSnapshot.map(Snapshots.day) ?? String(localized: "换设备、备份")) { PhoneSnapshot(library: library) }
+                    link(String(localized: "笔记导出"), "square.and.arrow.up", "Obsidian · Notion · flomo") { PhoneNoteExport() }
                 }
                 group {
                     link(String(localized: "关于"), "info.circle", Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) { PhoneAbout() }
