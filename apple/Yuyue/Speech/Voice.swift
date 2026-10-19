@@ -1,11 +1,15 @@
 import AVFoundation
 
-/// Something that reads a sentence aloud: the system voices now, offline voices later. Every
-/// voice hands its audio to the same `Player`, which plays it, shows it on the lock screen and
-/// tells the reader how long each sentence takes.
+/// Something that reads a sentence aloud: the system voices and the cloud ones. Every voice
+/// hands its audio to the same `Player`, which plays it, shows it on the lock screen and tells
+/// the reader how long each sentence takes.
 protocol Voice: Sendable {
     var id: String { get }
     var name: String { get }
+    /// "高级", or the cloud it comes from: said after the name.
+    var qualityName: String? { get }
+    /// Made on the device, without the network.
+    var isOffline: Bool { get }
     /// Whether the voice can read text in `language` (a BCP 47 tag such as zh-Hans).
     func speaks(_ language: String) -> Bool
     /// The sentence as audio in `Speech.format`; nil when there is nothing to say.
@@ -65,5 +69,57 @@ nonisolated enum SpokenLanguage {
     /// Whether a voice for `voiceLanguage` (zh-CN) can read text in `tag` (zh-Hans).
     static func matches(_ voiceLanguage: String, _ tag: String) -> Bool {
         voiceLanguages(for: tag).contains { voiceLanguage.lowercased().hasPrefix($0.lowercased()) }
+    }
+}
+
+/// Every voice to choose from: the system's, then the cloud ones that have a key.
+enum Voices {
+    static func all(for tag: String) -> [any Voice] {
+        SystemVoice.all(for: tag) + CloudVoice.all().filter { $0.speaks(tag) }
+    }
+
+    static func find(_ id: String) -> (any Voice)? {
+        if id.hasPrefix("cloud.") { return CloudVoice.all().first { $0.id == id } }
+        return SystemVoice.all().first { $0.id == id }
+    }
+
+    /// "名字 · 高级"
+    static func title(_ v: any Voice) -> String {
+        [v.name, v.qualityName].compactMap { $0 }.joined(separator: " · ")
+    }
+
+    /// 试听: system voices speak straight away; a cloud voice is fetched, then played.
+    @MainActor static func preview(_ voice: any Voice, text: String, failed: @escaping (String) -> Void = { _ in }) {
+        if let v = voice as? SystemVoice { return SystemVoice.preview(v, text: text) }
+        previewing?.cancel()
+        previewing = Task {
+            do {
+                guard let speech = try await voice.render(text, language: ""), !Task.isCancelled else { return }
+                Previewer.shared.play(speech)
+            } catch {
+                failed(error.localizedDescription)
+            }
+        }
+    }
+
+    @MainActor private static var previewing: Task<Void, Never>?
+}
+
+/// Plays one rendered sentence, for 试听 with a cloud voice.
+@MainActor private final class Previewer {
+    static let shared = Previewer()
+    private let engine = AVAudioEngine()
+    private let node = AVAudioPlayerNode()
+
+    init() {
+        engine.attach(node)
+        engine.connect(node, to: engine.mainMixerNode, format: Speech.format)
+    }
+
+    func play(_ speech: Speech) {
+        node.stop()
+        if !engine.isRunning { try? engine.start() }
+        node.scheduleBuffer(speech.buffer)
+        node.play()
     }
 }

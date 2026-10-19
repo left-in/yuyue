@@ -507,12 +507,32 @@
         }
       }
     },
+    "%@ 的 Key 不对": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The %@ key isn't right"
+          }
+        }
+      }
+    },
     "%@ 的令牌不对，去设置 · 数据 · 笔记导出里重新填": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "The %@ token isn't right. Enter it again in Settings · Data · Note Export"
+          }
+        }
+      }
+    },
+    "%@ 的额度用完了": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your %@ quota is used up"
           }
         }
       }
@@ -543,6 +563,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ says that's enough for today. Send the rest tomorrow"
+          }
+        }
+      }
+    },
+    "%@ 说太忙，等一会儿再试": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is busy. Try again in a moment"
           }
         }
       }
@@ -1678,6 +1708,7 @@
         }
       }
     },
+    "Azure 门户里建一个“语音”资源，拷它的密钥和区域（比如 eastasia）。每月 50 万字免费。": {},
     "CSV 表格": {
       "localizations": {
         "en": {
@@ -1950,6 +1981,7 @@
         }
       }
     },
+    "elevenlabs.io › 个人资料 › API Keys。声音最像真人，额度按字数算。": {},
     "fixed": {},
     "flomo 网页版 › 设置 › API，拷那条以 https://flomoapp.com/iwh/ 开头的链接；每条划线成一条笔记": {
       "localizations": {
@@ -2003,6 +2035,7 @@
         }
       }
     },
+    "platform.openai.com › API keys 里建一个。每 100 万字约 15 美元。": {},
     "~": {},
     "· %@": {},
     "“": {},
@@ -3167,6 +3200,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Two"
+          }
+        }
+      }
+    },
+    "云端 · 读过的存在本机": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloud · kept on device once read"
+          }
+        }
+      }
+    },
+    "云端声音": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloud Voices"
           }
         }
       }
@@ -4539,6 +4592,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Add to This Book"
+          }
+        }
+      }
+    },
+    "区域": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Region"
           }
         }
       }
@@ -5955,6 +6018,26 @@
         }
       }
     },
+    "填你自己的 Key，费用直接走你的账号，语阅不经手。读过的句子存在这台 Mac 上，再听不花钱，断网也能听；听书时会把这一章提前合成好。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use your own key; costs go straight to your account and Yuyue never handles them. Sentences once read are kept on this Mac, so hearing them again is free and works offline. While you listen, the rest of the chapter is fetched ahead."
+          }
+        }
+      }
+    },
+    "填你自己的 Key，费用直接走你的账号，语阅不经手。读过的句子存在这台设备上，再听不花钱，断网也能听；听书时会把这一章提前合成好。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use your own key; costs go straight to your account and Yuyue never handles them. Sentences once read are kept on this device, so hearing them again is free and works offline. While you listen, the rest of the chapter is fetched ahead."
+          }
+        }
+      }
+    },
     "填到放书的那个文件夹。坚果云的密码要在网页版“安全选项”里生成应用密码。": {
       "localizations": {
         "en": {
@@ -6035,7 +6118,18 @@
         }
       }
     },
+    "声音数据读不出来": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The audio couldn't be read"
+          }
+        }
+      }
+    },
     "声音都在这台 Mac 上合成，不联网。想要更自然的声音：系统设置 › 辅助功能 › 朗读内容 › 系统声音 › 管理声音，下载“高级”的那几个": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -6046,6 +6140,7 @@
       }
     },
     "声音都在这台设备上合成，不联网。想要更自然的声音：设置 › 辅助功能 › 朗读内容 › 声音，下载“高级”的那几个。": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -6875,6 +6970,16 @@
         }
       }
     },
+    "已连上 · %lld 个声音": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connected · %lld voices"
+          }
+        }
+      }
+    },
     "已连上一台电脑": {
       "localizations": {
         "en": {
@@ -7141,6 +7246,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Adjust 0.1 s"
+          }
+        }
+      }
+    },
+    "微软 Azure": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Microsoft Azure"
           }
         }
       }
@@ -11469,6 +11584,26 @@
         }
       }
     },
+    "系统声音在这台 Mac 上合成，不联网。想要更自然的声音：系统设置 › 辅助功能 › 朗读内容 › 系统声音 › 管理声音，下载“高级”的那几个": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System voices are made on this Mac, offline. For more natural ones, go to System Settings › Accessibility › Spoken Content › System Voice › Manage Voices and download the Premium ones"
+          }
+        }
+      }
+    },
+    "系统声音在这台设备上合成，不联网。想要更自然的声音：设置 › 辅助功能 › 朗读内容 › 声音，下载“高级”的那几个。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System voices are made on this device, offline. For more natural ones, go to Settings › Accessibility › Spoken Content › Voices and download the Premium ones."
+          }
+        }
+      }
+    },
     "系统离线翻译": {
       "localizations": {
         "en": {
@@ -12909,6 +13044,16 @@
         }
       }
     },
+    "资源的密钥 1": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Key 1 of the resource"
+          }
+        }
+      }
+    },
     "超时": {
       "localizations": {
         "en": {
@@ -13131,6 +13276,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Never synced"
+          }
+        }
+      }
+    },
+    "还没填 %@ 的 Key": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No %@ key yet"
           }
         }
       }

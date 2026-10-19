@@ -20,6 +20,8 @@ nonisolated final class SystemVoice: Voice, @unchecked Sendable {
         quality = voice.quality
     }
 
+    var isOffline: Bool { true }
+
     func speaks(_ tag: String) -> Bool {
         SpokenLanguage.matches(language, tag)
     }

@@ -655,10 +655,73 @@ private struct ListeningSettings: View {
                     VoiceRow(tag: tag, name: name, sample: sample)
                 }
             }
-            Text("声音都在这台 Mac 上合成，不联网。想要更自然的声音：系统设置 › 辅助功能 › 朗读内容 › 系统声音 › 管理声音，下载“高级”的那几个")
+            Text("系统声音在这台 Mac 上合成，不联网。想要更自然的声音：系统设置 › 辅助功能 › 朗读内容 › 系统声音 › 管理声音，下载“高级”的那几个")
+                .font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                .padding(.horizontal, 8)
+            SettingsHeading(String(localized: "云端声音"))
+            SettingsCard {
+                ForEach(CloudVoice.Provider.allCases) { CloudVoiceRow(provider: $0) }
+            }
+            Text("填你自己的 Key，费用直接走你的账号，语阅不经手。读过的句子存在这台 Mac 上，再听不花钱，断网也能听；听书时会把这一章提前合成好。")
                 .font(.system(size: 11)).foregroundStyle(YYColor.t3)
                 .padding(.horizontal, 8)
             Spacer(minLength: 0)
+        }
+    }
+}
+
+/// 云端声音: one provider's key (and Azure's region); 连接 checks it and fetches the voices.
+private struct CloudVoiceRow: View {
+    let provider: CloudVoice.Provider
+    @State private var key = ""
+    @AppStorage(CloudVoice.Provider.regionName) private var region = ""
+    @State private var checking = false
+    @State private var outcome: String?
+    @State private var failed = false
+
+    var body: some View {
+        SettingsRow(provider.title, detail: outcome ?? provider.help) {
+            HStack(spacing: 8) {
+                if provider == .azure {
+                    TextField("", text: $region, prompt: Text(verbatim: "eastasia"))
+                        .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
+                        .frame(width: 90)
+                }
+                SecureField("", text: $key, prompt: Text(provider.keyHint))
+                    .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
+                    .frame(width: provider == .azure ? 150 : 248)
+                Button {
+                    connect()
+                } label: {
+                    if checking { ProgressView().controlSize(.small) } else { Text(key.isEmpty ? String(localized: "清掉") : String(localized: "连接")) }
+                }
+                .disabled(checking)
+            }
+        }
+        .foregroundStyle(failed ? YYColor.danger : YYColor.t1)
+        .onAppear { key = Keychain.read(provider.keyName) ?? "" }
+    }
+
+    private func connect() {
+        let k = key.trimmingCharacters(in: .whitespacesAndNewlines)
+        region = region.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !k.isEmpty else {
+            Keychain.delete(provider.keyName)
+            outcome = nil
+            return
+        }
+        Keychain.write(provider.keyName, k)
+        checking = true
+        Task {
+            defer { checking = false }
+            do {
+                let n = try await CloudVoice.refresh(provider)
+                failed = false
+                outcome = String(localized: "已连上 · \(n) 个声音")
+            } catch {
+                failed = true
+                outcome = error.localizedDescription
+            }
         }
     }
 }
@@ -672,12 +735,12 @@ private struct VoiceRow: View {
     private var key: String { "player.voice." + tag }
 
     var body: some View {
-        let voices = SystemVoice.all(for: tag)
-        let current = voices.first { $0.id == chosen } ?? SystemVoice.best(for: tag) as? SystemVoice ?? voices.first
-        SettingsRow(name, detail: current.map { v in [v.name, v.qualityName].compactMap { $0 }.joined(separator: " · ") } ?? String(localized: "这台 Mac 上没有这种语言的声音")) {
+        let voices = Voices.all(for: tag)
+        let current = voices.first { $0.id == chosen } ?? SystemVoice.best(for: tag) ?? voices.first
+        SettingsRow(name, detail: current.map(Voices.title) ?? String(localized: "这台 Mac 上没有这种语言的声音")) {
             HStack(spacing: 8) {
                 if let current {
-                    Button("试听") { SystemVoice.preview(current, text: sample) }
+                    Button("试听") { Voices.preview(current, text: sample) }
                 }
                 Menu("换声音") {
                     ForEach(voices, id: \.id) { v in
@@ -686,9 +749,9 @@ private struct VoiceRow: View {
                             UserDefaults.standard.set(v.id, forKey: key)
                         } label: {
                             if v.id == current?.id {
-                                Label([v.name, v.qualityName].compactMap { $0 }.joined(separator: " · "), systemImage: "checkmark")
+                                Label(Voices.title(v), systemImage: "checkmark")
                             } else {
-                                Text([v.name, v.qualityName].compactMap { $0 }.joined(separator: " · "))
+                                Text(Voices.title(v))
                             }
                         }
                     }

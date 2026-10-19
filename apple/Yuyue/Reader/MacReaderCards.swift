@@ -333,10 +333,10 @@ struct ListenCard: View {
                 .background(YYColor.card, in: .rect(cornerRadius: 9))
                 .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(YYColor.line, lineWidth: 0.5))
             VStack(alignment: .leading, spacing: 2) {
-                Text(current.map { [$0.name, $0.qualityName].compactMap { $0 }.joined(separator: " · ") } ?? String(localized: "没有能读的声音"))
+                Text(current.map(Voices.title) ?? String(localized: "没有能读的声音"))
                     .font(.system(size: 12.5, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
-                Text([languageName(language), String(localized: "离线"), Self.here].joined(separator: " · "))
+                Text([languageName(language), current?.isOffline == false ? String(localized: "云端 · 读过的存在本机") : String(localized: "离线"), Self.here].joined(separator: " · "))
                     .font(.system(size: 10.5))
                     .foregroundStyle(YYColor.t2)
             }
@@ -359,14 +359,14 @@ struct ListenCard: View {
                 .buttonStyle(.plain)
             }
             Menu {
-                ForEach(SystemVoice.all(for: language), id: \.id) { voice in
+                ForEach(Voices.all(for: language), id: \.id) { voice in
                     Button {
                         player.choose(voice, for: language)
                     } label: {
                         if voice.id == current?.id {
-                            Label([voice.name, voice.qualityName].compactMap { $0 }.joined(separator: " · "), systemImage: "checkmark")
+                            Label(Voices.title(voice), systemImage: "checkmark")
                         } else {
-                            Text([voice.name, voice.qualityName].compactMap { $0 }.joined(separator: " · "))
+                            Text(Voices.title(voice))
                         }
                     }
                 }

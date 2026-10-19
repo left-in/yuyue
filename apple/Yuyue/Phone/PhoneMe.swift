@@ -782,10 +782,87 @@ struct PhoneListening: View {
             ForEach(Self.languages, id: \.0) { tag, name, sample in
                 PhoneVoiceSection(tag: tag, name: name, sample: sample)
             }
-            YYNote(String(localized: "声音都在这台设备上合成，不联网。想要更自然的声音：设置 › 辅助功能 › 朗读内容 › 声音，下载“高级”的那几个。"))
+            YYNote(String(localized: "系统声音在这台设备上合成，不联网。想要更自然的声音：设置 › 辅助功能 › 朗读内容 › 声音，下载“高级”的那几个。"))
+            YYLabel(String(localized: "云端声音"))
+            YYGroup {
+                ForEach(CloudVoice.Provider.allCases) { p in
+                    NavigationLink { PhoneCloudVoice(provider: p) } label: {
+                        YYRow(p.title, icon: "cloud", value: p.isSetUp ? String(localized: "已连上") : String(localized: "填 Key"), chevron: true)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            YYNote(String(localized: "填你自己的 Key，费用直接走你的账号，语阅不经手。读过的句子存在这台设备上，再听不花钱，断网也能听；听书时会把这一章提前合成好。"))
         }
         .navigationTitle("朗读")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+/// 云端声音: one provider's key (and Azure's region); 连接 checks it and fetches the voices.
+private struct PhoneCloudVoice: View {
+    let provider: CloudVoice.Provider
+    @State private var key = ""
+    @AppStorage(CloudVoice.Provider.regionName) private var region = ""
+    @State private var checking = false
+    @State private var outcome: String?
+    @State private var failed = false
+
+    var body: some View {
+        YYPage {
+            YYGroup {
+                YYField(label: "Key", labelWidth: 44) {
+                    SecureField("", text: $key, prompt: Text(provider.keyHint))
+                        .font(YYUI.font(11.5, design: .monospaced))
+                        .textInputAutocapitalization(.never).autocorrectionDisabled()
+                }
+                if provider == .azure {
+                    YYField(label: String(localized: "区域"), labelWidth: 44) {
+                        TextField("", text: $region, prompt: Text(verbatim: "eastasia"))
+                            .font(YYUI.font(11.5, design: .monospaced))
+                            .textInputAutocapitalization(.never).autocorrectionDisabled()
+                    }
+                }
+            }
+            .foregroundStyle(YYColor.t1)
+            .padding(.top, YYUI.s(10))
+            YYNote(outcome ?? provider.help)
+                .foregroundStyle(failed ? YYColor.danger : YYColor.t3)
+            Button {
+                connect()
+            } label: {
+                if checking { ProgressView() } else { Text(key.isEmpty ? String(localized: "清掉") : String(localized: "连接")) }
+            }
+            .buttonStyle(YYButtonStyle(kind: .main, size: .large, wide: true))
+            .disabled(checking)
+            .padding(.top, YYUI.s(18))
+        }
+        .navigationTitle(provider.title)
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear { key = Keychain.read(provider.keyName) ?? "" }
+    }
+
+    private func connect() {
+        let k = key.trimmingCharacters(in: .whitespacesAndNewlines)
+        region = region.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !k.isEmpty else {
+            Keychain.delete(provider.keyName)
+            outcome = nil
+            return
+        }
+        Keychain.write(provider.keyName, k)
+        checking = true
+        Task {
+            defer { checking = false }
+            do {
+                let n = try await CloudVoice.refresh(provider)
+                failed = false
+                outcome = String(localized: "已连上 · \(n) 个声音")
+            } catch {
+                failed = true
+                outcome = error.localizedDescription
+            }
+        }
     }
 }
 
@@ -798,7 +875,7 @@ private struct PhoneVoiceSection: View {
     private var key: String { "player.voice." + tag }
 
     var body: some View {
-        let voices = SystemVoice.all(for: tag)
+        let voices = Voices.all(for: tag)
         let current = voices.first { $0.id == chosen } ?? SystemVoice.best(for: tag) ?? voices.first
         VStack(alignment: .leading, spacing: 0) {
             YYLabel(name, voices.isEmpty ? nil : String(localized: "\(voices.count) 个声音"))
@@ -824,7 +901,7 @@ private struct PhoneVoiceSection: View {
                             .contentShape(.rect)
                         }
                         .buttonStyle(.plain)
-                        Button { SystemVoice.preview(v, text: sample) } label: {
+                        Button { Voices.preview(v, text: sample) } label: {
                             Image(systemName: "play.fill").font(YYUI.font(9)).foregroundStyle(YYColor.t1)
                                 .frame(width: YYUI.s(24), height: YYUI.s(24))
                                 .background(YYColor.inset, in: .circle)

@@ -113,6 +113,7 @@ final class Player {
     @ObservationIgnored private var resumedAt: Date?
     @ObservationIgnored private var texts: [UInt32: [String]] = [:]
     @ObservationIgnored private var voices: [String: (any Voice)?] = [:]
+    @ObservationIgnored private var fetchingAhead: (section: UInt32, voice: String, task: Task<Void, Never>)?
     @ObservationIgnored private var artwork: MPMediaItemArtwork?
     @ObservationIgnored private var observers: [any NSObjectProtocol] = []
     @ObservationIgnored private var remoteTargets: [(MPRemoteCommand, Any)] = []
@@ -198,6 +199,8 @@ final class Player {
 
     func stop() {
         let wasStopped = state == .stopped
+        fetchingAhead?.task.cancel()
+        fetchingAhead = nil
         reset()
         state = .stopped
         spot = nil
@@ -276,6 +279,7 @@ final class Player {
                         self.failed(String(localized: "没有能读这种语言的声音（\(language)）"))
                         return
                     }
+                    if let cloud = voice as? CloudVoice { self.fetchAhead(cloud, from: spot, language: language) }
                     do {
                         speech = try await voice.render(self.text(at: spot), language: language)
                     } catch {
@@ -293,6 +297,15 @@ final class Player {
             // The book is over once the last sentence has played.
             if self.queued.isEmpty && self.nextToRender == nil && self.state == .loading { self.stop() }
         }
+    }
+
+    /// 整章缓存: a cloud voice fetches the rest of the chapter in the background, so it plays on
+    /// offline and without waiting.
+    private func fetchAhead(_ voice: CloudVoice, from spot: Spot, language: String) {
+        guard fetchingAhead?.section != spot.section || fetchingAhead?.voice != voice.id else { return }
+        fetchingAhead?.task.cancel()
+        let texts = Array(sentences(spot.section).dropFirst(spot.sentence + 1))
+        fetchingAhead = (spot.section, voice.id, Task.detached(priority: .utility) { await voice.prefetch(texts, language: language) })
     }
 
     @concurrent private static func narrate(_ recording: Recording, _ spot: Spot) async -> Speech? {
@@ -471,27 +484,26 @@ final class Player {
     }
 
     /// The voice reading `language` now.
-    func currentVoice(for language: String) -> SystemVoice? {
-        voice(for: language) as? SystemVoice
+    func currentVoice(for language: String) -> (any Voice)? {
+        voice(for: language)
     }
 
     /// Reads `language` with another voice from now on, starting the sentence again in it.
-    func choose(_ voice: SystemVoice, for language: String) {
+    func choose(_ voice: any Voice, for language: String) {
         UserDefaults.standard.set(voice.id, forKey: Self.voiceKey(language))
         voices[language] = voice
         restartHere()
     }
 
     /// 试听: a few words in `voice`, without moving the book.
-    func preview(_ voice: SystemVoice, text: String) {
+    func preview(_ voice: any Voice, text: String) {
         if state == .playing || state == .loading { pause() }
-        SystemVoice.preview(voice, text: text)
+        Voices.preview(voice, text: text) { [weak self] in self?.failure = $0 }
     }
 
     private func voice(for language: String) -> (any Voice)? {
         if let known = voices[language] { return known }
-        let chosen = UserDefaults.standard.string(forKey: Self.voiceKey(language))
-            .flatMap { id in SystemVoice.all().first { $0.id == id } }
+        let chosen = UserDefaults.standard.string(forKey: Self.voiceKey(language)).flatMap(Voices.find)
         let voice: (any Voice)? = chosen ?? SystemVoice.best(for: language)
         voices[language] = voice
         return voice
