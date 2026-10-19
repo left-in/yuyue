@@ -205,7 +205,7 @@ struct PhoneShelf: View {
             HStack {
                 Text("在读").font(.subheadline.weight(.semibold)).foregroundStyle(YYColor.t1)
                 Spacer()
-                Text("\(reading.count) \(kind == .comics ? "部" : "本")").font(.footnote).foregroundStyle(YYColor.t3)
+                Text(kind == .comics ? String(localized: "\(reading.count) 部") : String(localized: "\(reading.count) 本")).font(.footnote).foregroundStyle(YYColor.t3)
             }
             .padding(.horizontal, 20)
             ScrollView(.horizontal) {

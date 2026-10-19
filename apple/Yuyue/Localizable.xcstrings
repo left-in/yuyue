@@ -2,6 +2,16 @@
   "sourceLanguage": "zh-Hans",
   "strings": {
     "": {},
+    " %lld 分": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " %lld min"
+          }
+        }
+      }
+    },
     " · 不要了 %lld 条": {
       "localizations": {
         "en": {
@@ -58,6 +68,16 @@
           "stringUnit": {
             "state": "translated",
             "value": " · used the whole book"
+          }
+        }
+      }
+    },
+    " · 要看一下": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · needs a look"
           }
         }
       }
@@ -982,6 +1002,16 @@
         }
       }
     },
+    "%lld 日": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        }
+      }
+    },
     "%lld 月": {
       "localizations": {
         "en": {
@@ -1240,6 +1270,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld chapters ready to listen"
+          }
+        }
+      }
+    },
+    "%lld 章要看一下": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld chapter needs a look"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld chapters need a look"
+                }
+              }
+            }
           }
         }
       }
@@ -2045,7 +2097,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Previous sentence"
+            "value": "Previous Sentence"
           }
         }
       }
@@ -2075,7 +2127,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Previous match"
+            "value": "Previous Match"
           }
         }
       }
@@ -2085,7 +2137,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Previous chapter"
+            "value": "Previous Chapter"
           }
         }
       }
@@ -2155,7 +2207,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Next sentence"
+            "value": "Next Sentence"
           }
         }
       }
@@ -2175,7 +2227,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Next match"
+            "value": "Next Match"
           }
         }
       }
@@ -2185,7 +2237,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Next chapter"
+            "value": "Next Chapter"
           }
         }
       }
@@ -3711,7 +3763,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$lld %2$@"
+            "value": "%1$lld chapters"
           }
         },
         "zh-Hans": {
@@ -4383,7 +4435,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Repeat sentence"
+            "value": "Repeat Sentence"
           }
         }
       }
@@ -4608,6 +4660,16 @@
         }
       }
     },
+    "另一台设备": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "another device"
+          }
+        }
+      }
+    },
     "只出现过这一次": {
       "localizations": {
         "en": {
@@ -4653,7 +4715,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Listen only, hide text"
+            "value": "Listen Only, Hide Text"
           }
         }
       }
@@ -5845,7 +5907,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Foreign language"
+            "value": "Languages"
           }
         }
       }
@@ -5855,7 +5917,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Foreign Languages"
+            "value": "Languages"
           }
         }
       }
@@ -7625,7 +7687,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Continue Reading"
+            "value": "Continue"
           }
         }
       }
@@ -12744,6 +12806,16 @@
         }
       }
     },
+    "还剩": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "left"
+          }
+        }
+      }
+    },
     "还剩 %lld 分": {
       "localizations": {
         "en": {
@@ -12986,6 +13058,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Not chosen"
+          }
+        }
+      }
+    },
+    "还要": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "left"
           }
         }
       }
@@ -13984,6 +14066,26 @@
         }
       }
     },
+    "部": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "series"
+          }
+        }
+      }
+    },
+    "都对好了": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "all lined up"
+          }
+        }
+      }
+    },
     "都掌握了。新查的词加进生词本，会出现在这里": {
       "localizations": {
         "en": {
@@ -14430,6 +14532,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "(no thought)"
+          }
+        }
+      }
+    },
+    "，%lld 处要看一下": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ", %lld places need a look"
           }
         }
       }

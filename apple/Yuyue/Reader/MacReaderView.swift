@@ -819,7 +819,7 @@ private struct TocPanel: View {
             ProgressLine(value: model.bookFraction, height: 2.5)
                 .padding(.horizontal, 2).padding(.top, 12)
             HStack(alignment: .firstTextBaseline) {
-                Text("读到\(model.chapterTitle.map { ChapterTitle($0).number ?? "这里" } ?? "这里") · \(Int((model.bookFraction * 100).rounded()))%")
+                Text("读到\(model.chapterTitle.map { ChapterTitle($0).number ?? String(localized: "这里") } ?? String(localized: "这里")) · \(Int((model.bookFraction * 100).rounded()))%")
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                 Spacer()
@@ -1242,7 +1242,7 @@ private struct SearchPanel: View {
                                         .font(.system(size: 11, weight: .semibold))
                                         .foregroundStyle(YYColor.t1)
                                     Spacer()
-                                    Text("\(group.hits.count) 处\(group.label.hasSuffix("这一页") ? " · 这一页" : "")")
+                                    Text("\(group.hits.count) 处\(group.label.hasSuffix(String(localized: "这一页")) ? String(localized: " · 这一页") : "")")
                                         .font(.system(size: 10))
                                         .foregroundStyle(YYColor.t3)
                                 }

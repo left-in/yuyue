@@ -526,7 +526,7 @@ private struct ReadingSettings: View {
                 SettingsRow(String(localized: "字体")) {
                     YYSegments(items: [(ReaderFont?.none, String(localized: "系统")), (.some(.sans), String(localized: "黑体")), (.some(.serif), String(localized: "宋体")), (.some(.kai), String(localized: "楷体"))],
                                selection: Binding(get: { settings.font }, set: { v in change { $0.font = v } }), small: true)
-                        .frame(width: 220)
+                        .frame(minWidth: 220).fixedSize()
                 }
                 SettingsRow(String(localized: "字号")) {
                     HStack(spacing: 10) {
@@ -539,14 +539,14 @@ private struct ReadingSettings: View {
                 SettingsRow(String(localized: "行距")) {
                     YYSegments(items: [(Double?.some(1.6), String(localized: "紧")), (nil, String(localized: "适中")), (.some(2.2), String(localized: "松"))],
                                selection: Binding(get: { settings.lineHeight }, set: { v in change { $0.lineHeight = v } }), small: true)
-                        .frame(width: 160)
+                        .frame(minWidth: 160).fixedSize()
                 }
             }
             SettingsCard {
                 SettingsRow(String(localized: "翻页方式")) {
                     YYSegments(items: [(LayoutMode.paginated, String(localized: "左右翻页")), (.scrolled, String(localized: "上下滚动"))],
                                selection: Binding(get: { settings.mode }, set: { v in change { $0.mode = v } }), small: true)
-                        .frame(width: 160)
+                        .frame(minWidth: 160).fixedSize()
                 }
                 SettingsRow(String(localized: "窗口够宽时分两栏"), detail: String(localized: "像翻开一本书，左右两页")) {
                     SettingsSwitch(isOn: $twoColumns)

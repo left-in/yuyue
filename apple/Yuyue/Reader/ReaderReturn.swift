@@ -14,7 +14,7 @@ struct ElsewhereCard: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 6) {
                 Image(systemName: "laptopcomputer.and.iphone").font(.system(size: 11)).foregroundStyle(YYColor.t2)
-                Text("\(elsewhere.progress.deviceName ?? "另一台设备") 上读到了更后面")
+                Text("\(elsewhere.progress.deviceName ?? String(localized: "另一台设备")) 上读到了更后面")
                     .font(.system(size: 12, weight: .semibold))
                 Spacer()
                 Text(Self.ago(Date(timeIntervalSince1970: Double(elsewhere.progress.at) / 1000)))

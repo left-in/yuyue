@@ -73,7 +73,7 @@ private struct AlignCheck: View {
         .background(paper.bg)
         .environment(\.colorScheme, .light)
         .navigationTitle("\(bookTitle) · 对齐检查")
-        .navigationSubtitle("第 \(chapter) 章 · \(timings.sections.count - timings.troubled.count) 章对好了\(left > 0 ? "，\(left) 处要看一下" : "")")
+        .navigationSubtitle("第 \(chapter) 章 · \(timings.sections.count - timings.troubled.count) 章对好了\(left > 0 ? String(localized: "，\(left) 处要看一下") : "")")
         .toolbar {
             ToolbarItem(placement: .primaryAction) { stopper }
             ToolbarItem(placement: .primaryAction) {
@@ -341,7 +341,7 @@ private struct AlignCheck: View {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     Text("第 \(chapter) 章").font(.system(size: 14, weight: .bold))
-                    Text("\(timings.sections.count) 章 · \(timings.troubled.isEmpty ? "都对好了" : "\(timings.troubled.count) 章要看一下")")
+                    Text("\(timings.sections.count) 章 · \(timings.troubled.isEmpty ? String(localized: "都对好了") : String(localized: "\(timings.troubled.count) 章要看一下"))")
                         .font(.system(size: 10.5))
                         .foregroundStyle(YYColor.t3)
                     Spacer(minLength: 0)
@@ -372,7 +372,7 @@ private struct AlignCheck: View {
     private var chapterMenu: some View {
         Menu {
             ForEach(timings.sections, id: \.section) { c in
-                Button("第 \(chapterNumber(c.section)) 章\(timings.troubled.contains(c.section) ? " · 要看一下" : "")") { go(toChapter: c.section) }
+                Button("第 \(chapterNumber(c.section)) 章\(timings.troubled.contains(c.section) ? String(localized: " · 要看一下") : "")") { go(toChapter: c.section) }
             }
         } label: {
             Image(systemName: "chevron.down")

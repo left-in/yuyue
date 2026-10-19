@@ -197,7 +197,7 @@ struct ReplaceRulesView: View {
                     }
                 }
                 .padding(.top, YYUI.s(12))
-                YYNote(String(localized: "挑中的规则会加到\(scope == .book ? "这本书" : "全部书")，加完还能改、能关。"))
+                YYNote(String(localized: "挑中的规则会加到\(scope == .book ? String(localized: "这本书") : String(localized: "全部书"))，加完还能改、能关。"))
             }
             .navigationTitle(scope == .book ? String(localized: "加到这本书") : String(localized: "加到全部书"))
             #if os(iOS)

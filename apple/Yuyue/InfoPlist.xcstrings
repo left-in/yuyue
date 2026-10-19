@@ -1,129 +1,133 @@
 {
-  "sourceLanguage": "zh-Hans",
-  "strings": {
-    "CFBundleDisplayName": {
-      "extractionState": "extracted_with_value",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yuyue"
+  "sourceLanguage" : "zh-Hans",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "comment" : "Bundle display name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yuyue"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "new",
-            "value": "语阅"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "语阅"
           }
         }
       }
     },
-    "CFBundleName": {
-      "extractionState": "extracted_with_value",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yuyue"
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yuyue"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "new",
-            "value": "语阅"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "语阅"
           }
         }
       }
     },
-    "Kindle 电子书": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kindle Book"
+    "Kindle 电子书" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kindle Book"
           }
         }
       }
     },
-    "NSLocalNetworkUsageDescription": {
-      "extractionState": "extracted_with_value",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "When a computer's browser sends books to Yuyue, it connects to this device over your Wi‑Fi."
+    "NSLocalNetworkUsageDescription" : {
+      "comment" : "Privacy - Local Network Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When a computer's browser sends books to Yuyue, it connects to this device over your Wi‑Fi."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "new",
-            "value": "电脑浏览器给语阅传书时，要经过你的 Wi‑Fi 连到这台设备。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "电脑浏览器给语阅传书时，要经过你的 Wi‑Fi 连到这台设备。"
           }
         }
       }
     },
-    "NSSpeechRecognitionUsageDescription": {
-      "extractionState": "extracted_with_value",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To line up an audiobook with its e-book, the recording is transcribed on this device. Nothing is uploaded."
+    "NSSpeechRecognitionUsageDescription" : {
+      "comment" : "Privacy - Speech Recognition Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To line up an audiobook with its e-book, the recording is transcribed on this device. Nothing is uploaded."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "new",
-            "value": "有声书和电子书对齐时，要在这台设备上把录音转成文字，不上传。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "有声书和电子书对齐时，要在这台设备上把录音转成文字，不上传。"
           }
         }
       }
     },
-    "有声书": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Audiobook"
+    "有声书" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audiobook"
           }
         }
       }
     },
-    "漫画": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comic"
+    "漫画" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comic"
           }
         }
       }
     },
-    "漫画压缩包": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Comic Archive"
+    "漫画压缩包" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comic Archive"
           }
         }
       }
     },
-    "语阅快照": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yuyue Snapshot"
+    "语阅快照" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yuyue Snapshot"
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

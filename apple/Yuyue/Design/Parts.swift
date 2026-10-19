@@ -183,7 +183,8 @@ struct YYSegments<T: Hashable>: View {
                 let on = selection == value
                 Button { selection = value } label: {
                     HStack(spacing: YYUI.s(4)) {
-                        Text(title)
+                        // Never cut a choice short; a longer (English) label widens its own chip.
+                        Text(title).fixedSize()
                         if let n = counts[value] {
                             Text("\(n)").font(YYUI.font(10).monospacedDigit()).foregroundStyle(YYColor.t3)
                         }

@@ -33,7 +33,7 @@ struct Audiobook: Codable, Identifiable, Equatable {
     /// `6 小时 12 分`, `38 分钟`.
     static func length(_ seconds: Double) -> String {
         let m = Int(seconds / 60)
-        return m >= 60 ? String(localized: "\(m / 60) 小时\(m % 60 > 0 ? " \(m % 60) 分" : "")") : String(localized: "\(max(1, m)) 分钟")
+        return m >= 60 ? String(localized: "\(m / 60) 小时\(m % 60 > 0 ? String(localized: " \(m % 60) 分") : "")") : String(localized: "\(max(1, m)) 分钟")
     }
 }
 

@@ -513,7 +513,7 @@ struct MacShelfView: View {
 
                 let books = shown
                 HStack {
-                    Text("\(books.count) \(filter == .comics ? "部" : "本")")
+                    Text(filter == .comics ? String(localized: "\(books.count) 部") : String(localized: "\(books.count) 本"))
                         .font(.system(size: 12.5, weight: .semibold))
                         .foregroundStyle(YYColor.t1)
                     Spacer()
@@ -659,7 +659,7 @@ struct MacShelfView: View {
                 Text(book.title)
                     .font(.system(size: 11.5, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
-                    .lineLimit(1)
+                    .lineLimit(2)
                     .padding(.bottom, 2)
                 if showProgress { note(book) }
             }
@@ -984,7 +984,7 @@ struct ReadingCard: View {
                 if let symbol {
                     Image(systemName: symbol).symbolEffect(.variableColor.iterative, options: .repeating)
                 }
-                Text(title)
+                Text(title).fixedSize()
             }
             .font(.system(size: 11.5, weight: .medium))
             .foregroundStyle(text)

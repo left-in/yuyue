@@ -375,7 +375,7 @@ struct PhoneStats: View {
         let end = isCurrent ? min(Date(), last) : last
         switch period {
         case .week:
-            return (periodWord, String(localized: "\(Notes.monthDay(first)) – \(cal.component(.month, from: first) == cal.component(.month, from: last) ? "\(cal.component(.day, from: last)) 日" : Notes.monthDay(last))"))
+            return (periodWord, String(localized: "\(Notes.monthDay(first)) – \(cal.component(.month, from: first) == cal.component(.month, from: last) ? String(localized: "\(cal.component(.day, from: last)) 日") : Notes.monthDay(last))"))
         case .month:
             return (String(localized: "\(cal.component(.month, from: first)) 月"), String(localized: "1 日 – \(cal.component(.day, from: end)) 日"))
         case .year:
@@ -463,7 +463,7 @@ struct PhoneStats: View {
                 HStack(alignment: .firstTextBaseline, spacing: YYUI.s(8)) {
                     Text(book.title).font(YYUI.font(11.5, .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
                     Spacer(minLength: 0)
-                    Text(book.status == .finished ? finishedLine(book) : String(localized: "\(book.percent) · \(book.remaining.replacingOccurrences(of: "还剩", with: "还要"))"))
+                    Text(book.status == .finished ? finishedLine(book) : String(localized: "\(book.percent) · \(book.remaining.replacingOccurrences(of: String(localized: "还剩"), with: String(localized: "还要")))"))
                         .font(YYUI.font(10.5).monospacedDigit()).foregroundStyle(YYColor.t2).lineLimit(1)
                 }
                 Text([read > 0 ? String(localized: "读 ") + Self.duration(read) : nil, listen > 0 ? String(localized: "听 ") + Self.duration(listen) : nil].compactMap { $0 }.joined(separator: " · "))
@@ -1338,7 +1338,7 @@ struct PhoneSync: View {
                         Rectangle().fill(YYColor.line).frame(height: 0.5)
                         HStack(spacing: YYUI.s(9)) {
                             Image(systemName: Self.symbol(d.platform)).font(YYUI.font(12)).foregroundStyle(YYColor.t2).frame(width: YYUI.s(14))
-                            Text(d.thisDevice ? String(localized: "这台 \(d.name.isEmpty ? "设备" : d.name)") : (d.name.isEmpty ? String(localized: "设备") : d.name))
+                            Text(d.thisDevice ? String(localized: "这台 \(d.name.isEmpty ? String(localized: "设备") : d.name)") : (d.name.isEmpty ? String(localized: "设备") : d.name))
                                 .font(YYUI.font(11)).foregroundStyle(YYColor.t1).lineLimit(1)
                             Spacer(minLength: YYUI.s(8))
                             Text(detail(of: d)).font(YYUI.font(10).monospacedDigit()).foregroundStyle(YYColor.t3).lineLimit(1)

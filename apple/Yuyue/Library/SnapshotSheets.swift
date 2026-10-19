@@ -57,7 +57,7 @@ struct SnapshotImportSheet: View {
                     .background(YYColor.inset, in: .rect(cornerRadius: YYUI.s(8)))
                 VStack(alignment: .leading, spacing: YYUI.s(2)) {
                     Text(url.lastPathComponent).font(YYUI.font(11.5, .semibold)).foregroundStyle(YYColor.t1).lineLimit(1).truncationMode(.middle)
-                    Text("来自\(Snapshots.from(info.deviceName).hasPrefix("这台") ? "" : " ")\(Snapshots.from(info.deviceName)) · \(Snapshots.when(info.madeAt)) · \(Snapshots.size(info.bytes))")
+                    Text("来自\(Snapshots.from(info.deviceName).hasPrefix(String(localized: "这台")) ? "" : " ")\(Snapshots.from(info.deviceName)) · \(Snapshots.when(info.madeAt)) · \(Snapshots.size(info.bytes))")
                         .font(YYUI.font(10).monospacedDigit()).foregroundStyle(YYColor.t3).lineLimit(1)
                 }
                 Spacer(minLength: 0)
