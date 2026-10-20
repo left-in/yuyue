@@ -529,6 +529,8 @@ yy-tr {
   -webkit-user-select: none;
   user-select: none;
 }
+/* A selection in the theme colour, light (`.v-mr-sel`), not the system's blue. */
+#yy-content ::selection { background-color: var(--yy-accent-soft); }
 ::highlight(yy-hit) { background-color: var(--yy-accent-soft); }
 ::highlight(yy-hit-now) { background-color: var(--yy-p-main); color: var(--yy-p-on-main); }
 html[data-yy-paper="dark"] ::highlight(yy-underline), html[data-yy-paper="kaminight"] ::highlight(yy-underline) { text-decoration-color: var(--yy-p-ink); }

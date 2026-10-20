@@ -658,8 +658,9 @@ final class ReaderPager: PlatformView {
     func geometry() -> PageGeometry {
         let width = Double(bounds.width)
         let columns: UInt8 = prefersTwoColumns && width >= 880 && mode == .paginated ? 2 : 1
-        // About 34 characters to a line at most; wider pages get wider margins instead.
-        let measure = fontSize * 34
+        // About 30 characters to a line at most (`.v-mac-col`: 460 wide at 15); wider pages get
+        // wider margins instead.
+        let measure = fontSize * 31
         let margin = max(width < 500 ? 24 : 40, (width / Double(columns) - measure) / 2).rounded()
         #if os(iOS)
         let top = Double(safeAreaInsets.top) + 28
