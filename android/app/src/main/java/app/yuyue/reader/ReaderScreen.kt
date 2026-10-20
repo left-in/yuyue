@@ -333,61 +333,97 @@ private fun SearchCapsule(model: ReaderModel, paper: YYPaper) {
     }
 }
 
-/** 选中文字, or a highlight tapped: the card over the words — four colours and two lines, then
- *  想法 · 复制 · 删除. */
+/** 选中文字, or a highlight tapped: the same card as on iPhone, over the words — three colours
+ *  and the wave, the two underlines (and 删除 for a highlight), then 想法 · 从这读 · 翻译 · 复制 · 分享. */
 @Composable
 private fun Cards(model: ReaderModel, paper: YYPaper, thought: (Mark) -> Unit) {
     val density = LocalDensity.current
+    val context = LocalContext.current
     val sel = model.selection
     val open = model.openMark
     if (sel == null && open == null) return
-    val anchorY = with(density) { ((sel?.rect?.y ?: open?.y ?: 200.0).toFloat() * density.density).roundToInt() }
     val current = open?.mark
-    Box(Modifier.fillMaxSize()) {
+    val text = current?.text ?: sel?.text ?: return
+    val top = (sel?.rect?.y ?: open?.y ?: 200.0).toFloat()
+    val bottom = (sel?.rect?.let { it.y + it.height } ?: ((open?.y ?: 200.0) + 24)).toFloat()
+    val tint = YY.tint
+    fun ringed(style: MarkStyle) = (current?.style ?: model.lastStyle) == style
+    fun pick(style: MarkStyle) {
+        if (current != null) { model.setStyle(style, current); model.dismissCards() } else model.mark(style)
+    }
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val cardHeight = 116.dp
+        // Above the words when there is room, under them otherwise.
+        val y = with(density) {
+            val above = (top.dp - cardHeight - 12.dp)
+            if (above > 56.dp) above else (bottom.dp + 12.dp)
+        }
         Column(
-            Modifier
-                .align(Alignment.TopCenter)
-                .offset { IntOffset(0, maxOf(with(density) { 60.dp.roundToPx() }, anchorY - with(density) { 120.dp.roundToPx() })) }
-                .shadow(16.dp, RoundedCornerShape(14.dp))
-                .clip(RoundedCornerShape(14.dp))
-                .background(YY.c.card)
-                .padding(10.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            Modifier.align(Alignment.TopCenter).offset(y = y).width(340.dp)
+                .shadow(16.dp, RoundedCornerShape(14.dp), ambientColor = Color.Black.copy(alpha = 0.14f), spotColor = Color.Black.copy(alpha = 0.2f))
+                .clip(RoundedCornerShape(14.dp)).background(YY.c.card),
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.padding(start = 12.dp, end = 12.dp, top = 10.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 for (style in listOf(MarkStyle.YELLOW, MarkStyle.BLUE, MarkStyle.PINK, MarkStyle.WAVE)) {
-                    val on = current?.style == style
                     Box(
-                        Modifier.size(28.dp).clip(CircleShape).background(style.swatch(paper)).border(if (on) 2.dp else 0.5.dp, if (on) YY.tint.accent else YY.c.line, CircleShape)
-                            .clickable { if (current != null) model.setStyle(style, current) else model.mark(style) },
+                        Modifier.size(28.dp).border(1.5.dp, if (ringed(style)) tint.accent else Color.Transparent, CircleShape).padding(3.dp)
+                            .clip(CircleShape).background(if (style == MarkStyle.WAVE) YY.c.hlR.copy(alpha = 0.14f) else style.swatch(paper)).clickable { pick(style) },
+                        contentAlignment = Alignment.Center,
+                    ) { if (style == MarkStyle.WAVE) Text("~", fontSize = 17.sp, fontWeight = FontWeight.Medium, color = YY.c.hlR, modifier = Modifier.offset(y = (-2).dp)) }
+                }
+                Box(Modifier.weight(1f))
+                for (style in listOf(MarkStyle.UNDERLINE, MarkStyle.DOTTED)) {
+                    Text(
+                        "A", fontFamily = YY.serif, fontSize = 17.sp, color = if (ringed(style)) tint.accent else YY.c.t2,
+                        textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline,
+                        modifier = Modifier.width(32.dp).clickable { pick(style) }.padding(vertical = 6.dp),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                     )
                 }
+                if (current != null) {
+                    Icon(Icons.delete, t("删除划线"), tint = YY.c.danger, modifier = Modifier.size(26.dp).clickable { model.deleteMark(current) }.padding(4.dp))
+                }
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                CardAction(Icons.edit, if (current?.note != null) t("改想法") else t("写想法")) {
+            Box(Modifier.fillMaxWidth().height(0.5.dp).background(YY.c.line))
+            Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 6.dp)) {
+                CardAction(Icons.edit, t("想法"), Modifier.weight(1f)) {
                     val m = current ?: model.mark()
                     model.dismissCards()
                     if (m != null) thought(m)
                 }
-                CardAction(Icons.upload, t("复制")) { model.copySelection() }
-                if (current != null) CardAction(Icons.delete, t("删除"), YY.c.danger) { model.deleteMark(current) }
+                if (model.player != null) CardAction(Icons.headphones, t("从这读"), Modifier.weight(1f)) { model.readFrom(current) }
+                CardAction(Icons.translate, t("翻译"), Modifier.weight(1f)) {
+                    model.dismissCards()
+                    runCatching {
+                        context.startActivity(android.content.Intent(android.content.Intent.ACTION_PROCESS_TEXT).setType("text/plain").putExtra(android.content.Intent.EXTRA_PROCESS_TEXT, text).putExtra(android.content.Intent.EXTRA_PROCESS_TEXT_READONLY, true))
+                    }.onFailure { model.show(app.yuyue.library.Library.Toast(app.yuyue.library.Library.Toast.Icon.Error, t("翻译没成功"), "")) }
+                }
+                CardAction(Icons.upload, t("复制"), Modifier.weight(1f)) { model.copySelection() }
+                CardAction(Icons.share, t("分享"), Modifier.weight(1f)) {
+                    model.dismissCards()
+                    val book = model.detail?.summary
+                    val quote = "“$text”" + (current?.note?.let { "\n$it" } ?: "") + (book?.let { "\n——《${it.title}》" } ?: "")
+                    context.startActivity(android.content.Intent.createChooser(android.content.Intent(android.content.Intent.ACTION_SEND).setType("text/plain").putExtra(android.content.Intent.EXTRA_TEXT, quote), null))
+                }
             }
         }
     }
 }
 
 @Composable
-private fun CardAction(icon: ImageVector, title: String, color: Color = YY.c.t1, onClick: () -> Unit) {
-    Column(Modifier.clip(RoundedCornerShape(8.dp)).clickable(onClick = onClick).padding(horizontal = 6.dp, vertical = 4.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Icon(icon, title, tint = color, modifier = Modifier.size(18.dp))
-        Text(title, fontSize = 11.sp, color = color)
+private fun CardAction(icon: ImageVector, title: String, modifier: Modifier, color: Color = YY.c.t1, onClick: () -> Unit) {
+    Column(modifier.clip(RoundedCornerShape(8.dp)).clickable(onClick = onClick).padding(vertical = 4.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Icon(icon, title, tint = color, modifier = Modifier.size(19.dp))
+        Text(title, fontSize = 11.sp, color = color, maxLines = 1)
     }
 }
 
+/** The colours 笔记 and the card show for a highlight, as on Apple (`YYColor.mkY` …). */
+@Composable
 private fun MarkStyle.swatch(paper: YYPaper): Color = when (this) {
-    MarkStyle.YELLOW -> Color(0xFFF2D27A)
-    MarkStyle.BLUE -> Color(0xFF9DBDEB)
-    MarkStyle.PINK -> Color(0xFFF0A094)
+    MarkStyle.YELLOW -> YY.c.mkY
+    MarkStyle.BLUE -> YY.c.mkB
+    MarkStyle.PINK -> YY.c.mkP
     else -> paper.wave
 }
 

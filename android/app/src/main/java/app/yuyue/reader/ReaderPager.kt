@@ -47,6 +47,8 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
         fun doubleTapped(m: ReaderMessage)
         /** 下拉加书签: how far the page is pulled down (px), and whether the finger let go. */
         fun pulled(distance: Float, released: Boolean)
+        /** A section was laid out for the first time: what is drawn in it goes in now. */
+        fun sectionReady(page: SectionPage)
     }
 
     var listener: Listener? = null
@@ -396,6 +398,11 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
         when (m.type) {
             "log" -> android.util.Log.d("yuyue-reader", m.json.optString("level") + " " + m.json.optString("message"))
             "ready", "layout" -> {
+                if (m.type == "ready") {
+                    sendMarks(page)
+                    sendHits(page)
+                    listener?.sectionReady(page)
+                }
                 page.take(m)
                 scope.launch {
                     val shown = page.settle()
@@ -432,6 +439,44 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
         val layout = cur.layout ?: return null
         val sentence = if (mode == LayoutMode.SCROLLED) scrolledTo ?: 0 else layout.firstSentence(cur.page)
         return Position(section.toUInt(), sentence.toUInt())
+    }
+
+    // MARK: Drawn in the text
+
+    private var marks: List<uniffi.yuyue_core.Mark> = emptyList()
+    private var hits: Pair<String, uniffi.yuyue_core.SearchHit?>? = null
+    /** 沉浸阅读 can hide the highlights. */
+    var marksHidden = false
+        set(v) { field = v; slots.forEach(::sendMarks) }
+
+    fun setMarks(list: List<uniffi.yuyue_core.Mark>) {
+        marks = list
+        slots.forEach(::sendMarks)
+    }
+
+    /** Marks where `query` turns up; `current` in the solid colour. null clears. */
+    fun setHits(query: String?, current: uniffi.yuyue_core.SearchHit?) {
+        hits = query?.let { it to current }
+        slots.forEach(::sendHits)
+    }
+
+    private fun sendMarks(page: SectionPage) {
+        val section = page.section ?: return
+        val list = org.json.JSONArray()
+        if (!marksHidden) for (m in marks) if (m.section.toInt() == section) {
+            list.put(org.json.JSONObject().put("id", m.id)
+                .put("start", org.json.JSONObject().put("s", m.start.sentence.toInt()).put("o", m.start.offset.toInt()))
+                .put("end", org.json.JSONObject().put("s", m.end.sentence.toInt()).put("o", m.end.offset.toInt()))
+                .put("style", m.style.css).put("note", m.note != null))
+        }
+        page.call("yy.setMarks($list)")
+    }
+
+    private fun sendHits(page: SectionPage) {
+        val h = hits
+        if (h == null || page.section == null) return page.call("yy.setHits(null, null)")
+        val c = h.second?.takeIf { it.section.toInt() == page.section }?.let { "{s: ${it.sentence}, nth: ${it.nth}}" } ?: "null"
+        page.call("yy.setHits(${org.json.JSONObject.quote(h.first)}, $c)")
     }
 
     /** Hands JavaScript to the current section's reader. */

@@ -226,18 +226,9 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     fun reloadNotes() {
         marks = runCatching { core.marks(bookID) }.getOrDefault(emptyList())
         bookmarks = runCatching { core.bookmarks(bookID) }.getOrDefault(emptyList())
-        pager.callAll("yy.setMarks(${marksJson()})")
+        pager.setMarks(marks)
         library.notesChanged()
     }
-
-    private fun marksJson(): String = JSONArray().apply {
-        for (m in marks) {
-            put(JSONObject().put("id", m.id).put("section", m.section.toInt())
-                .put("start", JSONObject().put("s", m.start.sentence.toInt()).put("o", m.start.offset.toInt()))
-                .put("end", JSONObject().put("s", m.end.sentence.toInt()).put("o", m.end.offset.toInt()))
-                .put("style", m.style.css).put("note", m.note != null))
-        }
-    }.toString()
 
     /** Highlights the selection in `style` (the last one used when null). */
     fun mark(style: MarkStyle? = null, note: String? = null): Mark? {
@@ -284,6 +275,15 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         show(Library.Toast(Library.Toast.Icon.Check, t("已复制"), "“${text.take(16)}”"))
     }
 
+    /** 从这读: reads aloud from the first selected sentence, or the highlight's. */
+    fun readFrom(mark: Mark?) {
+        val p = player ?: return
+        val start = mark?.let { Position(it.section, it.start.sentence) } ?: selection?.let { Position(it.section.toUInt(), it.start.s.toUInt()) } ?: return
+        dismissCards()
+        followFrom = 0
+        p.play(start)
+    }
+
     fun dismissCards() {
         if (selection != null) pager.call("yy.clearSelection()")
         selection = null
@@ -324,7 +324,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         if (q.isEmpty()) {
             hits = emptyList()
             hitIndex = null
-            pager.callAll("yy.setHits(null, null)")
+            pager.setHits(null, null)
             return
         }
         searching = library.scope.launch {
@@ -339,9 +339,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     fun showHit(index: Int?) {
         hitIndex = index
         val hit = index?.let { hits.getOrNull(it) }
-        val q = JSONObject.quote(query.trim())
-        val current = hit?.let { "{s: ${it.sentence}, nth: ${it.nth}}" } ?: "null"
-        pager.callAll("yy.setHits($q, $current)")
+        pager.setHits(query.trim(), hit)
         if (hit != null) jump(hit.section.toInt(), hit.sentence.toInt())
     }
 
@@ -357,7 +355,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         query = ""
         hits = emptyList()
         hitIndex = null
-        pager.callAll("yy.setHits(null, null)")
+        pager.setHits(null, null)
     }
 
     // MARK: Settings
@@ -596,6 +594,12 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     }
 
     override fun doubleTapped(m: ReaderMessage) {}
+
+    override fun sectionReady(page: SectionPage) {
+        player?.spot?.takeIf { it.section == page.section && player.state != app.yuyue.speech.Player.State.Stopped }?.let {
+            page.call("yy.setActive(${it.sentence}, {durationMs: 0, elapsedMs: 0, playing: false})")
+        }
+    }
 
     override fun pulled(distance: Float, released: Boolean) {
         if (released) {
