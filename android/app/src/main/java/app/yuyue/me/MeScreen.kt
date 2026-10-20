@@ -60,7 +60,7 @@ import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
 
 /** A page under 我的. */
-enum class MePage { Immersive, EInk, Sources, Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening, Companion }
+enum class MePage { Immersive, EInk, Sources, Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening, Companion, NoteExport }
 
 /** 我的 (prototype 我的), as on iPhone: this week's reading and listening on top, the year's
  *  totals under it, then every setting in groups. */
@@ -82,6 +82,7 @@ fun MeScreen(library: Library) {
                 MePage.Snapshot -> SnapshotPage(library)
                 MePage.Listening -> ListeningPage()
                 MePage.Companion -> app.yuyue.companion.CompanionSettings()
+                MePage.NoteExport -> app.yuyue.notes.NoteExportPage()
                 MePage.Sources -> {}
                 MePage.Immersive -> YYPage { Spacer(Modifier.height(YY.s(10))); app.yuyue.reader.ImmersiveSettings(null) }
                 MePage.EInk -> app.yuyue.reader.EInkPage(library.core)
@@ -101,6 +102,7 @@ private val MePage.title: String
         MePage.Snapshot -> t("数据快照")
         MePage.Listening -> t("朗读")
         MePage.Companion -> t("书伴")
+        MePage.NoteExport -> t("笔记导出")
         MePage.Sources -> t("书库来源")
         MePage.Immersive -> t("沉浸阅读")
         MePage.EInk -> t("墨水屏")
@@ -163,6 +165,7 @@ private fun Main(library: Library, push: (MePage) -> Unit) {
             }
             Group {
                 row { YYRow(t("数据快照"), Icons.snapshot, t("换设备、备份"), chevron = true) { push(MePage.Snapshot) } }
+                row { YYRow(t("笔记导出"), Icons.upload, "Obsidian · Notion · flomo", chevron = true) { push(MePage.NoteExport) } }
             }
             Group {
                 row { YYRow(t("关于"), Icons.info, BuildConfig.VERSION_NAME, chevron = true) { push(MePage.About) } }

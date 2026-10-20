@@ -144,7 +144,10 @@ fun NotesScreen(library: Library) {
     opened?.let { id ->
         notes.firstOrNull { it.id == id }?.let { n ->
             androidx.activity.compose.BackHandler { opened = null }
-            BookNotes(n, kind == "thoughts", back = { opened = null }) { a, m -> act(a, n, m) }
+            Box(Modifier.fillMaxSize()) {
+                BookNotes(library, n, kind == "thoughts", back = { opened = null }) { a, m -> act(a, n, m) }
+                library.toast?.let { UndoToast(it, undo = { library.undo() }, modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp)) }
+            }
             writing?.let { (wn, m) -> ThoughtDialog(m.note ?: "") { text -> if (text != null) library.setNote(text.trim().ifEmpty { null }, wn.id, m); writing = null } }
             return
         }
@@ -154,11 +157,13 @@ fun NotesScreen(library: Library) {
         Column(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.statusBars)) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(t("笔记"), fontSize = 32.sp, fontWeight = FontWeight.Bold, color = YY.c.t1, modifier = Modifier.weight(1f))
-                if (kind != "words" && shown.isNotEmpty()) {
-                    Text(t("导出"), fontSize = 15.sp, color = YY.tint.accent, modifier = Modifier.clickable {
-                        val md = NotedBook.markdown(shown, if (kind == "thoughts") t("语阅 · 想法") else t("语阅笔记"))
-                        context.startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).setType("text/markdown").putExtra(Intent.EXTRA_TEXT, md), null))
-                    })
+                if (kind != "words" && shown.isNotEmpty()) Box {
+                    var exporting by remember { mutableStateOf(false) }
+                    Text(t("导出"), fontSize = 15.sp, color = YY.tint.accent, modifier = Modifier.clickable { exporting = true })
+                    NoteExportMenu(
+                        library, exporting, { exporting = false },
+                        { NotedBook.markdown(shown, if (kind == "thoughts") t("语阅 · 想法") else t("语阅笔记")) }, t("语阅笔记.md"), { shown },
+                    )
                 }
             }
             Row(Modifier.padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -270,12 +275,20 @@ private fun BookList(shown: List<NotedBook>, open: (String) -> Unit) {
 
 /** One book's notes in book order, under their chapters (prototype 一本书的笔记). */
 @Composable
-private fun BookNotes(n: NotedBook, thoughtsOnly: Boolean, back: () -> Unit, act: (String, Mark) -> Unit) {
+private fun BookNotes(library: Library, n: NotedBook, thoughtsOnly: Boolean, back: () -> Unit, act: (String, Mark) -> Unit) {
     val marks = if (thoughtsOnly) n.marks.filter { it.note != null } else n.marks
     Column(Modifier.fillMaxSize().background(YY.c.bg).windowInsetsPadding(WindowInsets.statusBars)) {
         Row(Modifier.fillMaxWidth().height(52.dp).padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Icon(Icons.back, t("返回"), tint = YY.c.t1, modifier = Modifier.size(24.dp).clickable(onClick = back))
             Text(n.book.title, fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = YY.c.t1, maxLines = 1, modifier = Modifier.weight(1f))
+            Box {
+                var exporting by remember { mutableStateOf(false) }
+                Text(t("导出"), fontSize = 15.sp, color = YY.tint.accent, modifier = Modifier.clickable { exporting = true })
+                NoteExportMenu(
+                    library, exporting, { exporting = false },
+                    { NotedBook.markdown(listOf(n), t("《%@》的笔记", n.book.title)) }, t("%@ 笔记.md", n.book.title), { listOf(n) }, n.book,
+                )
+            }
         }
         LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 96.dp)) {
             item {

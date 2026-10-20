@@ -32,6 +32,8 @@ class Library(private val context: Context) {
     val dataDir: File = File(context.filesDir, "Yuyue").apply { mkdirs() }
     val core: YuyueCore = YuyueCore.open(dataDir.path, deviceName(context), "android")
     val scope: CoroutineScope = MainScope()
+    /** 导出's sending, which outlives the menu that starts it. */
+    val noteSender by lazy { app.yuyue.notes.NoteSender(context, this) }
 
     var books by mutableStateOf<List<BookSummary>>(emptyList())
         private set
