@@ -146,9 +146,12 @@ fun YYRow(
         horizontalArrangement = Arrangement.spacedBy(YY.s(10)),
     ) {
         if (icon != null) Icon(icon, null, tint = YY.c.t2, modifier = Modifier.size(YY.s(15)))
-        Text(title, style = YY.font(11.5f), color = titleColor, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
-        Spacer(Modifier.weight(1f).widthIn(min = YY.s(8)))
-        if (value != null) Text(value, style = YY.font(10.5f), color = YY.c.t3, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        // The name stays whole; the grey value gives way.
+        Text(title, style = YY.font(11.5f), color = titleColor, maxLines = 1)
+        Text(
+            value ?: "", style = YY.font(10.5f), color = YY.c.t3, maxLines = 1, overflow = TextOverflow.Ellipsis,
+            textAlign = androidx.compose.ui.text.style.TextAlign.End, modifier = Modifier.weight(1f).padding(start = YY.s(8)),
+        )
         trailing()
         if (chevron) Icon(Icons.chevronRight, null, tint = YY.c.t3, modifier = Modifier.size(YY.s(11)))
     }

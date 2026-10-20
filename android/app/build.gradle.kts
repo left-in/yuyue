@@ -35,6 +35,8 @@ android {
 
     // The reader bundle (`cd reader && pnpm build`) is served to the WebView as /app/….
     sourceSets["main"].assets.directories.add("../../reader/dist")
+    // Wi‑Fi 传书's page for the computer, shared with Apple.
+    sourceSets["main"].assets.directories.add("../../shared")
 
     packaging { jniLibs { useLegacyPackaging = false } }
 }

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="{{lang}}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{title}}</title>
+<style>
+:root{--bg:#F6F5F3;--card:#fff;--inset:#EFEEEB;--line:#E7E5E1;--t1:#2A2B2E;--t2:#85827F;--t3:#A8A49F;--accent:#2B4C7E;--ok:#3E9B6A;--danger:#C2473A}
+@media (prefers-color-scheme:dark){:root{--bg:#101112;--card:#1B1C1E;--inset:#26272A;--line:#2C2D30;--t1:#EDEDEE;--t2:#9A9895;--t3:#75726E;--accent:#8FA8C8;--ok:#5DBB88;--danger:#E5806F}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t1);font:14px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:560px;margin:0 auto;padding:48px 20px}
+h1{font:700 26px/1.4 "Songti SC","Noto Serif SC",serif;margin:0;letter-spacing:.02em}
+.sub{color:var(--t2);font-size:13px;margin:6px 0 24px}
+#drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:180px;border:1.5px dashed var(--accent);border-radius:16px;background:var(--card);color:var(--t2);cursor:pointer;transition:background .15s}
+#drop.over{background:color-mix(in srgb,var(--accent) 8%,var(--card))}
+#drop svg{width:26px;height:26px;color:var(--accent)}
+#drop small{color:var(--t3);font-size:12px}
+.lb{display:flex;justify-content:space-between;align-items:baseline;margin:28px 2px 8px;font-size:15px;font-weight:600}
+.lb em{font-style:normal;font-weight:400;font-size:12.5px;color:var(--t3)}
+#list{background:var(--card);border-radius:16px;padding:0 16px;box-shadow:0 1px 2px rgba(51,46,41,.04),0 8px 24px rgba(51,46,41,.05)}
+.row{display:flex;gap:12px;padding:12px 0;border-top:.5px solid var(--line)}
+.row:first-child{border-top:0}
+.ic{width:30px;height:30px;border-radius:8px;background:var(--inset);display:grid;place-items:center;flex:none;font-size:14px}
+.f{flex:1;min-width:0}
+.f b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f span{display:block;font-size:12.5px;color:var(--t3);font-variant-numeric:tabular-nums}
+.f span.bad{color:var(--danger)}
+.pb{height:3px;border-radius:2px;background:var(--inset);overflow:hidden;margin-top:7px}
+.pb i{display:block;height:100%;background:var(--accent);border-radius:2px;width:0}
+.note{color:var(--t3);font-size:12.5px;margin:12px 4px}
+#gone{display:none;color:var(--danger)}
+</style></head><body><main>
+<h1>{{heading}}</h1>
+<p class="sub">{{formats}}</p>
+<label id="drop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M5 14v4.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V14"/></svg>{{drop}}<small>{{many}}</small><input id="pick" type="file" multiple hidden></label>
+<div id="box" hidden><div class="lb"><span>{{sending}}</span><em id="count"></em></div><div id="list"></div>
+<p class="note" id="gone">{{gone}}</p>
+<p class="note">{{awake}}</p></div>
+</main><script>
+const CH=4<<20,files=[];let busy=false;
+const $=s=>document.querySelector(s);
+function hash(s){let h=5381;for(const c of s)h=(h*33^c.codePointAt(0))>>>0;return h.toString(36)}
+function icon(n){return /\.(cbz|cbr|zip|rar)$/i.test(n)?'▦':/\.(m4b|mp3|m4a|aac)$/i.test(n)?'♪':'▤'}
+function mb(b){return b>=1<<30?(b/(1<<30)).toFixed(1)+' GB':b>=1<<20?(b/(1<<20)).toFixed(1)+' MB':Math.max(1,Math.round(b/1024))+' KB'}
+function add(list){for(const file of list){const id=hash(file.name+'|'+file.size+'|'+file.lastModified);if(files.some(f=>f.id===id))continue;files.push({id,file,sent:0,state:'queued'})}render();pump()}
+function render(){$('#box').hidden=!files.length;$('#count').textContent={{files}}.replace('%d',files.length);$('#list').innerHTML=files.map(f=>{
+ const p=f.file.size?Math.floor(f.sent/f.file.size*100):100;
+ const t=f.state==='done'?{{done}}:f.state==='bad'?f.err:f.state==='queued'?{{queued}}:f.state==='importing'?{{importing}}:p+'%';
+ return `<div class="row"><span class="ic">${f.state==='done'?'✓':icon(f.file.name)}</span><span class="f"><b></b><span class="${f.state==='bad'?'bad':''}">${mb(f.file.size)} · ${t}</span>${f.state==='sending'?`<div class="pb"><i style="width:${p}%"></i></div>`:''}</span></div>`}).join('');
+ [...$('#list').querySelectorAll('.f b')].forEach((b,i)=>b.textContent=files[i].file.name)}
+async function announce(){const r=await fetch('/queue',{method:'POST',body:JSON.stringify(files.filter(f=>f.state!=='done'&&f.state!=='bad').map(f=>({id:f.id,name:f.file.name,size:f.file.size})))});const have=await r.json();for(const f of files)if(f.id in have)f.sent=have[f.id]}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function pump(){if(busy)return;busy=true;
+ while(true){try{await announce();$('#gone').style.display='none';break}catch(e){$('#gone').style.display='block';await sleep(2000)}}
+ for(const f of files){if(f.state==='done'||f.state==='bad')continue;f.state='sending';render();
+  while(true){try{
+   const r=await fetch(`/chunk?id=${f.id}&offset=${f.sent}`,{method:'PUT',body:f.file.slice(f.sent,f.sent+CH)});
+   const j=await r.json();$('#gone').style.display='none';
+   if(j.error){f.state='bad';f.err=j.error;break}
+   f.sent=j.received;if(j.done){f.state='done';break}
+   if(f.sent>=f.file.size)f.state='importing';render();
+  }catch(e){$('#gone').style.display='block';render();await sleep(2000);try{await announce()}catch(_){}}}
+  render()}
+ busy=false;if(files.some(f=>f.state==='queued'))pump()}
+const drop=$('#drop');
+drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('over')});
+drop.addEventListener('dragleave',()=>drop.classList.remove('over'));
+drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('over');add(e.dataTransfer.files)});
+document.addEventListener('dragover',e=>e.preventDefault());document.addEventListener('drop',e=>{e.preventDefault();add(e.dataTransfer.files)});
+$('#pick').addEventListener('change',e=>{add(e.target.files);e.target.value=''});
+window.addEventListener('beforeunload',e=>{if(busy){e.preventDefault();e.returnValue=''}});
+</script></body></html>

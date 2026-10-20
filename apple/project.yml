@@ -42,6 +42,9 @@ targets:
       - path: ../reader/dist
         type: folder
         buildPhase: resources
+      # Wi‑Fi 传书's page for the computer, shared with Android.
+      - path: ../shared/wifi-page.html
+        buildPhase: resources
     dependencies:
       - package: YuyueCore
     # 请开发者喝咖啡's tips, for trying in Xcode before they exist in App Store Connect.

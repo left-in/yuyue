@@ -24,5 +24,6 @@
  "系统声音在这台设备上合成，不联网。想要更自然的声音：在系统的“文字转语音”里下载语音数据。": "System voices are made on this device, offline. For more natural ones, download voice data in the system's Text-to-speech settings.",
  "语阅快照-%@%@.yuyue": "Yuyue-Snapshot-%1$@%2$@.yuyue",
  "这台手机的系统读不出 PDF 里的字，Android 15 起才能朗读 PDF": "This phone's system can't read the words in a PDF; reading PDFs aloud needs Android 15 or later",
- "选一个同步方式就开始": "Choose a way to sync to start"
+ "选一个同步方式就开始": "Choose a way to sync to start",
+ "电脑和这台手机连同一个 Wi‑Fi": "Connect the computer and this phone to the same Wi‑Fi"
 }

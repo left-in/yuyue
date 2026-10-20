@@ -875,6 +875,16 @@
         }
       }
     },
+    "%d 个文件" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d files"
+          }
+        }
+      }
+    },
     "%lld" : {},
     "%lld / %lld" : {
       "localizations" : {
@@ -1990,6 +2000,16 @@
         }
       }
     },
+    "EPUB、PDF、TXT、MOBI、AZW3，漫画 CBZ、CBR、ZIP。传完直接放进书架。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EPUB, PDF, TXT, MOBI, AZW3, and comics as CBZ, CBR or ZIP. They go straight onto the shelf."
+          }
+        }
+      }
+    },
     "EPUB、PDF、TXT、MOBI；漫画 CBZ、ZIP、CBR" : {
       "localizations" : {
         "en" : {
@@ -2281,6 +2301,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "One"
+          }
+        }
+      }
+    },
+    "一次可以放很多本" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can drop many at once"
           }
         }
       }
@@ -3617,6 +3647,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Uses the whole book; you may learn the ending"
+          }
+        }
+      }
+    },
+    "传书到「%@」" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send books to “%@”"
+          }
+        }
+      }
+    },
+    "传的时候让手机上的那一页亮着。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep the page on the phone open while sending."
           }
         }
       }
@@ -9341,6 +9391,16 @@
         }
       }
     },
+    "正在传" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sending"
+          }
+        }
+      }
+    },
     "正在估算还要多久 · " : {
       "localizations" : {
         "en" : {
@@ -12621,6 +12681,16 @@
         }
       }
     },
+    "语阅 · Wi‑Fi 传书" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yuyue · Wi‑Fi Transfer"
+          }
+        }
+      }
+    },
     "语阅 · 想法" : {
       "localizations" : {
         "en" : {
@@ -14297,6 +14367,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn't connect to %@. Check the address, and that the phone and library are on the same network"
+          }
+        }
+      }
+    },
+    "连不上手机了。回到语阅的“Wi‑Fi 传书”页面，这里会从断的地方接着传。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can't reach the phone. Go back to Wi‑Fi Transfer in Yuyue, and sending picks up where it stopped."
           }
         }
       }
