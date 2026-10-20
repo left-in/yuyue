@@ -138,7 +138,7 @@ fun Root(library: Library) {
                         Tab.Search -> app.yuyue.search.SearchScreen(library)
                     }
                     Page.Wifi -> app.yuyue.me.SubPage(t("Wi‑Fi 传书"), { pages.removeAt(pages.lastIndex) }) { app.yuyue.shelf.WifiPage(library) }
-                    Page.Remote -> Placeholder(t("远程书库"))
+                    Page.Remote -> app.yuyue.shelf.RemotePage(library) { pages.removeAt(pages.lastIndex) }
                     Page.Watched -> app.yuyue.me.SubPage(t("监听一个文件夹"), { pages.removeAt(pages.lastIndex) }) { app.yuyue.shelf.WatchedPage(library) }
                 }
             }

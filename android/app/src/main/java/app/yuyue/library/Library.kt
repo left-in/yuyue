@@ -53,6 +53,8 @@ class Library(private val context: Context) {
     var nowPlaying by mutableStateOf<Any?>(null)
     private val intents = mutableMapOf<String, OpenIntent>()
     val sync = app.yuyue.sync.Sync(context, core, this)
+    /** 远程书库 filled in under 书库来源. */
+    val sources = RemoteSources()
     /** 监听一个文件夹. */
     val watched = WatchedFolder(context)
     /** A 数据快照 opened from another app, waiting to be looked at before it's brought back. */

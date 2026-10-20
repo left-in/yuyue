@@ -31,5 +31,6 @@
  "已保存，书伴用 %@": "Saved. The companion uses %@",
  "没接上": "Not set up",
  "用哪个": "Which one",
- "能用 · %@ 秒回答": "Works · answered in %@ s"
+ "能用 · %@ 秒回答": "Works · answered in %@ s",
+ "放进这个文件夹的书，下次打开语阅时自动导入。可以是手机里的任何文件夹，比如“下载”或者网盘 App 同步下来的文件夹。": "Books put in this folder are imported the next time you open Yuyue. It can be any folder on the phone, such as Downloads or one a cloud drive app keeps in sync."
 }

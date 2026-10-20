@@ -60,7 +60,7 @@ import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
 
 /** A page under 我的. */
-enum class MePage { Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening, Companion }
+enum class MePage { Sources, Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening, Companion }
 
 /** 我的 (prototype 我的), as on iPhone: this week's reading and listening on top, the year's
  *  totals under it, then every setting in groups. */
@@ -70,6 +70,7 @@ fun MeScreen(library: Library) {
     BackHandler(enabled = stack.isNotEmpty()) { stack.removeAt(stack.lastIndex) }
     when (val page = stack.lastOrNull()) {
         null -> Main(library) { stack += it }
+        MePage.Sources -> app.yuyue.shelf.SourcesHome(library) { stack.removeAt(stack.lastIndex) }
         else -> Sub(page, back = { stack.removeAt(stack.lastIndex) }) {
             when (page) {
                 MePage.Stats -> Stats(library)
@@ -81,6 +82,7 @@ fun MeScreen(library: Library) {
                 MePage.Snapshot -> SnapshotPage(library)
                 MePage.Listening -> ListeningPage()
                 MePage.Companion -> app.yuyue.companion.CompanionSettings()
+                MePage.Sources -> {}
             }
         }
     }
@@ -97,6 +99,7 @@ private val MePage.title: String
         MePage.Snapshot -> t("数据快照")
         MePage.Listening -> t("朗读")
         MePage.Companion -> t("书伴")
+        MePage.Sources -> t("书库来源")
     }
 
 /** A page pushed over 我的: its name in the middle, ‹ on the left. */
@@ -134,6 +137,7 @@ private fun Main(library: Library, push: (MePage) -> Unit) {
                     }
                     YYRow(t("同步"), Icons.sync, detail, chevron = true) { push(MePage.Sync) }
                 }
+                row { YYRow(t("书库来源"), Icons.server, if (library.sources.all.isEmpty()) null else t("%lld 个", library.sources.all.size), chevron = true) { push(MePage.Sources) } }
             }
             Group {
                 row { YYRow(t("外观"), Icons.settings, "${modeTitle(mode)} · ${YYTints.All.firstOrNull { it.id == tintID }?.name?.let { t(it) } ?: ""}", chevron = true) { push(MePage.Appearance) } }
