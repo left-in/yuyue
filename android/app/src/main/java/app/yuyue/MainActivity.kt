@@ -148,9 +148,13 @@ fun Root(library: Library) {
 
         library.presented?.let { id ->
             LaunchedEffect(id) { lastBook = id }
-            ReaderScreen(library, id) {
+            val closeBook = {
                 library.presented = null
                 lastBook = ""
+            }
+            when (library.books.firstOrNull { it.id == id }?.format) {
+                uniffi.yuyue_core.BookFormat.COMIC -> app.yuyue.comics.ComicScreen(library, id, closeBook)
+                else -> ReaderScreen(library, id, closeBook)
             }
         }
     }
