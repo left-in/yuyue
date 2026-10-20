@@ -60,7 +60,7 @@ import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
 
 /** A page under 我的. */
-enum class MePage { Sources, Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening, Companion }
+enum class MePage { Immersive, EInk, Sources, Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening, Companion }
 
 /** 我的 (prototype 我的), as on iPhone: this week's reading and listening on top, the year's
  *  totals under it, then every setting in groups. */
@@ -83,6 +83,8 @@ fun MeScreen(library: Library) {
                 MePage.Listening -> ListeningPage()
                 MePage.Companion -> app.yuyue.companion.CompanionSettings()
                 MePage.Sources -> {}
+                MePage.Immersive -> YYPage { Spacer(Modifier.height(YY.s(10))); app.yuyue.reader.ImmersiveSettings(null) }
+                MePage.EInk -> app.yuyue.reader.EInkPage(library.core)
             }
         }
     }
@@ -100,6 +102,8 @@ private val MePage.title: String
         MePage.Listening -> t("朗读")
         MePage.Companion -> t("书伴")
         MePage.Sources -> t("书库来源")
+        MePage.Immersive -> t("沉浸阅读")
+        MePage.EInk -> t("墨水屏")
     }
 
 /** A page pushed over 我的: its name in the middle, ‹ on the left. */
@@ -140,6 +144,14 @@ private fun Main(library: Library, push: (MePage) -> Unit) {
                 row { YYRow(t("书库来源"), Icons.server, if (library.sources.all.isEmpty()) null else t("%lld 个", library.sources.all.size), chevron = true) { push(MePage.Sources) } }
             }
             Group {
+                row {
+                    val on by rememberPref(app.yuyue.reader.ImmersivePrefs.ALWAYS, false)
+                    YYRow(t("沉浸阅读"), Icons.read, if (on) t("开") else t("关"), chevron = true) { push(MePage.Immersive) }
+                }
+                row {
+                    val on by rememberPref(app.yuyue.reader.EInk.KEY, false)
+                    YYRow(t("墨水屏"), Icons.book, if (on) t("开") else t("关"), chevron = true) { push(MePage.EInk) }
+                }
                 row { YYRow(t("外观"), Icons.settings, "${modeTitle(mode)} · ${YYTints.All.firstOrNull { it.id == tintID }?.name?.let { t(it) } ?: ""}", chevron = true) { push(MePage.Appearance) } }
             }
             Group {

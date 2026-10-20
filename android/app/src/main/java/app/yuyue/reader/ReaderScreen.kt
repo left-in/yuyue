@@ -133,17 +133,26 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
 
     // The status bar only with the controls, as on iPhone; its icons follow the paper.
     val activity = context as? android.app.Activity
-    LaunchedEffect(model.chromeShown, paper) {
+    LaunchedEffect(model.chromeShown, model.searchShown, model.immersive, paper) {
         val window = activity?.window ?: return@LaunchedEffect
         val controller = WindowCompat.getInsetsController(window, window.decorView)
         controller.isAppearanceLightStatusBars = !paper.isDark
         controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        if (model.chromeShown || model.searchShown) controller.show(WindowInsetsCompat.Type.statusBars()) else controller.hide(WindowInsetsCompat.Type.statusBars())
+        val show = model.chromeShown || model.searchShown || (model.immersive && !ImmersivePrefs.hidesStatusBar)
+        if (show) controller.show(WindowInsetsCompat.Type.statusBars()) else controller.hide(WindowInsetsCompat.Type.statusBars())
+        // 沉浸: the navigation bar goes too, until a swipe from the edge.
+        if (model.immersive && !model.chromeShown) controller.hide(WindowInsetsCompat.Type.navigationBars()) else controller.show(WindowInsetsCompat.Type.navigationBars())
+    }
+    // 读书时通知不打扰, while 沉浸阅读 is on.
+    LaunchedEffect(model.immersive) { if (ImmersivePrefs.quiet) DoNotDisturb.set(context, model.immersive) }
+    // 沉浸: called up by a tap, gone again by itself.
+    LaunchedEffect(model.immersive, model.chromeShown) {
+        if (model.immersive && model.chromeShown) { kotlinx.coroutines.delay(4000); if (!model.listenShown && !model.settingsShown) model.chromeShown = false }
     }
     DisposableEffect(Unit) {
         onDispose {
             val window = activity?.window ?: return@onDispose
-            WindowCompat.getInsetsController(window, window.decorView).show(WindowInsetsCompat.Type.statusBars())
+            WindowCompat.getInsetsController(window, window.decorView).show(WindowInsetsCompat.Type.systemBars())
         }
     }
 
@@ -166,6 +175,7 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
     if (model.tocShown) TocSheet(model) { model.tocShown = false }
     if (model.settingsShown) TypesetSheet(model) { model.settingsShown = false }
     if (model.listenShown) ListenSheet(model) { model.listenShown = false }
+    if (model.immersiveShown) ImmersiveSheet(model) { model.immersiveShown = false }
     var companionSettings by remember { mutableStateOf(false) }
     if (model.companionShown) app.yuyue.companion.CompanionSheet(model, settings = { companionSettings = true }) { model.companionShown = false }
     if (companionSettings) app.yuyue.companion.CompanionSettingsSheet { companionSettings = false }
@@ -221,7 +231,7 @@ private fun PullMark(model: ReaderModel, paper: YYPaper) {
 private fun Modifier.glass(paper: YYPaper, shape: androidx.compose.ui.graphics.Shape = CircleShape): Modifier =
     this.shadow(10.dp, shape, ambientColor = Color.Black.copy(alpha = 0.08f), spotColor = Color.Black.copy(alpha = 0.14f))
         .clip(shape)
-        .background(paper.glass.copy(alpha = maxOf(paper.glass.alpha, 0.92f)))
+        .background(paper.glass.copy(alpha = maxOf(paper.glass.alpha, 0.97f)))
         .border(0.5.dp, paper.line, shape)
 
 @Composable
@@ -245,7 +255,20 @@ private fun Chrome(model: ReaderModel, paper: YYPaper, close: () -> Unit) {
                     Text(page?.let { t("回到第 %lld 页", it) } ?: t("回到原处"), fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = paper.ink)
                 }
             }
-            if (model.searchShown) SearchCapsule(model, paper) else Capsule(model, paper)
+            // 沉浸阅读 hides the capsule until the middle is tapped.
+            val capsule = !model.immersive || model.chromeShown || model.searchShown
+            AnimatedVisibility(capsule, enter = fadeIn() + slideInVertically { it }, exit = fadeOut() + slideOutVertically { it }) {
+                if (model.searchShown) SearchCapsule(model, paper) else Capsule(model, paper)
+            }
+            if (!capsule) {
+                if (!ImmersivePrefs.hidesProgress) {
+                    Text(model.capsuleNote, fontSize = 10.sp, color = paper.ink2, modifier = Modifier.padding(bottom = 2.dp))
+                } else if (ImmersivePrefs.keepsLine) {
+                    BoxWithConstraints(Modifier.fillMaxWidth().height(1.dp)) {
+                        Box(Modifier.width(maxWidth * model.bookFraction.toFloat()).fillMaxHeight().background(paper.ink.copy(alpha = 0.25f)))
+                    }
+                }
+            }
         }
     }
 }
@@ -269,6 +292,7 @@ private fun TopBar(model: ReaderModel, paper: YYPaper, close: () -> Unit) {
             Box {
                 Glyph(Icons.more, t("更多"), paper.ink) { more = true }
                 DropdownMenu(more, { more = false }, containerColor = YY.c.card) {
+                    app.yuyue.shelf.Item(t("沉浸阅读"), Icons.read) { more = false; model.immersiveShown = true }
                     app.yuyue.shelf.Item(t("书伴"), Icons.companion) { more = false; model.chromeShown = false; model.companionShown = true }
                     app.yuyue.shelf.Item(t("书的信息"), Icons.info) { more = false }
                 }

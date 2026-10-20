@@ -32,5 +32,10 @@
  "没接上": "Not set up",
  "用哪个": "Which one",
  "能用 · %@ 秒回答": "Works · answered in %@ s",
- "放进这个文件夹的书，下次打开语阅时自动导入。可以是手机里的任何文件夹，比如“下载”或者网盘 App 同步下来的文件夹。": "Books put in this folder are imported the next time you open Yuyue. It can be any folder on the phone, such as Downloads or one a cloud drive app keeps in sync."
+ "放进这个文件夹的书，下次打开语阅时自动导入。可以是手机里的任何文件夹，比如“下载”或者网盘 App 同步下来的文件夹。": "Books put in this folder are imported the next time you open Yuyue. It can be any folder on the phone, such as Downloads or one a cloud drive app keeps in sync.",
+ "去允许": "Allow",
+ "要让语阅读书时打开勿扰，先在系统里允许它管理勿扰。": "To let Yuyue turn on Do Not Disturb while you read, allow it to manage Do Not Disturb in the system settings first.",
+ "语阅 · 沉浸阅读": "Yuyue · Focus Reading",
+ "读书时不打扰": "Reading, no interruptions",
+ "读书时语阅打开勿扰，离开书页就关掉；你自己开的勿扰不会被动。": "Yuyue turns on Do Not Disturb while you read and off when you leave the book; a Do Not Disturb you turned on yourself is left alone."
 }

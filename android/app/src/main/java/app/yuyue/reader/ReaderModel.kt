@@ -85,6 +85,12 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     /** Reads the book aloud; null for a book without words to read. */
     val player: app.yuyue.speech.Player? = detail?.takeIf { it.summary.format != uniffi.yuyue_core.BookFormat.COMIC }?.let { app.yuyue.speech.Player(context, core, it) }
     var listenShown by mutableStateOf(false)
+    var immersiveShown by mutableStateOf(false)
+    private var immersiveState = mutableStateOf(false)
+    /** 沉浸阅读: only the words on the page. */
+    var immersive: Boolean
+        get() = immersiveState.value
+        set(v) { immersiveState.value = v; applyImmersive() }
     /** 与书对话. */
     val companion = app.yuyue.companion.BookCompanion(this)
     var companionShown by mutableStateOf(false)
@@ -117,6 +123,8 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         pager.calm = s.paper == Paper.EINK
         Prefs.string(STYLE_KEY).let { saved -> MarkStyle.entries.firstOrNull { it.name == saved }?.let { lastStyle = it } }
         reloadNotes()
+        // 我的 › 沉浸阅读 on: every book opens with only its words.
+        immersive = ImmersivePrefs.always
         player?.let { p ->
             p.onSentence = { spot, duration, elapsed, playing -> reading(spot, duration, elapsed, playing); setListening(playing) }
             p.onStop = { pager.clearInk(); setListening(false) }
@@ -139,6 +147,12 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
             if (intent == Library.OpenIntent.Listen || intent == Library.OpenIntent.ListenFromStart) player?.play(position)
             if (intent is Library.OpenIntent.Ask) ask(intent.question)
         }
+    }
+
+    /** What 沉浸阅读 changes on the page. 墨水屏 turns whole pages, never slides them. */
+    fun applyImmersive() {
+        pager.calm = (immersive && ImmersivePrefs.stillPages) || settings.paper == Paper.EINK
+        pager.marksHidden = immersive && ImmersivePrefs.hidesMarks
     }
 
     /** Opens 书伴 with a question. */
@@ -396,7 +410,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         pager.fontSize = s.fontSize
         val modeChanged = pager.mode != s.mode
         pager.mode = s.mode
-        pager.calm = s.paper == Paper.EINK
+        applyImmersive()
         pager.apply(s.script(pager.geometry()))
         if (modeChanged) pager.reload()
     }
@@ -507,6 +521,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     }
 
     fun close() {
+        if (ImmersivePrefs.quiet) DoNotDisturb.set(context, false)
         tick()
         flush()
         player?.close()
