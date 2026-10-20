@@ -388,7 +388,8 @@ extension ReaderModel {
     }
 
     func startSearch() {
-        searchShown = true
+        // ⌘F again while it is open: back to the field.
+        if searchShown { searchFieldWanted += 1 } else { searchShown = true }
     }
 
     // MARK: Helpers

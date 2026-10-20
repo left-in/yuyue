@@ -62,10 +62,11 @@ struct MacReaderView: View {
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
         .navigationTitle(model.detail?.summary.title ?? String(localized: "读书"))
         .focusedSceneValue(\.reader, model)
+        .onChange(of: model.searchFieldWanted) { focusSearch() }
         .onChange(of: model.searchShown) { _, shown in
             if shown {
                 if panel != .search { panel = .search }
-                Task { searchFocused = true }
+                focusSearch()
             } else if panel == .search {
                 panel = ReaderPanel(rawValue: savedPanel)
             }
@@ -380,7 +381,7 @@ struct MacReaderView: View {
                     model.setTranslateShown(!model.translateShown)
                 }
             }
-            tool(String(localized: "书伴"), "sparkle", help: String(localized: "书伴 ⌘K"), on: panel == .companion) { panel = panel == .companion ? nil : .companion }
+            tool(String(localized: "书伴"), "sparkle", help: String(localized: "书伴"), on: panel == .companion) { panel = panel == .companion ? nil : .companion }
             tool(String(localized: "笔记"), "sidebar.right", help: String(localized: "笔记栏 ⌘⌥N"), on: panel == .notes) { panel = panel == .notes ? nil : .notes }
         }
         .padding(.horizontal, 3)
@@ -451,7 +452,27 @@ struct MacReaderView: View {
     }
 
     private func startSearch() {
-        model.searchShown = true
+        model.startSearch()
+    }
+
+    /// The field is new in the toolbar and the page (a web view) holds the keyboard: ask for it
+    /// once the toolbar has it, and again when that has settled, or typing goes to the page.
+    private func focusSearch() {
+        Task {
+            searchFocused = true
+            // A field in the toolbar doesn't answer to focus state here; hand it the keyboard
+            // directly once the toolbar has it.
+            try? await Task.sleep(for: .milliseconds(80))
+            guard let window = NSApp.keyWindow, let field = Self.field(in: window.contentView?.superview, placeholder: String(localized: "书内搜索")) else { return }
+            if window.firstResponder !== field.currentEditor() { window.makeFirstResponder(field) }
+        }
+    }
+
+    private static func field(in view: NSView?, placeholder: String) -> NSTextField? {
+        guard let view else { return nil }
+        if let f = view as? NSTextField, f.isEditable, f.placeholderString == placeholder { return f }
+        for sub in view.subviews { if let f = field(in: sub, placeholder: placeholder) { return f } }
+        return nil
     }
 
     private func closeSearch() {
@@ -1211,8 +1232,11 @@ private struct SearchPanel: View {
     let model: ReaderModel
     private let tint = YYTint.standard
 
+    private static func rowID(_ i: Int) -> String { "hit-\(i)" }
+
     private struct Group: Identifiable {
-        let id: Int
+        let page: Int
+        var id: String { "page-\(page)" }
         let label: String
         var hits: [(Int, SearchHit)]
     }
@@ -1221,10 +1245,10 @@ private struct SearchPanel: View {
         var out: [Group] = []
         for (i, hit) in model.hits.enumerated() {
             let page = model.estimatedPage(section: hit.section, sentence: Int(hit.sentence)) ?? 0
-            if out.last?.id == page {
+            if out.last?.page == page {
                 out[out.count - 1].hits.append((i, hit))
             } else {
-                out.append(Group(id: page, label: pageLabel(model, section: hit.section, sentence: Int(hit.sentence)), hits: [(i, hit)]))
+                out.append(Group(page: page, label: pageLabel(model, section: hit.section, sentence: Int(hit.sentence)), hits: [(i, hit)]))
             }
         }
         return out
@@ -1248,6 +1272,8 @@ private struct SearchPanel: View {
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 0) {
                             // `.v-mr-rg` / `.v-mr-r`
+                            // Pages and hits are both numbers: their ids are kept apart, or a page
+                            // and the hit with the same number land in each other's place.
                             ForEach(Array(groups.enumerated()), id: \.element.id) { g, group in
                                 HStack(alignment: .firstTextBaseline) {
                                     Text(group.label.replacingOccurrences(of: String(localized: " · 这一页"), with: ""))
@@ -1266,7 +1292,7 @@ private struct SearchPanel: View {
                                     // No line next to the one showing.
                                     let quiet = k == 0 || model.hitIndex == pair.0 || model.hitIndex == group.hits[k - 1].0
                                     Rectangle().fill(quiet ? .clear : YYColor.line).frame(height: 0.5)
-                                    row(pair.0, pair.1, first: k == 0).id(pair.0)
+                                    row(pair.0, pair.1, first: k == 0).id(Self.rowID(pair.0))
                                 }
                             }
                         }
@@ -1275,7 +1301,7 @@ private struct SearchPanel: View {
                     .scrollIndicators(.never)
                     .padding(.horizontal, -6)
                     .onChange(of: model.hitIndex) { _, i in
-                        if let i { withAnimation { proxy.scrollTo(i, anchor: .center) } }
+                        if let i { withAnimation { proxy.scrollTo(Self.rowID(i), anchor: .center) } }
                     }
                 }
             }

@@ -188,7 +188,13 @@ struct QuickSearchPanel: View {
                 .onTapGesture(perform: close)
             panel.padding(.top, 50)
         }
-        .onAppear { focused = true }
+        .task {
+            // In a reading window the page (a web view) holds the keyboard; asking once as the
+            // panel appears can lose to it, so ask again when it has settled.
+            focused = true
+            try? await Task.sleep(for: .milliseconds(100))
+            focused = true
+        }
     }
 
     private var panel: some View {

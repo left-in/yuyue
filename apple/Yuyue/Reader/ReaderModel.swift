@@ -77,6 +77,8 @@ final class ReaderModel {
     var openNote: OpenNote?
     /// 书内搜索.
     var searchShown = false
+    /// Bumped when the open search field should take the keyboard again.
+    var searchFieldWanted = 0
     var query = ""
     var hits: [SearchHit] = []
     var hitIndex: Int?
