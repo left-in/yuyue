@@ -27,3 +27,6 @@ android/app/src/main/jniLibs/
 android/app/src/main/java/uniffi/
 android/.kotlin/
 android/app/build
+android/keystore.properties
+*.jks
+*.keystore

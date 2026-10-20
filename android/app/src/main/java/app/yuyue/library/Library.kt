@@ -53,6 +53,8 @@ class Library(private val context: Context) {
     var nowPlaying by mutableStateOf<Any?>(null)
     private val intents = mutableMapOf<String, OpenIntent>()
     val sync = app.yuyue.sync.Sync(context, core, this)
+    /** 监听一个文件夹. */
+    val watched = WatchedFolder(context)
     /** A 数据快照 opened from another app, waiting to be looked at before it's brought back. */
     var openedSnapshot by mutableStateOf<Pair<File, uniffi.yuyue_core.SnapshotInfo>?>(null)
 

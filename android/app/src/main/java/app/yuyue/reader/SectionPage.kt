@@ -113,6 +113,8 @@ class SectionPage(context: Context, private val core: YuyueCore, private val geo
     var onReady: ((SectionPage) -> Unit)? = null
 
     init {
+        // Debug builds can be looked into from Chrome; done here, not at launch, as it starts the WebView.
+        if (app.yuyue.BuildConfig.DEBUG) WebView.setWebContentsDebuggingEnabled(true)
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = false

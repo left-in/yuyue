@@ -1,4 +1,5 @@
 import org.gradle.process.ExecOperations
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -20,8 +21,24 @@ android {
         ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") }
     }
 
+    signingConfigs {
+        // The store key lives outside the repo: android/keystore.properties (storeFile, storePassword,
+        // keyAlias, keyPassword). Without it a release build is signed with the debug key, to try on a phone.
+        val props = rootProject.file("keystore.properties")
+        if (props.exists()) {
+            val p = Properties().apply { props.inputStream().use { load(it) } }
+            create("store") {
+                storeFile = rootProject.file(p.getProperty("storeFile"))
+                storePassword = p.getProperty("storePassword")
+                keyAlias = p.getProperty("keyAlias")
+                keyPassword = p.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("store") ?: signingConfigs.getByName("debug")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")

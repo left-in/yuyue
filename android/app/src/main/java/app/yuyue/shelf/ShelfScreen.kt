@@ -210,7 +210,7 @@ fun ShelfScreen(library: Library, openWifi: () -> Unit, openRemote: () -> Unit, 
 
     if (importShown) {
         ImportSheet(
-            watching = null,
+            watching = library.watched.name,
             dismiss = { importShown = false },
             files = { importShown = false; picker.launch(importTypes) },
             wifi = { importShown = false; openWifi() },

@@ -51,6 +51,7 @@ import app.yuyue.design.rememberPref
 import app.yuyue.library.Library
 import app.yuyue.reader.ReaderScreen
 import app.yuyue.shelf.ShelfScreen
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private val library: Library get() = (application as YuyueApp).library
@@ -138,7 +139,7 @@ fun Root(library: Library) {
                     }
                     Page.Wifi -> app.yuyue.me.SubPage(t("Wi‑Fi 传书"), { pages.removeAt(pages.lastIndex) }) { app.yuyue.shelf.WifiPage(library) }
                     Page.Remote -> Placeholder(t("远程书库"))
-                    Page.Watched -> Placeholder(t("监听一个文件夹"))
+                    Page.Watched -> app.yuyue.me.SubPage(t("监听一个文件夹"), { pages.removeAt(pages.lastIndex) }) { app.yuyue.shelf.WatchedPage(library) }
                 }
             }
             NowPlayingBar(library)
@@ -161,6 +162,15 @@ fun Root(library: Library) {
     }
 
     LaunchedEffect(Unit) { library.sync.keepUp() }
+    // Books put in the watched folder come in whenever 语阅 comes to the front.
+    val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
+    androidx.compose.runtime.DisposableEffect(lifecycle) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, e ->
+            if (e == androidx.lifecycle.Lifecycle.Event.ON_START) library.scope.launch { library.watched.scan(library) }
+        }
+        lifecycle.addObserver(observer)
+        onDispose { lifecycle.removeObserver(observer) }
+    }
     library.openedSnapshot?.let { (file, info) -> app.yuyue.me.SnapshotImportSheet(library, file, info) { library.openedSnapshot = null } }
 
     library.alert?.let { message ->
