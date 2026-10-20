@@ -85,6 +85,11 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     /** Reads the book aloud; null for a book without words to read. */
     val player: app.yuyue.speech.Player? = detail?.takeIf { it.summary.format != uniffi.yuyue_core.BookFormat.COMIC }?.let { app.yuyue.speech.Player(context, core, it) }
     var listenShown by mutableStateOf(false)
+    /** 与书对话. */
+    val companion = app.yuyue.companion.BookCompanion(this)
+    var companionShown by mutableStateOf(false)
+    /** Words handed to the companion (问). */
+    var companionQuote by mutableStateOf<String?>(null)
     /** After a page is turned by hand the pages stop following the voice for a while. */
     private var followFrom = 0L
 
@@ -132,7 +137,14 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
             if (intent is Library.OpenIntent.At) position = intent.position
             pager.open(position.section.toInt(), if (position.sentence == 0u) Target.Start else Target.Sentence(position.sentence.toInt()))
             if (intent == Library.OpenIntent.Listen || intent == Library.OpenIntent.ListenFromStart) player?.play(position)
+            if (intent is Library.OpenIntent.Ask) ask(intent.question)
         }
+    }
+
+    /** Opens 书伴 with a question. */
+    fun ask(question: String) {
+        companionShown = true
+        if (question.isNotBlank()) companion.ask(question, companionQuote)
     }
 
     // MARK: Reading aloud

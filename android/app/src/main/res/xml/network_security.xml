@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The app only talks to addresses the reader typed in: an Ollama or a NAS at home is often
+     plain http (http://192.168.1.5:11434, a WebDAV share, an OPDS library), so that is allowed. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

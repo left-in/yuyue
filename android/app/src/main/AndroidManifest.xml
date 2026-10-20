@@ -19,7 +19,8 @@
         android:supportsRtl="false"
         android:enableOnBackInvokedCallback="true"
         android:localeConfig="@xml/locales_config"
-        android:theme="@style/Theme.Yuyue">
+        android:theme="@style/Theme.Yuyue"
+        android:networkSecurityConfig="@xml/network_security">
 
         <activity
             android:name=".MainActivity"

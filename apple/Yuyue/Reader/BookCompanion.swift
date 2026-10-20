@@ -237,7 +237,8 @@ final class BookCompanion {
             let i = Int(sentence)
             guard all.indices.contains(i) else { return nil }
             let from = max(0, i - 1), to = min(all.count - 1, i + 1)
-            let joined = all[from ... to].joined().replacingOccurrences(of: "\n", with: " ")
+            // A space between sentences: English ones would run together otherwise.
+            let joined = all[from ... to].map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.joined(separator: " ").replacingOccurrences(of: "\n", with: " ")
             return Excerpt(section: section, sentence: sentence, text: String(joined.prefix(240)))
         }
     }

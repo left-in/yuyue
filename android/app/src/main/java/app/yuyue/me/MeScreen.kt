@@ -60,7 +60,7 @@ import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
 
 /** A page under 我的. */
-enum class MePage { Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening }
+enum class MePage { Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening, Companion }
 
 /** 我的 (prototype 我的), as on iPhone: this week's reading and listening on top, the year's
  *  totals under it, then every setting in groups. */
@@ -80,6 +80,7 @@ fun MeScreen(library: Library) {
                 MePage.Sync -> SyncPage(library.sync)
                 MePage.Snapshot -> SnapshotPage(library)
                 MePage.Listening -> ListeningPage()
+                MePage.Companion -> app.yuyue.companion.CompanionSettings()
             }
         }
     }
@@ -95,6 +96,7 @@ private val MePage.title: String
         MePage.Sync -> t("同步")
         MePage.Snapshot -> t("数据快照")
         MePage.Listening -> t("朗读")
+        MePage.Companion -> t("书伴")
     }
 
 /** A page pushed over 我的: its name in the middle, ‹ on the left. */
@@ -138,6 +140,10 @@ private fun Main(library: Library, push: (MePage) -> Unit) {
             }
             Group {
                 row { YYRow(t("朗读"), Icons.headphones, null, chevron = true) { push(MePage.Listening) } }
+                row {
+                    val c = app.yuyue.companion.CompanionConfig.current
+                    YYRow(t("书伴"), Icons.companion, if (c.isReady) c.label else t("没接上"), chevron = true) { push(MePage.Companion) }
+                }
             }
             Group {
                 row { YYRow(t("数据快照"), Icons.snapshot, t("换设备、备份"), chevron = true) { push(MePage.Snapshot) } }

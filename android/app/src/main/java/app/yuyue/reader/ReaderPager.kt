@@ -401,6 +401,7 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
                 if (m.type == "ready") {
                     sendMarks(page)
                     sendHits(page)
+                    sendSource(page)
                     listener?.sectionReady(page)
                 }
                 page.take(m)
@@ -470,6 +471,20 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
                 .put("style", m.style.css).put("note", m.note != null))
         }
         page.call("yy.setMarks($list)")
+    }
+
+    /** 书伴's 出处: one sentence washed in the accent until something else is pointed at. */
+    private var source: Position? = null
+
+    fun setSource(p: Position?) {
+        source = p
+        slots.forEach(::sendSource)
+    }
+
+    private fun sendSource(page: SectionPage) {
+        val s = source
+        if (s == null || page.section != s.section.toInt()) return page.call("yy.setSource(null)")
+        page.call("yy.setSource(${s.sentence})")
     }
 
     private fun sendHits(page: SectionPage) {

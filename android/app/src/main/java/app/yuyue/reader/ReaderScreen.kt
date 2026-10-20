@@ -166,6 +166,9 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
     if (model.tocShown) TocSheet(model) { model.tocShown = false }
     if (model.settingsShown) TypesetSheet(model) { model.settingsShown = false }
     if (model.listenShown) ListenSheet(model) { model.listenShown = false }
+    var companionSettings by remember { mutableStateOf(false) }
+    if (model.companionShown) app.yuyue.companion.CompanionSheet(model, settings = { companionSettings = true }) { model.companionShown = false }
+    if (companionSettings) app.yuyue.companion.CompanionSettingsSheet { companionSettings = false }
     model.player?.failure?.let { message ->
         AlertDialog(
             onDismissRequest = { model.player.failure = null },
@@ -266,6 +269,7 @@ private fun TopBar(model: ReaderModel, paper: YYPaper, close: () -> Unit) {
             Box {
                 Glyph(Icons.more, t("更多"), paper.ink) { more = true }
                 DropdownMenu(more, { more = false }, containerColor = YY.c.card) {
+                    app.yuyue.shelf.Item(t("书伴"), Icons.companion) { more = false; model.chromeShown = false; model.companionShown = true }
                     app.yuyue.shelf.Item(t("书的信息"), Icons.info) { more = false }
                 }
             }
@@ -419,6 +423,12 @@ private fun Cards(model: ReaderModel, paper: YYPaper, thought: (Mark) -> Unit) {
                     if (m != null) thought(m)
                 }
                 if (model.player != null) CardAction(Icons.headphones, t("从这读"), Modifier.weight(1f)) { model.readFrom(current) }
+                CardAction(Icons.companion, t("问"), Modifier.weight(1f), color = YY.tint.accent) {
+                    model.companionQuote = text
+                    model.dismissCards()
+                    model.chromeShown = false
+                    model.companionShown = true
+                }
                 CardAction(Icons.translate, t("翻译"), Modifier.weight(1f)) {
                     model.dismissCards()
                     runCatching {
