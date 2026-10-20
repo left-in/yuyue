@@ -402,6 +402,7 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
                     sendMarks(page)
                     sendHits(page)
                     sendSource(page)
+                    sendForeign(page)
                     listener?.sectionReady(page)
                 }
                 page.take(m)
@@ -492,6 +493,60 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
         if (h == null || page.section == null) return page.call("yy.setHits(null, null)")
         val c = h.second?.takeIf { it.section.toInt() == page.section }?.let { "{s: ${it.sentence}, nth: ${it.nth}}" } ?: "null"
         page.call("yy.setHits(${org.json.JSONObject.quote(h.first)}, $c)")
+    }
+
+    // MARK: 外文原著
+
+    /** Taps on words look them up (点词). */
+    var lookup = false
+        set(v) { if (v != field) { field = v; slots.forEach(::sendForeign) } }
+    /** 生词: dotted wherever they turn up. */
+    private var vocab: List<String> = emptyList()
+    /** The word being looked up. */
+    private var looking: Triple<Int, TextPoint, TextPoint>? = null
+    /** 难词注释: the harder words of a section and their meanings, from the core. */
+    var glosser: ((Int) -> List<Pair<String, String>>)? = null
+    private val glossed = mutableMapOf<Int, List<Pair<String, String>>>()
+    /** 沉浸阅读 can hide 难词注释 too. */
+    var glossesHidden = false
+
+    fun refreshGlosses() {
+        if (glosser == null) return
+        glossed.clear()
+        slots.forEach(::sendGlosses)
+    }
+
+    fun setVocab(words: List<String>) {
+        if (words == vocab) return
+        vocab = words
+        for (p in slots) if (p.section != null) p.call("yy.setVocab(${org.json.JSONArray(words)})")
+    }
+
+    fun setLooking(section: Int?, start: TextPoint?, end: TextPoint?) {
+        looking = if (section != null && start != null && end != null) Triple(section, start, end) else null
+        slots.forEach(::sendLooking)
+    }
+
+    private fun sendForeign(page: SectionPage) {
+        if (page.section == null) return
+        page.call("yy.setLookup($lookup)")
+        if (vocab.isNotEmpty()) page.call("yy.setVocab(${org.json.JSONArray(vocab)})")
+        sendGlosses(page)
+        sendLooking(page)
+    }
+
+    private fun sendGlosses(page: SectionPage) {
+        val section = page.section ?: return
+        val g = glosser ?: return
+        if (glossesHidden) return page.call("yy.setGlosses(null)")
+        val list = glossed.getOrPut(section) { g(section) }
+        page.call("yy.setGlosses(${org.json.JSONArray(list.map { org.json.JSONObject().put("form", it.first).put("gloss", it.second) })})")
+    }
+
+    private fun sendLooking(page: SectionPage) {
+        val l = looking
+        if (l == null || page.section != l.first) return page.call("yy.setLooking(null, null)")
+        page.call("yy.setLooking(${l.second.json()}, ${l.third.json()})")
     }
 
     /** Hands JavaScript to the current section's reader. */

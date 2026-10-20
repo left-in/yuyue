@@ -40,7 +40,7 @@ data class TextSelection(val section: Int, val start: TextPoint, val end: TextPo
 data class OpenMark(val mark: Mark, val x: Double, val y: Double)
 
 /** One open book: where the reader is, how the pages look, the notes in it (as `ReaderModel` on iPhone). */
-class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPager, private val context: Context) : ReaderPager.Listener {
+class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPager, val context: Context) : ReaderPager.Listener {
     val core = library.core
     val detail: BookDetail? = runCatching { core.book(bookID) }.getOrNull()
     var failure by mutableStateOf<String?>(null)
@@ -86,6 +86,8 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     val player: app.yuyue.speech.Player? = detail?.takeIf { it.summary.format != uniffi.yuyue_core.BookFormat.COMIC }?.let { app.yuyue.speech.Player(context, core, it) }
     var listenShown by mutableStateOf(false)
     var immersiveShown by mutableStateOf(false)
+    /** 外文原著: the word tapped, and its card. */
+    var lookup by mutableStateOf<WordLookup?>(null)
     private var immersiveState = mutableStateOf(false)
     /** 沉浸阅读: only the words on the page. */
     var immersive: Boolean
@@ -125,6 +127,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         reloadNotes()
         // 我的 › 沉浸阅读 on: every book opens with only its words.
         immersive = ImmersivePrefs.always
+        setUpForeign()
         player?.let { p ->
             p.onSentence = { spot, duration, elapsed, playing -> reading(spot, duration, elapsed, playing); setListening(playing) }
             p.onStop = { pager.clearInk(); setListening(false) }
@@ -579,6 +582,8 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
 
     override fun tapped(m: ReaderMessage) {
         if (selection != null || openMark != null) return dismissCards()
+        if (lookup != null) return closeLookup()
+        m.word?.takeIf { isForeign && m.link == null }?.let { w -> library.scope.launch { look(w) }; return }
         m.mark?.let { id -> marks.firstOrNull { it.id == id }?.let { openMark = OpenMark(it, m.x ?: 0.0, m.y ?: 0.0); return } }
         m.link?.let { link ->
             link.optString("target").takeIf { it.isNotEmpty() }?.let { return follow(it) }

@@ -54,6 +54,8 @@ android {
     sourceSets["main"].assets.directories.add("../../reader/dist")
     // Wi‑Fi 传书's page for the computer, shared with Apple.
     sourceSets["main"].assets.directories.add("../../shared")
+    // 点词's dictionary (scripts/ecdict-android.py).
+    sourceSets["main"].assets.directories.add("src/main/assets-dict")
 
     packaging { jniLibs { useLegacyPackaging = false } }
 }

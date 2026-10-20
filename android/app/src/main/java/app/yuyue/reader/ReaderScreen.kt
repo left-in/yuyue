@@ -166,6 +166,7 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
         }
         Chrome(model, paper, close)
         Cards(model, paper) { thought = it }
+        model.lookup?.let { WordCard(model, it) }
         model.toast?.let {
             UndoToast(it, undo = { model.undoToast() }, modifier = Modifier.align(Alignment.BottomCenter).windowInsetsPadding(WindowInsets.navigationBars).padding(horizontal = 16.dp).padding(bottom = 72.dp))
         }
