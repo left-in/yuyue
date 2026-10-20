@@ -73,6 +73,7 @@ import app.yuyue.design.YYPapers
 import app.yuyue.library.Library
 import app.yuyue.shelf.UndoToast
 import app.yuyue.t
+import kotlinx.coroutines.launch
 import uniffi.yuyue_core.Mark
 import uniffi.yuyue_core.MarkStyle
 import uniffi.yuyue_core.Paper
@@ -177,6 +178,14 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
     if (model.settingsShown) TypesetSheet(model) { model.settingsShown = false }
     if (model.listenShown) ListenSheet(model) { model.listenShown = false }
     if (model.immersiveShown) ImmersiveSheet(model) { model.immersiveShown = false }
+    if (model.rulesShown) ReplaceRulesSheet(library.core, bookID, changed = { model.player?.textsChanged(); model.pager.reload() }) { model.rulesShown = false }
+    if (model.txtShown) TxtLayoutSheet(library, bookID, model.detail?.summary?.title ?: "", rebuilt = {
+        // The book was built again: closed and opened afresh, at the place the core carried over.
+        model.txtShown = false
+        close()
+        library.scope.launch { kotlinx.coroutines.delay(150); library.presented = bookID }
+    }) { model.txtShown = false }
+    if (model.infoShown) library.books.firstOrNull { it.id == bookID }?.let { app.yuyue.shelf.BookInfoSheet(library, it) { model.infoShown = false } }
     var companionSettings by remember { mutableStateOf(false) }
     if (model.companionShown) app.yuyue.companion.CompanionSheet(model, settings = { companionSettings = true }) { model.companionShown = false }
     if (companionSettings) app.yuyue.companion.CompanionSettingsSheet { companionSettings = false }
@@ -295,7 +304,9 @@ private fun TopBar(model: ReaderModel, paper: YYPaper, close: () -> Unit) {
                 DropdownMenu(more, { more = false }, containerColor = YY.c.card) {
                     app.yuyue.shelf.Item(t("沉浸阅读"), Icons.read) { more = false; model.immersiveShown = true }
                     app.yuyue.shelf.Item(t("书伴"), Icons.companion) { more = false; model.chromeShown = false; model.companionShown = true }
-                    app.yuyue.shelf.Item(t("书的信息"), Icons.info) { more = false }
+                    app.yuyue.shelf.Item(t("书的信息"), Icons.info) { more = false; model.infoShown = true }
+                    if (model.detail?.summary?.format != uniffi.yuyue_core.BookFormat.PDF) app.yuyue.shelf.Item(t("替换规则"), Icons.sort) { more = false; model.rulesShown = true }
+                    if (model.detail?.summary?.format == uniffi.yuyue_core.BookFormat.TXT) app.yuyue.shelf.Item(t("编码和目录"), Icons.textSize) { more = false; model.txtShown = true }
                 }
             }
         }

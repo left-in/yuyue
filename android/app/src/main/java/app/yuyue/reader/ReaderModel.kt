@@ -86,6 +86,9 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     val player: app.yuyue.speech.Player? = detail?.takeIf { it.summary.format != uniffi.yuyue_core.BookFormat.COMIC }?.let { app.yuyue.speech.Player(context, core, it) }
     var listenShown by mutableStateOf(false)
     var immersiveShown by mutableStateOf(false)
+    var infoShown by mutableStateOf(false)
+    var rulesShown by mutableStateOf(false)
+    var txtShown by mutableStateOf(false)
     /** 外文原著: the word tapped, and its card. */
     var lookup by mutableStateOf<WordLookup?>(null)
     private var immersiveState = mutableStateOf(false)

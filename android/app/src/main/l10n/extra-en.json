@@ -38,5 +38,6 @@
  "语阅 · 沉浸阅读": "Yuyue · Focus Reading",
  "读书时不打扰": "Reading, no interruptions",
  "读书时语阅打开勿扰，离开书页就关掉；你自己开的勿扰不会被动。": "Yuyue turns on Do Not Disturb while you read and off when you leave the book; a Do Not Disturb you turned on yourself is left alone.",
- "词典里没有这个词。": "This word isn't in the dictionary."
+ "词典里没有这个词。": "This word isn't in the dictionary.",
+ "规则从上往下依次执行。只改朗读的规则不动屏幕上的字，只改读出来的音。": "Rules run from top to bottom. A read-aloud-only rule leaves the words on screen alone and only changes how they're read."
 }
