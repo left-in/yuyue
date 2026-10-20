@@ -41,6 +41,8 @@ struct TypesetCard: View {
                 Text("A").font(YYUI.serif(12)).foregroundStyle(YYColor.t1)
                 Slider(value: binding(\.fontSize), in: Self.sizes, step: 1)
                     .controlSize(.small)
+                    // A popover doesn't take the window's tint: without it the slider is system blue.
+                    .tint(YYTint.standard.fill)
                 Text("A").font(YYUI.serif(18)).foregroundStyle(YYColor.t1)
                 Text("\(Int(model.settings.fontSize))")
                     .font(.system(size: 12, weight: .bold))
@@ -166,6 +168,7 @@ struct TypesetCard: View {
                 .labelsHidden()
                 .toggleStyle(.switch)
                 .controlSize(.small)
+                .tint(YYTint.standard.fill)
         }
     }
 
@@ -441,6 +444,7 @@ struct ListenCard: View {
             VStack(spacing: 2) {
             Slider(value: Binding(get: { Double(rate) }, set: { rate = Float(($0 * 10).rounded() / 10) }), in: 0.8 ... 2.0)
                 .controlSize(.small)
+                .tint(YYTint.standard.fill)
             GeometryReader { g in
                 ForEach(Self.rates, id: \.self) { mark in
                     Text(rateText(mark))

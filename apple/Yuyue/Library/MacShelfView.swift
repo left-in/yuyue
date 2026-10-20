@@ -659,7 +659,7 @@ struct MacShelfView: View {
                 Text(book.title)
                     .font(.system(size: 11.5, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
-                    .lineLimit(2)
+                    .lineLimit(1)
                     .padding(.bottom, 2)
                 if showProgress { note(book) }
             }

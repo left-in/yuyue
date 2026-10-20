@@ -631,7 +631,7 @@ private struct ComicQuickSettings: View {
                 .foregroundStyle(Color(white: 0.6))
                 .padding(.bottom, 8)
             row(String(localized: "自动裁白边"), String(localized: "扫描版四周的白边裁掉，画大一些")) {
-                Toggle("", isOn: $crop).toggleStyle(.switch).controlSize(.small).labelsHidden()
+                Toggle("", isOn: $crop).toggleStyle(.switch).controlSize(.small).labelsHidden().tint(YYTint.standard.fill)
             }
             Divider().overlay(Color.white.opacity(0.08))
             row(String(localized: "预加载"), nil) {
@@ -643,7 +643,7 @@ private struct ComicQuickSettings: View {
             }
             Divider().overlay(Color.white.opacity(0.08))
             row(String(localized: "窗口竖着时拆开跨页"), String(localized: "扫描版的双页图，单页看时拆成两半")) {
-                Toggle("", isOn: $split).toggleStyle(.switch).controlSize(.small).labelsHidden()
+                Toggle("", isOn: $split).toggleStyle(.switch).controlSize(.small).labelsHidden().tint(YYTint.standard.fill)
             }
         }
         .padding(16)
