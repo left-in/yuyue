@@ -154,6 +154,7 @@ fun Root(library: Library) {
             }
             when (library.books.firstOrNull { it.id == id }?.format) {
                 uniffi.yuyue_core.BookFormat.COMIC -> app.yuyue.comics.ComicScreen(library, id, closeBook)
+                uniffi.yuyue_core.BookFormat.PDF -> app.yuyue.pdf.PdfScreen(library, id, closeBook)
                 else -> ReaderScreen(library, id, closeBook)
             }
         }

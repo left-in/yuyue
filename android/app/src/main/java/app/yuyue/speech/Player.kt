@@ -32,7 +32,34 @@ import uniffi.yuyue_core.YuyueCore
  * chapters follow one another without a gap. Speed is applied while playing (pitch kept). The
  * notification and lock screen show the book and take play, pause, next and previous sentence.
  */
-class Player(private val context: Context, private val core: YuyueCore, val detail: BookDetail) {
+class Player(private val context: Context, private val core: YuyueCore, val detail: BookDetail, script: Script? = null) {
+    /** What is read, one section after another: a book's chapters from the core, or a PDF's
+     *  pages, each a section of its own. */
+    class Script(
+        val sentences: (Int) -> List<String>,
+        /** The next section with something to read, and the one before. */
+        val next: (Int) -> Int?,
+        val previous: (Int) -> Int?,
+        val language: (Int) -> String,
+        /** What the notification calls the section. */
+        val title: (Int) -> String?,
+    ) {
+        companion object {
+            fun book(core: YuyueCore, d: BookDetail): Script {
+                val id = d.summary.id
+                return Script(
+                    sentences = { runCatching { core.spokenSentences(id, it.toUInt()) }.getOrDefault(emptyList()) },
+                    next = { runCatching { core.nextSection(id, it.toUInt(), true) }.getOrNull()?.toInt() },
+                    previous = { runCatching { core.previousSection(id, it.toUInt(), true) }.getOrNull()?.toInt() },
+                    language = { d.sections.getOrNull(it)?.lang ?: d.summary.language },
+                    title = { s -> d.toc.lastOrNull { it.section.toInt() <= s }?.title ?: d.sections.getOrNull(s)?.title },
+                )
+            }
+        }
+    }
+
+    private val script: Script = script ?: Script.book(core, detail)
+
     enum class State { Stopped, Loading, Playing, Paused }
 
     /** A sentence of the book. */
@@ -404,15 +431,17 @@ class Player(private val context: Context, private val core: YuyueCore, val deta
 
     // MARK: The book's sentences
 
-    private fun sentences(section: Int): List<String> =
-        texts.getOrPut(section) { runCatching { core.spokenSentences(detail.summary.id, section.toUInt()) }.getOrDefault(emptyList()) }
+    private fun sentences(section: Int): List<String> = texts.getOrPut(section) { script.sentences(section) }
 
     private fun text(s: Spot) = sentences(s.section).getOrElse(s.sentence) { "" }
 
-    private fun lang(section: Int): String = detail.sections.getOrNull(section)?.lang ?: detail.summary.language
+    private fun lang(section: Int): String = script.language(section)
 
-    private fun next(section: Int) = runCatching { core.nextSection(detail.summary.id, section.toUInt(), true) }.getOrNull()?.toInt()
-    private fun previous(section: Int) = runCatching { core.previousSection(detail.summary.id, section.toUInt(), true) }.getOrNull()?.toInt()
+    private fun next(section: Int) = script.next(section)
+    private fun previous(section: Int) = script.previous(section)
+
+    /** What the notification calls the section being read. */
+    val sectionTitle: String? get() = spot?.let { script.title(it.section) }
 
     /** `s` itself when it can be read, or the first sentence after it that can. */
     private fun first(s: Spot): Spot? {

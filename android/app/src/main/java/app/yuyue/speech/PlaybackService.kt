@@ -65,7 +65,7 @@ object Session {
                 artBook = book.id
                 art = book.coverPath?.let { runCatching { File(it).readBytes() }.getOrNull() }
             }
-            val chapter = p.spot?.let { s -> p.detail.toc.lastOrNull { it.section.toInt() <= s.section }?.title }
+            val chapter = p.sectionTitle
             val meta = MediaMetadata.Builder()
                 .setTitle(p.line ?: book.title)
                 .setArtist(listOfNotNull(book.title, chapter).joinToString(" · "))
