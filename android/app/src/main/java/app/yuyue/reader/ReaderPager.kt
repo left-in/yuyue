@@ -222,6 +222,24 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
         settle(target.toFloat(), animated = !calm)
     }
 
+    /** Goes to a page of the current section, as the voice moves on. */
+    fun showPage(page: Int, animated: Boolean) {
+        val cur = current ?: return
+        val n = cur.layout?.pageCount ?: return
+        if (page !in 0 until n || page == cur.page) return
+        settle(page.toFloat(), animated && !calm)
+    }
+
+    /** The ink line under `sentence` of `section` (contract §7); off when null. */
+    fun setInk(section: Int, sentence: Int, durationMs: Double, elapsedMs: Double, playing: Boolean) {
+        for (s in slots) {
+            if (s.section == section) s.call("yy.setActive($sentence, {durationMs: $durationMs, elapsedMs: $elapsedMs, playing: $playing})")
+            else s.call("yy.setActive(null)")
+        }
+    }
+
+    fun clearInk() = callAll("yy.setActive(null)")
+
     /** Goes to page `p` of the current section (`-1` and `pageCount` cross into the neighbours). */
     private fun settle(to: Float, animated: Boolean) {
         animator?.cancel()

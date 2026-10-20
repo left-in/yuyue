@@ -82,6 +82,12 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         private set
     /** The pull-down of 下拉加书签, 0 when not pulled. */
     var pull by mutableStateOf(0f)
+    /** Reads the book aloud; null for a book without words to read. */
+    val player: app.yuyue.speech.Player? = detail?.takeIf { it.summary.format != uniffi.yuyue_core.BookFormat.COMIC }?.let { app.yuyue.speech.Player(context, core, it) }
+    var listenShown by mutableStateOf(false)
+    /** After a page is turned by hand the pages stop following the voice for a while. */
+    private var followFrom = 0L
+
     /** Opening a book only shows where it was; the position is written once the reader moves. */
     private var opened = false
     private var saving: Job? = null
@@ -106,6 +112,14 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         pager.calm = s.paper == Paper.EINK
         Prefs.string(STYLE_KEY).let { saved -> MarkStyle.entries.firstOrNull { it.name == saved }?.let { lastStyle = it } }
         reloadNotes()
+        player?.let { p ->
+            p.onSentence = { spot, duration, elapsed, playing -> reading(spot, duration, elapsed, playing); setListening(playing) }
+            p.onStop = { pager.clearInk(); setListening(false) }
+            p.onSleep = { spot ->
+                run { core.addBookmark(bookID, spot.section.toUInt(), spot.sentence.toUInt()) }
+                show(Library.Toast(Library.Toast.Icon.Check, t("定时到了，停在这里"), t("加了一个书签")))
+            }
+        }
         val d = detail
         if (d == null) {
             failure = t("找不到这本书的文件")
@@ -117,7 +131,55 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
             var position = if (intent == Library.OpenIntent.ListenFromStart) start else mine?.position ?: latest?.position ?: start
             if (intent is Library.OpenIntent.At) position = intent.position
             pager.open(position.section.toInt(), if (position.sentence == 0u) Target.Start else Target.Sentence(position.sentence.toInt()))
+            if (intent == Library.OpenIntent.Listen || intent == Library.OpenIntent.ListenFromStart) player?.play(position)
         }
+    }
+
+    // MARK: Reading aloud
+
+    val isPlaying: Boolean get() = player?.state == app.yuyue.speech.Player.State.Playing || player?.state == app.yuyue.speech.Player.State.Loading
+
+    private val following: Boolean get() = System.currentTimeMillis() >= followFrom
+
+    /** Pauses; or reads on from what's on screen. Paused on a sentence still on the page, it carries on from there. */
+    fun togglePlay() {
+        val p = player ?: return
+        when (p.state) {
+            app.yuyue.speech.Player.State.Playing, app.yuyue.speech.Player.State.Loading -> p.pause()
+            app.yuyue.speech.Player.State.Paused -> {
+                followFrom = 0
+                if (p.spot?.let(::isOnScreen) == true) p.resume() else pager.here()?.let { p.play(it) }
+            }
+            app.yuyue.speech.Player.State.Stopped -> {
+                followFrom = 0
+                pager.here()?.let { p.play(it) }
+            }
+        }
+    }
+
+    /** ‹ › in the capsule: a sentence while reading aloud, a page otherwise. */
+    fun step(forward: Boolean) {
+        val p = player
+        if (p != null && p.spot != null) p.skip(forward) else turn(forward)
+    }
+
+    private fun isOnScreen(spot: app.yuyue.speech.Player.Spot): Boolean {
+        val cur = pager.current ?: return false
+        if (cur.section != spot.section) return false
+        val layout = cur.layout ?: return false
+        return settings.mode == LayoutMode.SCROLLED || layout.pageOf(spot.sentence) == cur.page
+    }
+
+    private fun setListening(playing: Boolean) {
+        if (playing) { if (library.listening != bookID) library.listening = bookID }
+        else if (library.listening == bookID) library.listening = null
+    }
+
+    private fun reading(spot: app.yuyue.speech.Player.Spot, durationMs: Double, elapsedMs: Double, playing: Boolean) {
+        if (spot.section == section && sentence != spot.sentence) sentence = spot.sentence
+        pager.setInk(spot.section, spot.sentence, durationMs, elapsedMs, playing)
+        // Into the next chapter with the voice; within a section the reader says when the ink reaches another page.
+        if (following && spot.section != pager.current?.section) pager.show(spot.section, Target.Sentence(spot.sentence, "third"))
     }
 
     val paper: Paper get() = settings.paper
@@ -437,6 +499,8 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     fun close() {
         tick()
         flush()
+        player?.close()
+        setListening(false)
         pager.close()
     }
 
@@ -482,6 +546,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
 
     override fun turnedByHand(pager: ReaderPager) {
         lastTurn = System.currentTimeMillis()
+        followFrom = System.currentTimeMillis() + 8000
         chromeShown = false
         dismissCards()
         if (returnTo != null && ++turnsSinceJump >= 3) returnTo = null
@@ -518,7 +583,9 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         pager.show(s, if (parts.size > 1) Target.Anchor(parts[1], "third") else Target.Start)
     }
 
-    override fun inkReached(page: Int) {}
+    override fun inkReached(page: Int) {
+        if (following && isPlaying) pager.showPage(page, animated = true)
+    }
 
     override fun selected(m: ReaderMessage) {
         val start = m.start

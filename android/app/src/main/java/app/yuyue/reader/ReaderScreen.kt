@@ -147,6 +147,16 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
 
     if (model.tocShown) TocSheet(model) { model.tocShown = false }
     if (model.settingsShown) TypesetSheet(model) { model.settingsShown = false }
+    if (model.listenShown) ListenSheet(model) { model.listenShown = false }
+    model.player?.failure?.let { message ->
+        AlertDialog(
+            onDismissRequest = { model.player.failure = null },
+            containerColor = YY.c.card,
+            title = { Text(t("朗读出错了"), color = YY.c.t1) },
+            text = { Text(message, color = YY.c.t2) },
+            confirmButton = { TextButton({ model.player.failure = null }) { Text(t("好"), color = YY.tint.accent) } },
+        )
+    }
     thought?.let { mark ->
         ThoughtDialog(mark.note ?: "") { text ->
             if (text != null) model.setNote(text, mark)
@@ -249,7 +259,7 @@ private fun Capsule(model: ReaderModel, paper: YYPaper) {
     Box(Modifier.fillMaxWidth().height(50.dp).glass(paper)) {
         Row(Modifier.fillMaxSize().padding(horizontal = 5.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
             Glyph(Icons.list, t("目录、书签和笔记"), paper.ink) { model.tocShown = true }
-            Column(Modifier.weight(1f).padding(start = 2.dp)) {
+            Column(Modifier.weight(1f).padding(start = 2.dp).clickable(enabled = model.player != null) { model.listenShown = true }) {
                 val n = model.sentenceCount
                 Text(
                     if (n > 0) t("第 %lld / %lld 句", minOf(model.sentence + 1, n), n) else model.chapterTitle ?: "",
@@ -257,11 +267,13 @@ private fun Capsule(model: ReaderModel, paper: YYPaper) {
                 )
                 Text(model.capsuleNote, fontSize = 10.5.sp, color = paper.ink2, maxLines = 1)
             }
-            Glyph(Icons.chevronLeft, t("上一页"), paper.ink) { model.turn(false) }
-            Box(Modifier.size(40.dp).clip(CircleShape).background(paper.main).clickable(onClickLabel = t("朗读")) {}, contentAlignment = Alignment.Center) {
-                Icon(Icons.play, t("朗读"), tint = paper.onMain, modifier = Modifier.size(20.dp))
+            val reading = model.player?.spot != null
+            Glyph(Icons.chevronLeft, if (reading) t("上一句") else t("上一页"), paper.ink) { model.step(false) }
+            val playing = model.isPlaying
+            Box(Modifier.size(40.dp).clip(CircleShape).background(paper.main).clickable(enabled = model.player != null, onClickLabel = if (playing) t("暂停") else t("朗读")) { model.togglePlay() }, contentAlignment = Alignment.Center) {
+                Icon(if (playing) Icons.pause else Icons.play, if (playing) t("暂停") else t("朗读"), tint = paper.onMain, modifier = Modifier.size(20.dp))
             }
-            Glyph(Icons.chevronRight, t("下一页"), paper.ink) { model.turn(true) }
+            Glyph(Icons.chevronRight, if (reading) t("下一句") else t("下一页"), paper.ink) { model.step(true) }
             Box(Modifier.size(36.dp).clip(CircleShape).clickable(onClickLabel = t("排版")) { model.settingsShown = true }, contentAlignment = Alignment.Center) {
                 Text("Aa", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = paper.ink)
             }

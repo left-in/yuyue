@@ -15,6 +15,7 @@ class YuyueApp : Application() {
         instance = this
         if (BuildConfig.DEBUG) android.webkit.WebView.setWebContentsDebuggingEnabled(true)
         Prefs.init(this)
+        app.yuyue.library.Keys.init(this)
         L10n.load(this)
         // The core's own words (errors, 常用规则, a chapter's 读/听 line) in the interface's language.
         setUiLanguage(if (L10n.chinese) "zh-Hans" else "en")
