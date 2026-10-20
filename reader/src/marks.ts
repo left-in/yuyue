@@ -405,10 +405,13 @@ let pressing = false;
 export function initSelection(): void {
   // While the mouse is down the selection is still being dragged out: report it once released.
   document.addEventListener('pointerdown', () => (pressing = true), true);
-  document.addEventListener('pointerup', () => {
+  const released = (): void => {
     pressing = false;
     schedule(30);
-  }, true);
+  };
+  document.addEventListener('pointerup', released, true);
+  // Android ends a long press that starts a selection with pointercancel, not pointerup.
+  document.addEventListener('pointercancel', released, true);
   document.addEventListener('selectionchange', () => {
     if (!pressing) schedule(250);
   });

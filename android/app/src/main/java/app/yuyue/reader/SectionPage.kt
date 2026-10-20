@@ -267,4 +267,25 @@ class SectionPage(context: Context, private val core: YuyueCore, private val geo
 class ReaderWebView(context: Context) : WebView(context) {
     /** Text is selected on the page, so drags extend the selection instead of turning it. */
     var selecting = false
+
+    /** Selected words get 语阅's own card (划线 · 想法 · 复制 …), not the system's toolbar over it;
+     *  the selection and its handles stay. */
+    override fun startActionMode(callback: android.view.ActionMode.Callback?, type: Int): android.view.ActionMode = NoToolbar(this)
+
+    override fun startActionMode(callback: android.view.ActionMode.Callback?): android.view.ActionMode = NoToolbar(this)
+
+    private class NoToolbar(private val view: android.view.View) : android.view.ActionMode() {
+        override fun setTitle(title: CharSequence?) {}
+        override fun setTitle(resId: Int) {}
+        override fun setSubtitle(subtitle: CharSequence?) {}
+        override fun setSubtitle(resId: Int) {}
+        override fun setCustomView(view: android.view.View?) {}
+        override fun invalidate() {}
+        override fun finish() {}
+        override fun getMenu(): android.view.Menu = android.widget.PopupMenu(view.context, view).menu
+        override fun getTitle(): CharSequence? = null
+        override fun getSubtitle(): CharSequence? = null
+        override fun getCustomView(): android.view.View? = null
+        override fun getMenuInflater(): android.view.MenuInflater = android.view.MenuInflater(view.context)
+    }
 }
