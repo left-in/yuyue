@@ -60,7 +60,7 @@ import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
 
 /** A page under 我的. */
-enum class MePage { Stats, Appearance, About, Privacy, Licences }
+enum class MePage { Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening }
 
 /** 我的 (prototype 我的), as on iPhone: this week's reading and listening on top, the year's
  *  totals under it, then every setting in groups. */
@@ -77,6 +77,9 @@ fun MeScreen(library: Library) {
                 MePage.About -> About { stack += it }
                 MePage.Privacy -> TextPage(PRIVACY)
                 MePage.Licences -> TextPage(LICENCES)
+                MePage.Sync -> SyncPage(library.sync)
+                MePage.Snapshot -> SnapshotPage(library)
+                MePage.Listening -> ListeningPage()
             }
         }
     }
@@ -89,6 +92,9 @@ private val MePage.title: String
         MePage.About -> t("关于")
         MePage.Privacy -> t("隐私说明")
         MePage.Licences -> t("开源许可")
+        MePage.Sync -> t("同步")
+        MePage.Snapshot -> t("数据快照")
+        MePage.Listening -> t("朗读")
     }
 
 /** A page pushed over 我的: its name in the middle, ‹ on the left. */
@@ -117,7 +123,24 @@ private fun Main(library: Library, push: (MePage) -> Unit) {
         YYPage {
             Box(Modifier.padding(top = YY.s(14), bottom = YY.s(12)).clickable { push(MePage.Stats) }) { WeekCard(library) }
             Group {
+                row {
+                    val sync = library.sync
+                    val detail = when {
+                        !sync.on -> t("没开")
+                        sync.state is app.yuyue.sync.Sync.State.Failed -> t("%@ · 没同步上", "WebDAV")
+                        else -> listOfNotNull("WebDAV", sync.lastSynced?.let { ago(it) }).joinToString(" · ")
+                    }
+                    YYRow(t("同步"), Icons.sync, detail, chevron = true) { push(MePage.Sync) }
+                }
+            }
+            Group {
                 row { YYRow(t("外观"), Icons.settings, "${modeTitle(mode)} · ${YYTints.All.firstOrNull { it.id == tintID }?.name?.let { t(it) } ?: ""}", chevron = true) { push(MePage.Appearance) } }
+            }
+            Group {
+                row { YYRow(t("朗读"), Icons.headphones, null, chevron = true) { push(MePage.Listening) } }
+            }
+            Group {
+                row { YYRow(t("数据快照"), Icons.snapshot, t("换设备、备份"), chevron = true) { push(MePage.Snapshot) } }
             }
             Group {
                 row { YYRow(t("关于"), Icons.info, BuildConfig.VERSION_NAME, chevron = true) { push(MePage.About) } }
@@ -226,7 +249,8 @@ private fun PeriodTotal(label: String, seconds: Int, color: Color) {
 private fun Bars(days: List<DaySums>, modifier: Modifier) {
     val most = maxOf(1, days.maxOf { it.read + it.listen })
     val today = LocalDate.now()
-    val names = listOf(t("一"), t("二"), t("三"), t("四"), t("五"), t("六"), t("日"))
+    val names = if (app.yuyue.L10n.chinese) listOf("一", "二", "三", "四", "五", "六", "日")
+    else DayOfWeek.entries.map { it.getDisplayName(java.time.format.TextStyle.SHORT, java.util.Locale.getDefault()) }
     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
         days.forEachIndexed { i, d ->
             val on = d.day == today
@@ -289,10 +313,10 @@ private fun AppearancePage() {
         YYGroup {
             for (tint in YYTints.All) {
                 row {
-                    YYRow(t(tint.name), value = if (tint.id == YYTints.Default.id) t("默认") else t("你确认过的原样"), onClick = { tintID = tint.id }) {
+                    YYRow(t(tint.name), value = if (tint.id == YYTints.Default.id) t("默认") else t("你确认过的原样"), onClick = { tintID = tint.id }, trailing = {
                         Box(Modifier.size(YY.s(18)).background(tint.light.black, CircleShape))
                         Icon(Icons.check, null, tint = if (tint.id == tintID) YY.tint.accent else Color.Transparent, modifier = Modifier.size(YY.s(13)))
-                    }
+                    })
                 }
             }
         }

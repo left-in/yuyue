@@ -155,6 +155,9 @@ fun Root(library: Library) {
         }
     }
 
+    LaunchedEffect(Unit) { library.sync.keepUp() }
+    library.openedSnapshot?.let { (file, info) -> app.yuyue.me.SnapshotImportSheet(library, file, info) { library.openedSnapshot = null } }
+
     library.alert?.let { message ->
         AlertDialog(
             onDismissRequest = { library.alert = null },

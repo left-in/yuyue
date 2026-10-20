@@ -134,8 +134,8 @@ fun YYRow(
     value: String? = null,
     chevron: Boolean = false,
     titleColor: Color = YY.c.t1,
-    onClick: (() -> Unit)? = null,
     trailing: @Composable RowScope.() -> Unit = {},
+    onClick: (() -> Unit)? = null,
 ) {
     Row(
         Modifier

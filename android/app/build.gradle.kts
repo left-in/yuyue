@@ -84,6 +84,8 @@ dependencies {
     implementation("androidx.documentfile:documentfile:1.1.0")
     implementation("androidx.security:security-crypto:1.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+    // WebDAV needs PROPFIND and MKCOL, which the platform client refuses.
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // UniFFI's Kotlin bindings call the core through JNA.
     implementation("net.java.dev.jna:jna:5.18.1@aar")
 }

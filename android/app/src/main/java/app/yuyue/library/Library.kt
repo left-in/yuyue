@@ -52,6 +52,9 @@ class Library(private val context: Context) {
      *  over the tabs plays and pauses it, and opening the book again picks it up as it is. */
     var nowPlaying by mutableStateOf<Any?>(null)
     private val intents = mutableMapOf<String, OpenIntent>()
+    val sync = app.yuyue.sync.Sync(context, core, this)
+    /** A 数据快照 opened from another app, waiting to be looked at before it's brought back. */
+    var openedSnapshot by mutableStateOf<Pair<File, uniffi.yuyue_core.SnapshotInfo>?>(null)
 
     init {
         // Deleted books can be put back for 30 days; after that their files go.
@@ -236,6 +239,14 @@ class Library(private val context: Context) {
             val imported = mutableListOf<BookSummary>()
             for (uri in uris) {
                 val name = displayName(uri)
+                if (name.endsWith(".yuyue", ignoreCase = true)) {
+                    try {
+                        openedSnapshot = withContext(Dispatchers.IO) { app.yuyue.me.copyIn(uri)?.let { it to core.readSnapshot(it.path) } }
+                    } catch (e: Exception) {
+                        failures += "$name：${message(e)}"
+                    }
+                    continue
+                }
                 val had = books.map { it.id }.toSet()
                 try {
                     val book = withContext(Dispatchers.IO) { importOne(uri, name) }
@@ -263,6 +274,7 @@ class Library(private val context: Context) {
                         reload()
                     })
                 }
+                openedSnapshot != null && uris.size == 1 -> {}
                 else -> note(Toast.Icon.Check, t("书架里已经有这本了，没有再导入一份"), "")
             }
         }
