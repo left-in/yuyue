@@ -312,9 +312,9 @@ impl YuyueCore {
     /// parse.
     pub fn save_replace_rule(&self, rule: ReplaceRule) -> Result<ReplaceRule> {
         if rule.find.is_empty() {
-            return Err(CoreError::Invalid { message: crate::i18n::tr("要查找的字是空的", "Type what to find") });
+            return Err(CoreError::Invalid { detail: crate::i18n::tr("要查找的字是空的", "Type what to find") });
         }
-        compile(&rule).map_err(|message| CoreError::Invalid { message })?;
+        compile(&rule).map_err(|detail| CoreError::Invalid { detail })?;
         if let Some(b) = &rule.book {
             self.book_dir(b)?;
         }

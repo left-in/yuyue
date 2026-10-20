@@ -404,7 +404,7 @@ impl YuyueCore {
             return Ok(());
         }
         if !is_day(&day) {
-            return Err(CoreError::Invalid { message: format!("not a day: {day}") });
+            return Err(CoreError::Invalid { detail: format!("not a day: {day}") });
         }
         let mut store = lock(&self.store);
         let device = store.device().to_string();
@@ -485,7 +485,7 @@ impl YuyueCore {
         self.book_dir(&book)?;
         let (start, end) = if end < start { (end, start) } else { (start, end) };
         if start == end || text.trim().is_empty() {
-            return Err(CoreError::Invalid { message: crate::i18n::tr("没有选中文字", "Nothing is selected") });
+            return Err(CoreError::Invalid { detail: crate::i18n::tr("没有选中文字", "Nothing is selected") });
         }
         let id = new_id();
         let note = clean_note(note);

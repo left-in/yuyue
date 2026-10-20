@@ -25,7 +25,7 @@ impl YuyueCore {
     pub fn export_epub(&self, book_id: String, notes: bool, path: String) -> Result<()> {
         let m = self.manifest(&book_id)?;
         if matches!(m.format, Format::Comic | Format::Pdf) {
-            return Err(CoreError::Invalid { message: tr("漫画和 PDF 不能导出成 EPUB", "Comics and PDFs can't be exported as EPUB") });
+            return Err(CoreError::Invalid { detail: tr("漫画和 PDF 不能导出成 EPUB", "Comics and PDFs can't be exported as EPUB") });
         }
         let dir = self.book_dir(&book_id)?;
         let rules = self.rules_for(&book_id, false)?;
@@ -46,7 +46,7 @@ fn write_epub(m: &Manifest, dir: &Path, section: &dyn Fn(u32) -> Result<String>,
     let mut zip = ZipWriter::new(File::create(out)?);
     let stored = SimpleFileOptions::default().compression_method(CompressionMethod::Stored);
     let deflated = SimpleFileOptions::default().compression_method(CompressionMethod::Deflated);
-    let z = |e: zip::result::ZipError| CoreError::Io { message: e.to_string() };
+    let z = |e: zip::result::ZipError| CoreError::Io { detail: e.to_string() };
 
     // The mimetype comes first and uncompressed (EPUB OCF).
     zip.start_file("mimetype", stored).map_err(z)?;

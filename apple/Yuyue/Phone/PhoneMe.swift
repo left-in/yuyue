@@ -1873,23 +1873,19 @@ struct PhoneAbout: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    static let licences = """
-    语阅用到了这些开源项目，感谢它们的作者：
+    static var licences: String {
+        String(localized: "语阅用到了这些开源项目，感谢它们的作者：") + "\n\n"
+            + "UniFFI (MPL-2.0) · rusqlite / SQLite (MIT / Public Domain) · serde, serde_json, regex, encoding_rs, chardetng, zip, html5ever, roxmltree, ICU4X, blake3, percent-encoding, thiserror (MIT / Apache-2.0) · rars (MIT)"
+            + "\n\n" + String(localized: "完整的许可文本随源代码一起发布。")
+    }
 
-    UniFFI（MPL-2.0）· rusqlite / SQLite（MIT / 公有领域）· serde、serde_json（MIT / Apache-2.0）· quick-xml（MIT）· zip（MIT）· unrar（无 RAR 压缩功能的解压部分）· jieba-rs（MIT）· image（MIT / Apache-2.0）
-
-    完整的许可文本随源代码一起发布。
-    """
-
-    static let privacy = """
-    语阅没有服务器，也不收集任何数据：没有账号、没有统计、没有广告。
-
-    书、进度、笔记和生词都存在这台设备上。打开同步时，它们只在你的设备和你自己选的网盘（iCloud 云盘、WebDAV 或 Google Drive）之间传，语阅看不到。
-
-    书伴默认用设备自带的模型，不联网。你填了自己的 Key 时，提问和书里相关的几段原文会直接发给你选的服务商，费用和隐私条款按你和它的约定；Key 只存在这台设备的钥匙串里。
-
-    翻译用系统的离线翻译，原文不出这台设备。
-    """
+    static var privacy: String {
+        [String(localized: "语阅没有服务器，也不收集任何数据：没有账号、没有统计、没有广告。"),
+         String(localized: "书、进度、笔记和生词都存在这台设备上。打开同步时，它们只在你的设备和你自己选的网盘（iCloud 云盘、WebDAV 或 Google Drive）之间传，语阅看不到。"),
+         String(localized: "书伴默认用设备自带的模型，不联网。你填了自己的 Key 时，提问和书里相关的几段原文会直接发给你选的服务商，费用和隐私条款按你和它的约定；Key 只存在这台设备的钥匙串里。"),
+         String(localized: "云端声音和笔记导出（Notion、flomo）也只在你填了 Key 或链接时联网：要读的句子、要发的笔记直接发给你选的服务。读过的声音存在这台设备上。"),
+         String(localized: "翻译用系统的离线翻译，原文不出这台设备。")].joined(separator: "\n\n")
+    }
 }
 
 private struct PhoneTextPage: View {

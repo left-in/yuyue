@@ -128,7 +128,7 @@ impl YuyueCore {
         let dir = self.txt_dir(&book_id)?;
         let choice = normalized(choice);
         encoding(&choice)?;
-        txt::Headings::rule(choice.rule.as_deref()).map_err(|_| CoreError::Invalid { message: crate::i18n::tr("目录规则写得不对", "The chapter rule isn't valid") })?;
+        txt::Headings::rule(choice.rule.as_deref()).map_err(|_| CoreError::Invalid { detail: crate::i18n::tr("目录规则写得不对", "The chapter rule isn't valid") })?;
         let old = book::txt_options(&dir);
         if old.encoding == choice.encoding && old.rule == choice.rule {
             return self.summary(&book_id);
@@ -257,7 +257,7 @@ fn normalized(choice: TxtChoice) -> TxtChoice {
 
 fn encoding(choice: &TxtChoice) -> Result<Option<&'static encoding_rs::Encoding>> {
     match &choice.encoding {
-        Some(name) => txt::encoding_for(name).map(Some).ok_or_else(|| CoreError::Invalid { message: format!("{}{name}", crate::i18n::tr("不认识的编码：", "Unknown encoding: ")) }),
+        Some(name) => txt::encoding_for(name).map(Some).ok_or_else(|| CoreError::Invalid { detail: format!("{}{name}", crate::i18n::tr("不认识的编码：", "Unknown encoding: ")) }),
         None => Ok(None),
     }
 }

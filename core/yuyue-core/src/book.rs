@@ -389,10 +389,10 @@ fn build_mobi(tmp: &Path, id: &str, bytes: &[u8], fallback_title: &str) -> Resul
 
 fn build_txt(tmp: &Path, id: &str, bytes: &[u8], fallback_title: &str, options: &TxtOptions) -> Result<Manifest> {
     let encoding = match &options.encoding {
-        Some(name) => Some(txt::encoding_for(name).ok_or_else(|| CoreError::Invalid { message: format!("{}{name}", crate::i18n::tr("不认识的编码：", "Unknown encoding: ")) })?),
+        Some(name) => Some(txt::encoding_for(name).ok_or_else(|| CoreError::Invalid { detail: format!("{}{name}", crate::i18n::tr("不认识的编码：", "Unknown encoding: ")) })?),
         None => None,
     };
-    let headings = txt::Headings::rule(options.rule.as_deref()).map_err(|_| CoreError::Invalid { message: crate::i18n::tr("目录规则写得不对", "The chapter rule isn't valid") })?;
+    let headings = txt::Headings::rule(options.rule.as_deref()).map_err(|_| CoreError::Invalid { detail: crate::i18n::tr("目录规则写得不对", "The chapter rule isn't valid") })?;
     let analysis = txt::analyze(bytes, encoding, &headings);
     let layout = TxtOptions { doubt: analysis.doubt.clone(), ..options.clone() };
     if layout != TxtOptions::default() {

@@ -1,0 +1,9 @@
+{
+ "一本书可以同时放进几个合集。长按合集可以重命名或删除。": "A book can be in several collections. Long-press a collection to rename or delete it.",
+ "书、进度、笔记和生词都存在这台设备上。打开同步时，它们只在你的设备和你自己选的网盘（WebDAV 或 Google Drive）之间传，语阅看不到。": "Your books, progress, notes and words stay on this device. With sync on, they travel only between your devices and the storage you choose (WebDAV or Google Drive); Yuyue never sees them.",
+ "书伴、云端声音和笔记导出只在你填了自己的 Key 时联网，提问、要读的句子或笔记直接发给你选的服务商；Key 只存在这台设备上，加密保存。": "The companion, cloud voices and note export go online only when you add your own key: questions, sentences to read or notes go straight to the provider you chose. Keys stay on this device, encrypted.",
+ "完整的许可文本随源代码一起发布。": "The full licence texts are published with the source code.",
+ "语阅没有服务器，也不收集任何数据：没有账号、没有统计、没有广告。": "Yuyue has no servers and collects no data: no accounts, no analytics, no ads.",
+ "语阅用到了这些开源项目，感谢它们的作者：": "Yuyue uses these open-source projects, with thanks to their authors:",
+ "返回": "Back"
+}

@@ -89,7 +89,7 @@ fn check_id(id: &str) -> Result<()> {
 fn clean_name(name: &str) -> Result<String> {
     let name = name.split_whitespace().collect::<Vec<_>>().join(" ");
     if name.is_empty() {
-        return Err(CoreError::Invalid { message: crate::i18n::tr("合集要有名字", "A collection needs a name") });
+        return Err(CoreError::Invalid { detail: crate::i18n::tr("合集要有名字", "A collection needs a name") });
     }
     Ok(name.chars().take(40).collect())
 }

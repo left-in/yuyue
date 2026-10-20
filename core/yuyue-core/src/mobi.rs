@@ -826,7 +826,7 @@ fn escape(s: &str) -> String {
 }
 
 fn write_epub(pdb: &Pdb, resource_start: usize, book: &Book) -> Result<Vec<u8>> {
-    let err = |e: zip::result::ZipError| CoreError::Io { message: e.to_string() };
+    let err = |e: zip::result::ZipError| CoreError::Io { detail: e.to_string() };
     let mut zip = ZipWriter::new(Cursor::new(Vec::new()));
     let stored = SimpleFileOptions::default().compression_method(CompressionMethod::Stored);
     let deflated = SimpleFileOptions::default().compression_method(CompressionMethod::Deflated);

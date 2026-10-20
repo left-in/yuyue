@@ -285,10 +285,10 @@ impl Store {
         let now = (self.now)();
         for op in &batch.ops {
             let Some(remote) = parse_hlc(&op.hlc) else {
-                return Err(CoreError::Invalid { message: format!("bad clock stamp {}", op.hlc) });
+                return Err(CoreError::Invalid { detail: format!("bad clock stamp {}", op.hlc) });
             };
             if !op.hlc.ends_with(&op.device) {
-                return Err(CoreError::Invalid { message: format!("stamp {} is not from {}", op.hlc, op.device) });
+                return Err(CoreError::Invalid { detail: format!("stamp {} is not from {}", op.hlc, op.device) });
             }
             last = receive(last, remote, now);
             if watched(&op.entity, &op.field) {

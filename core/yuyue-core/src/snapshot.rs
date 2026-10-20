@@ -291,17 +291,17 @@ impl YuyueCore {
     }
 
     fn read_header(path: &str) -> Result<(Header, ZipArchive<File>)> {
-        let mut zip = ZipArchive::new(File::open(path)?).map_err(|_| CoreError::Invalid { message: crate::i18n::tr("这不是语阅的快照", "This isn't a 语阅 snapshot") })?;
+        let mut zip = ZipArchive::new(File::open(path)?).map_err(|_| CoreError::Invalid { detail: crate::i18n::tr("这不是语阅的快照", "This isn't a 语阅 snapshot") })?;
         let mut text = String::new();
         zip.by_name(HEADER)
-            .map_err(|_| CoreError::Invalid { message: crate::i18n::tr("这不是语阅的快照", "This isn't a 语阅 snapshot") })?
+            .map_err(|_| CoreError::Invalid { detail: crate::i18n::tr("这不是语阅的快照", "This isn't a 语阅 snapshot") })?
             .read_to_string(&mut text)?;
         let header: Header = serde_json::from_str(&text)?;
         if header.format != FORMAT {
-            return Err(CoreError::Invalid { message: crate::i18n::tr("这不是语阅的快照", "This isn't a 语阅 snapshot") });
+            return Err(CoreError::Invalid { detail: crate::i18n::tr("这不是语阅的快照", "This isn't a 语阅 snapshot") });
         }
         if header.version > 1 {
-            return Err(CoreError::Invalid { message: crate::i18n::tr("这个快照来自更新版本的语阅，先更新再导入", "This snapshot is from a newer 语阅. Update the app, then import it") });
+            return Err(CoreError::Invalid { detail: crate::i18n::tr("这个快照来自更新版本的语阅，先更新再导入", "This snapshot is from a newer 语阅. Update the app, then import it") });
         }
         Ok((header, zip))
     }
@@ -379,7 +379,7 @@ impl YuyueCore {
     /// Who made a snapshot, when, and what's in it, without reading it all.
     pub fn peek_snapshot(&self, path: String) -> Result<SnapshotAbout> {
         let bytes = std::fs::metadata(&path)?.len();
-        let not_one = || CoreError::Invalid { message: crate::i18n::tr("这不是语阅的快照", "This isn't a 语阅 snapshot") };
+        let not_one = || CoreError::Invalid { detail: crate::i18n::tr("这不是语阅的快照", "This isn't a 语阅 snapshot") };
         let mut zip = ZipArchive::new(File::open(&path)?).map_err(|_| not_one())?;
         let mut text = String::new();
         zip.by_name(ABOUT).map_err(|_| not_one())?.read_to_string(&mut text)?;

@@ -169,7 +169,7 @@ impl YuyueCore {
 fn key_of(word: &str) -> Result<String> {
     let key = word.trim().to_lowercase();
     if key.is_empty() || key.chars().count() > 64 || key.contains('/') || key.split_whitespace().count() > 4 {
-        return Err(CoreError::Invalid { message: crate::i18n::tr("这不像一个词", "That doesn't look like a word") });
+        return Err(CoreError::Invalid { detail: crate::i18n::tr("这不像一个词", "That doesn't look like a word") });
     }
     Ok(key)
 }
