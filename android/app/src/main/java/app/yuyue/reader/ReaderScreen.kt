@@ -66,6 +66,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import app.yuyue.design.Icons
+import app.yuyue.design.Prefs
 import app.yuyue.design.YY
 import app.yuyue.design.YYPaper
 import app.yuyue.design.YYPapers
@@ -96,15 +97,32 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
     val top = WindowInsets.statusBars.getTop(density)
     val bottom = WindowInsets.navigationBars.getBottom(density)
     val model = remember(bookID) {
-        val pager = ReaderPager(context, library.core, bookID)
-        pager.insetTop = top
-        pager.insetBottom = bottom
-        ReaderModel.PULL_MARK = with(density) { 64.dp.toPx() }
-        ReaderModel(library, bookID, pager, context)
+        // Still being read aloud with its pages closed: picked up as it is.
+        (library.nowPlaying as? ReaderModel)?.takeIf { it.bookID == bookID }?.also { library.nowPlaying = null } ?: run {
+            library.nowPlaying?.let { (it as? ReaderModel)?.close() }
+            library.nowPlaying = null
+            val pager = ReaderPager(context, library.core, bookID)
+            pager.insetTop = top
+            pager.insetBottom = bottom
+            ReaderModel.PULL_MARK = with(density) { 64.dp.toPx() }
+            ReaderModel(library, bookID, pager, context)
+        }
     }
     val paper = model.paper.tokens
     model.pager.background = paper.bg.toArgb()
-    DisposableEffect(model) { onDispose { model.close() } }
+    DisposableEffect(model) {
+        // 音量键翻页: on unless reading aloud, when the keys are for the volume.
+        VolumeKeys.handler = { forward ->
+            if (Prefs.bool("reader.volumeKeys", true) && !model.isPlaying && model.settings.mode == uniffi.yuyue_core.LayoutMode.PAGINATED) {
+                model.turn(forward); true
+            } else false
+        }
+        onDispose {
+            VolumeKeys.handler = null
+            // Pages closed while the voice reads on: it goes on, with the 播放条 over the tabs.
+            if (model.isPlaying) library.nowPlaying = model else model.close()
+        }
+    }
     BackHandler {
         when {
             model.selection != null || model.openMark != null -> model.dismissCards()
@@ -132,7 +150,7 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
     var thought by remember { mutableStateOf<Mark?>(null) }
 
     Box(Modifier.fillMaxSize().background(paper.bg)) {
-        AndroidView({ model.pager }, Modifier.fillMaxSize())
+        AndroidView({ model.pager.also { (it.parent as? android.view.ViewGroup)?.removeView(it) } }, Modifier.fillMaxSize())
         PullMark(model, paper)
         model.bookmarkHere?.takeIf { model.pull == 0f && !model.chromeShown && !model.searchShown }?.let {
             Icon(Icons.bookmark, null, tint = YY.tint.accent, modifier = Modifier.align(Alignment.TopEnd).padding(end = 22.dp).size(22.dp).offset(y = (-3).dp))
@@ -155,6 +173,15 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
             title = { Text(t("朗读出错了"), color = YY.c.t1) },
             text = { Text(message, color = YY.c.t2) },
             confirmButton = { TextButton({ model.player.failure = null }) { Text(t("好"), color = YY.tint.accent) } },
+            dismissButton = if (model.player.missingVoice) {
+                {
+                    TextButton({
+                        model.player.failure = null
+                        // The engine's own page for voice data: Chinese, English and the rest.
+                        runCatching { context.startActivity(android.content.Intent(android.speech.tts.TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)) }
+                    }) { Text(t("下载声音"), color = YY.tint.accent) }
+                }
+            } else null,
         )
     }
     thought?.let { mark ->
@@ -439,4 +466,9 @@ fun ThoughtDialog(initial: String, done: (String?) -> Unit) {
         confirmButton = { TextButton({ done(text) }) { Text(t("完成"), color = YY.tint.accent) } },
         dismissButton = { TextButton({ done(null) }) { Text(t("取消"), color = YY.c.t2) } },
     )
+}
+
+/** The volume keys while a book is open: the reader takes them to turn pages, or lets them be. */
+object VolumeKeys {
+    var handler: ((forward: Boolean) -> Boolean)? = null
 }

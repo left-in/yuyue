@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -45,6 +46,7 @@ import androidx.core.content.IntentCompat
 import app.yuyue.design.Icons
 import app.yuyue.design.YY
 import app.yuyue.design.YuyueTheme
+import app.yuyue.design.Prefs
 import app.yuyue.design.rememberPref
 import app.yuyue.library.Library
 import app.yuyue.reader.ReaderScreen
@@ -61,6 +63,22 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) handle(intent)
         setContent { YuyueTheme { Root(library) } }
+    }
+
+    /** 音量键翻页: volume down turns on, up turns back; held down, the pages keep turning. */
+    override fun onKeyDown(keyCode: Int, event: android.view.KeyEvent): Boolean {
+        val forward = when (keyCode) {
+            android.view.KeyEvent.KEYCODE_VOLUME_DOWN -> true
+            android.view.KeyEvent.KEYCODE_VOLUME_UP -> false
+            else -> return super.onKeyDown(keyCode, event)
+        }
+        return app.yuyue.reader.VolumeKeys.handler?.invoke(forward) == true || super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: android.view.KeyEvent): Boolean {
+        if ((keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP) && app.yuyue.reader.VolumeKeys.handler != null &&
+            Prefs.bool("reader.volumeKeys", true)) return true
+        return super.onKeyUp(keyCode, event)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -123,6 +141,7 @@ fun Root(library: Library) {
                     Page.Watched -> Placeholder(t("监听一个文件夹"))
                 }
             }
+            NowPlayingBar(library)
             TabBar(tab) { tab = it; pages.clear() }
         }
         BackHandler(enabled = pages.isNotEmpty()) { pages.removeAt(pages.lastIndex) }
@@ -181,5 +200,39 @@ private fun TabItem(icon: ImageVector, title: String, on: Boolean, onClick: () -
 fun Placeholder(title: String) {
     Box(Modifier.fillMaxSize().background(YY.c.bg), contentAlignment = Alignment.Center) {
         Text(title, color = YY.c.t3)
+    }
+}
+
+/** Cover, the sentence being read, ‹ ▶ ›, and a thin line for the chapter underneath, while a
+ *  book is read aloud with its pages closed. A tap anywhere else goes back to the page. */
+@Composable
+private fun NowPlayingBar(library: Library) {
+    val model = library.nowPlaying as? app.yuyue.reader.ReaderModel ?: return
+    val player = model.player ?: return
+    val book = library.books.firstOrNull { it.id == model.bookID } ?: return
+    if (player.state == app.yuyue.speech.Player.State.Stopped) {
+        LaunchedEffect(Unit) { model.close(); library.nowPlaying = null }
+        return
+    }
+    val tint = YY.tint
+    Box(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
+        Row(
+            Modifier.fillMaxWidth().background(YY.c.card, androidx.compose.foundation.shape.CircleShape)
+                .clickable { library.presented = book.id }.padding(start = 10.dp, end = 8.dp, top = 7.dp, bottom = 7.dp),
+            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            app.yuyue.shelf.BookCover(book, Modifier.size(width = 30.dp, height = 45.dp))
+            Column(Modifier.weight(1f)) {
+                Text(player.line ?: book.title, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = YY.c.t1, maxLines = 1)
+                Text(book.title, fontSize = 11.sp, color = YY.c.t3, maxLines = 1)
+            }
+            Icon(Icons.previous, t("上一句"), tint = YY.c.t1, modifier = Modifier.size(34.dp).clickable { player.skip(false) }.padding(6.dp))
+            val playing = player.state == app.yuyue.speech.Player.State.Playing || player.state == app.yuyue.speech.Player.State.Loading
+            Icon(if (playing) Icons.pause else Icons.play, if (playing) t("暂停") else t("接着听"), tint = YY.c.t1, modifier = Modifier.size(38.dp).clickable { player.toggle() }.padding(5.dp))
+            Icon(Icons.next, t("下一句"), tint = YY.c.t1, modifier = Modifier.size(34.dp).clickable { player.skip(true) }.padding(6.dp))
+        }
+        androidx.compose.foundation.layout.BoxWithConstraints(Modifier.align(Alignment.BottomStart).padding(horizontal = 22.dp).fillMaxWidth().height(2.dp)) {
+            Box(Modifier.width(maxWidth * player.sectionProgress.toFloat()).height(2.dp).background(tint.accent, androidx.compose.foundation.shape.CircleShape))
+        }
     }
 }

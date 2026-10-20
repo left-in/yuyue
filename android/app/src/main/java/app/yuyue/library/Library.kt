@@ -48,6 +48,9 @@ class Library(private val context: Context) {
     var presented by mutableStateOf<String?>(null)
     /** The book being read aloud, in whichever screen. */
     var listening by mutableStateOf<String?>(null)
+    /** A book still being read aloud after its pages were closed (a ReaderModel): the 播放条
+     *  over the tabs plays and pauses it, and opening the book again picks it up as it is. */
+    var nowPlaying by mutableStateOf<Any?>(null)
     private val intents = mutableMapOf<String, OpenIntent>()
 
     init {
