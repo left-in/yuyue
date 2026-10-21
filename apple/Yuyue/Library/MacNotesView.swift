@@ -423,6 +423,9 @@ struct MacNotesView: View {
                 NSPasteboard.general.setString(mark.text + (mark.note.map { "\n\n" + $0 } ?? ""), forType: .string)
             }
             Button("分享书摘…") { sharing = Self.quote(n, mark) }
+            // As on iPhone; the note at the bottom of the shelf offers 撤销.
+            Divider()
+            Button("删除划线", role: .destructive) { library.deleteMarks([(n.book.id, mark)]) }
         }
     }
 
