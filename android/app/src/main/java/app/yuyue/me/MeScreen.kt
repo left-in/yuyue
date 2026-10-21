@@ -60,7 +60,7 @@ import java.time.ZoneId
 import java.time.temporal.TemporalAdjusters
 
 /** A page under 我的. */
-enum class MePage { Immersive, EInk, Sources, Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening, Companion, NoteExport }
+enum class MePage { Immersive, EInk, Sources, Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening, Companion, NoteExport, Wifi, Foreign, Engines, Storage }
 
 /** 我的 (prototype 我的), as on iPhone: this week's reading and listening on top, the year's
  *  totals under it, then every setting in groups. */
@@ -84,6 +84,10 @@ fun MeScreen(library: Library) {
                 MePage.Companion -> app.yuyue.companion.CompanionSettings()
                 MePage.NoteExport -> app.yuyue.notes.NoteExportPage()
                 MePage.Sources -> {}
+                MePage.Wifi -> app.yuyue.shelf.WifiPage(library)
+                MePage.Foreign -> ForeignPage()
+                MePage.Engines -> EnginesPage { stack += it }
+                MePage.Storage -> StoragePage(library)
                 MePage.Immersive -> YYPage { Spacer(Modifier.height(YY.s(10))); app.yuyue.reader.ImmersiveSettings(null) }
                 MePage.EInk -> app.yuyue.reader.EInkPage(library.core)
             }
@@ -106,6 +110,10 @@ private val MePage.title: String
         MePage.Sources -> t("书库来源")
         MePage.Immersive -> t("沉浸阅读")
         MePage.EInk -> t("墨水屏")
+        MePage.Wifi -> t("Wi‑Fi 传书")
+        MePage.Foreign -> t("外文阅读")
+        MePage.Engines -> t("引擎")
+        MePage.Storage -> t("存储空间")
     }
 
 /** A page pushed over 我的: its name in the middle, ‹ on the left. */
@@ -144,8 +152,10 @@ private fun Main(library: Library, push: (MePage) -> Unit) {
                     YYRow(t("同步"), Icons.sync, detail, chevron = true) { push(MePage.Sync) }
                 }
                 row { YYRow(t("书库来源"), Icons.server, if (library.sources.all.isEmpty()) null else t("%lld 个", library.sources.all.size), chevron = true) { push(MePage.Sources) } }
+                row { YYRow(t("Wi‑Fi 传书"), Icons.wifi, null, chevron = true) { push(MePage.Wifi) } }
             }
             Group {
+                row { YYRow(t("外观"), Icons.settings, "${modeTitle(mode)} · ${YYTints.All.firstOrNull { it.id == tintID }?.name?.let { t(it) } ?: ""}", chevron = true) { push(MePage.Appearance) } }
                 row {
                     val on by rememberPref(app.yuyue.reader.ImmersivePrefs.ALWAYS, false)
                     YYRow(t("沉浸阅读"), Icons.read, if (on) t("开") else t("关"), chevron = true) { push(MePage.Immersive) }
@@ -154,16 +164,14 @@ private fun Main(library: Library, push: (MePage) -> Unit) {
                     val on by rememberPref(app.yuyue.reader.EInk.KEY, false)
                     YYRow(t("墨水屏"), Icons.book, if (on) t("开") else t("关"), chevron = true) { push(MePage.EInk) }
                 }
-                row { YYRow(t("外观"), Icons.settings, "${modeTitle(mode)} · ${YYTints.All.firstOrNull { it.id == tintID }?.name?.let { t(it) } ?: ""}", chevron = true) { push(MePage.Appearance) } }
+                row { YYRow(t("外文阅读"), Icons.translate, null, chevron = true) { push(MePage.Foreign) } }
             }
             Group {
                 row { YYRow(t("朗读"), Icons.headphones, null, chevron = true) { push(MePage.Listening) } }
-                row {
-                    val c = app.yuyue.companion.CompanionConfig.current
-                    YYRow(t("书伴"), Icons.companion, if (c.isReady) c.label else t("没接上"), chevron = true) { push(MePage.Companion) }
-                }
+                row { YYRow(t("引擎"), Icons.companion, t("书伴、朗读、翻译"), chevron = true) { push(MePage.Engines) } }
             }
             Group {
+                row { YYRow(t("存储空间"), Icons.storage, null, chevron = true) { push(MePage.Storage) } }
                 row { YYRow(t("数据快照"), Icons.snapshot, t("换设备、备份"), chevron = true) { push(MePage.Snapshot) } }
                 row { YYRow(t("笔记导出"), Icons.upload, "Obsidian · Notion · flomo", chevron = true) { push(MePage.NoteExport) } }
             }

@@ -40,5 +40,12 @@
  "读书时语阅打开勿扰，离开书页就关掉；你自己开的勿扰不会被动。": "Yuyue turns on Do Not Disturb while you read and off when you leave the book; a Do Not Disturb you turned on yourself is left alone.",
  "词典里没有这个词。": "This word isn't in the dictionary.",
  "规则从上往下依次执行。只改朗读的规则不动屏幕上的字，只改读出来的音。": "Rules run from top to bottom. A read-aloud-only rule leaves the words on screen alone and only changes how they're read.",
- "每本书一篇笔记，写进你选的文件夹；再发一次就更新那一篇。选 Obsidian 库，或库里的一个文件夹。": "One note per book, written into the folder you choose; sending again updates that note. Choose your Obsidian vault, or a folder in it."
+ "每本书一篇笔记，写进你选的文件夹；再发一次就更新那一篇。选 Obsidian 库，或库里的一个文件夹。": "One note per book, written into the folder you choose; sending again updates that note. Choose your Obsidian vault, or a folder in it.",
+ "Key 只存在这台设备上，加密保存，不同步、不上传。": "Keys stay on this device, encrypted. They aren't synced or uploaded.",
+ "交给手机上的翻译 App": "Uses a translation app on your phone",
+ "手机上的翻译 App": "A translation app on your phone",
+ "查词用语阅自带的英汉词典，不联网，变形词能找回原词。": "Words are looked up in Yuyue's built-in English–Chinese dictionary, offline; inflected forms lead back to the base word.",
+ "比如 Google 翻译": "Such as Google Translate",
+ "英汉词典（内置）": "English–Chinese (built in)",
+ "选中一句点“翻译”，交给 Google 翻译这类装在手机上的翻译 App。": "Select a sentence and tap Translate to send it to a translation app on your phone, such as Google Translate."
 }
