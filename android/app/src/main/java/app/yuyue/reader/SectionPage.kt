@@ -194,12 +194,16 @@ class SectionPage(context: Context, private val core: YuyueCore, private val geo
         val layout = layout ?: run { target = t; return }
         val g = generation
         val last = layout.pageCount - 1
+        // Across pages the page only finds where the target is and the pager moves the view
+        // (`render`): moved from both sides, the view adds one move to the other and lands a page
+        // too far. Down a scrolled section the page's own move stands.
+        fun find(expression: String) = "(function(){ const x = scrollX; const p = $expression; scrollTo(x, scrollY); return p; })()"
         val landed = when (t) {
-            Target.Start -> ask("(yy.scrollToPage(0, false), 0)")
-            Target.End -> ask("(yy.scrollToPage($last, false), $last)")
-            is Target.Page -> { val p = t.page.coerceIn(0, last); ask("(yy.scrollToPage($p, false), $p)") }
-            is Target.Sentence -> ask("yy.scrollToSentence(${t.sentence}, false, {align: '${t.align}'})")
-            is Target.Anchor -> ask("yy.scrollToAnchor(${JSONObject.quote(t.id)}, false, {align: '${t.align}'})")
+            Target.Start -> 0
+            Target.End -> last
+            is Target.Page -> t.page.coerceIn(0, last)
+            is Target.Sentence -> ask(find("yy.scrollToSentence(${t.sentence}, false, {align: '${t.align}'})"))
+            is Target.Anchor -> ask(find("yy.scrollToAnchor(${JSONObject.quote(t.id)}, false, {align: '${t.align}'})"))
         }
         val p = (landed as? Number)?.toInt() ?: return
         if (p >= 0 && g == generation) page = minOf(p, last)
