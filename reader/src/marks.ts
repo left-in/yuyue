@@ -166,6 +166,7 @@ function draw(): void {
     if (by[k]) reg.set('yy-' + k, new Highlight(...by[k]));
     else reg.delete('yy-' + k);
   }
+  repaint();
 }
 
 let fillsEl: HTMLElement | null = null;
@@ -291,8 +292,20 @@ export function setHits(query: string | null, current?: { s: number; nth: number
   if (reg && Highlight) {
     reg.set('yy-hit', new Highlight(...all));
     reg.set('yy-hit-now', new Highlight(...now));
+    repaint();
   }
   return all.length + now.length;
+}
+
+/** WebKit on the Mac doesn't paint a changed highlight while the keyboard is in a native field
+ *  (⌘G from the search box left the old hit solid, though the new one was set): give the text a
+ *  layer of its own, or take it away, so it is painted again. */
+let flip = false;
+function repaint(): void {
+  // On <body>, which holds the columns: inside it, a layer of its own would split the text
+  // across columns differently, and the absolutely placed pieces are placed from <html>.
+  flip = !flip;
+  document.body.style.setProperty('will-change', flip ? 'transform' : '');
 }
 
 /** 书伴's 出处: the whole sentence `s` washed in the accent and "出处" in the margin beside its
@@ -307,6 +320,7 @@ export function setSource(s: number | null): void {
     const r = source == null ? null : rangeOf({ s: source, o: 0 }, { s: source, o: sentenceText(source).length });
     if (r) reg.set('yy-source', new Highlight(r));
     else reg.delete('yy-source');
+    repaint();
   }
   placeSource();
 }

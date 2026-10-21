@@ -37,6 +37,9 @@ struct ReaderScreen: View {
                 Color.clear
             }
         }
+        #if os(macOS)
+        .background(OneWindowPerBook(bookID: bookID))
+        #endif
         .onAppear {
             guard model == nil, comic == nil, pdf == nil else { return }
             #if os(iOS)
@@ -97,6 +100,33 @@ struct ReaderScreen: View {
 }
 
 #if os(macOS)
+/// A book has one window. Opening it again comes to the window it has; but windows put back from
+/// last time (and any opened while they were being put back) can bring a book twice, so a second
+/// window for a book brings the first forward and closes itself.
+private struct OneWindowPerBook: NSViewRepresentable {
+    let bookID: String
+
+    @MainActor private static var open: [String: WeakWindow] = [:]
+    private struct WeakWindow { weak var window: NSWindow? }
+
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        let bookID = bookID
+        DispatchQueue.main.async {
+            guard let window = view.window else { return }
+            if let other = Self.open[bookID]?.window, other !== window, other.isVisible || other.isMiniaturized {
+                other.makeKeyAndOrderFront(nil)
+                window.close()
+                return
+            }
+            Self.open[bookID] = WeakWindow(window: window)
+        }
+        return view
+    }
+
+    func updateNSView(_ view: NSView, context: Context) {}
+}
+
 /// Books and comics keep their own window size: a book opens as the shelf does (`.v-mac`, with
 /// room for the notes beside the column), a comic wider for two pages side by side and dark
 /// behind the glass. Each remembers how it was last sized, so
