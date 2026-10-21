@@ -53,6 +53,8 @@ struct MacPdfView: View {
         .toolbar { toolbar }
         .toolbar(removing: .title)
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+        // `.v-mac-tb`, as in the reading window.
+        .trafficLights(CGPoint(x: 24, y: 29))
         .navigationTitle(model.title)
         .onAppear {
             #if DEBUG

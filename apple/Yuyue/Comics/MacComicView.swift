@@ -42,6 +42,13 @@ struct MacComicView: View {
         .preferredColorScheme(.dark)
         .toolbar(removing: .title)
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+        // Where the reading window has them (`.v-mac-tb`); the empty toolbar makes the title
+        // bar tall enough for them to be clicked there.
+        .toolbar {
+            ToolbarItem { Color.clear.frame(width: 1, height: 1) }
+                .withoutGlass()
+        }
+        .trafficLights(CGPoint(x: 24, y: 29))
         .navigationTitle(model.title)
         .onContinuousHover { phase in
             if case .active = phase { wake() }

@@ -60,6 +60,8 @@ struct MacReaderView: View {
         .toolbar(model.immersive ? .hidden : .visible, for: .windowToolbar)
         .toolbar(removing: .title)
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+        // `.v-mac-tb`: 18 in, in the middle of the 58-high bar.
+        .trafficLights(CGPoint(x: 24, y: 29))
         .navigationTitle(model.detail?.summary.title ?? String(localized: "读书"))
         .focusedSceneValue(\.reader, model)
         .onChange(of: model.searchFieldWanted) { focusSearch() }

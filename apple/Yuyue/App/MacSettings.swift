@@ -20,10 +20,15 @@ struct MacSettings: View {
                 // The window grows to the whole page, wrapped lines and all.
                 .fixedSize(horizontal: false, vertical: true)
         }
+        // `.v-ms-stb`: one header 88 high from the window's top edge, title bar and all.
+        .ignoresSafeArea(.container, edges: .top)
+        .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
         .frame(width: 680)
         .tint(tint.accent)
         .navigationTitle(page.title)
         .background(SettingsTitlebar(title: page.title))
+        // `.v-ms-stb .v-lights`: 16 in, 14 down.
+        .trafficLights(CGPoint(x: 22, y: 20))
     }
 
     @ViewBuilder private func content(_ p: SettingsPage) -> some View {
@@ -103,8 +108,9 @@ struct SettingsTabs: View {
         HStack(spacing: 4) {
             ForEach(SettingsPage.allCases) { tab($0) }
         }
-        .padding(.top, 4)
-        .padding(.bottom, 8)
+        // `.v-ms-tabs` start 33 down; the bar is 88 in all.
+        .padding(.top, 33)
+        .padding(.bottom, 7)
         .frame(maxWidth: .infinity)
         .background(Color(nsColor: Self.header))
         .overlay(alignment: .bottom) { Rectangle().fill(YYColor.line).frame(height: 0.5) }
@@ -173,6 +179,8 @@ private struct SettingsTitlebar: NSViewRepresentable {
             if window.toolbar != nil { window.toolbar = nil }
             if window.titleVisibility != .hidden { window.titleVisibility = .hidden }
             if !window.titlebarAppearsTransparent { window.titlebarAppearsTransparent = true }
+            // The header is drawn under the title bar, so the two are one colour with no line.
+            if !window.styleMask.contains(.fullSizeContentView) { window.styleMask.insert(.fullSizeContentView) }
             if window.titlebarSeparatorStyle != .none { window.titlebarSeparatorStyle = .none }
             window.backgroundColor = SettingsTabs.header
             guard label.superview == nil, let close = window.standardWindowButton(.closeButton), let bar = close.superview else { return }
@@ -189,6 +197,72 @@ private struct SettingsTitlebar: NSViewRepresentable {
     func updateNSView(_ host: Host, context: Context) {
         host.label.stringValue = title
         host.window.map(host.tidy)
+    }
+}
+
+// MARK: - Traffic lights
+
+extension View {
+    /// Puts the window's close, minimise and zoom buttons where the prototype draws them: the
+    /// close button's middle `close` from the window's top-left corner, the others after it at the
+    /// system's spacing (`.v-lights`). AppKit lays them out again whenever it likes, so they are
+    /// put back on every window update.
+    func trafficLights(_ close: CGPoint) -> some View {
+        background(TrafficLights(close: close))
+    }
+}
+
+private struct TrafficLights: NSViewRepresentable {
+    let close: CGPoint
+
+    final class Host: NSView {
+        var close = CGPoint.zero
+        nonisolated(unsafe) private var observers: [NSObjectProtocol] = []
+
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            observers.forEach(NotificationCenter.default.removeObserver)
+            observers = []
+            guard let window else { return }
+            for name in [NSWindow.didUpdateNotification, NSWindow.didResizeNotification, NSWindow.didExitFullScreenNotification] {
+                observers.append(NotificationCenter.default.addObserver(forName: name, object: window, queue: .main) { [weak self] note in
+                    guard let window = note.object as? NSWindow else { return }
+                    MainActor.assumeIsolated { self?.place(in: window) }
+                })
+            }
+            place(in: window)
+        }
+
+        deinit { observers.forEach(NotificationCenter.default.removeObserver) }
+
+        func place(in window: NSWindow) {
+            guard !window.styleMask.contains(.fullScreen) else { return }
+            let buttons = [NSWindow.ButtonType.closeButton, .miniaturizeButton, .zoomButton].compactMap { window.standardWindowButton($0) }
+            guard buttons.count == 3, let bar = buttons[0].superview else { return }
+            // A button below the title bar shows but can't be clicked: such a window needs a
+            // toolbar, which makes the bar 52 high (SwiftUI owns it, so it isn't added here).
+            guard bar.frame.height >= close.y + buttons[0].frame.height / 2 else { return }
+            let step = buttons[1].frame.minX - buttons[0].frame.minX
+            // The middle of the close button, in the bar's own coordinates.
+            let top = window.frame.height - close.y
+            let middle = bar.convert(NSPoint(x: close.x, y: top), from: nil)
+            for (i, b) in buttons.enumerated() {
+                let origin = NSPoint(x: (middle.x + CGFloat(i) * step - b.frame.width / 2).rounded(),
+                                     y: (middle.y - b.frame.height / 2).rounded())
+                if b.frame.origin != origin { b.setFrameOrigin(origin) }
+            }
+        }
+    }
+
+    func makeNSView(context: Context) -> Host {
+        let host = Host()
+        host.close = close
+        return host
+    }
+
+    func updateNSView(_ host: Host, context: Context) {
+        host.close = close
+        host.window.map(host.place)
     }
 }
 

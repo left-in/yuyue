@@ -72,6 +72,8 @@ private struct AlignCheck: View {
         }
         .background(paper.bg)
         .environment(\.colorScheme, .light)
+        // `.v-mac-tb`, as in the reading window.
+        .trafficLights(CGPoint(x: 24, y: 29))
         .navigationTitle("\(bookTitle) · 对齐检查")
         .navigationSubtitle("第 \(chapter) 章 · \(timings.sections.count - timings.troubled.count) 章对好了\(left > 0 ? String(localized: "，\(left) 处要看一下") : "")")
         .toolbar {
