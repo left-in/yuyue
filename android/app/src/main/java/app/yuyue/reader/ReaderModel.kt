@@ -628,7 +628,16 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         if (selection != null) openMark = null
     }
 
-    override fun doubleTapped(m: ReaderMessage) {}
+    override fun doubleTapped(m: ReaderMessage) {
+        // 双击屏幕边缘进出沉浸, as on iPhone: the outer eighth on either side, where no words are.
+        val view = pager.current?.webView ?: return
+        val width = view.width / view.resources.displayMetrics.density
+        val x = m.x ?: return
+        if (width > 0 && (x < width * 0.12 || x > width * 0.88)) {
+            chromeShown = false
+            immersive = !immersive
+        }
+    }
 
     override fun sectionReady(page: SectionPage) {
         player?.spot?.takeIf { it.section == page.section && player.state != app.yuyue.speech.Player.State.Stopped }?.let {
