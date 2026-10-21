@@ -129,7 +129,7 @@ struct TxtLayoutView: View {
     // MARK: 目录
 
     @ViewBuilder private var chapterPart: some View {
-        YYLabel(String(localized: "目录"), layout.flatMap { $0.error == nil ? String(localized: "识别出 \($0.chapters.count.formatted()) 章") : nil })
+        YYLabel(String(localized: "目录"), layout.flatMap { $0.error == nil ? String(localized: "识别出 \($0.chapters.count) 章") : nil })
         YYGroup {
             YYField(label: String(localized: "目录规则"), labelWidth: 52) { ruleField }
             if let error = layout?.error {
@@ -151,7 +151,7 @@ struct TxtLayoutView: View {
                         chapterRow(chapters[long], long: true)
                     } else {
                         NavigationLink { allChapters(layout) } label: {
-                            YYRow(String(localized: "全部 \(chapters.count.formatted()) 章"), chevron: true)
+                            YYRow(String(localized: "全部 \(chapters.count) 章"), chevron: true)
                         }
                         .buttonStyle(.plain)
                     }
@@ -209,7 +209,7 @@ struct TxtLayoutView: View {
             }
             .padding(.top, YYUI.s(12))
         }
-        .navigationTitle("\(layout.chapters.count.formatted()) 章")
+        .navigationTitle("\(layout.chapters.count) 章")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif

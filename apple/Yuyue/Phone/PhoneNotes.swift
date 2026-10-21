@@ -298,7 +298,7 @@ struct PhoneNotes: View {
                 }
             } header: {
                 HStack {
-                    Text("\(shown.count) 本书 · \(shown.reduce(0) { $0 + $1.marks.count }.formatted()) 条")
+                    Text("\(shown.count) 本书 · \(shown.reduce(0) { $0 + $1.marks.count }) 条")
                     Spacer()
                     Text("最近记的在上面")
                 }

@@ -249,7 +249,7 @@ struct QuickSearchPanel: View {
                         }
                     }
                     if !search.lines.isEmpty {
-                        group(String(localized: "全文"), String(localized: "\(search.lineCount.formatted()) 处 · \(search.lineBooks) 本书"))
+                        group(String(localized: "全文"), String(localized: "\(search.lineCount) 处 · \(search.lineBooks) 本书"))
                         ForEach(Array(search.lines.enumerated()), id: \.element.id) { i, l in
                             row(1 + search.titles.count + i) { lineRow(l) }
                         }
@@ -418,7 +418,7 @@ struct QuickSearchPanel: View {
             HStack(spacing: 4) { Key("↩"); Text("打开") }
             HStack(spacing: 4) { Key("⌘↩"); Text("问书伴") }
             Spacer()
-            Text("在 \(search.bookCount.formatted()) 本书和 \(search.allNotes.formatted()) 条笔记里搜")
+            Text("在 \(search.bookCount) 本书和 \(search.allNotes) 条笔记里搜")
         }
         .font(.system(size: 10.5))
         .foregroundStyle(YYColor.t3)

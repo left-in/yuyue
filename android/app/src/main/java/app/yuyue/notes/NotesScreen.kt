@@ -252,7 +252,7 @@ private fun BookList(shown: List<NotedBook>, open: (String) -> Unit) {
     LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 96.dp)) {
         item {
             Row(Modifier.padding(start = 4.dp, end = 4.dp, top = 12.dp, bottom = 8.dp)) {
-                Text(t("%lld 本书 · %@ 条", shown.size, shown.sumOf { it.marks.size }.toString()), fontSize = 12.sp, color = YY.c.t3, modifier = Modifier.weight(1f))
+                Text(t("%lld 本书 · %lld 条", shown.size, shown.sumOf { it.marks.size }), fontSize = 12.sp, color = YY.c.t3, modifier = Modifier.weight(1f))
                 Text(t("最近记的在上面"), fontSize = 12.sp, color = YY.c.t3)
             }
         }

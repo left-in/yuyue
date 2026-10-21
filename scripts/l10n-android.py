@@ -4,7 +4,8 @@
 Kotlin code says `t("已导入 %lld 本书", n)`: the Chinese is the key, exactly as in
 apple/Yuyue/Localizable.xcstrings (Swift format specifiers and all). Words only Android has go in
 android/app/src/main/l10n/extra-en.json. Writes one JSON table, key -> English, where a plural is
-{"one": …, "other": …}.
+{"one": …, "other": …} and a key with several counts is {"text": "…%#@n@…", "subs": {"n":
+[argument, specifier, one, other]}} (see scripts/l10n-plurals.py).
 
 usage: l10n-android.py OUT.json
 """
@@ -17,7 +18,12 @@ for key, entry in cat['strings'].items():
     en = entry.get('localizations', {}).get('en')
     if not en:
         continue
-    if 'stringUnit' in en:
+    if 'substitutions' in en:
+        out[key] = {'text': en['stringUnit']['value'], 'subs': {
+            name: [s['argNum'], s['formatSpecifier'], s['variations']['plural']['one']['stringUnit']['value'],
+                   s['variations']['plural']['other']['stringUnit']['value']]
+            for name, s in en['substitutions'].items()}}
+    elif 'stringUnit' in en:
         out[key] = en['stringUnit']['value']
     elif 'variations' in en and 'plural' in en['variations']:
         p = en['variations']['plural']

@@ -26,6 +26,11 @@ object L10n {
         english = buildMap {
             for (key in json.keys()) {
                 when (val v = json.get(key)) {
+                    is JSONObject if v.has("subs") -> put(key, Counted(v.getString("text"), v.getJSONObject("subs").let { subs ->
+                        subs.keys().asSequence().associateWith { name ->
+                            subs.getJSONArray(name).let { Counted.Sub(it.getInt(0), it.getString(1), it.getString(2), it.getString(3)) }
+                        }
+                    }))
                     is JSONObject -> put(key, v.keys().asSequence().associateWith { v.getString(it) })
                     else -> put(key, v.toString())
                 }
@@ -37,6 +42,7 @@ object L10n {
         val found = english?.get(key)
         val pattern = when (found) {
             is String -> found
+            is Counted -> found.pattern(args)
             is Map<*, *> -> {
                 val n = args.firstOrNull { it is Number } as Number?
                 (found[if (n?.toLong() == 1L) "one" else "other"] ?: found["other"]) as String
@@ -45,6 +51,18 @@ object L10n {
         }
         if (args.isEmpty()) return pattern.replace("%%", "%")
         return String.format(kotlin(pattern), *args)
+    }
+
+    /** A key with several counts, each worded on its own: `%#@n@` in `text` becomes `n`'s one or
+     *  other, with `%arg` as its argument. */
+    private class Counted(val text: String, val subs: Map<String, Sub>) {
+        class Sub(val arg: Int, val spec: String, val one: String, val other: String)
+
+        fun pattern(args: Array<out Any?>): String = Regex("""%#@(\w+)@""").replace(text) { m ->
+            val sub = subs[m.groupValues[1]] ?: return@replace m.value
+            val n = (args.getOrNull(sub.arg - 1) as? Number)?.toLong()
+            (if (n == 1L) sub.one else sub.other).replace("%arg", "%${sub.arg}\$${sub.spec}")
+        }
     }
 
     private val swiftSpec = Regex("""%(\d+\$)?([-+ 0#]*\d*(?:\.\d+)?)(lld|ld|llu|lu|u|@)""")

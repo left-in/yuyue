@@ -81,7 +81,7 @@ fun TxtLayoutSheet(library: Library, bookID: String, title: String, rebuilt: () 
                 l?.previewTitle?.let { Text(it, style = YY.font(12.5f, FontWeight.SemiBold, YY.serif), color = YY.c.t1) }
                 l?.preview?.take(3)?.forEach { Text("　　" + it, style = YY.font(11.5f, family = YY.serif), color = YY.c.t1, maxLines = 3) }
             }
-            YYLabel(t("目录"), l?.takeIf { it.error == null }?.let { t("识别出 %@ 章", "%,d".format(it.chapters.size)) })
+            YYLabel(t("目录"), l?.takeIf { it.error == null }?.let { t("识别出 %lld 章", it.chapters.size) })
             YYGroup {
                 row { YYField(t("目录规则"), 52f) { Field(rule, l?.defaultRule ?: t("自动")) { rule = it } } }
                 val chapters = l?.chapters ?: emptyList()

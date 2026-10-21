@@ -151,7 +151,7 @@ struct MacNotesView: View {
     private var header: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             Text("笔记").font(.system(size: 22, weight: .bold)).foregroundStyle(YYColor.t1)
-            Text("\(allMarks.count.formatted()) 条 · 来自 \(notes.count) 本书")
+            Text("\(allMarks.count) 条 · 来自 \(notes.count) 本书")
                 .font(.system(size: 12)).foregroundStyle(YYColor.t2)
             Spacer()
             Segments(items: [(false, String(localized: "按时间")), (true, String(localized: "按书"))], selection: $byBook, small: true) { Text($1) }

@@ -103,7 +103,7 @@ struct PhoneSearch: View {
                         card { ForEach(s.titles) { titleRow($0) } }
                     }
                     if (scope == .all || scope == .lines), !s.lines.isEmpty {
-                        label(String(localized: "全文"), String(localized: "\(s.lineCount.formatted()) 处 · \(s.lineBooks) 本书"))
+                        label(String(localized: "全文"), String(localized: "\(s.lineCount) 处 · \(s.lineBooks) 本书"))
                         card { ForEach(scope == .all ? Array(s.lines.prefix(4)) : s.lines) { lineRow($0) } }
                     }
                     if (scope == .all || scope == .notes), !s.notes.isEmpty {

@@ -150,7 +150,7 @@ fun SearchScreen(library: Library) {
                     item { YYGroup { for (h in titles) row { TitleRow(h) { open(library, h) } } } }
                 }
                 if ((scope == Scope.All || scope == Scope.Lines) && lines.isNotEmpty()) {
-                    item { YYLabel(t("全文"), t("%@ 处 · %lld 本书", "$lineCount", lineBooks)) }
+                    item { YYLabel(t("全文"), t("%lld 处 · %lld 本书", lineCount, lineBooks)) }
                     item {
                         YYGroup {
                             for (l in if (scope == Scope.All) lines.take(4) else lines) row {
