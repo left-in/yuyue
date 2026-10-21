@@ -313,7 +313,7 @@ struct MacReviewSheet: View {
         return VStack(alignment: .leading, spacing: 0) {
             Text(review.book == nil ? String(localized: "今天的 \(review.items.count) 条看完了") : String(localized: "这本书的 \(review.items.count) 条看完了"))
                 .font(YYUI.serif(19, .semibold)).tracking(0.4).foregroundStyle(YYColor.t1)
-            Text("留下 \(kept) 条" + (dropped > 0 ? String(localized: " · 不要了 \(dropped) 条") : ""))
+            Text(String(localized: "留下 \(kept) 条") + (dropped > 0 ? String(localized: " · 不要了 \(dropped) 条") : ""))
                 .font(.system(size: 11.5)).monospacedDigit().foregroundStyle(YYColor.t2).padding(.top, 6)
             VStack(spacing: 0) {
                 ForEach(Array(review.items.enumerated()), id: \.element.mark.id) { i, item in

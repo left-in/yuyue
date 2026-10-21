@@ -16083,6 +16083,16 @@
           }
         }
       }
+    },
+    "留下 %lld 条" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kept %lld"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
