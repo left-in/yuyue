@@ -47,5 +47,10 @@
  "查词用语阅自带的英汉词典，不联网，变形词能找回原词。": "Words are looked up in Yuyue's built-in English–Chinese dictionary, offline; inflected forms lead back to the base word.",
  "比如 Google 翻译": "Such as Google Translate",
  "英汉词典（内置）": "English–Chinese (built in)",
- "选中一句点“翻译”，交给 Google 翻译这类装在手机上的翻译 App。": "Select a sentence and tap Translate to send it to a translation app on your phone, such as Google Translate."
+ "选中一句点“翻译”，交给 Google 翻译这类装在手机上的翻译 App。": "Select a sentence and tap Translate to send it to a translation app on your phone, such as Google Translate.",
+ "Google 账号没连上（%@）": "Couldn't connect the Google account (%@)",
+ "Google 账号要重新登录": "Sign in to your Google account again",
+ "和 iPhone、Mac 选同一种方式，进度和笔记就在这些设备之间来回。Google Drive 存在只有语阅看得到的隐藏文件夹里。": "Choose the same way on your iPhone and Mac, and progress and notes travel between them. On Google Drive they're kept in a hidden folder only Yuyue can see.",
+ "已连接": "Connected",
+ "用这台手机上的 Google 账号": "Uses the Google account on this phone"
 }

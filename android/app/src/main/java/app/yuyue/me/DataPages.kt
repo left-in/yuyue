@@ -55,6 +55,8 @@ import app.yuyue.library.Library
 import app.yuyue.reader.SwitchRow
 import app.yuyue.shelf.Field
 import app.yuyue.sync.Sync
+import app.yuyue.sync.DriveAuth
+import androidx.activity.result.IntentSenderRequest
 import app.yuyue.t
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -77,16 +79,53 @@ import java.util.Locale
 @Composable
 fun SyncPage(sync: Sync) {
     var editing by remember { mutableStateOf(false) }
+    var driving by remember { mutableStateOf(false) }
+    var driveProblem by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    fun connect() {
+        scope.launch {
+            try {
+                withContext(Dispatchers.IO) { sync.connectDrive() }
+            } catch (e: Exception) {
+                driveProblem = Sync.message(e)
+            }
+            driving = false
+        }
+    }
+    val allow = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        if (runCatching { DriveAuth.token(context, result.data) }.isSuccess) connect() else driving = false
+    }
     LaunchedEffect(Unit) { sync.loadDevices() }
     YYPage {
         StatusCard(sync)
         YYLabel(t("同步方式"))
         YYGroup {
             row {
-                YYRow("WebDAV", Icons.server, if (sync.on) sync.webdav?.url?.let { Uri.parse(it).host } else t("坚果云、群晖、Nextcloud…"), chevron = true) { editing = true }
+                YYRow("Google Drive", Icons.cloudDownload, if (sync.method == "drive") sync.driveEmail ?: t("已连接") else t("用这台手机上的 Google 账号"), onClick = {
+                    if (sync.method == "drive") return@YYRow
+                    driving = true
+                    driveProblem = null
+                    DriveAuth.authorize(context) { r ->
+                        r.onSuccess { e ->
+                            when (e) {
+                                is DriveAuth.Either.Ask -> allow.launch(IntentSenderRequest.Builder(e.sender).build())
+                                is DriveAuth.Either.Token -> connect()
+                            }
+                        }.onFailure { driving = false; driveProblem = t("Google 账号没连上（%@）", it.message ?: "") }
+                    }
+                }, trailing = {
+                    if (driving) CircularProgressIndicator(Modifier.size(YY.s(14)), strokeWidth = 2.dp, color = YY.tint.accent)
+                    else if (sync.method == "drive") Icon(Icons.check, null, tint = YY.tint.accent, modifier = Modifier.size(YY.s(13)))
+                })
+            }
+            row {
+                YYRow("WebDAV", Icons.server, if (sync.method == "webdav") sync.webdav?.url?.let { Uri.parse(it).host } else t("坚果云、群晖、Nextcloud…"), chevron = sync.method != "webdav", onClick = { editing = true }, trailing = {
+                    if (sync.method == "webdav") Icon(Icons.check, null, tint = YY.tint.accent, modifier = Modifier.size(YY.s(13)))
+                })
             }
         }
-        YYNote(t("和 iPhone、Mac 用同一个 WebDAV 文件夹，进度和笔记就在这些设备之间来回。"))
+        YYNote(driveProblem ?: t("和 iPhone、Mac 选同一种方式，进度和笔记就在这些设备之间来回。Google Drive 存在只有语阅看得到的隐藏文件夹里。"), if (driveProblem != null) YY.c.danger else YY.c.t3)
         YYLabel(t("同步这些"))
         YYGroup {
             row { SwitchRow(t("进度和书签"), sync.includes(SyncPart.READING)) { sync.include(SyncPart.READING, it) } }
@@ -174,10 +213,10 @@ private fun WebDAVSheet(sync: Sync, dismiss: () -> Unit) {
         Column(Modifier.padding(horizontal = 16.dp).padding(bottom = 28.dp)) {
             Text("WebDAV", style = YY.font(14f, FontWeight.Bold), color = YY.c.t1, modifier = Modifier.padding(start = 4.dp, bottom = 10.dp))
             YYGroup {
-                row { YYField(t("地址"), 44f) { Field(url, "https://dav.jianguoyun.com/dav/") { url = it } } }
-                row { YYField(t("账号"), 44f) { Field(user, t("邮箱或用户名")) { user = it } } }
-                row { YYField(t("密码"), 44f) { Secret(password, t("坚果云填应用密码")) { password = it } } }
-                row { YYField(t("文件夹"), 44f) { Field(folder, t("语阅")) { folder = it } } }
+                row { YYField(t("地址"), 64f) { Field(url, "https://dav.jianguoyun.com/dav/") { url = it } } }
+                row { YYField(t("账号"), 64f) { Field(user, t("邮箱或用户名")) { user = it } } }
+                row { YYField(t("密码"), 64f) { Secret(password, t("坚果云填应用密码")) { password = it } } }
+                row { YYField(t("文件夹"), 64f) { Field(folder, t("语阅")) { folder = it } } }
             }
             YYNote(problem ?: t("密码存在这台设备上，加密保存。"), if (problem != null) YY.c.danger else YY.c.t3)
             Spacer(Modifier.height(18.dp))

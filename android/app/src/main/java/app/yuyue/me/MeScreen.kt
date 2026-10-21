@@ -144,10 +144,11 @@ private fun Main(library: Library, push: (MePage) -> Unit) {
             Group {
                 row {
                     val sync = library.sync
+                    val place = if (sync.method == "drive") "Google Drive" else "WebDAV"
                     val detail = when {
                         !sync.on -> t("没开")
-                        sync.state is app.yuyue.sync.Sync.State.Failed -> t("%@ · 没同步上", "WebDAV")
-                        else -> listOfNotNull("WebDAV", sync.lastSynced?.let { ago(it) }).joinToString(" · ")
+                        sync.state is app.yuyue.sync.Sync.State.Failed -> t("%@ · 没同步上", place)
+                        else -> listOfNotNull(place, sync.lastSynced?.let { ago(it) }).joinToString(" · ")
                     }
                     YYRow(t("同步"), Icons.sync, detail, chevron = true) { push(MePage.Sync) }
                 }

@@ -108,6 +108,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
     // WebDAV needs PROPFIND and MKCOL, which the platform client refuses.
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    // 同步 · Google Drive: the phone's Google account allows the app's hidden folder.
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
     // UniFFI's Kotlin bindings call the core through JNA.
     implementation("net.java.dev.jna:jna:5.18.1@aar")
 }

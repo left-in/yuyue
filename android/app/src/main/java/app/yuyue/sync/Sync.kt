@@ -62,7 +62,12 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
         private set
     var devices by mutableStateOf<List<DeviceInfo>>(emptyList())
         private set
-    var on by mutableStateOf(Prefs.string(METHOD) == "webdav")
+    /** "webdav", "drive", or "none". */
+    var method by mutableStateOf(Prefs.string(METHOD, "none"))
+        private set
+    val on get() = method == "webdav" || method == "drive"
+    /** The Google account's address, to show. */
+    var driveEmail by mutableStateOf(Prefs.string(DriveAuth.EMAIL).ifEmpty { null })
         private set
     /** 书文件: each book's own file goes into the folder too. On the phone only over Wi‑Fi. */
     var syncsFiles by mutableStateOf(Prefs.bool(FILES, true))
@@ -108,26 +113,44 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
         Prefs.set(FOLDER, account.folder)
         Keys.write(PASSWORD, account.password)
         Prefs.set(METHOD, "webdav")
-        on = true
+        method = "webdav"
         now()
+    }
+
+    /** Google Drive, once the phone's account has allowed it: checks it can be listed, then
+     *  keeps it and syncs. */
+    suspend fun connectDrive() {
+        val folder = DriveFolder(context)
+        folder.prepare()
+        folder.list()
+        driveEmail = folder.email()
+        Prefs.set(DriveAuth.EMAIL, driveEmail ?: "")
+        Prefs.set(METHOD, "drive")
+        method = "drive"
+        now()
+    }
+
+    private fun folder(): SyncFolder? = when (method) {
+        "webdav" -> webdav?.let(::WebDAVFolder)
+        "drive" -> DriveFolder(context)
+        else -> null
     }
 
     fun stop() {
         running?.cancel()
         running = null
         Prefs.set(METHOD, "none")
-        on = false
+        method = "none"
         state = State.Idle
     }
 
     /** Exchanges changes now, unless an exchange is already under way. */
     fun now() {
         if (running != null) return
-        val account = webdav?.takeIf { on } ?: return
+        val folder = folder() ?: return
         state = State.Syncing
         running = library.scope.launch {
             try {
-                val folder = WebDAVFolder(account)
                 var applied = withContext(Dispatchers.IO) { exchange(folder) }
                 if (syncsFiles && onWifi()) applied += withContext(Dispatchers.IO) { exchangeFiles(folder) }
                 lastSynced = System.currentTimeMillis()
@@ -160,7 +183,7 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
 
     /** Reads every other device's file that changed since last time, then writes this device's
      *  own when it knows something new. Returns how many values changed here. */
-    private suspend fun exchange(folder: WebDAVFolder): Int {
+    private suspend fun exchange(folder: SyncFolder): Int {
         folder.prepare()
         val mine = core.deviceId() + SUFFIX
         val files = folder.list()
@@ -188,7 +211,7 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
 
     /** 书文件: a book's file is `<id>.book.<ext>`; ids are the file's hash, so the same file
      *  imported anywhere is the same book. One failing doesn't stop the rest. */
-    private suspend fun exchangeFiles(folder: WebDAVFolder): Int {
+    private suspend fun exchangeFiles(folder: SyncFolder): Int {
         val files = runCatching { folder.list() }.getOrNull() ?: return 0
         val books = runCatching { core.books() }.getOrDefault(emptyList())
         var took = 0
@@ -220,6 +243,9 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
 
     class Status(val code: Int) : IOException("HTTP $code")
 
+    /** The Google account has to allow 语阅 again. */
+    class SignedOut : IOException("signed out")
+
     companion object {
         private const val SUFFIX = ".yuyue-sync.json"
         private const val METHOD = "sync.method"
@@ -235,6 +261,7 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
         private const val WRITTEN = "sync.written"
 
         fun message(e: Throwable): String = when {
+            e is SignedOut -> t("Google 账号要重新登录")
             e is Status && (e.code == 401 || e.code == 403) -> t("账号或密码不对")
             e is Status && e.code == 404 -> t("服务器上没有这个地址")
             e is Status -> t("服务器回了 %lld", e.code)
@@ -246,7 +273,7 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
 }
 
 /** A folder on a WebDAV share: file name → a tag that changes when the file does. */
-class WebDAVFolder(private val account: Sync.WebDAVAccount) {
+class WebDAVFolder(private val account: Sync.WebDAVAccount) : SyncFolder {
     private val dir: String
         get() {
             val base = account.url.trimEnd('/')
@@ -271,29 +298,29 @@ class WebDAVFolder(private val account: Sync.WebDAVAccount) {
         return response
     }
 
-    fun prepare() {
+    override fun prepare() {
         // 405: there already.
         send(request(dir, "MKCOL")) { it in 200..299 || it == 405 }.close()
     }
 
-    fun list(): Map<String, String> {
+    override fun list(): Map<String, String> {
         val body = """<?xml version="1.0" encoding="utf-8"?><d:propfind xmlns:d="DAV:"><d:prop><d:getetag/><d:getlastmodified/><d:getcontentlength/></d:prop></d:propfind>"""
             .toRequestBody("application/xml".toMediaType())
         val r = request(dir, "PROPFIND", body).newBuilder().header("Depth", "1").build()
         return send(r).use { parse(it.body!!.byteStream()) }
     }
 
-    fun read(name: String): ByteArray = send(request(dir + enc(name), "GET")).use { it.body!!.bytes() }
+    override fun read(name: String): ByteArray = send(request(dir + enc(name), "GET")).use { it.body!!.bytes() }
 
-    fun write(name: String, data: ByteArray) {
+    override fun write(name: String, data: ByteArray) {
         send(request(dir + enc(name), "PUT", data.toRequestBody("application/json".toMediaType()))).close()
     }
 
-    fun upload(name: String, file: File) {
+    override fun upload(name: String, file: File) {
         send(request(dir + enc(name), "PUT", file.asRequestBody("application/octet-stream".toMediaType())), slow).close()
     }
 
-    fun download(name: String, to: File) {
+    override fun download(name: String, to: File) {
         val part = File(to.path + ".download")
         send(request(dir + enc(name), "GET"), slow).use { r -> r.body!!.byteStream().use { input -> part.outputStream().use { input.copyTo(it) } } }
         if (!part.renameTo(to)) throw IOException("rename")
