@@ -73,7 +73,7 @@ fun MeScreen(library: Library) {
         MePage.Sources -> app.yuyue.shelf.SourcesHome(library) { stack.removeAt(stack.lastIndex) }
         else -> Sub(page, back = { stack.removeAt(stack.lastIndex) }) {
             when (page) {
-                MePage.Stats -> Stats(library)
+                MePage.Stats -> StatsPage(library)
                 MePage.Appearance -> AppearancePage()
                 MePage.About -> About { stack += it }
                 MePage.Privacy -> TextPage(PRIVACY)
@@ -252,7 +252,7 @@ private fun Tile(number: String, unit: String, label: String, modifier: Modifier
 
 /** `.v-me-tt`: "■ 读 5 小时 12 分", the numbers big. */
 @Composable
-private fun PeriodTotal(label: String, seconds: Int, color: Color) {
+internal fun PeriodTotal(label: String, seconds: Int, color: Color) {
     val m = seconds / 60
     val parts = when {
         m < 60 -> listOf(m to t("分"))
@@ -291,30 +291,6 @@ private fun Bars(days: List<DaySums>, modifier: Modifier) {
 }
 
 // MARK: 阅读统计
-
-@Composable
-private fun Stats(library: Library) {
-    var week by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(LocalDate.now()) }
-    val days = remember(week) { sums(library, weekDays(week)) }
-    YYPage {
-        Column(
-            Modifier.padding(top = YY.s(12)).fillMaxWidth().background(YY.c.card, RoundedCornerShape(YY.s(16))).padding(YY.s(14)),
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(t("%@ – %@", days.first().day.toString(), days.last().day.toString()), style = YY.font(12f, FontWeight.Bold), color = YY.c.t1, modifier = Modifier.weight(1f))
-                Icon(Icons.chevronLeft, t("往前"), tint = YY.c.t1, modifier = Modifier.size(28.dp).clickable { week = week.minusWeeks(1) })
-                Icon(Icons.chevronRight, t("往后"), tint = if (week >= LocalDate.now()) YY.c.t3 else YY.c.t1, modifier = Modifier.size(28.dp).clickable(enabled = week < LocalDate.now()) { week = week.plusWeeks(1) })
-            }
-            Row(Modifier.padding(top = YY.s(6)), horizontalArrangement = Arrangement.spacedBy(YY.s(20))) {
-                PeriodTotal(t("读"), days.sumOf { it.read }, YY.tint.fill)
-                PeriodTotal(t("听"), days.sumOf { it.listen }, YY.c.tint)
-            }
-            Bars(days, Modifier.padding(top = YY.s(10)).height(YY.s(90)))
-        }
-        YYLabel(t("怎么算的"))
-        YYNote(t("只在翻页、滚动或朗读的时候计时。") + t("一页停了 5 分钟没翻，或者锁屏又没在听，就停表。") + t("倍速按实际时间算：1.5× 听 1 小时，记 1 小时。"))
-    }
-}
 
 // MARK: 外观
 

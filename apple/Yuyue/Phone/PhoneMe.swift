@@ -374,6 +374,19 @@ struct PhoneStats: View {
         guard let first = days.first, let last = days.last else { return ("", "") }
         let cal = Calendar.current
         let end = isCurrent ? min(Date(), last) : last
+        // Other languages go by month names: "October", "Oct 1 – 21", "Jan – Oct".
+        if !(Bundle.main.preferredLocalizations.first ?? "zh").hasPrefix("zh") {
+            let day = { (d: Date) in String(cal.component(.day, from: d)) }
+            let short = { (d: Date) in d.formatted(.dateTime.month(.abbreviated)) }
+            switch period {
+            case .week:
+                return (periodWord, "\(short(first)) \(day(first)) – \(cal.isDate(first, equalTo: last, toGranularity: .month) ? "" : short(last) + " ")\(day(last))")
+            case .month:
+                return (first.formatted(.dateTime.month(.wide)), "\(short(first)) 1 – \(day(end))")
+            case .year:
+                return (String(cal.component(.year, from: first)), "\(short(first)) – \(short(end))")
+            }
+        }
         switch period {
         case .week:
             return (periodWord, String(localized: "\(Notes.monthDay(first)) – \(cal.component(.month, from: first) == cal.component(.month, from: last) ? String(localized: "\(cal.component(.day, from: last)) 日") : Notes.monthDay(last))"))
@@ -452,7 +465,10 @@ struct PhoneStats: View {
         switch period {
         case .week: WeekBars.weekday(days[i])
         case .month: i % 7 == 0 ? "\(i + 1)" : ""
-        case .year: i % 2 == 0 ? String(localized: "\(i + 1) 月") : ""
+        case .year:
+            i % 2 != 0 ? ""
+                : (Bundle.main.preferredLocalizations.first ?? "zh").hasPrefix("zh") ? String(localized: "\(i + 1) 月")
+                : (Calendar.current.date(byAdding: .month, value: i, to: days[0]) ?? days[0]).formatted(.dateTime.month(.abbreviated))
         }
     }
 
