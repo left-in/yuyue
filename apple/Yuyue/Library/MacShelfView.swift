@@ -63,6 +63,14 @@ struct MacShelfView: View {
         .background(YYColor.bg)
         .toolbar(removing: .title)
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+        // `.v-mac-sb .v-lights`: inside the sidebar card, 24 in from the window's corner. They
+        // sit lower than a plain title bar reaches, and a button outside it can't be clicked: an
+        // empty toolbar makes the bar tall enough.
+        .toolbar {
+            ToolbarItem { Color.clear.frame(width: 1, height: 1) }
+                .withoutGlass()
+        }
+        .trafficLights(CGPoint(x: 30, y: 30))
         // The prototype has no fade where lists meet the title bar, the search field or the line
         // above 同步: what scrolls up just goes under, clean.
         .noScrollEdgeFade()
@@ -470,7 +478,7 @@ struct MacShelfView: View {
     /// The room left is generous and the width rounded down: with scrollers always shown, a grid
     /// even a point too wide widens the window's column, which widens the grid, without end.
     private var columns: [GridItem] {
-        let room = max(0, mainFrame.width - 56 - 24)
+        let room = max(0, mainFrame.width - 48 - 24)
         let count = max(1, Int((room + 18) / (coverSize - 24 + 18)))
         let width = max(1, ((room - 18 * CGFloat(count - 1)) / CGFloat(count)).rounded(.down))
         return Array(repeating: GridItem(.fixed(width), spacing: 18, alignment: .top), count: count)
@@ -488,7 +496,10 @@ struct MacShelfView: View {
                     Spacer()
                     importButton
                 }
-                .padding(.bottom, 22)
+                // `.v-mac-hd`: 64 high, 4 of it above, the title in the middle.
+                .frame(height: 60)
+                .padding(.top, 4)
+                .padding(.bottom, 9)
 
                 if !library.imports.isEmpty {
                     MacImportCard(library: library, tint: tint) { id in reveal(id, scroll) }
@@ -519,6 +530,7 @@ struct MacShelfView: View {
                     Spacer()
                     sortMenu
                 }
+                .padding(.horizontal, 2)
                 .padding(.bottom, 14)
 
                 if books.isEmpty {
@@ -531,8 +543,9 @@ struct MacShelfView: View {
                     }
                 }
             }
-            .padding(.horizontal, 28)
-            .padding(.top, 14)
+            // `.v-mac-mn`: 22 in on the left, 26 on the right.
+            .padding(.leading, 22)
+            .padding(.trailing, 26)
             .padding(.bottom, 80)
         }
         // The title sits level with the window's buttons, as in the shelf's design.
@@ -588,7 +601,9 @@ struct MacShelfView: View {
                 .font(.system(size: 11))
                 .foregroundStyle(YYColor.t3)
         }
-        .padding(.bottom, 12)
+        // `.v-mac-mn .v-lb`
+        .padding(.horizontal, 2)
+        .padding(.bottom, 10)
     }
 
     private var sortMenu: some View {
