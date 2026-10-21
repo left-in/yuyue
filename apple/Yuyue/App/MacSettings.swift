@@ -9,20 +9,20 @@ struct MacSettings: View {
     let library: Library
     @AppStorage("settings.page") private var page = SettingsPage.general
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    @AppStorage(LiquidGlass.key) private var liquid = true
 
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
 
     var body: some View {
         VStack(spacing: 0) {
-            SettingsTabs(page: $page, tint: tint, liquid: liquid && LiquidGlass.supported)
+            SettingsTabs(page: $page, tint: tint)
             content(page)
                 // The window grows to the whole page, wrapped lines and all.
                 .fixedSize(horizontal: false, vertical: true)
         }
-        // `.v-ms-stb`: one header 88 high from the window's top edge, title bar and all.
-        .ignoresSafeArea(.container, edges: .top)
+        // `.v-ms-stb`: the title bar and the tabs are one header, one colour, no line between.
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+        // The page's name sits in the middle (`SettingsTitlebar`), not on the left.
+        .toolbar(removing: .title)
         .frame(width: 680)
         .tint(tint.accent)
         .navigationTitle(page.title)
@@ -89,13 +89,16 @@ enum SettingsPage: String, CaseIterable, Identifiable {
     }
 }
 
-/// `.v-ms-tabs`: the pages along the top. The chosen one is in the theme colour, on a Liquid Glass
-/// lens that slides from page to page, or, as the prototype draws it, on a grey pad.
+/// `.v-ms-tabs`: the pages along the top. The chosen one on a grey pad, its icon in the theme
+/// colour, as the prototype draws it.
 struct SettingsTabs: View {
     @Binding var page: SettingsPage
     let tint: YYTint
-    let liquid: Bool
-    @Namespace private var lens
+    /// The title bar's height (32 from macOS 26, 28 before): the tabs start 33 below the window's
+    /// top edge. Read from the layout it went round and round, the tabs moving the bar.
+    private var titlebar: CGFloat {
+        if #available(macOS 26, *) { 32 } else { 28 }
+    }
 
     /// `.v-ms-stb`: card 55% over the page, a little lighter than it; the title bar is this too.
     static let header = NSColor(name: nil) { look in
@@ -109,17 +112,17 @@ struct SettingsTabs: View {
             ForEach(SettingsPage.allCases) { tab($0) }
         }
         // `.v-ms-tabs` start 33 down; the bar is 88 in all.
-        .padding(.top, 33)
+        .padding(.top, max(0, 33 - titlebar))
         .padding(.bottom, 7)
         .frame(maxWidth: .infinity)
-        .background(Color(nsColor: Self.header))
+        .background(Color(nsColor: Self.header).ignoresSafeArea(.container, edges: .top))
         .overlay(alignment: .bottom) { Rectangle().fill(YYColor.line).frame(height: 0.5) }
     }
 
     private func tab(_ p: SettingsPage) -> some View {
         let on = page == p
         return Button {
-            withAnimation(liquid ? .bouncy(duration: 0.35) : nil) { page = p }
+            page = p
         } label: {
             VStack(spacing: 4) {
                 Image(systemName: p.symbol)
@@ -128,24 +131,15 @@ struct SettingsTabs: View {
                     .foregroundStyle(on ? tint.accent : YYColor.t2)
                 Text(p.title)
                     .font(.system(size: 11, weight: on ? .semibold : .regular))
-                    .foregroundStyle(on ? (liquid ? tint.accent : YYColor.t1) : YYColor.t2)
+                    .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
             }
             .frame(width: 64, height: 48)
-            .background { if on { pad } }
+            .background { if on { RoundedRectangle(cornerRadius: 9).fill(YYColor.inset) } }
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
     }
 
-    @ViewBuilder private var pad: some View {
-        if liquid, #available(macOS 26, *) {
-            Color.clear
-                .glassEffect(.regular.tint(tint.accentSoft).interactive(), in: .rect(cornerRadius: 9))
-                .matchedGeometryEffect(id: "lens", in: lens)
-        } else {
-            RoundedRectangle(cornerRadius: 9).fill(YYColor.inset)
-        }
-    }
 }
 
 /// `.v-ms-stb`: the title bar and the tabs are one header, no line between them, the page's name
@@ -469,7 +463,7 @@ private struct AppearanceSettings: View {
             }
             if LiquidGlass.supported {
                 SettingsCard {
-                    SettingsRow(String(localized: "液态玻璃效果"), detail: String(localized: "设置顶上的分页、读书窗口的工具胶囊和阅读胶囊、提示条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃，选中的垫一层浅色")) {
+                    SettingsRow(String(localized: "液态玻璃效果"), detail: String(localized: "读书窗口的工具胶囊和阅读胶囊、提示条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃，选中的垫一层浅色")) {
                         SettingsSwitch(isOn: $liquid)
                     }
                 }
@@ -752,6 +746,8 @@ private struct CloudVoiceRow: View {
     @State private var checking = false
     @State private var outcome: String?
     @State private var failed = false
+    /// A key is kept: an empty field then offers to take it away.
+    @State private var saved = false
 
     var body: some View {
         SettingsRow(provider.title, detail: outcome ?? provider.help) {
@@ -763,17 +759,23 @@ private struct CloudVoiceRow: View {
                 }
                 SecureField("", text: $key, prompt: Text(provider.keyHint))
                     .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
-                    .frame(width: provider == .azure ? 150 : 248)
+                    .frame(width: provider == .azure ? 130 : 200)
                 Button {
                     connect()
                 } label: {
-                    if checking { ProgressView().controlSize(.small) } else { Text(key.isEmpty ? String(localized: "清掉") : String(localized: "连接")) }
+                    if checking { ProgressView().controlSize(.small) } else { Text(key.isEmpty && saved ? String(localized: "清掉") : String(localized: "连接")) }
                 }
-                .disabled(checking)
+                .disabled(checking || (key.isEmpty && !saved))
+                // Squeezed by a long detail on the left, it was cut to a sliver.
+                .fixedSize()
             }
+            .fixedSize()
         }
         .foregroundStyle(failed ? YYColor.danger : YYColor.t1)
-        .onAppear { key = Keychain.read(provider.keyName) ?? "" }
+        .onAppear {
+            key = Keychain.read(provider.keyName) ?? ""
+            saved = !key.isEmpty
+        }
     }
 
     private func connect() {
@@ -781,10 +783,12 @@ private struct CloudVoiceRow: View {
         region = region.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         guard !k.isEmpty else {
             Keychain.delete(provider.keyName)
+            saved = false
             outcome = nil
             return
         }
         Keychain.write(provider.keyName, k)
+        saved = true
         checking = true
         Task {
             defer { checking = false }

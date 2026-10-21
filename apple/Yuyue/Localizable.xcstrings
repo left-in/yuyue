@@ -15231,6 +15231,16 @@
           }
         }
       }
+    },
+    "读书窗口的工具胶囊和阅读胶囊、提示条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃，选中的垫一层浅色" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Floating things like the reading window's tool and reading capsules, and banners use the system's Liquid Glass; when off, they use frosted blur with a light fill for the selection"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
