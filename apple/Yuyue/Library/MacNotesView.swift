@@ -43,9 +43,13 @@ struct MacNotesView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
+            // `.v-mac-hd.v-ms-hd`: 64 high, the title in the middle; `.v-ms-mn` 22 in, 28 on the right.
             header
-                .padding(.horizontal, 28)
-                .padding(.top, 14)
+                // The title and the line beside it share a baseline, which lifts the title: down 4.
+                .frame(height: 56)
+                .padding(.top, 8)
+                .padding(.leading, 22)
+                .padding(.trailing, 28)
             if notes.isEmpty {
                 empty
             } else if byBook {
@@ -59,8 +63,9 @@ struct MacNotesView: View {
                         }
                         byDay
                     }
-                    .padding(.horizontal, 28)
-                    .padding(.top, 16)
+                    .padding(.leading, 22)
+                    .padding(.trailing, 28)
+                    .padding(.top, 2)
                     .padding(.bottom, 28)
                 }
             }
@@ -279,15 +284,16 @@ struct MacNotesView: View {
                 .scrollBounceBehavior(.basedOnSize)
             }
             .frame(width: 250)
-            .padding(.top, 18)
+            .padding(.top, 4)
             ScrollView {
                 if let n = notes.first(where: { $0.id == chosen }) {
-                    bookNotes(n).padding(.top, 18).padding(.bottom, 28)
+                    bookNotes(n).padding(.top, 4).padding(.bottom, 28)
                 }
             }
             .scrollIndicators(.automatic)
         }
-        .padding(.horizontal, 28)
+        .padding(.leading, 22)
+        .padding(.trailing, 28)
     }
 
     private func bookRow(_ n: BookNotes) -> some View {
