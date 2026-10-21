@@ -8,7 +8,12 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.SimpleBasePlayer
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaSession
-import androidx.media3.session.MediaSessionService
+import androidx.media3.session.LibraryResult
+import androidx.media3.session.MediaLibraryService
+import androidx.media3.session.MediaLibraryService.LibraryParams
+import androidx.media3.session.MediaLibraryService.MediaLibrarySession
+import androidx.media3.session.SessionError
+import com.google.common.collect.ImmutableList
 import app.yuyue.MainActivity
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -22,7 +27,9 @@ import androidx.media3.common.Player as Media3Player
  */
 @UnstableApi
 object Session {
-    private var current: Player? = null
+    /** The player the notification and the car control now. */
+    var current: Player? = null
+        private set
     val player: SessionPlayer by lazy { SessionPlayer() }
 
     /** This player is the one the notification controls now. */
@@ -55,6 +62,8 @@ object Session {
                 COMMAND_PLAY_PAUSE, COMMAND_STOP, COMMAND_SEEK_TO_NEXT, COMMAND_SEEK_TO_PREVIOUS,
                 COMMAND_SEEK_TO_NEXT_MEDIA_ITEM, COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM,
                 COMMAND_GET_CURRENT_MEDIA_ITEM, COMMAND_GET_METADATA, COMMAND_GET_TIMELINE,
+                // Android Auto picks a book to hear.
+                COMMAND_SET_MEDIA_ITEM, COMMAND_CHANGE_MEDIA_ITEMS, COMMAND_PREPARE,
             ).build()
             val builder = State.Builder().setAvailableCommands(commands)
             if (p == null || p.state == Player.State.Stopped) {
@@ -94,6 +103,13 @@ object Session {
             return Futures.immediateVoidFuture()
         }
 
+        override fun handleSetMediaItems(mediaItems: MutableList<MediaItem>, startIndex: Int, startPositionMs: Long): ListenableFuture<*> {
+            mediaItems.getOrNull(maxOf(0, startIndex))?.mediaId?.takeIf { it != CarListening.ROOT }?.let(CarListening::play)
+            return Futures.immediateVoidFuture()
+        }
+
+        override fun handlePrepare(): ListenableFuture<*> = Futures.immediateVoidFuture()
+
         override fun handleStop(): ListenableFuture<*> {
             current?.stop()
             return Futures.immediateVoidFuture()
@@ -101,21 +117,44 @@ object Session {
     }
 }
 
-/** Keeps the voice going with the screen off and puts it in the notification. */
+/** Keeps the voice going with the screen off and puts it in the notification; in a car, lists
+ *  the books being read (Android Auto). */
 @UnstableApi
-class PlaybackService : MediaSessionService() {
-    private var session: MediaSession? = null
+class PlaybackService : MediaLibraryService() {
+    private var session: MediaLibrarySession? = null
 
     override fun onCreate() {
         super.onCreate()
         val open = PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_IMMUTABLE)
-        session = MediaSession.Builder(this, Session.player).setSessionActivity(open).build().also {
+        session = MediaLibrarySession.Builder(this, Session.player, Library()).setSessionActivity(open).build().also {
             // Started by the player, not by a controller: the notification needs the session added.
             addSession(it)
         }
     }
 
-    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = session
+    override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? = session
+
+    /** The car's list: one folder of books. */
+    private class Library : MediaLibrarySession.Callback {
+        override fun onGetLibraryRoot(session: MediaLibrarySession, browser: MediaSession.ControllerInfo, params: LibraryParams?): ListenableFuture<LibraryResult<MediaItem>> =
+            Futures.immediateFuture(LibraryResult.ofItem(CarListening.root(), params))
+
+        override fun onGetChildren(
+            session: MediaLibrarySession, browser: MediaSession.ControllerInfo, parentId: String, page: Int, pageSize: Int, params: LibraryParams?,
+        ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> {
+            val items = if (parentId == CarListening.ROOT) CarListening.books().map(CarListening::item) else emptyList()
+            return Futures.immediateFuture(LibraryResult.ofItemList(ImmutableList.copyOf(items), params))
+        }
+
+        override fun onGetItem(session: MediaLibrarySession, browser: MediaSession.ControllerInfo, mediaId: String): ListenableFuture<LibraryResult<MediaItem>> {
+            val book = CarListening.books().firstOrNull { it.id == mediaId } ?: return Futures.immediateFuture(LibraryResult.ofError(SessionError.ERROR_BAD_VALUE))
+            return Futures.immediateFuture(LibraryResult.ofItem(CarListening.item(book), null))
+        }
+
+        // The ids a car sends back are ours; the session player takes them as they are.
+        override fun onAddMediaItems(session: MediaSession, controller: MediaSession.ControllerInfo, mediaItems: MutableList<MediaItem>): ListenableFuture<MutableList<MediaItem>> =
+            Futures.immediateFuture(mediaItems)
+    }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         // Swiped away while paused: nothing left to keep going.
