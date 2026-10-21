@@ -110,6 +110,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // 同步 · Google Drive: the phone's Google account allows the app's hidden folder.
     implementation("com.google.android.gms:play-services-auth:21.3.0")
+    // 请开发者喝咖啡: Google Play's in-app purchase.
+    implementation("com.android.billingclient:billing:8.0.0")
     // UniFFI's Kotlin bindings call the core through JNA.
     implementation("net.java.dev.jna:jna:5.18.1@aar")
 }

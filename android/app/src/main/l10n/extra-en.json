@@ -52,5 +52,7 @@
  "Google 账号要重新登录": "Sign in to your Google account again",
  "和 iPhone、Mac 选同一种方式，进度和笔记就在这些设备之间来回。Google Drive 存在只有语阅看得到的隐藏文件夹里。": "Choose the same way on your iPhone and Mac, and progress and notes travel between them. On Google Drive they're kept in a hidden folder only Yuyue can see.",
  "已连接": "Connected",
- "用这台手机上的 Google 账号": "Uses the Google account on this phone"
+ "用这台手机上的 Google 账号": "Uses the Google account on this phone",
+ "没付成（%@）": "The payment didn't go through (%@)",
+ "在 Google Play 上架之后就能付了。": "You can pay once the app is on Google Play."
 }

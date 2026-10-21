@@ -10,6 +10,7 @@ import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.automirrored.rounded.MenuBook
 import androidx.compose.material.icons.automirrored.rounded.Undo
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Coffee
 import androidx.compose.material.icons.rounded.AutoStories
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
@@ -100,5 +101,6 @@ object Icons {
     val undo = AutoMirrored.Rounded.Undo
     val upload = Rounded.Upload
     val waveform = Rounded.GraphicEq
+    val cup = Rounded.Coffee
     val wifi = Rounded.Wifi
 }
