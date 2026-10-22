@@ -63,6 +63,7 @@ struct MacShelfView: View {
                 .frame(width: 212)
                 .padding(8)
                 .offset(x: sidebarShown ? 0 : -240)
+                .opacity(sidebarShown ? 1 : 0)
                 .allowsHitTesting(sidebarShown)
                 .accessibilityHidden(!sidebarShown)
         }
@@ -75,19 +76,20 @@ struct MacShelfView: View {
             }
         }
         .background(YYColor.bg)
+        // 显示侧栏 / 隐藏侧栏 sits in the page, just before its title on the title's line, and
+        // moves with the page; put away, the sidebar takes the window's buttons with it, so the
+        // button and the title start the page clean at its left edge.
+        .overlay(alignment: .topLeading) {
+            sidebarButton
+                .padding(.leading, (sidebarShown ? 228 : 0) + 16)
+                .padding(.top, Self.lineY - 11)
+                .ignoresSafeArea(.container, edges: .top)
+        }
         .toolbar(removing: .title)
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-        .toolbar {
-            // A toolbar item, so the title bar doesn't take its click; moved down onto the line
-            // the window's buttons and the page's title share.
-            ToolbarItem(placement: .navigation) { sidebarButton.offset(y: Self.lineY - 26) }
-                .withoutGlass()
-            ToolbarItem { Color.clear.frame(width: 1, height: 1) }
-                .withoutGlass()
-        }
-        // One line for the window's buttons, 显示侧栏 and the page's title (`.v-mac-hd`'s middle),
-        // whether the sidebar is there or not: nothing jumps when it slides.
-        .trafficLights(CGPoint(x: 30, y: Self.lineY))
+        // `.v-mac-sb .v-lights`: in the sidebar card's top corner, inside the title bar so they
+        // can be clicked; they fade out and back with the sidebar.
+        .trafficLights(CGPoint(x: 30, y: 24), hidden: !sidebarShown)
         // The prototype has no fade where lists meet the title bar, the search field or the line
         // above 同步: what scrolls up just goes under, clean.
         .noScrollEdgeFade()
@@ -206,7 +208,7 @@ struct MacShelfView: View {
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
             // The window's own buttons sit here.
-            Color.clear.frame(height: 26)
+            Color.clear.frame(height: 10)
             searchField
                 .padding(.top, 16)
                 .padding(.horizontal, 10)
@@ -470,14 +472,15 @@ struct MacShelfView: View {
     @State private var narrowWindow = false
     @State private var openedWhileNarrow = false
 
-    /// The middle of the window's buttons, 显示侧栏 and the page's title, from the window's top.
+    /// The middle of 显示侧栏 and the page's title, from the window's top (`.v-mac-hd`).
     static let lineY: CGFloat = 34
-    static let slide = Animation.spring(duration: 0.38, bounce: 0.08)
+    /// Out and back with a little give at the end.
+    static let slide = Animation.timingCurve(0.32, 1.18, 0.42, 1, duration: 0.42)
 
     private var sidebarShown: Bool { sidebarWanted && (!narrowWindow || openedWhileNarrow) }
 
-    /// The page's title clears the window's buttons and 显示侧栏 when the sidebar is away.
-    private var headerInset: CGFloat { sidebarShown ? 0 : 118 }
+    /// The page's title leaves room for 显示侧栏 before it.
+    private var headerInset: CGFloat { 30 }
 
     private func toggleSidebar() {
         // On 笔记 · 按书 the same key folds the book column instead.

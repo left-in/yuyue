@@ -214,16 +214,20 @@ extension View {
     /// close button's middle `close` from the window's top-left corner, the others after it at the
     /// system's spacing (`.v-lights`). AppKit lays them out again whenever it likes, so they are
     /// put back on every window update.
-    func trafficLights(_ close: CGPoint) -> some View {
-        background(TrafficLights(close: close))
+    func trafficLights(_ close: CGPoint, hidden: Bool = false) -> some View {
+        background(TrafficLights(close: close, hidden: hidden))
     }
 }
 
 private struct TrafficLights: NSViewRepresentable {
     let close: CGPoint
+    /// Faded away, as the shelf's are while its sidebar is put away; they fade back with it.
+    var hidden = false
 
     final class Host: NSView {
         var close = CGPoint.zero
+        var lightsHidden = false
+        private var shownHidden: Bool?
         nonisolated(unsafe) private var observers: [NSObjectProtocol] = []
 
         override func viewDidMoveToWindow() {
@@ -258,17 +262,42 @@ private struct TrafficLights: NSViewRepresentable {
                                      y: (middle.y - b.frame.height / 2).rounded())
                 if b.frame.origin != origin { b.setFrameOrigin(origin) }
             }
+            fade(buttons)
+        }
+
+        /// The first time they just are as they should; after that they fade with the sidebar.
+        private func fade(_ buttons: [NSButton]) {
+            guard lightsHidden != shownHidden else { return }
+            let first = shownHidden == nil
+            shownHidden = lightsHidden
+            let hide = lightsHidden
+            if !hide { buttons.forEach { $0.isHidden = false } }
+            if first {
+                buttons.forEach { $0.alphaValue = hide ? 0 : 1; $0.isHidden = hide }
+                return
+            }
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.3
+                context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                buttons.forEach { $0.animator().alphaValue = hide ? 0 : 1 }
+            } completionHandler: {
+                MainActor.assumeIsolated {
+                    if self.shownHidden == true { buttons.forEach { $0.isHidden = true } }
+                }
+            }
         }
     }
 
     func makeNSView(context: Context) -> Host {
         let host = Host()
         host.close = close
+        host.lightsHidden = hidden
         return host
     }
 
     func updateNSView(_ host: Host, context: Context) {
         host.close = close
+        host.lightsHidden = hidden
         host.window.map(host.place)
     }
 }
