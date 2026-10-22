@@ -596,8 +596,9 @@ struct MacShelfView: View {
     private var columns: [GridItem] {
         let room = max(0, mainFrame.width - 48 - 24)
         let count = max(1, Int((room + 18) / (coverSize - 24 + 18)))
-        let width = max(1, ((room - 18 * CGFloat(count - 1)) / CGFloat(count)).rounded(.down))
-        return Array(repeating: GridItem(.fixed(width), spacing: 18, alignment: .top), count: count)
+        // Flexible, not fixed: fixed widths made the grid as wide as the window it was measured
+        // in, so the window could grow (the sidebar put away) but never be made narrower again.
+        return Array(repeating: GridItem(.flexible(minimum: 40), spacing: 18, alignment: .top), count: count)
     }
 
     private var main: some View {
