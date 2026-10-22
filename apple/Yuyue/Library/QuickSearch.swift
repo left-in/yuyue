@@ -474,7 +474,7 @@ private struct Key: View {
     }
 }
 
-private extension Array where Element == String {
+extension Array where Element == String {
     /// Drops a chapter named the same as its book.
     func uniqued() -> [String] {
         var seen = Set<String>()

@@ -12,6 +12,8 @@ struct MacComicView: View {
     @State private var chrome = true
     @State private var hiding: Task<Void, Never>?
     @State private var tocShown = false
+    /// 条漫: a screen down (positive) or up for each press of the space bar.
+    @State private var stripStep = 0
     /// 自动裁白边, for every comic; the strip keeps its pictures whole so they join up.
     @AppStorage("comic.crop") private var crop = true
     @State private var settingsShown = false
@@ -27,7 +29,7 @@ struct MacComicView: View {
             Self.ink.ignoresSafeArea()
             Group {
                 if model.layout == .strip {
-                    ComicStrip(model: model, toc: { tocShown = true })
+                    ComicStrip(model: model, step: stripStep, toc: { tocShown = true })
                 } else {
                     paged
                 }
@@ -72,9 +74,13 @@ struct MacComicView: View {
         }
         .onKeyPress(.leftArrow) { turn(left: true) }
         .onKeyPress(.rightArrow) { turn(left: false) }
-        .onKeyPress(.space) {
-            guard model.layout != .strip else { return .ignored }
-            model.next()
+        .onKeyPress(.space, phases: [.down, .repeat]) { press in
+            // 条漫 goes down a screen (⇧ up), as the prototype says; the pages turn.
+            if model.layout == .strip {
+                stripStep = press.modifiers.contains(.shift) ? min(-1, stripStep - 1) : max(1, stripStep + 1)
+            } else {
+                model.next()
+            }
             return .handled
         }
         .alert("出错了", isPresented: Binding(get: { model.failure != nil }, set: { if !$0 { model.failure = nil } })) {
@@ -186,13 +192,15 @@ struct MacComicView: View {
                         .comicGlass(in: Capsule())
                 }
                 .buttonStyle(.plain)
-                .padding(.leading, 78)
+                // `.v-mac-back`: 86 in, clear of the window's buttons.
+                .padding(.leading, 86)
                 .help("回到书架")
                 Spacer()
                 tools
             }
             .padding(.trailing, 14)
-            .frame(height: 44)
+            // `.v-mac-tb`: 58 high, level with the window's buttons.
+            .frame(height: 58)
             .overlay {
                 if model.layout != .strip { titleBlock }
             }
@@ -210,7 +218,8 @@ struct MacComicView: View {
 
     private var titleBlock: some View {
         VStack(spacing: 1) {
-            Text(model.current.map { "\(model.title) · \(model.name(of: $0))" } ?? model.title)
+            // A comic of one episode is named after itself: once is enough.
+            Text(model.current.map { e in [model.title, model.name(of: e)].uniqued().joined(separator: " · ") } ?? model.title)
                 .font(.system(size: 12.5, weight: .semibold))
             Text(model.pageLabel).font(.system(size: 10.5)).monospacedDigit().foregroundStyle(Color(white: 0.6))
         }
@@ -252,7 +261,7 @@ struct MacComicView: View {
             .padding(.horizontal, 4)
             if model.layout != .strip {
                 Button { model.rightToLeft.toggle() } label: {
-                    tag(String(localized: "从右往左"), "arrow.left")
+                    tag(String(localized: "从右往左"), "arrow.left.to.line")
                         .font(.system(size: 11.5, weight: model.rightToLeft ? .semibold : .regular))
                         .foregroundStyle(model.rightToLeft ? .white : Color(white: 0.85))
                         .padding(.leading, 8).padding(.trailing, narrow ? 8 : 10).frame(height: 28)
@@ -295,8 +304,8 @@ extension ComicModel.Layout {
     var symbol: String {
         switch self {
         case .single: "rectangle.portrait"
-        case .double: "book.pages"
-        case .strip: "arrow.down.to.line.compact"
+        case .double: "rectangle.split.2x1"
+        case .strip: "rectangle.grid.1x2"
         }
     }
 }
@@ -489,10 +498,44 @@ private struct ComicContents: View {
     }
 }
 
+/// Scrolls the strip a screen at a time: SwiftUI's scroll view doesn't page on the space bar.
+private struct StripScroller: NSViewRepresentable {
+    let step: Int
+
+    final class Marker: NSView {
+        var last = 0
+    }
+
+    func makeNSView(context: Context) -> Marker {
+        let m = Marker()
+        m.last = step
+        return m
+    }
+
+    func updateNSView(_ m: Marker, context: Context) {
+        guard step != m.last else { return }
+        let down = step > m.last || step > 0 && m.last < 0
+        m.last = step
+        guard let scroll = m.enclosingScrollView else { return }
+        let clip = scroll.contentView
+        let page = clip.bounds.height * 0.85
+        let maxY = max(0, (scroll.documentView?.frame.height ?? 0) - clip.bounds.height)
+        let y = min(maxY, max(0, clip.bounds.origin.y + (down ? page : -page)))
+        NSAnimationContext.runAnimationGroup { ctx in
+            ctx.duration = 0.25
+            clip.animator().setBoundsOrigin(NSPoint(x: clip.bounds.origin.x, y: y))
+        } completionHandler: {
+            scroll.reflectScrolledClipView(clip)
+        }
+    }
+}
+
 /// 条漫: the pictures one under another in a column down the middle, the next episode straight
 /// after this one's 完, and a thin line on the right for how far through this episode.
 private struct ComicStrip: View {
     @Bindable var model: ComicModel
+    /// Changes with each press of the space bar; its sign says which way.
+    let step: Int
     let toc: () -> Void
     @State private var top: String?
     @State private var restored = false
@@ -512,10 +555,13 @@ private struct ComicStrip: View {
                             seam(e)
                         }
                     }
+                    // On the stack itself: put on the frames around it, no picture is a target and
+                    // the place read back (页码, 进度) never moved from where the strip opened.
+                    .scrollTargetLayout()
                     .frame(width: width)
                     .background(Color(red: 20 / 255, green: 20 / 255, blue: 22 / 255))
+                    .background(StripScroller(step: step))
                     .frame(maxWidth: .infinity)
-                    .scrollTargetLayout()
                 }
                 .scrollPosition(id: $top, anchor: .top)
                 .scrollIndicators(.never)
@@ -555,7 +601,7 @@ private struct ComicStrip: View {
             }
             .overlay(alignment: .top) {
                 VStack(spacing: 1) {
-                    Text(model.current.map { "\(model.title) · \(model.name(of: $0))" } ?? model.title)
+                    Text(model.current.map { e in [model.title, model.name(of: e)].uniqued().joined(separator: " · ") } ?? model.title)
                         .font(.system(size: 12.5, weight: .semibold))
                     Text("条漫 · " + (model.page + 1 >= (model.current?.pages.count ?? 0) ? String(localized: "这一话看完了") : String(localized: "第 \(model.page + 1) / \(model.current?.pages.count ?? 0) 张")))
                         .font(.system(size: 10.5)).monospacedDigit().foregroundStyle(Color(white: 0.6))
