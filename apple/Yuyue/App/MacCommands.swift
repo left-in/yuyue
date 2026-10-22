@@ -18,6 +18,11 @@ struct ReaderCommands: Commands {
                 if let model { model.quickSearchShown = true } else { NotificationCenter.default.post(name: .quickSearch, object: nil) }
             }
             .keyboardShortcut("k")
+            // 书架窗口: the sidebar on the left; a book's window: the notes on the right.
+            Button("显示或收起侧栏") {
+                if let model { model.togglePanel(.notes) } else { NotificationCenter.default.post(name: .toggleShelfSidebar, object: nil) }
+            }
+            .keyboardShortcut("n", modifiers: [.command, .option])
             Divider()
             Group { reading }.disabled(model == nil)
         }
@@ -29,8 +34,6 @@ struct ReaderCommands: Commands {
     @ViewBuilder private var reading: some View {
         Button("目录") { model?.togglePanel(.toc) }
             .keyboardShortcut("t", modifiers: [.command, .option])
-        Button("显示或收起笔记栏") { model?.togglePanel(.notes) }
-            .keyboardShortcut("n", modifiers: [.command, .option])
         Button("书伴") { model?.togglePanel(.companion) }
         Divider()
         Button("书内搜索") { model?.startSearch() }

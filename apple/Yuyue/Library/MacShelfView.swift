@@ -46,13 +46,16 @@ struct MacShelfView: View {
         // `.v-mac-sb`: the sidebar floats in the window, 8 in from its edges, and the page starts
         // beside it at 228.
         HStack(spacing: 0) {
-            if sidebarShown {
-                sidebar
-                    .frame(width: 212)
-                    .padding(8)
-                    .ignoresSafeArea(.container, edges: .top)
-                    .transition(.move(edge: .leading).combined(with: .opacity))
-            }
+            // Slides out to the left and back, the page widening and narrowing with it.
+            sidebar
+                .frame(width: 212)
+                .padding(8)
+                .ignoresSafeArea(.container, edges: .top)
+                .frame(width: sidebarShown ? 228 : 0, alignment: .trailing)
+                .clipped()
+                .opacity(sidebarShown ? 1 : 0)
+                .allowsHitTesting(sidebarShown)
+                .accessibilityHidden(!sidebarShown)
             Group {
                 switch filter {
                 case .notes: MacNotesView(library: library)
@@ -66,9 +69,9 @@ struct MacShelfView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .ignoresSafeArea(.container, edges: .top)
-        .overlay(alignment: .topLeading) { sidebarButton.ignoresSafeArea(.container, edges: .top) }
+        .onReceive(NotificationCenter.default.publisher(for: .toggleShelfSidebar)) { _ in toggleSidebar() }
         .onGeometryChange(for: Bool.self) { $0.size.width < 760 } action: { narrow in
-            withAnimation(.snappy(duration: 0.25)) {
+            withAnimation(.smooth(duration: 0.3)) {
                 narrowWindow = narrow
                 if !narrow { openedWhileNarrow = false }
             }
@@ -80,6 +83,10 @@ struct MacShelfView: View {
         // sit lower than a plain title bar reaches, and a button outside it can't be clicked: an
         // empty toolbar makes the bar tall enough.
         .toolbar {
+            // 显示侧栏 / 隐藏侧栏: a real toolbar button beside the window's buttons, as in 访达 and
+            // 备忘录, so the title bar never takes its click.
+            ToolbarItem(placement: .navigation) { sidebarButton }
+                .withoutGlass()
             ToolbarItem { Color.clear.frame(width: 1, height: 1) }
                 .withoutGlass()
         }
@@ -464,16 +471,22 @@ struct MacShelfView: View {
     /// it puts it away by itself, until it's asked for again.
     @AppStorage("shelf.sidebarShown") private var sidebarWanted = true
     @AppStorage("notes.byBook") private var notesByBook = false
+    @AppStorage("notes.bookColumnShown") private var notesBookColumn = true
     @State private var narrowWindow = false
     @State private var openedWhileNarrow = false
 
     private var sidebarShown: Bool { sidebarWanted && (!narrowWindow || openedWhileNarrow) }
 
     /// The page's title clears the window's buttons and this one when the sidebar is away.
-    private var headerInset: CGFloat { sidebarShown ? 0 : 104 }
+    private var headerInset: CGFloat { sidebarShown ? 0 : 118 }
 
     private func toggleSidebar() {
-        withAnimation(.snappy(duration: 0.25)) {
+        // On 笔记 · 按书 the same key folds the book column instead.
+        if filter == .notes && notesByBook {
+            withAnimation(.smooth(duration: 0.3)) { notesBookColumn.toggle() }
+            return
+        }
+        withAnimation(.smooth(duration: 0.3)) {
             if sidebarShown {
                 sidebarWanted = false
                 openedWhileNarrow = false
@@ -496,11 +509,8 @@ struct MacShelfView: View {
                 .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        // On 笔记 · 按书 the same key folds the book column instead (MacNotesView).
-        .keyboardShortcut(filter == .notes && notesByBook ? nil : KeyboardShortcut("n", modifiers: [.command, .option]))
         .help(sidebarShown ? String(localized: "隐藏侧栏 ⌘⌥N") : String(localized: "显示侧栏 ⌘⌥N"))
         .accessibilityLabel(sidebarShown ? String(localized: "隐藏侧栏") : String(localized: "显示侧栏"))
-        .offset(x: sidebarShown ? 186 : 84, y: sidebarShown ? 17 : 16)
     }
 
     /// 资料库, 状态, 笔记, 合集: each folds away by its title, and stays so.
@@ -1220,4 +1230,9 @@ struct ReadingCard: View {
         }
         .buttonStyle(.plain)
     }
+}
+
+extension Notification.Name {
+    /// 显示或收起侧栏 from the menu bar (⌘⌥N) while the shelf window is in front.
+    static let toggleShelfSidebar = Notification.Name("yuyue.toggleShelfSidebar")
 }

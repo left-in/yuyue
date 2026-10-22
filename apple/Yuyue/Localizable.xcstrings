@@ -16513,6 +16513,16 @@
           }
         }
       }
+    },
+    "显示或收起侧栏" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show or Hide Sidebar"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
