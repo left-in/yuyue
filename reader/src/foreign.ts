@@ -5,7 +5,7 @@
 // stays inside. CJK text never makes a word, so a click on Chinese stays a plain tap.
 
 import { fragmentsOf, sentenceOf, state } from './layout';
-import { Highlight, Point, pointOf, rangeOf, registry, textNodes } from './marks';
+import { Highlight, Point, pointOf, rangeOf, registry, repaint, textNodes } from './marks';
 
 const LETTER = 'A-Za-z\\u00C0-\\u024F\\u1E00-\\u1EFF\\u0370-\\u03FF\\u0400-\\u04FF';
 const WORDS = new RegExp('[' + LETTER + "](?:[" + LETTER + "]|['\\u2019\\-](?=[" + LETTER + ']))*', 'g');
@@ -96,6 +96,7 @@ export function setLooking(start: Point | null, end: Point | null): void {
   const r = start && end ? rangeOf(start, end) : null;
   if (r) reg.set('yy-look', new Highlight(r));
   else reg.delete('yy-look');
+  repaint();
 }
 
 /** Forms of an English word that count as the same word: fix → fixes, fixed, fixing. Keep in
@@ -153,6 +154,7 @@ export function drawVocab(): void {
   }
   if (ranges.length) reg.set('yy-vocab', new Highlight(...ranges));
   else reg.delete('yy-vocab');
+  repaint();
 }
 
 // ---------- 难词注释 ----------

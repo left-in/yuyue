@@ -20,7 +20,7 @@ struct WordCard: View {
                 }
                 Spacer(minLength: 8)
                 Button { model.say(lookup.word) } label: {
-                    Image(systemName: "speaker.wave.2").font(.system(size: 12, weight: .medium)).foregroundStyle(YYColor.t1)
+                    Image(systemName: "headphones").font(.system(size: 12, weight: .medium)).foregroundStyle(YYColor.t1)
                         .frame(width: 28, height: 28).background(YYColor.inset, in: .circle)
                 }
                 .buttonStyle(.plain)
@@ -35,20 +35,23 @@ struct WordCard: View {
             }
             Divider().overlay(YYColor.line).padding(.top, 12)
             HStack(spacing: 6) {
+                // The buttons keep their words; a long source gives way (it cut 加入生词本 short).
                 Text(source).font(.system(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
-                    .fixedSize()
                 Spacer(minLength: 4)
                 Button("更多释义") { more() }
                     .buttonStyle(CardButton(filled: false))
+                    .fixedSize()
                 Button { model.keep(!lookup.kept) } label: {
                     Label(lookup.kept ? String(localized: "在生词本里") : String(localized: "加入生词本"), systemImage: lookup.kept ? "checkmark" : "plus")
                 }
                 .buttonStyle(CardButton(filled: !lookup.kept))
+                .fixedSize()
             }
             .padding(.top, 10)
         }
         .padding(.horizontal, 16).padding(.top, 14).padding(.bottom, 12)
-        .frame(width: 330)
+        // A little wider than `.dict` (310): 本书只出现这一次 and both buttons on one line.
+        .frame(width: 350)
         .background(YYColor.card, in: .rect(cornerRadius: 14))
         .shadow(color: .black.opacity(0.14), radius: 15, y: 10)
         .shadow(color: .black.opacity(0.08), radius: 1.5, y: 1)

@@ -511,7 +511,8 @@ yy-gl {
   white-space: nowrap;
   font: 400 max(10.5px, calc(var(--yy-base-en) * .66))/1 var(--yy-sans) !important;
   letter-spacing: 0 !important;
-  color: var(--yy-p-ink-2);
+  /* `.v-mq-encol ruby rt`: in the paper's accent, as the words looked up are. */
+  color: var(--yy-p-pa);
 }
 /* 译: the translation under a paragraph (foreign.ts). */
 yy-tr {

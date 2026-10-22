@@ -147,11 +147,21 @@ private struct ReaderWindowShape: NSViewRepresentable {
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
+    /// Tells when it is in a window: a moment later (as before) can be too soon.
+    final class Host: NSView {
+        var placed: ((NSWindow) -> Void)?
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            guard let window, let placed else { return }
+            self.placed = nil
+            DispatchQueue.main.async { placed(window) }
+        }
+    }
+
     func makeNSView(context: Context) -> NSView {
-        let view = NSView()
+        let view = Host()
         let key = "window.size.\(kind.rawValue)", kind = kind
-        DispatchQueue.main.async {
-            guard let window = view.window else { return }
+        view.placed = { window in
             if kind == .comic {
                 window.backgroundColor = .black
                 window.titlebarAppearsTransparent = true

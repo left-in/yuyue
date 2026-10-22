@@ -301,7 +301,7 @@ export function setHits(query: string | null, current?: { s: number; nth: number
  *  (⌘G from the search box left the old hit solid, though the new one was set): give the text a
  *  layer of its own, or take it away, so it is painted again. */
 let flip = false;
-function repaint(): void {
+export function repaint(): void {
   // On <body>, which holds the columns: inside it, a layer of its own would split the text
   // across columns differently, and the absolutely placed pieces are placed from <html>.
   flip = !flip;
