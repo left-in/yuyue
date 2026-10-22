@@ -177,10 +177,12 @@ private struct PhoneAddService: View {
             guard key == self.key, url == self.url, chosen == self.chosen else { return }
             if let chosen {
                 do { match = (chosen, try await AIServices.models(chosen, url: url, key: key)) } catch { failure = Companion.message(for: error) }
-            } else if let found = await AIServices.identify(key) {
-                match = found
             } else {
-                failure = String(localized: "认不出是哪家的 Key：在下面选是哪家，再粘贴一次")
+                switch await AIServices.identify(key) {
+                case .found(let p, let models): match = (p, models)
+                case .refused(let p, let error): failure = String(localized: "是 \(p.name) 的 Key，但核对没通过：\(Companion.message(for: error))")
+                case .unknown: failure = String(localized: "认不出是哪家的 Key：在下面选是哪家，再粘贴一次")
+                }
             }
             checking = false
         }

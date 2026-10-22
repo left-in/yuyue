@@ -259,7 +259,7 @@ struct MacShelfView: View {
                 sidebarRow(.all, String(localized: "全部"), "books.vertical", library.books.count)
                 sidebarRow(.books, String(localized: "书"), "text.book.closed", library.books.count { !$0.isComic })
                 sidebarRow(.comics, String(localized: "漫画"), "rectangle.3.group", library.books.count(where: \.isComic))
-                sidebarRow(.audio, String(localized: "有声"), "headphones", library.books.count(where: library.hasAudio))
+                sidebarRow(.audio, String(localized: "有声"), ProtoIcon.wave.rawValue, library.books.count(where: library.hasAudio))
             }
             sidebarGroup(String(localized: "状态"), key: "status")
             if !closedGroups.contains("status") {
@@ -1038,11 +1038,15 @@ private struct SidebarRow<Title: View>: View {
     var body: some View {
         HStack(spacing: 8) {
             // `.v-mac-it svg`: every icon in the same 14 × 14 box, wide ones too.
-            Image(systemName: symbol)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 14, height: 14)
-                .foregroundStyle(drop ? tint.accent : color ?? (on ? YYColor.t1 : YYColor.t2))
+            Group {
+                if let drawn = ProtoIcon(rawValue: symbol) {
+                    drawn.shape.stroke(style: StrokeStyle(lineWidth: 1.6, lineCap: .round, lineJoin: .round))
+                } else {
+                    Image(systemName: symbol).resizable().scaledToFit()
+                }
+            }
+            .frame(width: 14, height: 14)
+            .foregroundStyle(drop ? tint.accent : color ?? (on ? YYColor.t1 : YYColor.t2))
             title
                 .font(.system(size: 12, weight: on || drop ? .semibold : .regular))
                 .foregroundStyle(drop ? tint.accent : color ?? YYColor.t1)
@@ -1257,5 +1261,31 @@ private struct SidebarToggle: View {
         .onHover { hover = $0 }
         .help(shown ? String(localized: "隐藏侧栏 ⌘⌥N") : String(localized: "显示侧栏 ⌘⌥N"))
         .accessibilityLabel(shown ? String(localized: "隐藏侧栏") : String(localized: "显示侧栏"))
+    }
+}
+
+/// The prototype's own icons where no system one matches, drawn as its SVGs are (16 × 16, lines).
+nonisolated enum ProtoIcon: String {
+    /// `#i-wavef`: 有声.
+    case wave = "proto.wave"
+
+    var shape: some Shape { ProtoShape(icon: self) }
+}
+
+nonisolated struct ProtoShape: Shape {
+    let icon: ProtoIcon
+
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        switch icon {
+        case .wave:
+            // M2 8h.5 M4.5 5.5v5 M7 3v10 M9.5 5v6 M12 6.5v3 M14 8h.01
+            p.move(to: CGPoint(x: 2, y: 8)); p.addLine(to: CGPoint(x: 2.5, y: 8))
+            for (x, y0, y1) in [(4.5, 5.5, 10.5), (7.0, 3.0, 13.0), (9.5, 5.0, 11.0), (12.0, 6.5, 9.5)] {
+                p.move(to: CGPoint(x: x, y: y0)); p.addLine(to: CGPoint(x: x, y: y1))
+            }
+            p.move(to: CGPoint(x: 14, y: 8)); p.addLine(to: CGPoint(x: 14.01, y: 8))
+        }
+        return p.applying(CGAffineTransform(translationX: rect.minX, y: rect.minY).scaledBy(x: rect.width / 16, y: rect.height / 16))
     }
 }

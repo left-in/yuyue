@@ -337,10 +337,14 @@ private struct AddServiceSheet: View {
                 } catch {
                     if key == self.key { failure = Companion.message(for: error) }
                 }
-            } else if let found = await AIServices.identify(key) {
-                if key == self.key { match = found }
-            } else if key == self.key {
-                failure = String(localized: "认不出是哪家的 Key：在下面选是哪家，再粘贴一次")
+            } else {
+                let result = await AIServices.identify(key)
+                guard key == self.key else { return }
+                switch result {
+                case .found(let p, let models): match = (p, models)
+                case .refused(let p, let error): failure = String(localized: "是 \(p.name) 的 Key，但核对没通过：\(Companion.message(for: error))")
+                case .unknown: failure = String(localized: "认不出是哪家的 Key：在下面选是哪家，再粘贴一次")
+                }
             }
             if key == self.key { checking = false }
         }

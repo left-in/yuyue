@@ -17013,6 +17013,16 @@
           }
         }
       }
+    },
+    "是 %@ 的 Key，但核对没通过：%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This looks like a %1$@ key, but it didn't check out: %2$@"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -235,21 +235,29 @@ final class AIServices {
         #endif
     }
 
+    enum Identified {
+        case found(AIPreset, [String])
+        /// Its start says whose it is, but that service turned it down.
+        case refused(AIPreset, Error)
+        case unknown
+    }
+
     /// Whose a pasted key is: its start says it outright, or the services that take its shape
     /// are each asked, and the one that answers is it.
-    nonisolated static func identify(_ key: String) async -> (AIPreset, [String])? {
+    nonisolated static func identify(_ key: String) async -> Identified {
         let key = key.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard key.count > 8 else { return nil }
+        guard key.count > 8 else { return .unknown }
         let exact = AIPreset.keyed.filter { p in p.prefixes.contains { $0 != "sk-" && key.hasPrefix($0) } }
+        if exact.count == 1, let p = exact.first {
+            do { return .found(p, try await models(p, url: p.url, key: key)) } catch { return .refused(p, error) }
+        }
         let candidates: [AIPreset]
-        if !exact.isEmpty {
-            candidates = exact
-        } else if key.hasPrefix("sk-") {
+        if key.hasPrefix("sk-") {
             candidates = AIPreset.keyed.filter { $0.prefixes.contains("sk-") || $0.id == "openai" }
         } else {
             candidates = AIPreset.keyed.filter { $0.prefixes.isEmpty && $0.id != "custom" }
         }
-        return await withTaskGroup(of: (AIPreset, [String])?.self) { group in
+        let found: (AIPreset, [String])? = await withTaskGroup(of: (AIPreset, [String])?.self) { group in
             for p in candidates {
                 group.addTask { (try? await models(p, url: p.url, key: key)).map { (p, $0) } }
             }
@@ -258,5 +266,6 @@ final class AIServices {
             }
             return nil
         }
+        return found.map { .found($0.0, $0.1) } ?? .unknown
     }
 }
