@@ -9,6 +9,7 @@ import YuyueCore
 /// sentence it was met in and where, and how often it turns up across the library. 掌握了 stops
 /// it being marked in books; 导出 makes Anki cards or a CSV.
 struct MacWordsView: View {
+    @Environment(\.shelfHeaderInset) private var headerInset
     let library: Library
     @Environment(\.openWindow) private var openWindow
     @AppStorage("words.byBook") private var byBook = false
@@ -109,6 +110,7 @@ struct MacWordsView: View {
     private var header: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             Text("生词本").font(.system(size: 22, weight: .bold)).foregroundStyle(YYColor.t1)
+                .padding(.leading, headerInset)
             if !words.isEmpty {
                 (Text("\(learning.count)").fontWeight(.semibold).foregroundStyle(YYColor.t1) + Text(" 个在学 · 掌握了 \(known.count) 个"))
                     .font(.system(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)

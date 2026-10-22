@@ -24,7 +24,6 @@ struct MacShelfView: View {
     @State private var dropCount: Int?
     /// A book 在书架里显示 pointed at, ringed for a moment.
     @State private var revealed: String?
-    @State private var naming = false
     @State private var newName = ""
     @State private var renaming: String?
     @State private var dropCollection: String?
@@ -47,18 +46,32 @@ struct MacShelfView: View {
         // `.v-mac-sb`: the sidebar floats in the window, 8 in from its edges, and the page starts
         // beside it at 228.
         HStack(spacing: 0) {
-            sidebar
-                .frame(width: 212)
-                .padding(8)
-                .ignoresSafeArea(.container, edges: .top)
+            if sidebarShown {
+                sidebar
+                    .frame(width: 212)
+                    .padding(8)
+                    .ignoresSafeArea(.container, edges: .top)
+                    .transition(.move(edge: .leading).combined(with: .opacity))
+            }
             Group {
                 switch filter {
                 case .notes: MacNotesView(library: library)
                 case .words: MacWordsView(library: library)
+                case .collections:
+                    CollectionWall(library: library, pinnedRaw: $pinnedRaw, leading: headerInset) { filter = .collection($0) }
                 default: main
                 }
             }
+            .environment(\.shelfHeaderInset, headerInset)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .ignoresSafeArea(.container, edges: .top)
+        .overlay(alignment: .topLeading) { sidebarButton.ignoresSafeArea(.container, edges: .top) }
+        .onGeometryChange(for: Bool.self) { $0.size.width < 760 } action: { narrow in
+            withAnimation(.snappy(duration: 0.25)) {
+                narrowWindow = narrow
+                if !narrow { openedWhileNarrow = false }
+            }
         }
         .background(YYColor.bg)
         .toolbar(removing: .title)
@@ -70,7 +83,9 @@ struct MacShelfView: View {
             ToolbarItem { Color.clear.frame(width: 1, height: 1) }
                 .withoutGlass()
         }
-        .trafficLights(CGPoint(x: 30, y: 30))
+        // In the sidebar card's corner while it's there; with it away, where a reading window
+        // has them (`.v-mac-tb`).
+        .trafficLights(sidebarShown ? CGPoint(x: 30, y: 30) : CGPoint(x: 24, y: 29))
         // The prototype has no fade where lists meet the title bar, the search field or the line
         // above 同步: what scrolls up just goes under, clean.
         .noScrollEdgeFade()
@@ -235,53 +250,64 @@ struct MacShelfView: View {
 
     private var sidebarList: some View {
         VStack(alignment: .leading, spacing: 0) {
-            sidebarGroup(String(localized: "资料库"))
-            sidebarRow(.all, String(localized: "全部"), "square.stack.3d.up", library.books.count)
-            sidebarRow(.books, String(localized: "书"), "book.closed", library.books.count { !$0.isComic })
-            sidebarRow(.comics, String(localized: "漫画"), "rectangle.split.2x2", library.books.count(where: \.isComic))
-            sidebarRow(.audio, String(localized: "有声"), "waveform", library.books.count(where: library.hasAudio))
-            sidebarGroup(String(localized: "状态"))
-            ForEach([ReadingStatus.reading, .want, .finished], id: \.self) { status in
-                sidebarRow(.status(status), status.name, status.symbol, library.books.count { $0.status == status })
+            sidebarGroup(String(localized: "资料库"), key: "library")
+            if !closedGroups.contains("library") {
+                sidebarRow(.all, String(localized: "全部"), "square.stack.3d.up", library.books.count)
+                sidebarRow(.books, String(localized: "书"), "book.closed", library.books.count { !$0.isComic })
+                sidebarRow(.comics, String(localized: "漫画"), "rectangle.split.2x2", library.books.count(where: \.isComic))
+                sidebarRow(.audio, String(localized: "有声"), "waveform", library.books.count(where: library.hasAudio))
             }
-            sidebarGroup(String(localized: "笔记"))
-            sidebarRow(.notes, String(localized: "笔记"), "quote.opening", noteCount)
-            sidebarRow(.words, String(localized: "生词本"), "translate", wordCount)
-            sidebarGroup(String(localized: "合集"))
-            ForEach(library.collections, id: \.id) { c in
-                collectionRow(c)
-            }
-            if naming {
-                SidebarRow(symbol: CollectionIcon.guess(for: newName) ?? CollectionIcon.fallback) {
-                    TextField("合集的名字", text: $newName)
-                        .textFieldStyle(.plain)
-                        .focused($nameFocused)
-                        .onSubmit(finishNaming)
-                        .onExitCommand { naming = false }
+            sidebarGroup(String(localized: "状态"), key: "status")
+            if !closedGroups.contains("status") {
+                ForEach([ReadingStatus.reading, .want, .finished], id: \.self) { status in
+                    sidebarRow(.status(status), status.name, status.symbol, library.books.count { $0.status == status })
                 }
-                .onChange(of: nameFocused) { if !nameFocused { finishNaming() } }
             }
-            Button {
-                newName = ""
-                naming = true
-                nameFocused = true
-            } label: {
-                SidebarRow(symbol: "plus", color: tint.accent) { Text("新建合集") }
-                    .foregroundStyle(tint.accent)
+            sidebarGroup(String(localized: "笔记"), key: "notes")
+            if !closedGroups.contains("notes") {
+                sidebarRow(.notes, String(localized: "笔记"), "quote.opening", noteCount)
+                sidebarRow(.words, String(localized: "生词本"), "translate", wordCount)
             }
-            .buttonStyle(.plain)
+            sidebarGroup(String(localized: "合集"), key: "collections")
+            if !closedGroups.contains("collections") {
+                allCollectionsRow
+                ForEach(pinnedCollections, id: \.id) { c in
+                    collectionRow(c)
+                }
+            }
         }
     }
 
-    /// `.v-mac-gt`
-    private func sidebarGroup(_ title: String) -> some View {
-        Text(title)
-            .font(.system(size: 10.5, weight: .semibold))
-            .foregroundStyle(YYColor.t3)
-            .padding(.horizontal, 8)
-            .padding(.top, 14)
-            .padding(.bottom, 4)
-            .accessibilityAddTraits(.isHeader)
+    /// “合集 14 ›”: the 合集墙. A book held over it a moment brings up every 合集 to drop it on.
+    private var allCollectionsRow: some View {
+        Button { filter = .collections } label: {
+            SidebarRow(symbol: "square.stack", trailing: "\(library.collections.count) ›",
+                       on: filter == .collections || (currentCollection.map { id in !pinnedCollections.contains { $0.id == id } } ?? false),
+                       drop: dropOverAll, tint: tint) {
+                Text("合集")
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(filter == .collections ? .isSelected : [])
+        .onDrop(of: [.utf8PlainText, .plainText], isTargeted: Binding(get: { dropOverAll }, set: { over in
+            dropOverAll = over
+            dropTimer?.cancel()
+            if over {
+                dropTimer = Task {
+                    try? await Task.sleep(for: .milliseconds(500))
+                    if !Task.isCancelled { dropListShown = true }
+                }
+            }
+        })) { _ in false }
+        .popover(isPresented: $dropListShown, arrowEdge: .trailing) {
+            CollectionDropList(library: library) { dropListShown = false }
+                .presentationBackground(YYColor.card)
+        }
+    }
+
+    /// `.v-mac-gt`: a click folds the group away or back; the arrow shows on hover, as in 访达.
+    private func sidebarGroup(_ title: String, key: String) -> some View {
+        SidebarGroupTitle(title: title, closed: closedGroups.contains(key)) { toggleGroup(key) }
     }
 
     private func sidebarRow(_ f: ShelfFilter, _ title: String, _ symbol: String, _ count: Int) -> some View {
@@ -294,8 +320,8 @@ struct MacShelfView: View {
 
     /// The rows in order, for ↑ ↓ on the sidebar.
     private var filterOrder: [ShelfFilter] {
-        [.all, .books, .comics, .audio, .status(.reading), .status(.want), .status(.finished), .notes, .words]
-            + library.collections.map { .collection($0.id) }
+        [.all, .books, .comics, .audio, .status(.reading), .status(.want), .status(.finished), .notes, .words, .collections]
+            + pinnedCollections.map { .collection($0.id) }
     }
 
     private func moveFilter(_ direction: MoveCommandDirection) {
@@ -386,11 +412,23 @@ struct MacShelfView: View {
         }, acceptsBooks: true) { urls in
             Task { await library.importFiles(urls, into: c.id) }
         } books: { ids in
-            for id in ids where library.books.contains(where: { $0.id == id }) {
-                library.setBook(id, in: c.id, true)
+            for id in ids {
+                if id.hasPrefix(PinnedCollections.dragPrefix) {
+                    movePinned(String(id.dropFirst(PinnedCollections.dragPrefix.count)), before: c.id)
+                } else if library.books.contains(where: { $0.id == id }) {
+                    library.setBook(id, in: c.id, true)
+                }
             }
         })
+        // Pinned 合集 are put in order by dragging one onto another.
+        .draggable(PinnedCollections.dragPrefix + c.id) {
+            SidebarRow(symbol: CollectionIcon.symbol(for: c)) { Text(c.name) }.frame(width: 180)
+        }
         .contextMenu {
+            Button("取消固定") {
+                pinnedRaw = PinnedCollections.raw(PinnedCollections.ids(pinnedRaw).filter { $0 != c.id })
+            }
+            Divider()
             Button("重命名") {
                 newName = c.name
                 renaming = c.id
@@ -398,17 +436,19 @@ struct MacShelfView: View {
             }
             Button("删除合集", role: .destructive) {
                 if filter == .collection(c.id) { filter = .all }
+                pinnedRaw = PinnedCollections.raw(PinnedCollections.ids(pinnedRaw).filter { $0 != c.id })
                 library.deleteCollection(c)
             }
         }
     }
 
-    private func finishNaming() {
-        guard naming else { return }
-        naming = false
-        let name = newName.trimmingCharacters(in: .whitespaces)
-        guard !name.isEmpty, let id = library.createCollection(name) else { return }
-        filter = .collection(id)
+    /// A pinned 合集 dropped on another goes just before it.
+    private func movePinned(_ id: String, before target: String) {
+        guard id != target else { return }
+        var ids = PinnedCollections.ids(pinnedRaw).filter { $0 != id }
+        let i = ids.firstIndex(of: target) ?? ids.count
+        ids.insert(id, at: i)
+        withAnimation(.snappy(duration: 0.2)) { pinnedRaw = PinnedCollections.raw(ids) }
     }
 
     private func finishRenaming(_ c: BookCollection) {
@@ -417,6 +457,72 @@ struct MacShelfView: View {
         let name = newName.trimmingCharacters(in: .whitespaces)
         if !name.isEmpty, name != c.name { library.renameCollection(c.id, to: name) }
     }
+
+    // MARK: 收起 / 展开
+
+    /// 显示侧栏 / 隐藏侧栏 (⌘⌥S, as in 访达): the sidebar goes away whole. A window too narrow for
+    /// it puts it away by itself, until it's asked for again.
+    @AppStorage("shelf.sidebarShown") private var sidebarWanted = true
+    @AppStorage("notes.byBook") private var notesByBook = false
+    @State private var narrowWindow = false
+    @State private var openedWhileNarrow = false
+
+    private var sidebarShown: Bool { sidebarWanted && (!narrowWindow || openedWhileNarrow) }
+
+    /// The page's title clears the window's buttons and this one when the sidebar is away.
+    private var headerInset: CGFloat { sidebarShown ? 0 : 104 }
+
+    private func toggleSidebar() {
+        withAnimation(.snappy(duration: 0.25)) {
+            if sidebarShown {
+                sidebarWanted = false
+                openedWhileNarrow = false
+            } else {
+                sidebarWanted = true
+                openedWhileNarrow = narrowWindow
+            }
+        }
+    }
+
+    /// Beside the window's buttons: at the sidebar card's top right while it's there, right after
+    /// the buttons when it isn't.
+    private var sidebarButton: some View {
+        Button(action: toggleSidebar) {
+            Image(systemName: "sidebar.left")
+                .font(.system(size: 13.5, weight: .regular))
+                .foregroundStyle(YYColor.t2)
+                .frame(width: 30, height: 26)
+                .background(sidebarShown ? .clear : YYColor.inset, in: .rect(cornerRadius: 7))
+                .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        // On 笔记 · 按书 the same key folds the book column instead (MacNotesView).
+        .keyboardShortcut(filter == .notes && notesByBook ? nil : KeyboardShortcut("s", modifiers: [.command, .option]))
+        .help(sidebarShown ? String(localized: "隐藏侧栏 ⌘⌥S") : String(localized: "显示侧栏 ⌘⌥S"))
+        .accessibilityLabel(sidebarShown ? String(localized: "隐藏侧栏") : String(localized: "显示侧栏"))
+        .offset(x: sidebarShown ? 186 : 84, y: sidebarShown ? 17 : 16)
+    }
+
+    /// 资料库, 状态, 笔记, 合集: each folds away by its title, and stays so.
+    @AppStorage("shelf.closedGroups") private var closedGroupsRaw = ""
+    private var closedGroups: Set<String> { Set(closedGroupsRaw.split(separator: ",").map(String.init)) }
+
+    private func toggleGroup(_ key: String) {
+        var set = closedGroups
+        if set.contains(key) { set.remove(key) } else { set.insert(key) }
+        withAnimation(.snappy(duration: 0.2)) { closedGroupsRaw = set.sorted().joined(separator: ",") }
+    }
+
+    // MARK: 合集 in the sidebar
+
+    @AppStorage(PinnedCollections.key) private var pinnedRaw = ""
+    private var pinnedCollections: [BookCollection] {
+        PinnedCollections.ids(pinnedRaw).compactMap { id in library.collections.first { $0.id == id } }
+    }
+    /// A book held over “合集”: after a moment, every 合集 to drop it on.
+    @State private var dropOverAll = false
+    @State private var dropListShown = false
+    @State private var dropTimer: Task<Void, Never>?
 
     @State private var noteCount = 0
     @State private var wordCount = 0
@@ -440,6 +546,7 @@ struct MacShelfView: View {
         case .audio: return String(localized: "有声")
         case .status(let s): return s.name
         case .collection(let id): return library.collections.first { $0.id == id }?.name ?? String(localized: "合集")
+        case .collections: return String(localized: "全部合集")
         case .notes: return String(localized: "笔记")
         case .words: return String(localized: "生词本")
         }
@@ -454,7 +561,7 @@ struct MacShelfView: View {
         case .audio: books = books.filter(library.hasAudio)
         case .status(let s): books = books.filter { $0.status == s }
         case .collection(let id): books = books.filter { $0.collections.contains(id) }
-        case .notes, .words: break
+        case .notes, .words, .collections: break
         }
         return sort.sorted(books)
     }
@@ -492,6 +599,8 @@ struct MacShelfView: View {
                         .font(.system(size: 22, weight: .bold))
                         .foregroundStyle(YYColor.t1)
                         .lineLimit(1)
+                        // Clear of the window's buttons and 显示侧栏 when the sidebar is away.
+                        .padding(.leading, headerInset)
                     Spacer()
                     importButton
                 }
@@ -534,6 +643,8 @@ struct MacShelfView: View {
 
                 if books.isEmpty {
                     empty
+                } else if case .status(let s) = filter ?? .all {
+                    statusShelves(s, books)
                 } else {
                     LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
                         ForEach(books) { book in
@@ -588,6 +699,24 @@ struct MacShelfView: View {
         .buttonStyle(.plain)
         .keyboardShortcut("o")
         .help("导入书或漫画（⌘O）：EPUB、PDF、MOBI、AZW3、TXT，漫画的 CBZ、CBR、ZIP，或一文件夹图片；也可以直接拖进窗口")
+    }
+
+    /// A status page cut into 书, 漫画, 有声书: each shelf with books in it, the empty ones left out.
+    private func statusShelves(_ s: ReadingStatus, _ books: [BookSummary]) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(StatusShelf.allCases, id: \.self) { shelf in
+                let list = books.filter { shelf.holds($0, in: library) }
+                if !list.isEmpty {
+                    sectionHeader("\(shelf.name) · \(list.count)", trailing: shelf.verb(s))
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
+                        ForEach(list) { book in
+                            cell(book).id(book.id)
+                        }
+                    }
+                    .padding(.bottom, 28)
+                }
+            }
+        }
     }
 
     private func sectionHeader(_ text: String, trailing: String) -> some View {
@@ -805,6 +934,44 @@ struct MacShelfView: View {
     }
 }
 
+/// The three shelves a status page is cut into. A book is on one of them: a comic on 漫画, a book
+/// with an audiobook on 有声书, the rest on 书. The words for a shelf follow its kind: 在看 and 看完
+/// for comics, 在听 and 听完 for audiobooks.
+private enum StatusShelf: CaseIterable {
+    case books, comics, audio
+
+    var name: String {
+        switch self {
+        case .books: String(localized: "书")
+        case .comics: String(localized: "漫画")
+        case .audio: String(localized: "有声书")
+        }
+    }
+
+    func holds(_ book: BookSummary, in library: Library) -> Bool {
+        switch self {
+        case .books: !book.isComic && !library.hasAudio(book)
+        case .comics: book.isComic
+        case .audio: !book.isComic && library.hasAudio(book)
+        }
+    }
+
+    /// The status in this shelf's words, as its header says it on the right.
+    func verb(_ status: ReadingStatus) -> String {
+        switch (status, self) {
+        case (.reading, .comics): String(localized: "在看")
+        case (.reading, .audio): String(localized: "在听")
+        case (.reading, _): String(localized: "在读")
+        case (.want, .comics): String(localized: "想看")
+        case (.want, .audio): String(localized: "想听")
+        case (.want, _): String(localized: "想读")
+        case (.finished, .comics): String(localized: "看完")
+        case (.finished, .audio): String(localized: "听完")
+        case (.finished, _): String(localized: "读完")
+        }
+    }
+}
+
 /// `.v-mac-sb`'s fill: the card colour, 55% of it over the window's.
 enum SidebarPanel {
     static let fill = Color.yyDynamic(light: YYRGBA(251, 250, 249), dark: YYRGBA(22, 23, 25))
@@ -812,9 +979,45 @@ enum SidebarPanel {
 
 /// `.v-mac-it`: an icon in grey, the name, the count on the right. The row being shown is a
 /// white card; a collection with a book dragged over it lights up in the accent.
+/// `.v-mac-gt`, which folds its group away: a click on it, or on the arrow that shows while the
+/// pointer is over it (as in 访达).
+private struct SidebarGroupTitle: View {
+    let title: String
+    let closed: Bool
+    let toggle: () -> Void
+    @State private var hover = false
+
+    var body: some View {
+        Button(action: toggle) {
+            HStack(spacing: 4) {
+                Text(title)
+                    .font(.system(size: 10.5, weight: .semibold))
+                    .foregroundStyle(YYColor.t3)
+                Spacer(minLength: 4)
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(YYColor.t3)
+                    .rotationEffect(.degrees(closed ? 0 : 90))
+                    .opacity(hover || closed ? 1 : 0)
+            }
+            .padding(.horizontal, 8)
+            .padding(.top, 14)
+            .padding(.bottom, 4)
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .onHover { hover = $0 }
+        .accessibilityAddTraits(.isHeader)
+        .accessibilityValue(closed ? String(localized: "已收起") : String(localized: "已展开"))
+        .help(closed ? String(localized: "展开") : String(localized: "收起"))
+    }
+}
+
 private struct SidebarRow<Title: View>: View {
     let symbol: String
     var count: Int?
+    /// In place of the count: “14 ›”.
+    var trailing: String?
     var on = false
     var drop = false
     var tint = YYTint.standard
@@ -835,8 +1038,8 @@ private struct SidebarRow<Title: View>: View {
                 .foregroundStyle(drop ? tint.accent : color ?? YYColor.t1)
                 .lineLimit(1)
             Spacer(minLength: 4)
-            if let count {
-                Text(count.formatted())
+            if let text = trailing ?? count?.formatted() {
+                Text(text)
                     .font(.system(size: 10.5).monospacedDigit())
                     .foregroundStyle(drop ? tint.accent : YYColor.t3)
             }

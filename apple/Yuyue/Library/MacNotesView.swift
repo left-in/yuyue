@@ -6,10 +6,13 @@ import YuyueCore
 /// By day, newest first; or a column of books with the chosen one's notes in book order. The dots
 /// show one colour only; 导出 takes what is shown. Double-click goes back to the page.
 struct MacNotesView: View {
+    @Environment(\.shelfHeaderInset) private var headerInset
     let library: Library
     @Environment(\.openWindow) private var openWindow
     @Environment(\.colorScheme) private var scheme
     @AppStorage("notes.byBook") private var byBook = false
+    /// 按书's column of books, folded away by ⌘⌥S (as the shelf's sidebar is).
+    @AppStorage("notes.bookColumnShown") private var bookColumnShown = true
     @State private var notes: [BookNotes] = []
     @State private var only: Only = .all
     @State private var chosen: String?
@@ -151,12 +154,14 @@ struct MacNotesView: View {
     private var header: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             Text("笔记").font(.system(size: 22, weight: .bold)).foregroundStyle(YYColor.t1)
+                .padding(.leading, headerInset)
             Text("\(allMarks.count) 条 · 来自 \(notes.count) 本书")
                 .font(.system(size: 12)).foregroundStyle(YYColor.t2)
             Spacer()
             Segments(items: [(false, String(localized: "按时间")), (true, String(localized: "按书"))], selection: $byBook, small: true) { Text($1) }
                 .frame(width: 156)
             .onChange(of: byBook) { only = .all }
+            if byBook { bookColumnToggle }
             NoteExportMenu(sender: library.noteSender,
                            markdown: markdown, name: exportTitle + ".md",
                            books: { exportBooks.map { NoteExport.Book(id: $0.book.id, title: $0.book.title, author: $0.book.author, chapters: chapters($0)) } },
@@ -170,6 +175,22 @@ struct MacNotesView: View {
             }
             .disabled(notes.isEmpty)
         }
+    }
+
+    /// 收起 / 展开 the book column: the shelf's sidebar button and ⌘⌥S, for this page.
+    private var bookColumnToggle: some View {
+        Button { withAnimation(.snappy(duration: 0.25)) { bookColumnShown.toggle() } } label: {
+            Image(systemName: "sidebar.left")
+                .font(.system(size: 13.5, weight: .regular))
+                .foregroundStyle(YYColor.t2)
+                .frame(width: 30, height: 26)
+                .background(bookColumnShown ? .clear : YYColor.inset, in: .rect(cornerRadius: 7))
+                .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .keyboardShortcut("s", modifiers: [.command, .option])
+        .help(bookColumnShown ? String(localized: "收起书列 ⌘⌥S") : String(localized: "展开书列 ⌘⌥S"))
+        .accessibilityLabel(bookColumnShown ? String(localized: "收起书列") : String(localized: "展开书列"))
     }
 
     private func chips(for marks: [Mark]) -> some View {
@@ -263,28 +284,31 @@ struct MacNotesView: View {
 
     private var bookColumns: some View {
         HStack(alignment: .top, spacing: 24) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(alignment: .firstTextBaseline) {
-                    Text("\(notes.count) 本书").font(.system(size: 12.5, weight: .semibold)).foregroundStyle(YYColor.t1)
-                    Spacer()
-                    Text("最近记的在上面").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
-                }
-                .padding(.horizontal, 4)
-                // The card holds the rows only, scrolling once they outgrow the window.
-                ScrollView {
-                    VStack(spacing: 1) {
-                        ForEach(notes) { bookRow($0) }
+            if bookColumnShown {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("\(notes.count) 本书").font(.system(size: 12.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                        Spacer()
+                        Text("最近记的在上面").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
                     }
-                    .padding(5)
-                    .background(YYColor.card, in: .rect(cornerRadius: 14))
-                    .yyShadow(scheme == .dark ? YYShadow.ringDark : YYShadow.ringLight)
-                    .padding(1).padding(.bottom, 20)
+                    .padding(.horizontal, 4)
+                    // The card holds the rows only, scrolling once they outgrow the window.
+                    ScrollView {
+                        VStack(spacing: 1) {
+                            ForEach(notes) { bookRow($0) }
+                        }
+                        .padding(5)
+                        .background(YYColor.card, in: .rect(cornerRadius: 14))
+                        .yyShadow(scheme == .dark ? YYShadow.ringDark : YYShadow.ringLight)
+                        .padding(1).padding(.bottom, 20)
+                    }
+                    .scrollIndicators(.never)
+                    .scrollBounceBehavior(.basedOnSize)
                 }
-                .scrollIndicators(.never)
-                .scrollBounceBehavior(.basedOnSize)
+                .frame(width: 250)
+                .padding(.top, 4)
+                .transition(.move(edge: .leading).combined(with: .opacity))
             }
-            .frame(width: 250)
-            .padding(.top, 4)
             ScrollView {
                 if let n = notes.first(where: { $0.id == chosen }) {
                     bookNotes(n).padding(.top, 4).padding(.bottom, 28)

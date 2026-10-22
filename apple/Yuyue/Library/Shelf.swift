@@ -11,6 +11,8 @@ enum ShelfFilter: Hashable {
     case audio
     case status(ReadingStatus)
     case collection(String)
+    /// 全部合集 (the 合集墙, on the Mac).
+    case collections
     /// 笔记 and 生词本.
     case notes
     case words
