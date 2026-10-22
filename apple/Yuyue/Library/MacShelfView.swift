@@ -460,7 +460,7 @@ struct MacShelfView: View {
 
     // MARK: 收起 / 展开
 
-    /// 显示侧栏 / 隐藏侧栏 (⌘⌥S, as in 访达): the sidebar goes away whole. A window too narrow for
+    /// 显示侧栏 / 隐藏侧栏 (⌘⌥N, as the prototype has it for both windows): the sidebar goes away whole. A window too narrow for
     /// it puts it away by itself, until it's asked for again.
     @AppStorage("shelf.sidebarShown") private var sidebarWanted = true
     @AppStorage("notes.byBook") private var notesByBook = false
@@ -497,8 +497,8 @@ struct MacShelfView: View {
         }
         .buttonStyle(.plain)
         // On 笔记 · 按书 the same key folds the book column instead (MacNotesView).
-        .keyboardShortcut(filter == .notes && notesByBook ? nil : KeyboardShortcut("s", modifiers: [.command, .option]))
-        .help(sidebarShown ? String(localized: "隐藏侧栏 ⌘⌥S") : String(localized: "显示侧栏 ⌘⌥S"))
+        .keyboardShortcut(filter == .notes && notesByBook ? nil : KeyboardShortcut("n", modifiers: [.command, .option]))
+        .help(sidebarShown ? String(localized: "隐藏侧栏 ⌘⌥N") : String(localized: "显示侧栏 ⌘⌥N"))
         .accessibilityLabel(sidebarShown ? String(localized: "隐藏侧栏") : String(localized: "显示侧栏"))
         .offset(x: sidebarShown ? 186 : 84, y: sidebarShown ? 17 : 16)
     }

@@ -16473,6 +16473,46 @@
           }
         }
       }
+    },
+    "隐藏侧栏 ⌘⌥N" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Sidebar ⌘⌥N"
+          }
+        }
+      }
+    },
+    "显示侧栏 ⌘⌥N" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Sidebar ⌘⌥N"
+          }
+        }
+      }
+    },
+    "收起书列 ⌘⌥N" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Book List ⌘⌥N"
+          }
+        }
+      }
+    },
+    "展开书列 ⌘⌥N" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Book List ⌘⌥N"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

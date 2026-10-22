@@ -11,7 +11,7 @@ struct MacNotesView: View {
     @Environment(\.openWindow) private var openWindow
     @Environment(\.colorScheme) private var scheme
     @AppStorage("notes.byBook") private var byBook = false
-    /// 按书's column of books, folded away by ⌘⌥S (as the shelf's sidebar is).
+    /// 按书's column of books, folded away by ⌘⌥N (as the shelf's sidebar is).
     @AppStorage("notes.bookColumnShown") private var bookColumnShown = true
     @State private var notes: [BookNotes] = []
     @State private var only: Only = .all
@@ -177,7 +177,7 @@ struct MacNotesView: View {
         }
     }
 
-    /// 收起 / 展开 the book column: the shelf's sidebar button and ⌘⌥S, for this page.
+    /// 收起 / 展开 the book column: the shelf's sidebar button and ⌘⌥N, for this page.
     private var bookColumnToggle: some View {
         Button { withAnimation(.snappy(duration: 0.25)) { bookColumnShown.toggle() } } label: {
             Image(systemName: "sidebar.left")
@@ -188,8 +188,8 @@ struct MacNotesView: View {
                 .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        .keyboardShortcut("s", modifiers: [.command, .option])
-        .help(bookColumnShown ? String(localized: "收起书列 ⌘⌥S") : String(localized: "展开书列 ⌘⌥S"))
+        .keyboardShortcut("n", modifiers: [.command, .option])
+        .help(bookColumnShown ? String(localized: "收起书列 ⌘⌥N") : String(localized: "展开书列 ⌘⌥N"))
         .accessibilityLabel(bookColumnShown ? String(localized: "收起书列") : String(localized: "展开书列"))
     }
 
