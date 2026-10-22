@@ -3264,7 +3264,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Saved companion answers"
+            "value" : "Saved Companion Answers"
           }
         }
       }
@@ -16520,6 +16520,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show or Hide Sidebar"
+          }
+        }
+      }
+    },
+    "其余 %lld 本" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld more"
+          }
+        }
+      }
+    },
+    "其余 %lld 部" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld more"
+          }
+        }
+      }
+    },
+    "这台 Mac 用不了 Apple 智能，书伴要接一个：填你自己的 Key，或接本机的 Ollama。费用直接走你的账号，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence isn't available on this Mac, so the Companion needs one connected: add your own key, or a local Ollama. Any cost goes to your own account; Yuyue never handles it."
           }
         }
       }

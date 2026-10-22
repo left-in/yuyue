@@ -43,14 +43,10 @@ struct MacShelfView: View {
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
 
     var body: some View {
-        // `.v-mac-sb`: the system's own split view, as 访达 and 备忘录 have it. From macOS 26 its
-        // sidebar floats in the window with the window's buttons inside, as the prototype draws
-        // it; it slides away and back with the system's motion, and puts itself away when the
-        // window gets too narrow.
-        NavigationSplitView(columnVisibility: $splitColumns) {
-            sidebar
-                .navigationSplitViewColumnWidth(min: 200, ideal: 228, max: 300)
-        } detail: {
+        // `.v-mac-sb`: the sidebar is a card floating in the window, 8 in from its edges, the page
+        // beside it at 228. Put away, the card slides out to the left whole, shadow and all, while
+        // the page widens under it; the window's buttons and 显示侧栏 stay where they are.
+        ZStack(alignment: .topLeading) {
             Group {
                 switch filter {
                 case .notes: MacNotesView(library: library)
@@ -62,14 +58,36 @@ struct MacShelfView: View {
             }
             .environment(\.shelfHeaderInset, headerInset)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .ignoresSafeArea(.container, edges: .top)
-            .background(YYColor.bg)
+            .padding(.leading, sidebarShown ? 228 : 0)
+            sidebar
+                .frame(width: 212)
+                .padding(8)
+                .offset(x: sidebarShown ? 0 : -240)
+                .allowsHitTesting(sidebarShown)
+                .accessibilityHidden(!sidebarShown)
         }
+        .ignoresSafeArea(.container, edges: .top)
         .onReceive(NotificationCenter.default.publisher(for: .toggleShelfSidebar)) { _ in toggleSidebar() }
-        .onChange(of: splitColumns) { sidebarWanted = splitColumns != .detailOnly }
+        .onGeometryChange(for: Bool.self) { $0.size.width < 760 } action: { narrow in
+            withAnimation(Self.slide) {
+                narrowWindow = narrow
+                if !narrow { openedWhileNarrow = false }
+            }
+        }
         .background(YYColor.bg)
         .toolbar(removing: .title)
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+        .toolbar {
+            // A toolbar item, so the title bar doesn't take its click; moved down onto the line
+            // the window's buttons and the page's title share.
+            ToolbarItem(placement: .navigation) { sidebarButton.offset(y: Self.lineY - 26) }
+                .withoutGlass()
+            ToolbarItem { Color.clear.frame(width: 1, height: 1) }
+                .withoutGlass()
+        }
+        // One line for the window's buttons, 显示侧栏 and the page's title (`.v-mac-hd`'s middle),
+        // whether the sidebar is there or not: nothing jumps when it slides.
+        .trafficLights(CGPoint(x: 30, y: Self.lineY))
         // The prototype has no fade where lists meet the title bar, the search field or the line
         // above 同步: what scrolls up just goes under, clean.
         .noScrollEdgeFade()
@@ -93,7 +111,6 @@ struct MacShelfView: View {
         .tint(tint.accent)
         .onAppear {
             AppAppearance.apply()
-            splitColumns = sidebarWanted ? .all : .detailOnly
             // 打开语阅时接着读上次那本: once, when the app starts.
             guard reopenLast, !reopened else { return }
             reopened = true
@@ -188,8 +205,10 @@ struct MacShelfView: View {
     /// its foot under a line. The list scrolls above the line rather than under it.
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
+            // The window's own buttons sit here.
+            Color.clear.frame(height: 26)
             searchField
-                .padding(.top, 4)
+                .padding(.top, 16)
                 .padding(.horizontal, 10)
             ScrollView {
                 sidebarList
@@ -200,8 +219,14 @@ struct MacShelfView: View {
             syncStatus
                 .padding(.horizontal, 10)
         }
+        .padding(.top, 16)
         .padding(.bottom, 8)
         .frame(maxHeight: .infinity, alignment: .top)
+        .background {
+            // On the shape alone, so the rows inside don't each cast one.
+            RoundedRectangle(cornerRadius: 14).fill(SidebarPanel.fill)
+                .yyShadow(scheme == .dark ? YYShadow.ringDark : YYShadow.ringLight)
+        }
         .focusable()
         .focusEffectDisabled()
         .onMoveCommand(perform: moveFilter)
@@ -219,7 +244,7 @@ struct MacShelfView: View {
             .foregroundStyle(YYColor.t2)
             .padding(.horizontal, 9)
             .frame(height: 30)
-            .background(Color.primary.opacity(0.06), in: .rect(cornerRadius: 9))
+            .background(YYColor.inset, in: .rect(cornerRadius: 9))
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
@@ -229,10 +254,10 @@ struct MacShelfView: View {
         VStack(alignment: .leading, spacing: 0) {
             sidebarGroup(String(localized: "资料库"), key: "library")
             if !closedGroups.contains("library") {
-                sidebarRow(.all, String(localized: "全部"), "square.stack.3d.up", library.books.count)
-                sidebarRow(.books, String(localized: "书"), "book.closed", library.books.count { !$0.isComic })
-                sidebarRow(.comics, String(localized: "漫画"), "rectangle.split.2x2", library.books.count(where: \.isComic))
-                sidebarRow(.audio, String(localized: "有声"), "waveform", library.books.count(where: library.hasAudio))
+                sidebarRow(.all, String(localized: "全部"), "books.vertical", library.books.count)
+                sidebarRow(.books, String(localized: "书"), "text.book.closed", library.books.count { !$0.isComic })
+                sidebarRow(.comics, String(localized: "漫画"), "rectangle.3.group", library.books.count(where: \.isComic))
+                sidebarRow(.audio, String(localized: "有声"), "headphones", library.books.count(where: library.hasAudio))
             }
             sidebarGroup(String(localized: "状态"), key: "status")
             if !closedGroups.contains("status") {
@@ -437,26 +462,42 @@ struct MacShelfView: View {
 
     // MARK: 收起 / 展开
 
-    /// 显示侧栏 / 隐藏侧栏: the system's button beside the window's buttons, ⌃⌘S as everywhere
-    /// on the Mac, and ⌘⌥N as the prototype has it for both windows. Remembered.
+    /// 显示侧栏 / 隐藏侧栏 (⌘⌥N, as the prototype has it for both windows). A window too narrow
+    /// for the sidebar puts it away by itself, until it's asked for again. Remembered.
     @AppStorage("shelf.sidebarShown") private var sidebarWanted = true
     @AppStorage("notes.byBook") private var notesByBook = false
     @AppStorage("notes.bookColumnShown") private var notesBookColumn = true
-    @State private var splitColumns = NavigationSplitViewVisibility.all
+    @State private var narrowWindow = false
+    @State private var openedWhileNarrow = false
 
-    private var sidebarShown: Bool { splitColumns != .detailOnly }
+    /// The middle of the window's buttons, 显示侧栏 and the page's title, from the window's top.
+    static let lineY: CGFloat = 34
+    static let slide = Animation.spring(duration: 0.38, bounce: 0.08)
 
-    /// The page's title clears the window's buttons and the sidebar button when the sidebar is
-    /// away.
-    private var headerInset: CGFloat { sidebarShown ? 0 : 124 }
+    private var sidebarShown: Bool { sidebarWanted && (!narrowWindow || openedWhileNarrow) }
+
+    /// The page's title clears the window's buttons and 显示侧栏 when the sidebar is away.
+    private var headerInset: CGFloat { sidebarShown ? 0 : 118 }
 
     private func toggleSidebar() {
         // On 笔记 · 按书 the same key folds the book column instead.
         if filter == .notes && notesByBook {
-            withAnimation(.smooth(duration: 0.3)) { notesBookColumn.toggle() }
+            withAnimation(Self.slide) { notesBookColumn.toggle() }
             return
         }
-        withAnimation { splitColumns = sidebarShown ? .detailOnly : .all }
+        withAnimation(Self.slide) {
+            if sidebarShown {
+                sidebarWanted = false
+                openedWhileNarrow = false
+            } else {
+                sidebarWanted = true
+                openedWhileNarrow = narrowWindow
+            }
+        }
+    }
+
+    private var sidebarButton: some View {
+        SidebarToggle(shown: sidebarShown, action: toggleSidebar)
     }
 
     /// 资料库, 状态, 笔记, 合集: each folds away by its title, and stays so.
@@ -590,9 +631,14 @@ struct MacShelfView: View {
                     .padding(.bottom, 28)
                 }
 
-                let books = shown
+                // The books in the 在读 cards above aren't shown again below them.
+                let carded = Set(reading.map(\.id))
+                let books = shown.filter { !carded.contains($0.id) }
+                if !books.isEmpty || carded.isEmpty {
                 HStack {
-                    Text(filter == .comics ? String(localized: "\(books.count) 部") : String(localized: "\(books.count) 本"))
+                    Text(carded.isEmpty
+                         ? (filter == .comics ? String(localized: "\(books.count) 部") : String(localized: "\(books.count) 本"))
+                         : (filter == .comics ? String(localized: "其余 \(books.count) 部") : String(localized: "其余 \(books.count) 本")))
                         .font(.system(size: 12.5, weight: .semibold))
                         .foregroundStyle(YYColor.t1)
                     Spacer()
@@ -611,6 +657,7 @@ struct MacShelfView: View {
                             cell(book).id(book.id)
                         }
                     }
+                }
                 }
             }
             // `.v-mac-mn`: 22 in on the left, 26 on the right.
@@ -1185,4 +1232,27 @@ struct ReadingCard: View {
 extension Notification.Name {
     /// 显示或收起侧栏 from the menu bar (⌘⌥N) while the shelf window is in front.
     static let toggleShelfSidebar = Notification.Name("yuyue.toggleShelfSidebar")
+}
+
+/// 显示侧栏 / 隐藏侧栏: a small plain icon, the page's grey, a pad under it on hover and while the
+/// sidebar is away, as the window's buttons are small and quiet beside it.
+private struct SidebarToggle: View {
+    let shown: Bool
+    let action: () -> Void
+    @State private var hover = false
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "sidebar.left")
+                .font(.system(size: 12.5, weight: .regular))
+                .foregroundStyle(hover ? YYColor.t1 : YYColor.t2)
+                .frame(width: 28, height: 22)
+                .background(hover ? YYColor.inset : .clear, in: .rect(cornerRadius: 6))
+                .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .onHover { hover = $0 }
+        .help(shown ? String(localized: "隐藏侧栏 ⌘⌥N") : String(localized: "显示侧栏 ⌘⌥N"))
+        .accessibilityLabel(shown ? String(localized: "隐藏侧栏") : String(localized: "显示侧栏"))
+    }
 }

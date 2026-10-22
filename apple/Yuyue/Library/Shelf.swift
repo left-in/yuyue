@@ -60,9 +60,8 @@ extension BookSummary {
         if isComic {
             if status == .finished { return String(localized: "看完") }
             guard episode > 0 else { return String(localized: "漫画 · 没看过") }
-            let strip = UserDefaults.standard.string(forKey: "comic.layout.\(id)") == "strip"
-            if episodes <= 1 { return strip ? String(localized: "条漫 · \(percent)") : percent }
-            return strip ? String(localized: "条漫 · 第 \(episode) 话") : String(localized: "读到第 \(episode) 话")
+            // The same words as the 在读 card: which 话, which page.
+            return comicPlace
         }
         return switch status {
         case .finished: String(localized: "读完")

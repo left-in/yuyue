@@ -9,17 +9,19 @@ struct CompanionSettings: View {
     let library: Library
     @State private var current = CompanionConfig.current
     @State private var editing: CompanionConfig?
-    @State private var cached: Int64 = 0
     private let tint = YYTint.standard
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("书伴默认用这台 Mac 自带的，不花钱，不联网也能用。想换更强的，就填你自己的 Key，费用直接走你的账号，语阅不经手。")
+            Text(Companion.appleAvailability == nil
+                 ? String(localized: "书伴默认用这台 Mac 自带的，不花钱，不联网也能用。想换更强的，就填你自己的 Key，费用直接走你的账号，语阅不经手。")
+                 : String(localized: "这台 Mac 用不了 Apple 智能，书伴要接一个：填你自己的 Key，或接本机的 Ollama。费用直接走你的账号，语阅不经手。"))
                 .font(.system(size: 12)).foregroundStyle(YYColor.t2).lineSpacing(3)
                 .padding(.horizontal, 8)
             SettingsHeading(String(localized: "书伴用哪个"))
             SettingsCard {
-                ForEach(CompanionProvider.allCases) { p in row(p) }
+                // Apple 智能 only where this Mac can use it; elsewhere it's left out, not greyed.
+                ForEach(CompanionProvider.allCases.filter { $0 != .apple || Companion.appleAvailability == nil }) { p in row(p) }
             }
             if let editing {
                 KeyForm(config: editing, done: { saved in
@@ -31,32 +33,11 @@ struct CompanionSettings: View {
                 })
                 .id(editing.provider)
             }
-            SettingsCard {
-                SettingsRow(String(localized: "存下的回答"), detail: String(localized: "同一本书、读到同一章问同样的问题，直接用存下的，不再花钱")) {
-                    HStack(spacing: 10) {
-                        Text(ByteCountFormatter.string(fromByteCount: cached, countStyle: .file))
-                            .font(.system(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)
-                        Button("清掉") {
-                            try? FileManager.default.removeItem(at: cacheDir)
-                            measure()
-                        }
-                        .disabled(cached == 0)
-                    }
-                }
-            }
             Label("Key 只存在这台设备的钥匙串里，不同步、不上传", systemImage: "lock")
                 .font(.system(size: 11)).foregroundStyle(YYColor.t3)
                 .padding(.leading, 8)
             Spacer(minLength: 0)
         }
-        .onAppear(perform: measure)
-    }
-
-    private var cacheDir: URL { library.dataDir.appending(path: "companion", directoryHint: .isDirectory) }
-
-    private func measure() {
-        let files = (try? FileManager.default.contentsOfDirectory(at: cacheDir, includingPropertiesForKeys: [.fileSizeKey])) ?? []
-        cached = files.reduce(0) { $0 + Int64((try? $1.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0) }
     }
 
     private func row(_ p: CompanionProvider) -> some View {

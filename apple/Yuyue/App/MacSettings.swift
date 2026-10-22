@@ -36,7 +36,7 @@ struct MacSettings: View {
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
         // The page's name sits in the middle (`SettingsTitlebar`), not on the left.
         .toolbar(removing: .title)
-        .frame(width: 680)
+        .frame(width: 780)
         .tint(tint.accent)
         .navigationTitle(page.title)
         .background(SettingsTitlebar(title: page.title))
@@ -1067,6 +1067,17 @@ private struct StorageSettings: View {
                         .foregroundStyle(YYColor.danger)
                         .disabled((usage?.deleted.isEmpty ?? true) || cleaning)
                 }
+                SettingsRow(String(localized: "书伴存下的回答"), detail: String(localized: "同一本书、读到同一章问同样的问题，直接用存下的，不再花钱")) {
+                    HStack(spacing: 10) {
+                        Text(Self.size(companionBytes))
+                            .font(.system(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)
+                        Button("清掉") {
+                            try? FileManager.default.removeItem(at: companionDir)
+                            companionBytes = Self.bytes(in: companionDir)
+                        }
+                        .disabled(companionBytes == 0)
+                    }
+                }
                 SettingsRow(String(localized: "书库放在"), detail: library.dataDir.path(percentEncoded: false)) {
                     Button("在访达中显示") { NSWorkspace.shared.activateFileViewerSelecting([library.dataDir]) }
                 }
@@ -1084,6 +1095,15 @@ private struct StorageSettings: View {
             Spacer(minLength: 0)
         }
         .task { await measure() }
+        .onAppear { companionBytes = Self.bytes(in: companionDir) }
+    }
+
+    @State private var companionBytes: Int64 = 0
+    private var companionDir: URL { library.dataDir.appending(path: "companion", directoryHint: .isDirectory) }
+
+    private static func bytes(in dir: URL) -> Int64 {
+        let files = (try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.fileSizeKey])) ?? []
+        return files.reduce(0) { $0 + Int64((try? $1.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0) }
     }
 
     private func bar(_ u: StorageUsage) -> some View {
