@@ -11,13 +11,26 @@ struct MacSettings: View {
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
 
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @State private var pageHeight: CGFloat = 300
+
+    /// Below the tabs: at most 560, less on a small screen.
+    private var maxPageHeight: CGFloat {
+        min(560, (NSScreen.main?.visibleFrame.height ?? 800) - 200)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             SettingsTabs(page: $page, tint: tint)
-            content(page)
-                // The window grows to the whole page, wrapped lines and all.
-                .fixedSize(horizontal: false, vertical: true)
+            // The window fits a short page whole; a long one stops at a height that fits the
+            // screen and scrolls, as 系统设置 does.
+            ScrollView {
+                content(page)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .onGeometryChange(for: CGFloat.self, of: \.size.height) { pageHeight = $0 }
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            .frame(height: min(pageHeight, maxPageHeight))
+            .background(YYColor.bg)
         }
         // `.v-ms-stb`: the title bar and the tabs are one header, one colour, no line between.
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
