@@ -2,10 +2,13 @@
 import AppKit
 import SwiftUI
 import Translation
+import UniformTypeIdentifiers
+import YuyueCore
 
 /// 设置 · 外文 (prototype 外文阅读设置): looking a word up, the 生词 marks, and the system's
 /// offline translation, which can be downloaded from here before the first 译.
 struct ForeignSettings: View {
+    let library: Library
     @AppStorage(ForeignPrefs.speakKey) private var speak = true
     @AppStorage(ForeignPrefs.accentKey) private var accent = ForeignPrefs.Accent.british
     @AppStorage(ForeignPrefs.markKey) private var mark = true
@@ -20,7 +23,7 @@ struct ForeignSettings: View {
         VStack(alignment: .leading, spacing: 12) {
             SettingsHeading(String(localized: "点词"))
             SettingsCard {
-                SettingsRow(String(localized: "词典"), detail: String(localized: "用 Mac 自带的词典。哪几本打开、谁在前面，在“词典”App 的设置里选")) {
+                SettingsRow(String(localized: "系统词典"), detail: String(localized: "导入的词典里查不到时用 Mac 自带的。哪几本打开、谁在前面，在“词典”App 的设置里选")) {
                     Button("打开词典") { openDictionary() }
                 }
                 SettingsRow(String(localized: "点词时读出来")) { SettingsSwitch(isOn: $speak) }
@@ -29,6 +32,8 @@ struct ForeignSettings: View {
                         .frame(width: 120)
                 }
             }
+            SettingsHeading(String(localized: "MDict 词典"))
+            MDictList(core: library.core)
             SettingsHeading(String(localized: "难词注释"))
             SettingsCard {
                 SettingsRow(String(localized: "在难词上方写释义"), detail: String(localized: "英文书里，难一些的词上方直接写着简短的中文意思")) {
@@ -124,6 +129,63 @@ struct ForeignSettings: View {
         if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.Dictionary") {
             NSWorkspace.shared.openApplication(at: url, configuration: .init())
         }
+    }
+}
+/// 导入 MDict 词典: the ones imported, looked up first and in this order; 导入 reads a `.mdx`
+/// once into the library (a big one takes a minute).
+private struct MDictList: View {
+    let core: YuyueCore
+    @State private var list: [DictionaryInfo] = []
+    @State private var picking = false
+    @State private var importing: String?
+    @State private var failed: String?
+
+    var body: some View {
+        SettingsCard {
+            ForEach(list, id: \.id) { d in
+                SettingsRow(d.title, detail: String(localized: "\(d.entries) 个词条")) {
+                    SettingsSwitch(isOn: Binding(get: { d.enabled }, set: { on in
+                        try? core.setDictionary(id: d.id, enabled: on)
+                        reload()
+                    }))
+                }
+                .contextMenu {
+                    Button("移除", role: .destructive) {
+                        try? core.removeDictionary(id: d.id)
+                        reload()
+                    }
+                }
+            }
+            SettingsRow(importing.map { String(localized: "正在导入 \($0)…") } ?? String(localized: "导入 MDict 词典"),
+                        detail: failed ?? String(localized: "选 .mdx 文件。点词时先查这里的词典，查不到再用系统的；右键一本可以移除")) {
+                if importing != nil {
+                    ProgressView().controlSize(.small)
+                } else {
+                    Button("选文件…") { picking = true }
+                }
+            }
+        }
+        .onAppear(perform: reload)
+        .fileImporter(isPresented: $picking, allowedContentTypes: [UTType(filenameExtension: "mdx") ?? .data], allowsMultipleSelection: true) { result in
+            guard case .success(let urls) = result else { return }
+            Task { await add(urls) }
+        }
+    }
+
+    private func reload() { list = (try? core.dictionaries()) ?? [] }
+
+    private func add(_ urls: [URL]) async {
+        failed = nil
+        for url in urls {
+            importing = url.deletingPathExtension().lastPathComponent
+            let scoped = url.startAccessingSecurityScopedResource()
+            let core = core
+            let result = await Task.detached { Result { try core.importDictionary(path: url.path(percentEncoded: false)) } }.value
+            if scoped { url.stopAccessingSecurityScopedResource() }
+            if case .failure(let e) = result { failed = Library.message(for: e) }
+            reload()
+        }
+        importing = nil
     }
 }
 #endif

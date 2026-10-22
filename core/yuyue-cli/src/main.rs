@@ -119,6 +119,18 @@ fn run(args: &[String]) -> Result<(), String> {
             print!("{}", core.section_document(id, number(section)?, geometry).map_err(err)?);
             Ok(())
         }
+        ["dict-import", library, file] => {
+            let d = open(library)?.import_dictionary(file.to_string()).map_err(err)?;
+            println!("{}  {}  {} entries", d.id, d.title, d.entries);
+            Ok(())
+        }
+        ["lookup", library, word] => {
+            match open(library)?.look_up(word.to_string()).map_err(err)? {
+                Some(e) => println!("{} · {}\n{}", e.dictionary, e.headword, e.summary),
+                None => println!("(not found)"),
+            }
+            Ok(())
+        }
         ["script", library, book, to] => {
             let core = open(library)?;
             let id = find(&core, book)?.id;

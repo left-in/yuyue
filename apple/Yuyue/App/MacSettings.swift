@@ -52,7 +52,7 @@ struct MacSettings: View {
             case .reading: ReadingSettings(library: library)
             case .comics: ComicSettings()
             case .listening: ListeningSettings()
-            case .foreign: ForeignSettings()
+            case .foreign: ForeignSettings(library: library)
             case .companion: CompanionSettings(library: library)
             case .sync: SyncSettings(library: library)
             case .storage: StorageSettings(library: library)

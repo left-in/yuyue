@@ -42,6 +42,11 @@ import app.yuyue.t
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.luminance
 
 /** 设置 · 外文, as on Apple. */
 object ForeignPrefs {
@@ -123,6 +128,9 @@ data class WordLookup(
     val count: Int? = null,
     /** In the 生词本 already. */
     val kept: Boolean = false,
+    /** The imported MDict dictionary it came from, and its whole entry (完整释义). */
+    val dictionary: String? = null,
+    val html: String? = null,
 ) {
     /** What goes into the 生词本: the dictionary's headword, or the word as tapped. */
     val headword: String
@@ -190,12 +198,18 @@ fun WordCard(model: ReaderModel, lookup: WordLookup) {
             } else {
                 Text(t("词典里没有这个词。"), fontSize = 12.sp, color = YY.c.t2, modifier = Modifier.padding(top = 6.dp))
             }
+            var full by remember(lookup.word) { mutableStateOf(false) }
+            if (full && lookup.html != null) DictEntryWeb(lookup.html, Modifier.padding(top = 8.dp).fillMaxWidth().height(240.dp))
             phrase(lookup)?.let { Text(it, fontFamily = FontFamily.Serif, fontStyle = FontStyle.Italic, fontSize = 11.5.sp, color = YY.c.t1, maxLines = 2, modifier = Modifier.padding(top = 4.dp)) }
             Box(Modifier.padding(top = 12.dp).fillMaxWidth().height(0.5.dp).background(YY.c.line))
             Row(Modifier.padding(top = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                val from = t("词典")
+                val from = lookup.dictionary ?: t("英汉词典（内置）")
                 val n = lookup.count ?: 0
                 Text(if (n == 1) t("%@ · 本书只出现这一次", from) else if (n > 1) t("%@ · 本书出现 %lld 次", from, n) else from, fontSize = 10.5.sp, color = YY.c.t3, modifier = Modifier.weight(1f))
+                if (lookup.html != null) {
+                    Text(if (full) t("收起释义") else t("完整释义"), fontSize = 11.5.sp, color = YY.c.t1,
+                        modifier = Modifier.padding(end = 6.dp).height(28.dp).background(YY.c.inset, CircleShape).clickable { full = !full }.padding(horizontal = 12.dp, vertical = 6.dp))
+                }
                 Row(
                     Modifier.height(28.dp).background(if (lookup.kept) YY.c.inset else tint.black, CircleShape).clickable { model.keep(!lookup.kept) }.padding(horizontal = 12.dp),
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -235,8 +249,10 @@ suspend fun ReaderModel.look(word: org.json.JSONObject) {
     val text = word.optString("text").ifEmpty { return }
     val rect = word.optJSONObject("rect")?.let { TextRect(it.optDouble("x"), it.optDouble("y"), it.optDouble("width"), it.optDouble("height")) }
     dismissCards()
-    val definition = Dictionary.define(context, text)
-    var l = WordLookup(text, section, start, end, word.optString("sentence"), rect, definition)
+    // The dictionaries the reader imported first, then the one built in.
+    val entry = withContext(Dispatchers.IO) { runCatching { core.lookUp(text) }.getOrNull() }
+    val definition = entry?.let { WordDefinition(it.headword, null, listOf(it.summary)) } ?: Dictionary.define(context, text)
+    var l = WordLookup(text, section, start, end, word.optString("sentence"), rect, definition, dictionary = entry?.dictionary, html = entry?.html)
     val words = runCatching { core.words() }.getOrDefault(emptyList())
     l = l.copy(
         kept = words.any { it.word.equals(l.headword, true) && !it.known },
@@ -292,4 +308,23 @@ fun ReaderModel.setUpForeign() {
         }
     }
     loadVocab()
+}
+
+/** 完整释义: an MDict entry as the dictionary wrote it (HTML), scripts off, links inert. */
+@Composable
+fun DictEntryWeb(html: String, modifier: Modifier = Modifier) {
+    val dark = YY.c.t1.luminance() > 0.5f
+    val page = """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>body{margin:0;padding:2px 2px 12px;font:14px/1.6 sans-serif;color:${if (dark) "#E8E6E1" else "#2A2B2E"};background:transparent;overflow-wrap:anywhere}
+        img{max-width:100%;height:auto}a{color:${if (dark) "#8FB0E0" else "#2B4C7E"};pointer-events:none;text-decoration:none}</style></head><body>$html</body></html>"""
+    androidx.compose.ui.viewinterop.AndroidView(
+        factory = { c ->
+            android.webkit.WebView(c).apply {
+                settings.javaScriptEnabled = false
+                setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                loadDataWithBaseURL(null, page, "text/html", "utf-8", null)
+            }
+        },
+        modifier = modifier,
+    )
 }

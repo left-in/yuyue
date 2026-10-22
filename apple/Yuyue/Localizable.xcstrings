@@ -12362,7 +12362,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "System dictionary"
+            "value" : "System Dictionary"
           }
         }
       }
@@ -17070,6 +17070,126 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Traditional"
+          }
+        }
+      }
+    },
+    "MDict 词典" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MDict Dictionaries"
+          }
+        }
+      }
+    },
+    "导入的词典里查不到时用 Mac 自带的。哪几本打开、谁在前面，在“词典”App 的设置里选" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used when the imported dictionaries don't have a word. Choose which are on, and their order, in the Dictionary app's settings."
+          }
+        }
+      }
+    },
+    "%lld 个词条" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld entries"
+          }
+        }
+      }
+    },
+    "正在导入 %@…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing %@…"
+          }
+        }
+      }
+    },
+    "导入 MDict 词典" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import MDict Dictionary"
+          }
+        }
+      }
+    },
+    "选 .mdx 文件。点词时先查这里的词典，查不到再用系统的；右键一本可以移除" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a .mdx file. Tapped words are looked up here first, then in the system dictionary. Right-click one to remove it."
+          }
+        }
+      }
+    },
+    "选文件…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose File…"
+          }
+        }
+      }
+    },
+    "完整释义" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full Entry"
+          }
+        }
+      }
+    },
+    "收起释义" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Entry"
+          }
+        }
+      }
+    },
+    "导入 MDict 词典（.mdx）" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import MDict Dictionary (.mdx)"
+          }
+        }
+      }
+    },
+    "点词先查这里导入的词典，查不到再用系统翻译。左滑一本可以移除。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapped words are looked up in these dictionaries first, then translated by the system. Swipe left on one to remove it."
+          }
+        }
+      }
+    },
+    "没查到。可以在 我的 › 外文阅读 里导入 MDict 词典。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not found. You can import an MDict dictionary in Me › Languages."
           }
         }
       }

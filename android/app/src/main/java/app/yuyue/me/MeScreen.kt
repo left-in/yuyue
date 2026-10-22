@@ -85,7 +85,7 @@ fun MeScreen(library: Library) {
                 MePage.NoteExport -> app.yuyue.notes.NoteExportPage()
                 MePage.Sources -> {}
                 MePage.Wifi -> app.yuyue.shelf.WifiPage(library)
-                MePage.Foreign -> ForeignPage()
+                MePage.Foreign -> ForeignPage(library.core)
                 MePage.Engines -> EnginesPage { stack += it }
                 MePage.Storage -> StoragePage(library)
                 MePage.Immersive -> YYPage { Spacer(Modifier.height(YY.s(10))); app.yuyue.reader.ImmersiveSettings(null) }

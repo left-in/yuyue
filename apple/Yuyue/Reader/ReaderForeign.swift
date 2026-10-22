@@ -64,6 +64,9 @@ struct WordLookup: Equatable {
     var count: Int?
     /// In the 生词本 already.
     var kept = false
+    /// The imported MDict dictionary it came from, and its whole entry (完整释义).
+    var dictionary: String?
+    var html: String?
 
     /// What goes into the 生词本: the dictionary's headword, or the word as clicked, lower-cased
     /// unless it looks like a name.
@@ -288,10 +291,15 @@ extension ReaderModel {
         guard let section = pager.current?.section else { return }
         dismissCards()
         sentenceTranslation = nil
-        let definition = SystemDictionary.define(word.text)
+        // The dictionaries the reader imported first, then the system's.
+        let entry = (try? core.lookUp(word: word.text)) ?? nil
+        let definition = entry.map { WordDefinition(headword: $0.headword, phonetic: nil, partOfSpeech: nil, meaning: $0.summary) }
+            ?? SystemDictionary.define(word.text)
         var l = WordLookup(word: word.text, section: section, start: word.start, end: word.end, context: word.sentence,
                            rect: CGRect(x: word.rect.x, y: word.rect.y, width: word.rect.width, height: word.rect.height),
                            definition: definition)
+        l.dictionary = entry?.dictionary
+        l.html = entry?.html
         let words = (try? core.words()) ?? []
         l.kept = words.contains { $0.word.lowercased() == l.headword.lowercased() && !$0.known }
         l.count = (try? core.bookWordCount(book: bookID, word: l.headword)).map(Int.init)

@@ -36,7 +36,7 @@ struct PhoneMe: View {
                     link(String(localized: "外观"), "sun.max", "\(mode.title) · \(tint.name)") { PhoneAppearance() }
                     link(String(localized: "沉浸阅读"), "viewfinder", immersiveAlways ? String(localized: "开") : String(localized: "关")) { PhoneImmersiveSheet().navigationTitle("沉浸阅读").navigationBarTitleDisplayMode(.inline) }
                     link(String(localized: "墨水屏"), "rectangle.portrait.on.rectangle.portrait", einkOn ? String(localized: "开") : String(localized: "关")) { PhoneEInk(library: library) }
-                    link(String(localized: "外文阅读"), "globe", nil) { PhoneForeign() }
+                    link(String(localized: "外文阅读"), "globe", nil) { PhoneForeign(library: library) }
                 }
                 group {
                     link(String(localized: "朗读"), "headphones", nil) { PhoneListening() }
@@ -937,6 +937,7 @@ private struct PhoneVoiceSection: View {
 /// 外文阅读 (prototype 外文阅读设置): saying a word aloud, 难词注释, the 生词 marks, and the
 /// system's offline translation.
 struct PhoneForeign: View {
+    let library: Library
     @AppStorage(ForeignPrefs.speakKey) private var speak = true
     @AppStorage(ForeignPrefs.accentKey) private var accent = ForeignPrefs.Accent.british
     @AppStorage(ForeignPrefs.markKey) private var mark = true
@@ -951,14 +952,16 @@ struct PhoneForeign: View {
         YYPage {
             groupLabel(String(localized: "点词")).padding(.top, YYUI.s(12))
             YYGroup {
-                YYRow(String(localized: "词典"), value: String(localized: "系统词典"))
                 YYRow(title: String(localized: "点词时读出来")) { YYSwitch(isOn: $speak, label: String(localized: "点词时读出来")) }
                 YYRow(title: String(localized: "发音")) {
                     YYSegments(items: [(ForeignPrefs.Accent.british, String(localized: "英音")), (ForeignPrefs.Accent.american, String(localized: "美音"))], selection: $accent, small: true)
                         .frame(width: YYUI.s(110))
                 }
             }
-            YYNote(String(localized: "查词用系统自带的词典：设置 › 通用 › 词典 里可以加别的。"))
+            .padding(.bottom, YYUI.s(14))
+            groupLabel(String(localized: "MDict 词典"))
+            PhoneMDictList(core: library.core)
+            YYNote(String(localized: "点词先查这里导入的词典，查不到再用系统翻译。左滑一本可以移除。"))
                 .padding(.bottom, YYUI.s(14))
             groupLabel(String(localized: "难词注释"))
             YYGroup {
@@ -1101,7 +1104,7 @@ struct PhoneEngines: View {
             .padding(.bottom, YYUI.s(14))
             groupLabel(String(localized: "翻译"))
             YYGroup {
-                NavigationLink { PhoneForeign() } label: { inUse(String(localized: "系统翻译"), String(localized: "离线，不限量")) }
+                NavigationLink { PhoneForeign(library: library) } label: { inUse(String(localized: "系统翻译"), String(localized: "离线，不限量")) }
                     .buttonStyle(.plain)
             }
             .padding(.bottom, YYUI.s(14))

@@ -8,6 +8,8 @@ struct WordCard: View {
     let model: ReaderModel
     let lookup: WordLookup
     private let tint = YYTint.standard
+    /// 完整释义 of an MDict entry, open under the short meaning.
+    @State private var full = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -28,6 +30,11 @@ struct WordCard: View {
                 .alignmentGuide(.firstTextBaseline) { $0[VerticalAlignment.center] + 5 }
             }
             meaning.padding(.top, 6)
+            if full, let html = lookup.html {
+                DictEntryView(html: html)
+                    .frame(height: 260)
+                    .padding(.top, 8)
+            }
             if let phrase {
                 (Text(phrase).font(.custom("Georgia", size: 11.5)).italic().foregroundStyle(YYColor.t1))
                     .lineLimit(2)
@@ -38,7 +45,7 @@ struct WordCard: View {
                 // The buttons keep their words; a long source gives way (it cut 加入生词本 short).
                 Text(source).font(.system(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
                 Spacer(minLength: 4)
-                Button("更多释义") { more() }
+                Button(lookup.html == nil ? String(localized: "更多释义") : full ? String(localized: "收起释义") : String(localized: "完整释义")) { more() }
                     .buttonStyle(CardButton(filled: false))
                     .fixedSize()
                 Button { model.keep(!lookup.kept) } label: {
@@ -52,6 +59,7 @@ struct WordCard: View {
         .padding(.horizontal, 16).padding(.top, 14).padding(.bottom, 12)
         // A little wider than `.dict` (310): 本书只出现这一次 and both buttons on one line.
         .frame(width: 350)
+        .onChange(of: lookup.word) { full = false }
         .background(YYColor.card, in: .rect(cornerRadius: 14))
         .shadow(color: .black.opacity(0.14), radius: 15, y: 10)
         .shadow(color: .black.opacity(0.08), radius: 1.5, y: 1)
@@ -81,13 +89,17 @@ struct WordCard: View {
     }
 
     private var source: String {
-        let from = lookup.definition != nil ? String(localized: "系统词典") : lookup.gloss != nil ? String(localized: "系统翻译") : String(localized: "词典")
+        let from = lookup.dictionary ?? (lookup.definition != nil ? String(localized: "系统词典") : lookup.gloss != nil ? String(localized: "系统翻译") : String(localized: "词典"))
         guard let n = lookup.count, n > 0 else { return from }
         return n == 1 ? String(localized: "\(from) · 本书只出现这一次") : String(localized: "\(from) · 本书出现 \(n) 次")
     }
 
     /// The whole entry, in the system's own look-up window.
     private func more() {
+        if lookup.html != nil {
+            withAnimation(.snappy(duration: 0.2)) { full.toggle() }
+            return
+        }
         let word = lookup.definition?.headword ?? lookup.word
         if let url = URL(string: "dict://" + (word.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? word)) {
             NSWorkspace.shared.open(url)

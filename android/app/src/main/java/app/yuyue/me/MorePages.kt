@@ -60,6 +60,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import uniffi.yuyue_core.BookFormat
 import java.io.File
+import kotlinx.coroutines.launch
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
 
 @Composable
 private fun Toggle(on: Boolean, change: (Boolean) -> Unit, enabled: Boolean = true) {
@@ -79,7 +83,7 @@ private fun TwoLines(title: String, detail: String?, modifier: Modifier = Modifi
 /** 外文阅读 (prototype 外文阅读设置), as on iPhone: saying a word aloud, 难词注释, the 生词 marks,
  *  and translation. */
 @Composable
-fun ForeignPage() {
+fun ForeignPage(core: uniffi.yuyue_core.YuyueCore) {
     var speak by rememberPref(ForeignPrefs.SPEAK, true)
     var accent by rememberPref(ForeignPrefs.ACCENT, "en-GB")
     var mark by rememberPref(ForeignPrefs.MARK, true)
@@ -89,7 +93,6 @@ fun ForeignPage() {
     YYPage {
         YYLabel(t("点词"))
         YYGroup {
-            row { YYRow(t("词典"), value = t("英汉词典（内置）")) }
             row { YYRow(t("点词时读出来"), trailing = { Toggle(speak, { speak = it }) }) }
             row {
                 YYRow(t("发音"), trailing = {
@@ -97,7 +100,9 @@ fun ForeignPage() {
                 })
             }
         }
-        YYNote(t("查词用语阅自带的英汉词典，不联网，变形词能找回原词。"))
+        YYLabel(t("MDict 词典"))
+        MDictList(core)
+        YYNote(t("点词先查这里导入的词典，查不到再用语阅自带的英汉词典（不联网，变形词能找回原词）。长按一本可以移除。"))
         YYLabel(t("难词注释"))
         YYGroup {
             row { YYRow(t("在难词上方写释义"), trailing = { Toggle(gloss, { gloss = it }) }) }
@@ -284,5 +289,55 @@ fun StoragePage(library: Library) {
                 }
             }
         }
+    }
+}
+
+/** 导入 MDict 词典: the ones imported, on or off, 导入 from the files on the phone. */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun MDictList(core: uniffi.yuyue_core.YuyueCore) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    var list by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(runCatching { core.dictionaries() }.getOrDefault(emptyList())) }
+    var importing by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }
+    var failed by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }
+    fun reload() { list = runCatching { core.dictionaries() }.getOrDefault(emptyList()) }
+    val picker = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.OpenMultipleDocuments()) { uris ->
+        scope.launch {
+            failed = null
+            for (uri in uris) {
+                val name = uri.lastPathSegment?.substringAfterLast('/')?.substringBeforeLast('.') ?: "MDict"
+                importing = name
+                val result = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    runCatching {
+                        // A copy the core can read by path; gone once it has been read in.
+                        val file = java.io.File(context.cacheDir, "import-$name.mdx")
+                        context.contentResolver.openInputStream(uri)?.use { input -> file.outputStream().use { input.copyTo(it) } }
+                        try { core.importDictionary(file.path) } finally { file.delete() }
+                    }
+                }
+                result.exceptionOrNull()?.let { failed = it.message }
+                reload()
+            }
+            importing = null
+        }
+    }
+    YYGroup {
+        for (d in list) {
+            row {
+                Box(Modifier.combinedClickable(onClick = {}, onLongClick = { runCatching { core.removeDictionary(d.id) }; reload() })) {
+                    YYRow(d.title, value = t("%lld 个词条", d.entries.toLong()), trailing = {
+                        Toggle(d.enabled, { on -> runCatching { core.setDictionary(d.id, on) }; reload() })
+                    })
+                }
+            }
+        }
+        row {
+            Row(Modifier.fillMaxWidth().clickable(enabled = importing == null) { picker.launch(arrayOf("*/*")) }.padding(vertical = YY.s(10)),
+                verticalAlignment = Alignment.CenterVertically) {
+                Text(importing?.let { t("正在导入 %@…", it) } ?: t("导入 MDict 词典（.mdx）"), style = YY.font(11.5f), color = YY.tint.accent)
+            }
+        }
+        failed?.let { f -> row { Text(f, style = YY.font(10.5f), color = YY.c.danger, modifier = Modifier.padding(vertical = YY.s(6))) } }
     }
 }

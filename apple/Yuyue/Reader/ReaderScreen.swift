@@ -251,6 +251,16 @@ private struct ReaderContent: View {
             .overlay { PhoneReaderChrome(model: model, close: { dismiss() }) }
             .overlay { cards.ignoresSafeArea() }
             .overlay(alignment: .bottom) {
+                // 点词 in a foreign book.
+                if let lookup = model.lookup {
+                    PhoneWordCard(model: model, lookup: lookup)
+                        .padding(.horizontal, 12)
+                        .padding(.bottom, 12)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+            }
+            .animation(.snappy(duration: 0.22), value: model.lookup?.word)
+            .overlay(alignment: .bottom) {
                 if let toast = model.toast {
                     UndoToast(toast: toast) { model.undoToast() }
                         .padding(.horizontal, 16)
