@@ -8734,7 +8734,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Close"
+            "value" : "Collapse"
           }
         }
       }
@@ -17020,6 +17020,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This looks like a %1$@ key, but it didn't check out: %2$@"
+          }
+        }
+      }
+    },
+    "收起成一个播放键" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fold Down to a Play Button"
           }
         }
       }

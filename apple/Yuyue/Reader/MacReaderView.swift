@@ -21,11 +21,10 @@ struct MacReaderView: View {
     @State private var sharing: QuoteShare?
     /// 沉浸阅读: the capsule comes back while the pointer is at the bottom edge.
     @State private var peek = false
-    /// The reading capsule tucked away while reading: it comes back while the pointer is near the
-    /// bottom (as in 沉浸阅读), leaving a hairline of the chapter's progress meanwhile.
-    @State private var tucked = false
     @State private var capsuleTypeset = false
-    private var barAway: Bool { (model.immersive || tucked) && !peek && !listenShown && !capsuleTypeset }
+    /// The reading capsule folded down to its play button, by the reader's choice; remembered.
+    @AppStorage("reader.capsuleFolded") private var folded = false
+    private var barAway: Bool { model.immersive && !peek && !listenShown && !capsuleTypeset }
     @State private var unpeek: Task<Void, Never>?
     @State private var pageHeight = 0.0
     /// The window 沉浸阅读 put into full screen, to take it out again.
@@ -231,7 +230,7 @@ struct MacReaderView: View {
             VStack(spacing: 10) {
                 if let e = model.elsewhere {
                     ElsewhereCard(elsewhere: e, tint: tint, stay: { model.elsewhere = nil }, jump: { model.jumpElsewhere() })
-                        .frame(width: 396)
+                        .frame(width: 418)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
                 if let toast = model.toast {
@@ -242,12 +241,12 @@ struct MacReaderView: View {
                 if let open = model.openNote {
                     FootnoteCard(open: open, bookTitle: model.detail?.summary.title ?? "", tint: tint,
                                  toNotes: { model.goToNotes() }, done: { model.openNote = nil })
-                        .frame(width: 396)
+                        .frame(width: 418)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
                 if let recap = model.recap {
                     RecapCard(recap: recap, tint: tint) { model.recap = nil }
-                        .frame(width: 396)
+                        .frame(width: 418)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
                 if let flag = model.narrationFlag {
@@ -266,11 +265,19 @@ struct MacReaderView: View {
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
                 if !barAway {
-                    capsule.transition(.move(edge: .bottom).combined(with: .opacity))
+                    Group {
+                        if folded {
+                            foldedCapsule.transition(.scale(scale: 0.6, anchor: .bottom).combined(with: .opacity))
+                        } else {
+                            capsule.transition(.scale(scale: 0.9, anchor: .bottom).combined(with: .opacity))
+                        }
+                    }
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
             .padding(.bottom, 18)
             .animation(.easeOut(duration: 0.2), value: barAway)
+            .animation(.spring(duration: 0.35, bounce: 0.12), value: folded)
             .animation(.snappy(duration: 0.25), value: model.toast?.id)
             .animation(.snappy(duration: 0.25), value: model.elsewhere == nil)
             .animation(.snappy(duration: 0.25), value: model.returnTo == nil)
@@ -282,10 +289,10 @@ struct MacReaderView: View {
         .overlay(alignment: .bottomLeading) {
             // All that is left of the progress while the capsule is away: a hairline along the
             // bottom (the book's in 沉浸阅读, the chapter's while reading in the window).
-            if barAway, !model.immersive || ImmersivePrefs.keepsLine {
+            if barAway, ImmersivePrefs.keepsLine {
                 GeometryReader { g in
                     Rectangle().fill(paper.ink.opacity(0.22))
-                        .frame(width: g.size.width * (model.immersive ? model.bookFraction : chapterProgress), height: 1.5)
+                        .frame(width: g.size.width * model.bookFraction, height: 1.5)
                         .frame(maxHeight: .infinity, alignment: .bottom)
                 }
                 .allowsHitTesting(false)
@@ -294,7 +301,7 @@ struct MacReaderView: View {
         }
         .onGeometryChange(for: Double.self) { $0.size.height } action: { pageHeight = $0 }
         .onContinuousHover { phase in
-            guard model.immersive || tucked else { return }
+            guard model.immersive else { return }
             if case .active(let at) = phase, at.y > pageHeight - 84 {
                 unpeek?.cancel()
                 peek = true
@@ -305,11 +312,6 @@ struct MacReaderView: View {
                     unpeek = nil
                 }
             }
-        }
-        // Shown when the book opens, then out of the way once reading has begun.
-        .task {
-            try? await Task.sleep(for: .seconds(3))
-            tucked = true
         }
         .frame(maxWidth: .infinity)
     }
@@ -550,12 +552,19 @@ struct MacReaderView: View {
                 TypesetCard(model: model)
                     .presentationBackground(YYColor.card)
             }
+            Button { folded = true } label: {
+                Image(systemName: "chevron.down").font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(paper.ink2)
+                    .frame(width: 22, height: 36)
+            }
+            .help("收起成一个播放键")
+            .accessibilityLabel("收起")
         }
         .buttonStyle(.plain)
         .foregroundStyle(paper.ink)
         .padding(.horizontal, 6)
         .padding(.vertical, 5)
-        .frame(width: 396)
+        .frame(width: 418)
         .yyGlass(Capsule(), fill: paper.glass, shadow: paper.isDark ? 0.4 : 0.08, liquid: !paper.isEink)
         .overlay(alignment: .bottom) {
             // How far into this chapter.
@@ -567,6 +576,40 @@ struct MacReaderView: View {
             .padding(.horizontal, 22)
             .padding(.bottom, 1)
         }
+        .overlay(Capsule().strokeBorder(paper.line, lineWidth: 0.5))
+    }
+
+    /// The capsule folded down: the play button, the chapter's progress as a ring round it, and
+    /// the arrow that opens it out again.
+    private var foldedCapsule: some View {
+        HStack(spacing: 2) {
+            Button { model.togglePlay() } label: {
+                Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(paper.onMain)
+                    .frame(width: 32, height: 32)
+                    .background(paper.main, in: .circle)
+                    .padding(3)
+                    .overlay {
+                        Circle().stroke(paper.line, lineWidth: 2)
+                        Circle().trim(from: 0, to: chapterProgress)
+                            .stroke(paper.ink, style: StrokeStyle(lineWidth: 2, lineCap: .round))
+                            .rotationEffect(.degrees(-90))
+                    }
+            }
+            .help(model.isPlaying ? String(localized: "暂停 空格") : String(localized: "朗读 空格"))
+            Button { folded = false } label: {
+                Image(systemName: "chevron.up").font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(paper.ink2)
+                    .frame(width: 24, height: 38)
+                    .contentShape(.rect)
+            }
+            .help("展开")
+            .accessibilityLabel("展开")
+        }
+        .buttonStyle(.plain)
+        .padding(.leading, 5).padding(.trailing, 4).padding(.vertical, 4)
+        .yyGlass(Capsule(), fill: paper.glass, shadow: paper.isDark ? 0.4 : 0.08, liquid: !paper.isEink)
         .overlay(Capsule().strokeBorder(paper.line, lineWidth: 0.5))
     }
 
