@@ -14240,7 +14240,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not chosen"
+            "value" : "Not Chosen"
           }
         }
       }
@@ -16550,6 +16550,466 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apple Intelligence isn't available on this Mac, so the Companion needs one connected: add your own key, or a local Ollama. Any cost goes to your own account; Yuyue never handles it."
+          }
+        }
+      }
+    },
+    "AI 服务" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI Services"
+          }
+        }
+      }
+    },
+    "Apple 智能（这台 Mac 上）" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence (on this Mac)"
+          }
+        }
+      }
+    },
+    "Apple 智能（这台设备上）" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence (on this device)"
+          }
+        }
+      }
+    },
+    "Key 不对，去设置 · AI 服务里重新接" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The key didn't work. Reconnect it in Settings · AI Services."
+          }
+        }
+      }
+    },
+    "Key 只存在这台设备的钥匙串里，不同步、不上传；本机的 magpie、Ollama 不出这台 Mac" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keys stay in this device's keychain, never synced or uploaded; magpie and Ollama on this Mac never leave it."
+          }
+        }
+      }
+    },
+    "Key（没有就空着）" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key (leave empty if none)"
+          }
+        }
+      }
+    },
+    "%@：能用，找到 %lld 个模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: works, %2$lld models found"
+          }
+        }
+      }
+    },
+    "%@ · %lld 个模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld models"
+          }
+        }
+      }
+    },
+    "%@（本机）" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ (this Mac)"
+          }
+        }
+      }
+    },
+    "%@ 秒" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ s"
+          }
+        }
+      }
+    },
+    "不用填模型名" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No model name needed"
+          }
+        }
+      }
+    },
+    "不用填模型名：接上时会问它有哪些模型。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No model name needed: Yuyue asks the service which models it has."
+          }
+        }
+      }
+    },
+    "书伴用" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Companion uses"
+          }
+        }
+      }
+    },
+    "书伴还没接上：在设置 · AI 服务里接一个" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Companion isn't connected yet. Connect a service in Settings · AI Services."
+          }
+        }
+      }
+    },
+    "刷新模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh Models"
+          }
+        }
+      }
+    },
+    "回答关于这本书的问题" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answers questions about the book"
+          }
+        }
+      }
+    },
+    "在运行，%lld 个模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running, %lld models"
+          }
+        }
+      }
+    },
+    "在运行，%lld 个模型；背后接着你在 magpie 里配的所有 Key 和订阅" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running, %lld models, backed by every key and plan you set up in magpie"
+          }
+        }
+      }
+    },
+    "在这里粘贴 Key，自动认出是哪家" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste a key here and Yuyue works out whose it is"
+          }
+        }
+      }
+    },
+    "已接上" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connected"
+          }
+        }
+      }
+    },
+    "或者先选是哪家" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or pick the service first"
+          }
+        }
+      }
+    },
+    "换一家" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick Another"
+          }
+        }
+      }
+    },
+    "接上" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect"
+          }
+        }
+      }
+    },
+    "接上 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect %@"
+          }
+        }
+      }
+    },
+    "接上一次，书伴就能用。可以接本机的 magpie、Ollama，或者填你自己的 Key；费用直接走你的账号，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect once and the Companion can use it: magpie or Ollama on this Mac, or your own key. Any cost goes to your own account; Yuyue never handles it."
+          }
+        }
+      }
+    },
+    "智谱 GLM" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zhipu GLM"
+          }
+        }
+      }
+    },
+    "正在找本机的 magpie、Ollama、LM Studio…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looking for magpie, Ollama and LM Studio on this Mac…"
+          }
+        }
+      }
+    },
+    "正在核对…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checking…"
+          }
+        }
+      }
+    },
+    "正在认是哪家、核对 Key…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Working out whose key it is…"
+          }
+        }
+      }
+    },
+    "正在问它有哪些模型…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asking for its models…"
+          }
+        }
+      }
+    },
+    "添加服务" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Service"
+          }
+        }
+      }
+    },
+    "用 Key 接" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect with a Key"
+          }
+        }
+      }
+    },
+    "硅基流动" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SiliconFlow"
+          }
+        }
+      }
+    },
+    "移除" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        }
+      }
+    },
+    "粘贴 Key，自动认出是哪家" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste a key to detect the service"
+          }
+        }
+      }
+    },
+    "粘贴 %@ 的 Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste your %@ key"
+          }
+        }
+      }
+    },
+    "能用，找到 %lld 个模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Works, %lld models found"
+          }
+        }
+      }
+    },
+    "自定义" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        }
+      }
+    },
+    "认不出是哪家的 Key：在下面选是哪家，再粘贴一次" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't tell whose key this is. Pick the service below and paste it again."
+          }
+        }
+      }
+    },
+    "认出是 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looks like %@"
+          }
+        }
+      }
+    },
+    "试一下" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try It"
+          }
+        }
+      }
+    },
+    "谁用哪个" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who Uses What"
+          }
+        }
+      }
+    },
+    "还没选：先添加一个服务" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not chosen yet: add a service first"
+          }
+        }
+      }
+    },
+    "这台 Mac 上找到的" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Found on This Mac"
+          }
+        }
+      }
+    },
+    "通义千问" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qwen"
+          }
+        }
+      }
+    },
+    "Key …%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key …%@"
           }
         }
       }

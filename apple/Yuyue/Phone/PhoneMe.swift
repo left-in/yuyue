@@ -1081,8 +1081,6 @@ struct PhoneForeign: View {
 /// by default; or the user's own key, kept in the keychain.
 struct PhoneEngines: View {
     let library: Library
-    @State private var current = CompanionConfig.current
-    @State private var editing: CompanionConfig?
     @State private var cached: Int64 = 0
     private let tint = YYTint.standard
 
@@ -1093,10 +1091,8 @@ struct PhoneEngines: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, YYUI.s(4)).padding(.top, YYUI.s(12)).padding(.bottom, YYUI.s(16))
             groupLabel(String(localized: "书伴"), spark: true)
-            YYGroup {
-                ForEach(CompanionProvider.allCases) { p in companionRow(p) }
-            }
-            .padding(.bottom, YYUI.s(14))
+            PhoneAIServices()
+                .padding(.bottom, YYUI.s(14))
             groupLabel(String(localized: "朗读"))
             YYGroup {
                 NavigationLink { PhoneListening() } label: { inUse(String(localized: "系统语音"), String(localized: "在这台设备上，不联网")) }
@@ -1124,15 +1120,6 @@ struct PhoneEngines: View {
         .navigationTitle("引擎")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: measure)
-        .sheet(item: Binding(get: { editing.map(Editing.init) }, set: { editing = $0?.config })) { e in
-            PhoneKeyForm(config: e.config) { saved in
-                if let saved {
-                    CompanionConfig.current = saved
-                    current = saved
-                }
-                editing = nil
-            }
-        }
     }
 
     /// `.gl`, with 书伴's spark in front.
@@ -1159,167 +1146,11 @@ struct PhoneEngines: View {
         .contentShape(.rect)
     }
 
-    private struct Editing: Identifiable {
-        let config: CompanionConfig
-        var id: String { config.provider.rawValue }
-    }
-
     private var cacheDir: URL { library.dataDir.appending(path: "companion", directoryHint: .isDirectory) }
 
     private func measure() {
         let files = (try? FileManager.default.contentsOfDirectory(at: cacheDir, includingPropertiesForKeys: [.fileSizeKey])) ?? []
         cached = files.reduce(0) { $0 + Int64((try? $1.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0) }
-    }
-
-    private func companionRow(_ p: CompanionProvider) -> some View {
-        let saved = CompanionConfig.saved(p)
-        let on = current.provider == p
-        let detail: String? = p == .apple ? (Companion.appleAvailability ?? p.detail) : p.detail
-        return Button {
-            if p == .apple {
-                guard Companion.appleAvailability == nil else { return }
-                CompanionConfig.current = saved
-                current = saved
-            } else {
-                editing = saved
-            }
-        } label: {
-            HStack(spacing: YYUI.s(8)) {
-                VStack(alignment: .leading, spacing: YYUI.s(1)) {
-                    Text(p.title).font(YYUI.font(11.5)).foregroundStyle(YYColor.t1)
-                    if let detail { Text(detail).font(YYUI.font(10)).foregroundStyle(YYColor.t3).lineLimit(1) }
-                }
-                Spacer(minLength: 0)
-                if p != .apple {
-                    HStack(spacing: YYUI.s(3)) {
-                        if saved.isReady { Circle().fill(YYColor.ok).frame(width: YYUI.s(6), height: YYUI.s(6)).padding(.trailing, YYUI.s(2)) }
-                        Text(saved.isReady ? String(localized: "已填 Key") : String(localized: "填 Key"))
-                        if !(on && current.isReady) { Image(systemName: "chevron.right").font(YYUI.font(9, .semibold)) }
-                    }
-                    .font(YYUI.font(10.5)).foregroundStyle(YYColor.t3)
-                }
-                if on && current.isReady {
-                    Image(systemName: "checkmark").font(YYUI.font(11, .bold)).foregroundStyle(tint.accent)
-                }
-            }
-            .padding(.vertical, YYUI.s(detail == nil ? 0 : 8))
-            .frame(minHeight: YYUI.s(36))
-            .contentShape(.rect)
-        }
-        .buttonStyle(.plain)
-        .opacity(p == .apple && Companion.appleAvailability != nil ? 0.6 : 1)
-    }
-}
-
-/// 填 Key (prototype 填 Key): 服务商, API Key, 模型, 接口地址; 测试一下 really asks; 保存.
-private struct PhoneKeyForm: View {
-    @State var config: CompanionConfig
-    let done: (CompanionConfig?) -> Void
-    @State private var testing = false
-    @State private var result: Result<TimeInterval, Error>?
-
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: YYUI.s(12)) {
-                YYSheetHeader(title: String(localized: "填 Key"), subtitle: String(localized: "书伴 · \(config.provider.title)")) { done(nil) }
-                YYGroup {
-                    YYField(label: String(localized: "服务商"), labelWidth: 52) {
-                        Text(config.provider.title).foregroundStyle(YYColor.t1)
-                    }
-                    YYField(label: "API Key", labelWidth: 52) {
-                        HStack(spacing: YYUI.s(8)) {
-                            SecureField("", text: $config.key, prompt: Text(config.provider == .openai ? String(localized: "可不填") : config.provider.keyHint))
-                                .font(YYUI.font(10.5, design: .monospaced))
-                                .textInputAutocapitalization(.never)
-                                .autocorrectionDisabled()
-                            PasteButton(payloadType: String.self) { strings in
-                                if let s = strings.first { config.key = s.trimmingCharacters(in: .whitespacesAndNewlines) }
-                            }
-                            .labelStyle(.titleOnly)
-                            .buttonBorderShape(.capsule)
-                            .controlSize(.small)
-                        }
-                    }
-                    YYField(label: String(localized: "模型"), labelWidth: 52) {
-                        TextField("", text: $config.model, prompt: Text(config.provider == .openai ? String(localized: "比如 qwen3:8b") : config.provider.defaultModel))
-                            .font(YYUI.font(10.5, design: .monospaced))
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
-                    }
-                    YYField(label: String(localized: "接口地址"), labelWidth: 52) {
-                        TextField("", text: $config.url, prompt: Text(config.provider == .openai ? String(localized: "比如 http://192.168.1.5:11434/v1") : String(localized: "空着就用官方的")))
-                            .font(YYUI.font(10.5, design: .monospaced))
-                            .keyboardType(.URL)
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
-                    }
-                }
-                .foregroundStyle(YYColor.t1)
-                HStack(spacing: YYUI.s(10)) {
-                    Button("测试一下", action: test)
-                        .buttonStyle(YYButtonStyle(kind: .raised))
-                        .disabled(!config.isReady || testing)
-                    Group {
-                        if testing {
-                            ProgressView().controlSize(.small)
-                        } else {
-                            switch result {
-                            case .success(let t):
-                                Label("能用 · 回答用了 \(t.formatted(.number.precision(.fractionLength(1)))) 秒", systemImage: "checkmark.circle")
-                                    .foregroundStyle(YYColor.t2)
-                            case .failure(let e):
-                                Label(Companion.message(for: e), systemImage: "exclamationmark.circle")
-                                    .foregroundStyle(YYColor.danger)
-                            case nil:
-                                EmptyView()
-                            }
-                        }
-                    }
-                    .font(YYUI.font(10.5).monospacedDigit())
-                    .labelStyle(PassLabel(ok: (try? result?.get()) != nil))
-                }
-                Text(config.provider == .openai
-                     ? String(localized: "Key 只存在这台设备的钥匙串里。Ollama 这类自己部署的模型不用 Key，填上地址和模型名就行。")
-                     : String(localized: "Key 只存在这台设备的钥匙串里。费用走你自己的 \(config.provider.account) 账号，语阅不经手，也看不到。"))
-                    .font(YYUI.font(10.5)).lineSpacing(YYUI.s(10.5) * 0.65).foregroundStyle(YYColor.t2)
-                    .fixedSize(horizontal: false, vertical: true)
-                Button("保存") { done(config) }
-                    .buttonStyle(YYButtonStyle(kind: .main, size: .large, wide: true))
-                    .disabled(!config.isReady)
-            }
-            .padding(YYUI.s(16))
-        }
-        .scrollBounceBehavior(.basedOnSize)
-        .background(YYColor.bg)
-        .presentationDetents([.medium, .large])
-        .presentationDragIndicator(.visible)
-    }
-
-    /// `.v-me-pass`: a green ring tick before the result.
-    private struct PassLabel: LabelStyle {
-        let ok: Bool
-        func makeBody(configuration: Configuration) -> some View {
-            HStack(spacing: YYUI.s(4)) {
-                configuration.icon.font(YYUI.font(12)).foregroundStyle(ok ? YYColor.ok : YYColor.danger)
-                configuration.title
-            }
-        }
-    }
-
-    private func test() {
-        testing = true
-        result = nil
-        let config = config
-        Task {
-            let start = Date()
-            do {
-                _ = try await Companion.answer(config, system: String(localized: "你是一个简短的助手。"), prompt: String(localized: "用一个词回答：天空通常是什么颜色？"))
-                result = .success(Date().timeIntervalSince(start))
-            } catch {
-                result = .failure(error)
-            }
-            testing = false
-        }
     }
 }
 

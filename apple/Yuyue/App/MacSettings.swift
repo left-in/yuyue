@@ -79,7 +79,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         case .comics: String(localized: "漫画")
         case .listening: String(localized: "朗读")
         case .foreign: String(localized: "外文")
-        case .companion: String(localized: "书伴")
+        case .companion: String(localized: "AI 服务")
         case .sync: String(localized: "同步")
         case .storage: String(localized: "存储")
         case .data: String(localized: "数据")
