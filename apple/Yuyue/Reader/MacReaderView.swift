@@ -21,6 +21,11 @@ struct MacReaderView: View {
     @State private var sharing: QuoteShare?
     /// 沉浸阅读: the capsule comes back while the pointer is at the bottom edge.
     @State private var peek = false
+    /// The reading capsule tucked away while reading: it comes back while the pointer is near the
+    /// bottom (as in 沉浸阅读), leaving a hairline of the chapter's progress meanwhile.
+    @State private var tucked = false
+    @State private var capsuleTypeset = false
+    private var barAway: Bool { (model.immersive || tucked) && !peek && !listenShown && !capsuleTypeset }
     @State private var unpeek: Task<Void, Never>?
     @State private var pageHeight = 0.0
     /// The window 沉浸阅读 put into full screen, to take it out again.
@@ -192,8 +197,8 @@ struct MacReaderView: View {
             model.pager.keyHandler = { [weak model] event in model.map { Self.key(event, model: $0) } ?? false }
         }
         .onChange(of: model.immersive) { _, on in immerse(on) }
-        .onChange(of: model.rulesShown) { _, shown in if shown { typesetShown = false } }
-        .onChange(of: model.txtShown) { _, shown in if shown { typesetShown = false } }
+        .onChange(of: model.rulesShown) { _, shown in if shown { typesetShown = false; capsuleTypeset = false } }
+        .onChange(of: model.txtShown) { _, shown in if shown { typesetShown = false; capsuleTypeset = false } }
         .onReceive(NotificationCenter.default.publisher(for: NSWindow.didExitFullScreenNotification)) { note in
             // Leaving full screen by the green button or the menu leaves 沉浸 too.
             guard model.immersive, let window = note.object as? NSWindow, window === fullScreened else { return }
@@ -260,12 +265,12 @@ struct MacReaderView: View {
                     DoubtPill(doubt: doubt, paper: paper, open: { model.txtShown = true }, dismiss: { model.dismissDoubt() })
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
-                if !model.immersive || peek {
+                if !barAway {
                     capsule.transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
             .padding(.bottom, 18)
-            .animation(.easeOut(duration: 0.2), value: peek)
+            .animation(.easeOut(duration: 0.2), value: barAway)
             .animation(.snappy(duration: 0.25), value: model.toast?.id)
             .animation(.snappy(duration: 0.25), value: model.elsewhere == nil)
             .animation(.snappy(duration: 0.25), value: model.returnTo == nil)
@@ -275,11 +280,12 @@ struct MacReaderView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: Audiobooks.timingsChanged)) { _ in model.timingsChanged() }
         .overlay(alignment: .bottomLeading) {
-            // All that is left of the progress in 沉浸阅读: a hairline along the bottom.
-            if model.immersive, !peek, ImmersivePrefs.keepsLine {
+            // All that is left of the progress while the capsule is away: a hairline along the
+            // bottom (the book's in 沉浸阅读, the chapter's while reading in the window).
+            if barAway, !model.immersive || ImmersivePrefs.keepsLine {
                 GeometryReader { g in
                     Rectangle().fill(paper.ink.opacity(0.22))
-                        .frame(width: g.size.width * model.bookFraction, height: 1.5)
+                        .frame(width: g.size.width * (model.immersive ? model.bookFraction : chapterProgress), height: 1.5)
                         .frame(maxHeight: .infinity, alignment: .bottom)
                 }
                 .allowsHitTesting(false)
@@ -288,7 +294,7 @@ struct MacReaderView: View {
         }
         .onGeometryChange(for: Double.self) { $0.size.height } action: { pageHeight = $0 }
         .onContinuousHover { phase in
-            guard model.immersive else { return }
+            guard model.immersive || tucked else { return }
             if case .active(let at) = phase, at.y > pageHeight - 84 {
                 unpeek?.cancel()
                 peek = true
@@ -299,6 +305,11 @@ struct MacReaderView: View {
                     unpeek = nil
                 }
             }
+        }
+        // Shown when the book opens, then out of the way once reading has begun.
+        .task {
+            try? await Task.sleep(for: .seconds(3))
+            tucked = true
         }
         .frame(maxWidth: .infinity)
     }
@@ -529,10 +540,16 @@ struct MacReaderView: View {
                 Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).frame(width: 30, height: 36)
             }
             .help(model.player?.spot != nil ? String(localized: "下一句 ⌘]") : String(localized: "下一页 →"))
-            Button { typesetShown.toggle() } label: {
+            Button { capsuleTypeset.toggle() } label: {
                 Text("Aa").font(.system(size: 13, weight: .semibold)).frame(width: 34, height: 36)
+                    .background(capsuleTypeset ? paper.line.opacity(0.8) : .clear, in: .rect(cornerRadius: 12))
             }
             .help("排版")
+            // Out of the button it was pressed on, not the toolbar's.
+            .popover(isPresented: $capsuleTypeset, arrowEdge: .top) {
+                TypesetCard(model: model)
+                    .presentationBackground(YYColor.card)
+            }
         }
         .buttonStyle(.plain)
         .foregroundStyle(paper.ink)
