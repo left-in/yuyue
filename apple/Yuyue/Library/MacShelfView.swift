@@ -257,7 +257,7 @@ struct MacShelfView: View {
             sidebarGroup(String(localized: "资料库"), key: "library")
             if !closedGroups.contains("library") {
                 sidebarRow(.all, String(localized: "全部"), "books.vertical", library.books.count)
-                sidebarRow(.books, String(localized: "书"), "text.book.closed", library.books.count { !$0.isComic })
+                sidebarRow(.books, String(localized: "书"), ProtoIcon.book.rawValue, library.books.count { !$0.isComic })
                 sidebarRow(.comics, String(localized: "漫画"), "rectangle.3.group", library.books.count(where: \.isComic))
                 sidebarRow(.audio, String(localized: "有声"), ProtoIcon.wave.rawValue, library.books.count(where: library.hasAudio))
             }
@@ -1040,7 +1040,7 @@ private struct SidebarRow<Title: View>: View {
             // `.v-mac-it svg`: every icon in the same 14 × 14 box, wide ones too.
             Group {
                 if let drawn = ProtoIcon(rawValue: symbol) {
-                    drawn.shape.stroke(style: StrokeStyle(lineWidth: 1.6, lineCap: .round, lineJoin: .round))
+                    drawn.shape.stroke(style: StrokeStyle(lineWidth: drawn.line, lineCap: .round, lineJoin: .round))
                 } else {
                     Image(systemName: symbol).resizable().scaledToFit()
                 }
@@ -1268,8 +1268,18 @@ private struct SidebarToggle: View {
 nonisolated enum ProtoIcon: String {
     /// `#i-wavef`: 有声.
     case wave = "proto.wave"
+    /// 书: a closed book, a bookmark ribbon hanging from its top (待定方案 7 · A).
+    case book = "proto.book"
 
     var shape: some Shape { ProtoShape(icon: self) }
+
+    /// The line at the sidebar's 14 points, matched by eye to the system icons beside it.
+    var line: CGFloat {
+        switch self {
+        case .wave: 1.6
+        case .book: 1.3
+        }
+    }
 }
 
 nonisolated struct ProtoShape: Shape {
@@ -1285,6 +1295,26 @@ nonisolated struct ProtoShape: Shape {
                 p.move(to: CGPoint(x: x, y: y0)); p.addLine(to: CGPoint(x: x, y: y1))
             }
             p.move(to: CGPoint(x: 14, y: 8)); p.addLine(to: CGPoint(x: 14.01, y: 8))
+        case .book:
+            // In a 24 box: M6 3.5h11a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6.5A1.5 1.5 0 0 1 5 19V5
+            // a1.5 1.5 0 0 1 1-1.5z M5 17.5h13 M14 3.5v7l-1.75-1.4L10.5 10.5v-7
+            var b = Path()
+            b.move(to: CGPoint(x: 6.5, y: 3.5))
+            b.addLine(to: CGPoint(x: 17, y: 3.5))
+            b.addQuadCurve(to: CGPoint(x: 18, y: 4.5), control: CGPoint(x: 18, y: 3.5))
+            b.addLine(to: CGPoint(x: 18, y: 19.5))
+            b.addQuadCurve(to: CGPoint(x: 17, y: 20.5), control: CGPoint(x: 18, y: 20.5))
+            b.addLine(to: CGPoint(x: 6.5, y: 20.5))
+            b.addQuadCurve(to: CGPoint(x: 5, y: 19), control: CGPoint(x: 5, y: 20.5))
+            b.addLine(to: CGPoint(x: 5, y: 5))
+            b.addQuadCurve(to: CGPoint(x: 6.5, y: 3.5), control: CGPoint(x: 5, y: 3.5))
+            b.closeSubpath()
+            b.move(to: CGPoint(x: 5, y: 17.5)); b.addLine(to: CGPoint(x: 18, y: 17.5))
+            b.move(to: CGPoint(x: 14, y: 3.5)); b.addLine(to: CGPoint(x: 14, y: 10.5))
+            b.addLine(to: CGPoint(x: 12.25, y: 9.1)); b.addLine(to: CGPoint(x: 10.5, y: 10.5))
+            b.addLine(to: CGPoint(x: 10.5, y: 3.5))
+            // Its 13 × 17 body centred and filling the 16 box, as tall as the icons beside it.
+            p.addPath(b.applying(CGAffineTransform(translationX: 8, y: 8).scaledBy(x: 16 / 18.5, y: 16 / 18.5).translatedBy(x: -11.5, y: -12)))
         }
         return p.applying(CGAffineTransform(translationX: rect.minX, y: rect.minY).scaledBy(x: rect.width / 16, y: rect.height / 16))
     }
