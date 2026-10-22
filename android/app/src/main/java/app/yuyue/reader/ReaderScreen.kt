@@ -124,6 +124,9 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
             if (model.isPlaying) library.nowPlaying = model else model.close()
         }
     }
+    // 霞鹜文楷 arrived: the open sections load again, now with its @font-face.
+    val fonts = WenKai.version
+    LaunchedEffect(fonts) { if (fonts > 0) model.pager.reload() }
     BackHandler {
         when {
             model.selection != null || model.openMark != null -> model.dismissCards()

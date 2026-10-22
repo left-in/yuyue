@@ -32,10 +32,12 @@ struct TypesetCard: View {
             HStack(spacing: 4) {
                 ForEach(YYPaper.all) { paper in swatch(paper) }
             }
-            Segments(items: [(ReaderFont?.none, String(localized: "系统")), (.sans, String(localized: "黑体")), (.serif, String(localized: "宋体")), (.kai, String(localized: "楷体"))],
+            Segments(items: [(ReaderFont?.none, String(localized: "系统")), (.serif, String(localized: "宋体")), (.kai, String(localized: "楷体")), (.wenKai, String(localized: "霞鹜文楷"))],
                      selection: binding(\.font)) { font, title in
-                Text(title).font(face(font))
+                Text(title).font(face(font)).lineLimit(1).minimumScaleFactor(0.8)
             }
+            .onChange(of: model.settings.font) { if model.settings.font == .wenKai { WenKai.shared.ensure() } }
+            WenKaiStatus(chosen: model.settings.font == .wenKai)
             // `.v-mr-fs`
             HStack(spacing: 12) {
                 Text("A").font(YYUI.serif(12)).foregroundStyle(YYColor.t1)
@@ -184,6 +186,7 @@ struct TypesetCard: View {
         switch font {
         case .serif: .custom("Songti SC", size: 12)
         case .kai: .custom("Kaiti SC", size: 12.5)
+        case .wenKai: WenKai.shared.installed ? .custom("LXGW WenKai Lite", size: 12.5) : .custom("Kaiti SC", size: 12.5)
         case .sans: .system(size: 12, weight: .medium)
         default: .system(size: 12)
         }

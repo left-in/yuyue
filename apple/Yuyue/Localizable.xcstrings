@@ -16093,6 +16093,46 @@
           }
         }
       }
+    },
+    "霞鹜文楷" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LXGW WenKai"
+          }
+        }
+      }
+    },
+    "霞鹜文楷正在下载 %lld%%，先用楷体" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloading LXGW WenKai %lld%%; using Kaiti for now"
+          }
+        }
+      }
+    },
+    "霞鹜文楷%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LXGW WenKai: %@"
+          }
+        }
+      }
+    },
+    "没下载下来" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "didn't download"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

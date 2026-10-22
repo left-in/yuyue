@@ -462,7 +462,14 @@ impl YuyueCore {
             return Err(CoreError::not_found("section"));
         }
         let content = self.rules_for(&book_id, false)?.apply_html(&book::section_html(&self.book_dir(&book_id)?, section)?);
-        Ok(document::section_document(&m, section, &content, &self.page_settings(&book_id, &geometry)?))
+        let html = document::section_document(&m, section, &content, &self.page_settings(&book_id, &geometry)?);
+        let faces = self.font_faces();
+        Ok(if faces.is_empty() { html } else { html.replacen("</head>", &format!("<style>{faces}</style>\n</head>"), 1) })
+    }
+
+    /// Where downloaded fonts are kept (霞鹜文楷); the page loads them from `/fonts/<file>`.
+    pub fn fonts_dir(&self) -> String {
+        self.fonts_path().to_string_lossy().into_owned()
     }
 
     /// A comic section's pictures, as absolute paths, in reading order.
@@ -825,8 +832,32 @@ impl YuyueCore {
         })
     }
 
+    fn fonts_path(&self) -> PathBuf {
+        self.books_dir.parent().map(|p| p.join("fonts")).unwrap_or_else(|| self.books_dir.join("../fonts"))
+    }
+
+    /// `@font-face` for each downloaded font: 霞鹜文楷 as its regular and its heavier weight.
+    fn font_faces(&self) -> String {
+        let dir = self.fonts_path();
+        let mut css = String::new();
+        for (file, weight) in [("LXGWWenKaiLite-Regular.ttf", "100 450"), ("LXGWWenKaiLite-Medium.ttf", "451 900")] {
+            if dir.join(file).is_file() {
+                css.push_str(&format!(r#"@font-face{{font-family:"LXGW WenKai";src:url("/fonts/{file}");font-weight:{weight};font-display:swap}}"#));
+            }
+        }
+        css
+    }
+
     fn try_serve(&self, path: &str, geometry: &PageGeometry) -> Result<Served> {
         let path = path.split(['?', '#']).next().unwrap_or("");
+        if let Some(name) = path.strip_prefix("/fonts/") {
+            // A bare file name in the fonts folder, nothing else.
+            if name.is_empty() || name.contains(['/', '\\']) || name.starts_with('.') {
+                return Ok(Served::NotFound);
+            }
+            let file = self.fonts_path().join(name);
+            return Ok(if file.is_file() { Served::File { path: file.to_string_lossy().into_owned(), mime: "font/ttf".into() } } else { Served::NotFound });
+        }
         let Some(rest) = path.strip_prefix("/book/") else { return Ok(Served::NotFound) };
         let Some((id, rest)) = rest.split_once('/') else { return Ok(Served::NotFound) };
         if let Some(name) = rest.strip_prefix("s/") {

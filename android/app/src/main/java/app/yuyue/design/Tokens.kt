@@ -82,6 +82,8 @@ enum class YYFont(val css: String, val androidNames: List<String>, val system: F
     Sans("-apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Hiragino Sans GB\",\"Microsoft YaHei\",sans-serif", listOf(), FontFamily.SansSerif),
     Serif("\"Noto Serif SC\",\"Source Han Serif SC\",\"Songti SC\",\"STSong\",serif", listOf("Noto Serif CJK SC", "Source Han Serif SC"), FontFamily.Serif),
     Kai("\"LXGW WenKai\",\"Kaiti SC\",\"STKaiti\",\"KaiTi\",serif", listOf("LXGW WenKai"), FontFamily.Serif),
+    Kaiti("\"Kaiti SC\",\"STKaiti\",\"KaiTi\",serif", listOf(), FontFamily.Serif),
+    Wenkai("\"LXGW WenKai\",\"Kaiti SC\",\"STKaiti\",serif", listOf(), FontFamily.Serif),
     Mono("ui-monospace,\"SF Mono\",Menlo,Consolas,monospace", listOf(), FontFamily.Monospace),
     LatinSerif("Georgia,\"Times New Roman\",serif", listOf(), FontFamily.Serif);
 }

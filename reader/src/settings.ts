@@ -49,7 +49,9 @@ const VARS: { [k: string]: [string, string, string | null] } = {
 const FONTS: { [k: string]: [string, string] } = {
   sans: ['var(--yy-sans)', 'var(--yy-sans)'],
   serif: ['var(--yy-serif)', 'var(--yy-latin-serif)'],
-  kai: ['var(--yy-kai)', 'var(--yy-latin-serif)'],
+  // 楷体 is the system's own; 霞鹜文楷 is downloaded, and core adds its @font-face once it is.
+  kai: ['var(--yy-kaiti)', 'var(--yy-latin-serif)'],
+  wenkai: ['var(--yy-wenkai)', 'var(--yy-latin-serif)'],
   mono: ['var(--yy-mono)', 'var(--yy-mono)'],
 };
 

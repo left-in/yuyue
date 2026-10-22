@@ -685,7 +685,7 @@ fun ReaderSettings.script(g: uniffi.yuyue_core.PageGeometry): JSONObject = JSONO
     put("justify", justify ?: JSONObject.NULL)
     put("indent", indent ?: JSONObject.NULL)
     put("compress", compress)
-    put("font", when (font) { Font.SANS -> "sans"; Font.SERIF -> "serif"; Font.KAI -> "kai"; null -> JSONObject.NULL })
+    put("font", when (font) { Font.SANS -> "sans"; Font.SERIF -> "serif"; Font.KAI -> "kai"; Font.WEN_KAI -> "wenkai"; null -> JSONObject.NULL })
     put("margin", g.margin)
     put("top", g.top)
     put("bottom", g.bottom)

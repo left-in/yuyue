@@ -209,6 +209,12 @@ final class ReaderModel {
                 }
             },
             Task { [weak self] in
+                // 霞鹜文楷 arrived: the open sections load again, now with its @font-face.
+                for await _ in NotificationCenter.default.notifications(named: .fontsChanged) {
+                    self?.pager.reload()
+                }
+            },
+            Task { [weak self] in
                 for await n in NotificationCenter.default.notifications(named: .readerJump) {
                     guard let self, n.object as? String == self.bookID else { continue }
                     switch self.library?.takeIntent(for: self.bookID) {
@@ -675,6 +681,7 @@ extension ReaderFont {
         case .sans: "sans"
         case .serif: "serif"
         case .kai: "kai"
+        case .wenKai: "wenkai"
         }
     }
 }

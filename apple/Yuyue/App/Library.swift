@@ -68,6 +68,7 @@ final class Library {
         booksDir = dir.appending(path: "books", directoryHint: .isDirectory)
         dataDir = dir
         sync = Sync(core: core)
+        WenKai.shared.attach(fontsDir: core.fontsDir())
         audiobooks = Audiobooks(core: core, dataDir: dir)
         Audiobooks.shared = audiobooks
         // Deleted books can be put back for 30 days; after that their files go.

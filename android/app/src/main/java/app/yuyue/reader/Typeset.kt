@@ -80,10 +80,12 @@ private fun Main(model: ReaderModel, openMore: () -> Unit) {
             }
         }
     }
+    // Android phones have no 楷体 of their own, so 楷体 is 霞鹜文楷 here, downloaded when chosen.
     YYSegments(
-        listOf<Pair<Font?, String>>(null to t("系统"), Font.SANS to t("黑体"), Font.SERIF to t("宋体"), Font.KAI to t("楷体")),
-        s.font, { f -> model.update { it.copy(font = f) } }, modifier = Modifier.fillMaxWidth(),
+        listOf<Pair<Font?, String>>(null to t("系统"), Font.SERIF to t("宋体"), Font.WEN_KAI to t("霞鹜文楷")),
+        s.font, { f -> model.update { it.copy(font = f) }; if (f == Font.WEN_KAI) WenKai.ensure() }, modifier = Modifier.fillMaxWidth(),
     )
+    WenKaiStatus(s.font == Font.WEN_KAI)
     Row(
         Modifier.fillMaxWidth().height(40.dp).background(YY.c.inset, RoundedCornerShape(12.dp)).padding(horizontal = 10.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),

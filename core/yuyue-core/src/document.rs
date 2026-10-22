@@ -66,6 +66,9 @@ pub enum Font {
     Sans,
     Serif,
     Kai,
+    /// 霞鹜文楷, an open-source 楷体 the app downloads when it is first chosen.
+    #[serde(rename = "wenkai")]
+    WenKai,
 }
 
 /// Everything that shapes a page. Typography comes from the synced reader settings; the
@@ -204,7 +207,8 @@ fn custom_properties(s: &PageSettings) -> String {
         let (name, latin) = match font {
             Font::Sans => ("sans", "sans"),
             Font::Serif => ("serif", "latin-serif"),
-            Font::Kai => ("kai", "latin-serif"),
+            Font::Kai => ("kaiti", "latin-serif"),
+            Font::WenKai => ("wenkai", "latin-serif"),
         };
         let _ = write!(css, ";--yy-font:var(--yy-{name});--yy-font-en:var(--yy-{latin})");
     }
@@ -291,7 +295,7 @@ mod tests {
         };
         let html = section_document(&m, 1, "", &s);
         assert!(html.contains(r#"<html lang="en" data-yy-paper="kaminight" data-yy-mode="scrolled" data-yy-paging="native" data-yy-justify="0" data-yy-indent="1" data-yy-compress="0" data-yy-motion="reduced""#), "{html}");
-        assert!(html.contains(r#"style="--yy-fs:20.5px;--yy-margin:24px;--yy-top:60px;--yy-bottom:90px;--yy-cols:2;--yy-lh:1.86;--yy-ps:0.5em;--yy-font:var(--yy-kai);--yy-font-en:var(--yy-latin-serif)""#), "{html}");
+        assert!(html.contains(r#"style="--yy-fs:20.5px;--yy-margin:24px;--yy-top:60px;--yy-bottom:90px;--yy-cols:2;--yy-lh:1.86;--yy-ps:0.5em;--yy-font:var(--yy-kaiti);--yy-font-en:var(--yy-latin-serif)""#), "{html}");
         assert!(html.contains(r#"data-section="1" data-kind="image""#));
         let eink = PageSettings { paper: Paper::Eink, ..PageSettings::default() };
         assert!(section_document(&m, 0, "", &eink).contains(r#"data-yy-motion="reduced""#));

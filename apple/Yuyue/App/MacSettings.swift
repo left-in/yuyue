@@ -592,9 +592,12 @@ private struct ReadingSettings: View {
                     }
                 }
                 SettingsRow(String(localized: "字体")) {
-                    YYSegments(items: [(ReaderFont?.none, String(localized: "系统")), (.some(.sans), String(localized: "黑体")), (.some(.serif), String(localized: "宋体")), (.some(.kai), String(localized: "楷体"))],
-                               selection: Binding(get: { settings.font }, set: { v in change { $0.font = v } }), small: true)
-                        .frame(minWidth: 220).fixedSize()
+                    VStack(alignment: .trailing, spacing: 6) {
+                        YYSegments(items: [(ReaderFont?.none, String(localized: "系统")), (.some(.serif), String(localized: "宋体")), (.some(.kai), String(localized: "楷体")), (.some(.wenKai), String(localized: "霞鹜文楷"))],
+                                   selection: Binding(get: { settings.font }, set: { v in change { $0.font = v }; if v == .wenKai { WenKai.shared.ensure() } }), small: true)
+                            .frame(minWidth: 260).fixedSize()
+                        WenKaiStatus(chosen: settings.font == .wenKai)
+                    }
                 }
                 SettingsRow(String(localized: "字号")) {
                     HStack(spacing: 10) {
