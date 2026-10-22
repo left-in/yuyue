@@ -11,7 +11,7 @@ import AppKit
 @Observable
 final class ReaderModel {
     let bookID: String
-    let detail: BookDetail?
+    private(set) var detail: BookDetail?
     private(set) var settings: ReaderSettings
     /// Whether this book keeps settings of its own (只用于这本书).
     private(set) var ownSettings = false
@@ -149,6 +149,7 @@ final class ReaderModel {
             failure = Library.message(for: error)
         }
         self.detail = detail
+        scriptValue = (try? core.bookScript(bookId: bookID)) ?? nil
         let own = (try? core.bookReaderSettings(bookId: bookID)) ?? nil
         var settings = own ?? (try? core.readerSettings()) ?? .standard
         // 我的 › 墨水屏: a book with its own paper reads on e-ink too.
@@ -476,6 +477,27 @@ final class ReaderModel {
     }
 
     /// 只用于这本书: the book keeps its own settings from now on, or goes back to the shared ones.
+    /// 简繁: this book shown in the other script, or (nil) as it is. Synced with the book.
+    var script: Script? {
+        get { scriptValue }
+        set {
+            guard newValue != scriptValue else { return }
+            scriptValue = newValue
+            do {
+                try core.setBookScript(bookId: bookID, script: newValue)
+            } catch {
+                failure = Library.message(for: error)
+            }
+            // The pages, the voice, the chapter titles and the search all go through it.
+            detail = try? core.book(id: bookID)
+            NotificationCenter.default.post(name: .replaceRulesChanged, object: bookID)
+        }
+    }
+    private var scriptValue: Script?
+
+    /// A Chinese book, which 简繁 can be shown for.
+    var isChinese: Bool { detail?.summary.language.hasPrefix("zh") ?? false }
+
     func setOwnSettings(_ on: Bool) {
         guard on != ownSettings else { return }
         ownSettings = on

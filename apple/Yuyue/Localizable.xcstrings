@@ -17033,6 +17033,46 @@
           }
         }
       }
+    },
+    "简繁" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chinese Script"
+          }
+        }
+      }
+    },
+    "原样" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As Is"
+          }
+        }
+      }
+    },
+    "简体" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simplified"
+          }
+        }
+      }
+    },
+    "繁體" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traditional"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

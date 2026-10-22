@@ -128,6 +128,13 @@ struct TypesetCard: View {
                     .frame(width: 170)
             }
             switchRow(String(localized: "中文标点挤压"), binding(\.compress))
+            if model.isChinese {
+                row(String(localized: "简繁")) {
+                    Segments(items: [(Script?.none, String(localized: "原样")), (.some(.simplified), String(localized: "简体")), (.some(.traditional), String(localized: "繁體"))],
+                             selection: Binding(get: { model.script }, set: { model.script = $0 })) { _, t in Text(t) }
+                        .frame(width: 170)
+                }
+            }
             if model.detail?.summary.format != .pdf {
                 Button {
                     model.settingsShown = false

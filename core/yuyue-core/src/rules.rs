@@ -11,6 +11,7 @@
 use std::collections::BTreeMap;
 
 use regex::{NoExpand, Regex};
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 
 use crate::api::{YuyueCore, lock, now_ms};
@@ -71,12 +72,12 @@ const PREVIEW_MAX: u32 = 999;
 /// Characters of context on each side of a sample.
 const CONTEXT: usize = 24;
 
-/// Rules ready to run.
-pub(crate) struct Rules(Vec<(Regex, String, bool)>);
+/// Rules ready to run, then the book's 简繁 conversion when it has one.
+pub(crate) struct Rules(Vec<(Regex, String, bool)>, Option<Script>);
 
 impl Rules {
     pub(crate) fn is_empty(&self) -> bool {
-        self.0.is_empty()
+        self.0.is_empty() && self.1.is_none()
     }
 
     pub(crate) fn apply(&self, text: &str) -> String {
@@ -84,7 +85,10 @@ impl Rules {
         for (re, with, regex) in &self.0 {
             out = if *regex { re.replace_all(&out, with.as_str()) } else { re.replace_all(&out, NoExpand(with)) }.into_owned();
         }
-        out
+        match self.1 {
+            Some(script) => script.convert(&out),
+            None => out,
+        }
     }
 
     /// Runs the rules on a section document's sentence spans, leaving the markup alone: what a
@@ -127,10 +131,20 @@ impl Rules {
         for (i, t) in tokens.iter().enumerate() {
             match (t, replaced.get(&i)) {
                 (_, Some(text)) => crate::dom::escape_text(text, &mut out),
+                // Outside the sentences (headings, captions): only the 简繁 conversion.
+                (Token::Text(raw), None) if self.1.is_some() => crate::dom::escape_text(&self.convert(&unescape(raw)), &mut out),
                 (Token::Tag(raw) | Token::Text(raw), None) => out.push_str(raw),
             }
         }
         out
+    }
+
+    /// The book's 简繁 conversion alone, for titles.
+    pub(crate) fn convert(&self, text: &str) -> String {
+        match self.1 {
+            Some(script) => script.convert(text),
+            None => text.to_string(),
+        }
     }
 }
 
@@ -471,7 +485,50 @@ impl YuyueCore {
                 .filter(|r| r.enabled && (speech || !r.speech_only))
                 .filter_map(|r| Some((compile(r).ok()?, r.replace.clone(), r.regex)))
                 .collect(),
+            self.script_of(book)?,
         ))
+    }
+
+    fn script_of(&self, book: &str) -> Result<Option<Script>> {
+        let value = lock(&self.store).get(&format!("book/{book}"), "script")?;
+        Ok(value.and_then(|v| serde_json::from_value(v).ok()))
+    }
+}
+
+/// A Chinese book shown in the other script (单本书简繁转换): the file stays as it is; what is
+/// shown, read aloud and searched for in it is converted.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, uniffi::Enum)]
+#[serde(rename_all = "lowercase")]
+pub enum Script {
+    /// 简体
+    Simplified,
+    /// 繁體
+    Traditional,
+}
+
+impl Script {
+    fn convert(self, text: &str) -> String {
+        let to = match self {
+            Script::Simplified => zhconv::Variant::ZhHans,
+            Script::Traditional => zhconv::Variant::ZhHant,
+        };
+        zhconv::zhconv(text, to)
+    }
+}
+
+#[uniffi::export]
+impl YuyueCore {
+    /// The script a book is shown in, when it isn't shown as it is.
+    pub fn book_script(&self, book_id: String) -> Result<Option<Script>> {
+        self.book_dir(&book_id)?;
+        self.script_of(&book_id)
+    }
+
+    /// Shows a book in 简体 or 繁體, or (None) as it is. Synced with the book.
+    pub fn set_book_script(&self, book_id: String, script: Option<Script>) -> Result<()> {
+        self.book_dir(&book_id)?;
+        let value = script.map(|s| json!(s)).unwrap_or(Value::Null);
+        lock(&self.store).set(&format!("book/{book_id}"), "script", value)
     }
 }
 
@@ -484,7 +541,22 @@ mod tests {
             list.iter()
                 .map(|(f, r, re)| (compile(&template(f, r, *re)).unwrap(), r.to_string(), *re))
                 .collect(),
+            None,
         )
+    }
+
+    #[test]
+    fn converts_a_book_to_the_other_script() {
+        let to_trad = Rules(Vec::new(), Some(Script::Traditional));
+        assert_eq!(to_trad.apply("红楼梦里的头发"), "紅樓夢裏的頭髮");
+        let to_simp = Rules(Vec::new(), Some(Script::Simplified));
+        assert_eq!(to_simp.apply("紅樓夢"), "红楼梦");
+        // Headings outside the sentences go along; the markup stays.
+        let html = r#"<h2>第一回 甄士隱夢幻識通靈</h2><p><span class="s" data-s="0">此開卷第一回也。</span></p>"#;
+        assert_eq!(
+            to_simp.apply_html(html),
+            r#"<h2>第一回 甄士隐梦幻识通灵</h2><p><span class="s" data-s="0">此开卷第一回也。</span></p>"#
+        );
     }
 
     #[test]

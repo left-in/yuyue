@@ -119,6 +119,17 @@ fn run(args: &[String]) -> Result<(), String> {
             print!("{}", core.section_document(id, number(section)?, geometry).map_err(err)?);
             Ok(())
         }
+        ["script", library, book, to] => {
+            let core = open(library)?;
+            let id = find(&core, book)?.id;
+            let script = match *to {
+                "simplified" => Some(yuyue_core::Script::Simplified),
+                "traditional" => Some(yuyue_core::Script::Traditional),
+                _ => None,
+            };
+            core.set_book_script(id, script).map_err(err)?;
+            Ok(())
+        }
         ["sentences", library, book, section] => {
             let core = open(library)?;
             let id = find(&core, book)?.id;

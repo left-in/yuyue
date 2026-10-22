@@ -382,6 +382,8 @@ impl YuyueCore {
 
     pub fn book(&self, id: String) -> Result<BookDetail> {
         let m = self.manifest(&id)?;
+        // Chapter titles in the book's chosen script (简繁转换), as its pages are.
+        let rules = self.rules_for(&id, false)?;
         Ok(BookDetail {
             summary: self.summary(&id)?,
             start: m.start,
@@ -390,7 +392,7 @@ impl YuyueCore {
                 .iter()
                 .enumerate()
                 .map(|(i, s)| SectionSummary {
-                    title: s.title.clone(),
+                    title: s.title.as_deref().map(|t| rules.convert(t)),
                     kind: section_kind(s.kind),
                     linear: s.linear,
                     continued: s.continued,
@@ -403,7 +405,7 @@ impl YuyueCore {
             toc: m
                 .toc
                 .iter()
-                .map(|e| TocItem { title: e.title.clone(), depth: e.depth, section: e.section, anchor: e.anchor.clone() })
+                .map(|e| TocItem { title: rules.convert(&e.title), depth: e.depth, section: e.section, anchor: e.anchor.clone() })
                 .collect(),
         })
     }

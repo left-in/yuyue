@@ -134,6 +134,12 @@ private fun More(model: ReaderModel, back: () -> Unit) {
         YYSegments(listOf<Pair<Boolean?, String>>(null to t("跟书"), true to t("对齐"), false to t("靠左")), s.justify, { v -> model.update { it.copy(justify = v) } }, modifier = Modifier.width(190.dp))
     }
     SwitchRow(t("中文标点挤压"), s.compress) { v -> model.update { it.copy(compress = v) } }
+    if (model.isChinese) {
+        Row2(t("简繁")) {
+            YYSegments(listOf<Pair<uniffi.yuyue_core.Script?, String>>(null to t("原样"), uniffi.yuyue_core.Script.SIMPLIFIED to t("简体"), uniffi.yuyue_core.Script.TRADITIONAL to t("繁體")),
+                model.script, { model.changeScript(it) }, modifier = Modifier.width(190.dp))
+        }
+    }
 }
 
 @Composable

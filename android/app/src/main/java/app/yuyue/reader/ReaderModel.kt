@@ -42,7 +42,8 @@ data class OpenMark(val mark: Mark, val x: Double, val y: Double)
 /** One open book: where the reader is, how the pages look, the notes in it (as `ReaderModel` on iPhone). */
 class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPager, val context: Context) : ReaderPager.Listener {
     val core = library.core
-    val detail: BookDetail? = runCatching { core.book(bookID) }.getOrNull()
+    var detail: BookDetail? by mutableStateOf(runCatching { core.book(bookID) }.getOrNull())
+        private set
     var failure by mutableStateOf<String?>(null)
     var settings by mutableStateOf(ReaderSettings(Paper.PLAIN, LayoutMode.PAGINATED, null, 18.0, null, null, null, null, true))
         private set
@@ -404,6 +405,23 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         apply(new)
     }
 
+    /** 简繁: this book shown in the other script, or (null) as it is. Synced with the book. */
+    var script by mutableStateOf(runCatching { core.bookScript(bookID) }.getOrNull())
+        private set
+
+    /** A Chinese book, which 简繁 can be shown for. */
+    val isChinese: Boolean get() = detail?.summary?.language?.startsWith("zh") == true
+
+    fun changeScript(to: uniffi.yuyue_core.Script?) {
+        if (to == script) return
+        script = to
+        runCatching { core.setBookScript(bookID, to) }
+        // The pages, the voice, the chapter titles and the search all go through it.
+        detail = runCatching { core.book(bookID) }.getOrNull() ?: detail
+        player?.textsChanged()
+        pager.reload()
+    }
+
     /** 只用于这本书: the book keeps its own settings from now on, or goes back to the shared ones. */
     fun setOwn(on: Boolean) {
         if (on == ownSettings) return
@@ -466,7 +484,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         val perPage = s.units.toDouble() / maxOf(1, pageCount)
         if (perPage <= 0) return null
         var before = counted.filter { it.first < section }.sumOf { it.second.units.toDouble() }
-        detail.sections.getOrNull(section)?.let { before += it.units.toDouble() * sentence / maxOf(1u, it.sentences).toDouble() }
+        detail?.sections?.getOrNull(section)?.let { before += it.units.toDouble() * sentence / maxOf(1u, it.sentences).toDouble() }
         return (before / perPage).toInt() + 1
     }
 
