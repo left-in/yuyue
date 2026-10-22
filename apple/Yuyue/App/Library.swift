@@ -18,6 +18,9 @@ final class Library {
     /// they've settled and the card folds away.
     private(set) var imports: [ImportFile] = []
     @ObservationIgnored private var importsStarted = Date()
+    /// When a file on the card last changed: files opened together from 访达 come one by one,
+    /// a moment apart, and belong on one card.
+    @ObservationIgnored private var importsTouched = Date.distantPast
     var alert: String?
     /// A 数据快照 opened from 文件 or dropped in, waiting to be looked at before it's brought back.
     var openedSnapshot: URL?
@@ -333,7 +336,7 @@ final class Library {
         let place = collection.flatMap { id in collections.first { $0.id == id }?.name } ?? String(localized: "全部")
         var rows: [UUID: URL] = [:]
         if card {
-            if imports.allSatisfy(\.settled) {
+            if imports.allSatisfy(\.settled), Date.now.timeIntervalSince(importsTouched) > 2 {
                 imports = []
                 importsStarted = .now
             }
@@ -341,6 +344,7 @@ final class Library {
                 let file = ImportFile(name: url.lastPathComponent)
                 rows[file.id] = url
                 imports.append(file)
+                importsTouched = .now
             }
         }
         for url in urls {
@@ -446,6 +450,7 @@ final class Library {
     private func setImport(_ id: UUID?, _ state: ImportFile.State) {
         guard let id, let i = imports.firstIndex(where: { $0.id == id }) else { return }
         imports[i].state = state
+        importsTouched = .now
         if state.settled { imports[i].took = Date.now.timeIntervalSince(importsStarted) }
     }
 

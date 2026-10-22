@@ -3,6 +3,9 @@ import SwiftUI
 @main
 struct YuyueApp: App {
     @State private var library = Result { try Library() }
+    #if os(macOS)
+    @NSApplicationDelegateAdaptor private var delegate: AppDelegate
+    #endif
 
     var body: some Scene {
         #if os(macOS)
@@ -62,3 +65,23 @@ struct YuyueApp: App {
         }
     }
 }
+
+#if os(macOS)
+/// Files opened with 语阅 from 访达 (or dropped on its icon). SwiftUI's `onOpenURL` hears only the
+/// first of several opened together; this hears them all.
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    /// Opened before the shelf was there to take them.
+    @MainActor static var waiting: [URL] = []
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        MainActor.assumeIsolated {
+            Self.waiting += urls
+            NotificationCenter.default.post(name: .filesOpened, object: nil)
+        }
+    }
+}
+
+extension Notification.Name {
+    static let filesOpened = Notification.Name("yuyue.filesOpened")
+}
+#endif

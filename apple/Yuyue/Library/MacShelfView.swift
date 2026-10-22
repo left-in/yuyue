@@ -79,9 +79,8 @@ struct MacShelfView: View {
                 Task { await library.importFiles(urls, into: currentCollection) }
             }
         }
-        .onOpenURL { url in
-            Task { await library.importFiles([url]) }
-        }
+        .onAppear(perform: takeOpenedFiles)
+        .onReceive(NotificationCenter.default.publisher(for: .filesOpened)) { _ in takeOpenedFiles() }
         .openingSnapshots(library)
         .audiobookSheets(library)
         .sheet(item: $editing) { book in
@@ -756,6 +755,14 @@ struct MacShelfView: View {
             }
         case .delete: library.delete(book)
         }
+    }
+
+    /// Files opened with 语阅 from 访达, all of them on one import card.
+    private func takeOpenedFiles() {
+        let urls = AppDelegate.waiting
+        guard !urls.isEmpty else { return }
+        AppDelegate.waiting = []
+        Task { await library.importFiles(urls) }
     }
 
     private func open(_ book: BookSummary, _ intent: Library.OpenIntent?) {
