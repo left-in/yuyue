@@ -30,7 +30,6 @@ struct MacShelfView: View {
     @FocusState private var nameFocused: Bool
     @Environment(\.openWindow) private var openWindow
     @Environment(\.openSettings) private var openSettings
-    @Environment(\.colorScheme) private var scheme
 
     private struct OpenMenu: Equatable {
         let book: String
@@ -43,9 +42,9 @@ struct MacShelfView: View {
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
 
     var body: some View {
-        // `.v-mac-sb`: the sidebar is a card floating in the window, 8 in from its edges, the page
-        // beside it at 228. Put away, the card slides out to the left whole, shadow and all, while
-        // the page widens under it; the window's buttons and 显示侧栏 stay where they are.
+        // 首页导航 · A (docs/design/首页导航.html): the sidebar is written straight on the desk, no
+        // card; the page is a sheet of paper lifted off it, 8 in from the window's edges. Put away,
+        // the sidebar slides out to the left while the paper widens to the window's left edge.
         ZStack(alignment: .topLeading) {
             Group {
                 switch filter {
@@ -58,7 +57,11 @@ struct MacShelfView: View {
             }
             .environment(\.shelfHeaderInset, headerInset)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(.leading, sidebarShown ? 228 : 0)
+            // Clipped to the sheet before its shadow goes under, so the shadow isn't clipped too.
+            .clipShape(.rect(cornerRadius: ShelfDesk.paperRadius))
+            .background { ShelfDesk.Paper() }
+            .padding([.top, .bottom, .trailing], ShelfDesk.margin)
+            .padding(.leading, paperLeading)
             sidebar
                 .frame(width: 212)
                 .padding(8)
@@ -79,13 +82,13 @@ struct MacShelfView: View {
                 if !narrow { openedWhileNarrow = false }
             }
         }
-        .background(YYColor.bg)
+        .background(ShelfDesk.fill)
         // 显示侧栏 / 隐藏侧栏 sits in the page, just before its title on the title's line, and
         // moves with the page; put away, the sidebar takes the window's buttons with it, so the
         // button and the title start the page clean at its left edge.
         .overlay(alignment: .topLeading) {
             sidebarButton
-                .padding(.leading, (sidebarShown ? 228 : 0) + 16)
+                .padding(.leading, paperLeading + 16)
                 .padding(.top, Self.lineY - 11)
                 .ignoresSafeArea(.container, edges: .top)
         }
@@ -205,10 +208,8 @@ struct MacShelfView: View {
 
     // MARK: Sidebar
 
-    /// The list, then 同步 under a line: below it, not over it, so a long list of 合集 stops at
-    /// the line instead of running under.
-    /// `.v-mac-sb`: a card a shade off white, the window's buttons in its top corner, 同步 at
-    /// its foot under a line. The list scrolls above the line rather than under it.
+    /// The list, then 同步 at its foot: below it, not over it, so a long list of 合集 stops
+    /// above 同步 instead of running under. On the desk itself, no card behind it.
     private var sidebar: some View {
         VStack(alignment: .leading, spacing: 0) {
             // The window's own buttons sit here.
@@ -228,11 +229,6 @@ struct MacShelfView: View {
         .padding(.top, 16)
         .padding(.bottom, 8)
         .frame(maxHeight: .infinity, alignment: .top)
-        .background {
-            // On the shape alone, so the rows inside don't each cast one.
-            RoundedRectangle(cornerRadius: 14).fill(SidebarPanel.fill)
-                .yyShadow(scheme == .dark ? YYShadow.ringDark : YYShadow.ringLight)
-        }
         .focusable()
         .focusEffectDisabled()
         .onMoveCommand(perform: moveFilter)
@@ -250,7 +246,7 @@ struct MacShelfView: View {
             .foregroundStyle(YYColor.t2)
             .padding(.horizontal, 9)
             .frame(height: 30)
-            .background(YYColor.inset, in: .rect(cornerRadius: 9))
+            .background(ShelfDesk.field, in: .rect(cornerRadius: 9))
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
@@ -372,7 +368,6 @@ struct MacShelfView: View {
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
-        .overlay(alignment: .top) { Rectangle().fill(YYColor.line).frame(height: 0.5) }
     }
 
     private func syncPlace(_ method: Sync.Method) -> String {
@@ -483,6 +478,9 @@ struct MacShelfView: View {
     static let slide = Animation.timingCurve(0.32, 1.18, 0.42, 1, duration: 0.42)
 
     private var sidebarShown: Bool { sidebarWanted && (!narrowWindow || openedWhileNarrow) }
+
+    /// Where the paper starts: just past the sidebar, or 8 in from the window's edge without it.
+    private var paperLeading: CGFloat { sidebarShown ? 220 : ShelfDesk.margin }
 
     /// The page's title leaves room for 显示侧栏 before it.
     private var headerInset: CGFloat { 30 }
@@ -985,9 +983,35 @@ private enum StatusShelf: CaseIterable {
     }
 }
 
-/// `.v-mac-sb`'s fill: the card colour, 55% of it over the window's.
-enum SidebarPanel {
-    static let fill = Color.yyDynamic(light: YYRGBA(251, 250, 249), dark: YYRGBA(22, 23, 25))
+/// 首页导航 · A: the shelf window is a desk a shade darker than the page, the sidebar written on
+/// it, and the page a sheet of paper lying on it.
+enum ShelfDesk {
+    static let fill = Color.yyDynamic(light: YYRGBA(234, 232, 227), dark: YYRGBA(12, 12, 13))
+    /// The row being shown: a faint wash, not a white card (white is for what's on the paper).
+    static let on = Color.yyDynamic(light: YYRGBA(42, 43, 46, 0.07), dark: YYRGBA(255, 255, 255, 0.08))
+    /// 搜索 · 问 on the desk: darker than the desk, as the page's own fields are than the page.
+    static let field = Color.yyDynamic(light: YYRGBA(0, 0, 0, 0.05), dark: YYRGBA(255, 255, 255, 0.06))
+    static let margin: CGFloat = 8
+    static let paperRadius: CGFloat = 12
+
+    /// The paper: the page's colour, a hairline edge and a soft shadow under it.
+    struct Paper: View {
+        @Environment(\.colorScheme) private var scheme
+
+        var body: some View {
+            let shape = RoundedRectangle(cornerRadius: ShelfDesk.paperRadius)
+            if scheme == .dark {
+                shape.fill(YYColor.bg)
+                    .shadow(color: .black.opacity(0.4), radius: 12, y: 8)
+                    .overlay(shape.strokeBorder(.white.opacity(0.07), lineWidth: 0.5))
+            } else {
+                shape.fill(YYColor.bg)
+                    .shadow(color: Color(yy: YYRGBA(51, 46, 41, 0.06)), radius: 12, y: 8)
+                    .shadow(color: Color(yy: YYRGBA(51, 46, 41, 0.06)), radius: 1.5, y: 1)
+                    .overlay(shape.strokeBorder(.black.opacity(0.07), lineWidth: 0.5))
+            }
+        }
+    }
 }
 
 /// `.v-mac-it`: an icon in grey, the name, the count on the right. The row being shown is a
@@ -1036,7 +1060,6 @@ private struct SidebarRow<Title: View>: View {
     var tint = YYTint.standard
     var color: Color?
     @ViewBuilder let title: Title
-    @Environment(\.colorScheme) private var scheme
 
     var body: some View {
         HStack(spacing: 8) {
@@ -1071,9 +1094,7 @@ private struct SidebarRow<Title: View>: View {
                 RoundedRectangle(cornerRadius: 8).fill(tint.accentSoft)
                     .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(tint.accent, lineWidth: 1.5))
             } else if on {
-                RoundedRectangle(cornerRadius: 8).fill(YYColor.card)
-                    .shadow(color: scheme == .dark ? .clear : Color(yy: YYRGBA(51, 46, 41, 0.04)), radius: 1, y: 1)
-                    .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(scheme == .dark ? Color(yy: YYRGBA(255, 255, 255, 0.06)) : YYColor.line, lineWidth: 0.5))
+                RoundedRectangle(cornerRadius: 8).fill(ShelfDesk.on)
             }
         }
         .contentShape(.rect)
