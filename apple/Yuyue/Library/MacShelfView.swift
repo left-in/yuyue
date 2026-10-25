@@ -238,10 +238,10 @@ struct MacShelfView: View {
     private var searchField: some View {
         Button { quick = "" } label: {
             HStack(spacing: 7) {
-                Image(systemName: "magnifyingglass").font(.system(size: 11.5))
-                Text("搜索 · 问").font(.system(size: 12))
+                Image(systemName: "magnifyingglass").font(.yy(size: 11.5))
+                Text("搜索 · 问").font(.yy(size: 12))
                 Spacer()
-                Text("⌘K").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                Text("⌘K").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
             }
             .foregroundStyle(YYColor.t2)
             .padding(.horizontal, 9)
@@ -256,9 +256,9 @@ struct MacShelfView: View {
         VStack(alignment: .leading, spacing: 0) {
             sidebarGroup(String(localized: "资料库"), key: "library")
             if !closedGroups.contains("library") {
-                sidebarRow(.all, String(localized: "全部"), "books.vertical", library.books.count)
+                sidebarRow(.all, String(localized: "全部"), "asset." + PhoneTabIcon.shelf, library.books.count)
                 sidebarRow(.books, String(localized: "书"), ProtoIcon.book.rawValue, library.books.count { !$0.isComic })
-                sidebarRow(.comics, String(localized: "漫画"), "rectangle.3.group", library.books.count(where: \.isComic))
+                sidebarRow(.comics, String(localized: "漫画"), ProtoIcon.comic.rawValue, library.books.count(where: \.isComic))
                 sidebarRow(.audio, String(localized: "有声"), ProtoIcon.wave.rawValue, library.books.count(where: library.hasAudio))
             }
             sidebarGroup(String(localized: "状态"), key: "status")
@@ -355,12 +355,12 @@ struct MacShelfView: View {
             HStack(spacing: 8) {
                 Circle().fill(dot).frame(width: 6, height: 6)
                 Text(text)
-                    .font(.system(size: 11))
+                    .font(.yy(size: 11))
                     .foregroundStyle(YYColor.t2)
                     .lineLimit(1)
                 Spacer(minLength: 0)
                 if let devices {
-                    Text(devices).font(.system(size: 10)).foregroundStyle(YYColor.t3)
+                    Text(devices).font(.yy(size: 10)).foregroundStyle(YYColor.t3)
                 }
             }
             .padding(8)
@@ -600,7 +600,7 @@ struct MacShelfView: View {
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
                     Text(title)
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.yy(size: 22, weight: .bold))
                         .foregroundStyle(YYColor.t1)
                         .lineLimit(1)
                         // Clear of the window's buttons and 显示侧栏 when the sidebar is away.
@@ -642,7 +642,7 @@ struct MacShelfView: View {
                     Text(carded.isEmpty
                          ? (filter == .comics ? String(localized: "\(books.count) 部") : String(localized: "\(books.count) 本"))
                          : (filter == .comics ? String(localized: "其余 \(books.count) 部") : String(localized: "其余 \(books.count) 本")))
-                        .font(.system(size: 12.5, weight: .semibold))
+                        .font(.yy(size: 12.5, weight: .semibold))
                         .foregroundStyle(YYColor.t1)
                     Spacer()
                     sortMenu
@@ -675,7 +675,8 @@ struct MacShelfView: View {
         .background(YYColor.bg)
         .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { mainFrame = $0 }
         .overlay { menuLayer }
-        .overlay(alignment: .bottom) { toast }
+        .overlay(alignment: .top) { toast }
+        .animation(.spring(duration: 0.4, bounce: 0.3), value: library.toast?.id)
         .overlay { dropHint }
         .onDrop(of: [.fileURL], delegate: ShelfDrop(hovering: $dropCount) { urls in
             Task { await library.importFiles(urls, into: currentCollection) }
@@ -694,11 +695,11 @@ struct MacShelfView: View {
                     ProgressView().controlSize(.mini)
                     Text("正在导入")
                 } else {
-                    Image(systemName: "plus").font(.system(size: 11, weight: .semibold))
+                    Image(systemName: "plus").font(.yy(size: 11, weight: .semibold))
                     Text("导入")
                 }
             }
-            .font(.system(size: 12, weight: .medium))
+            .font(.yy(size: 12, weight: .medium))
             .foregroundStyle(YYColor.t1)
             .padding(.horizontal, 12)
             .frame(height: 28)
@@ -732,11 +733,11 @@ struct MacShelfView: View {
     private func sectionHeader(_ text: String, trailing: String) -> some View {
         HStack {
             Text(text)
-                .font(.system(size: 12.5, weight: .semibold))
+                .font(.yy(size: 12.5, weight: .semibold))
                 .foregroundStyle(YYColor.t1)
             Spacer()
             Text(trailing)
-                .font(.system(size: 11))
+                .font(.yy(size: 11))
                 .foregroundStyle(YYColor.t3)
         }
         // `.v-mac-mn .v-lb`
@@ -754,9 +755,9 @@ struct MacShelfView: View {
         } label: {
             HStack(spacing: 4) {
                 Text(sort.name)
-                Image(systemName: "chevron.up.chevron.down").font(.system(size: 9, weight: .semibold))
+                Image(systemName: "chevron.up.chevron.down").font(.yy(size: 9, weight: .semibold))
             }
-            .font(.system(size: 11.5))
+            .font(.yy(size: 11.5))
             .foregroundStyle(YYColor.t2)
             .contentShape(.rect)
         }
@@ -775,8 +776,8 @@ struct MacShelfView: View {
             ("book.closed", String(localized: "这里还没有书"))
         }
         VStack(spacing: 10) {
-            Image(systemName: symbol).font(.system(size: 28, weight: .light)).foregroundStyle(YYColor.t3)
-            Text(text).font(.system(size: 12.5)).foregroundStyle(YYColor.t2)
+            Image(systemName: symbol).font(.yy(size: 28, weight: .light)).foregroundStyle(YYColor.t3)
+            Text(text).font(.yy(size: 12.5)).foregroundStyle(YYColor.t2)
         }
         .frame(maxWidth: .infinity, minHeight: 260)
     }
@@ -795,7 +796,7 @@ struct MacShelfView: View {
                     .overlay(alignment: .bottomTrailing) {
                         if !book.available {
                             Image(systemName: "icloud.and.arrow.down")
-                                .font(.system(size: 11, weight: .semibold))
+                                .font(.yy(size: 11, weight: .semibold))
                                 .foregroundStyle(YYColor.t2)
                                 .padding(6)
                                 .background(YYColor.card, in: .circle)
@@ -810,7 +811,7 @@ struct MacShelfView: View {
                             .presentationBackground(YYColor.bg)
                     }
                 Text(book.title)
-                    .font(.system(size: 11.5, weight: .semibold))
+                    .font(.yy(size: 11.5, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                     .lineLimit(1)
                     .padding(.bottom, 2)
@@ -831,11 +832,11 @@ struct MacShelfView: View {
         if library.listening == book.id {
             Label("听中 · \(book.percent)", systemImage: "headphones")
                 .labelStyle(TightLabel())
-                .font(.system(size: 10.5))
+                .font(.yy(size: 10.5))
                 .foregroundStyle(tint.accent)
         } else {
             Text(library.shelfNote(book))
-                .font(.system(size: 10.5))
+                .font(.yy(size: 10.5))
                 .foregroundStyle(YYColor.t3)
         }
     }
@@ -918,9 +919,8 @@ struct MacShelfView: View {
     @ViewBuilder private var toast: some View {
         if let note = library.toast {
             UndoToast(toast: note, undo: { library.undo() })
-                .frame(width: 360)
-                .padding(.bottom, 18)
-                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .padding(.top, 10)
+                .transition(UndoToast.transition)
                 .id(note.id)
         }
     }
@@ -1001,11 +1001,11 @@ private struct SidebarGroupTitle: View {
         Button(action: toggle) {
             HStack(spacing: 4) {
                 Text(title)
-                    .font(.system(size: 10.5, weight: .semibold))
+                    .font(.yy(size: 10.5, weight: .semibold))
                     .foregroundStyle(YYColor.t3)
                 Spacer(minLength: 4)
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 9, weight: .semibold))
+                    .font(.yy(size: 9, weight: .semibold))
                     .foregroundStyle(YYColor.t3)
                     .rotationEffect(.degrees(closed ? 0 : 90))
                     .opacity(hover || closed ? 1 : 0)
@@ -1041,6 +1041,9 @@ private struct SidebarRow<Title: View>: View {
             Group {
                 if let drawn = ProtoIcon(rawValue: symbol) {
                     drawn.shape.stroke(style: StrokeStyle(lineWidth: drawn.line, lineCap: .round, lineJoin: .round))
+                } else if symbol.hasPrefix("asset.") {
+                    // 全部: the phone's 书架 tab icon, from the asset catalogue.
+                    Image(String(symbol.dropFirst(6))).resizable().renderingMode(.template).scaledToFit()
                 } else {
                     Image(systemName: symbol).resizable().scaledToFit()
                 }
@@ -1048,13 +1051,13 @@ private struct SidebarRow<Title: View>: View {
             .frame(width: 14, height: 14)
             .foregroundStyle(drop ? tint.accent : color ?? (on ? YYColor.t1 : YYColor.t2))
             title
-                .font(.system(size: 12, weight: on || drop ? .semibold : .regular))
+                .font(.yy(size: 12, weight: on || drop ? .semibold : .regular))
                 .foregroundStyle(drop ? tint.accent : color ?? YYColor.t1)
                 .lineLimit(1)
             Spacer(minLength: 4)
             if let text = trailing ?? count?.formatted() {
                 Text(text)
-                    .font(.system(size: 10.5).monospacedDigit())
+                    .font(.yy(size: 10.5).monospacedDigit())
                     .foregroundStyle(drop ? tint.accent : YYColor.t3)
             }
         }
@@ -1183,12 +1186,12 @@ struct ReadingCard: View {
                 .onTapGesture { open(nil) }
             VStack(alignment: .leading, spacing: 0) {
                 Text(book.title)
-                    .font(.system(size: 12.5, weight: .semibold))
+                    .font(.yy(size: 12.5, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                     .lineLimit(1)
                     .padding(.bottom, 3)
                 Text(meta)
-                    .font(.system(size: 10.5))
+                    .font(.yy(size: 10.5))
                     .foregroundStyle(YYColor.t3)
                     .lineLimit(1)
                     .padding(.bottom, 8)
@@ -1225,7 +1228,7 @@ struct ReadingCard: View {
                 }
                 Text(title).fixedSize()
             }
-            .font(.system(size: 11.5, weight: .medium))
+            .font(.yy(size: 11.5, weight: .medium))
             .foregroundStyle(text)
             .padding(.horizontal, 12)
             .frame(height: 26)
@@ -1251,7 +1254,7 @@ private struct SidebarToggle: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: "sidebar.left")
-                .font(.system(size: 12.5, weight: .regular))
+                .font(.yy(size: 12.5, weight: .regular))
                 .foregroundStyle(hover ? YYColor.t1 : YYColor.t2)
                 .frame(width: 28, height: 22)
                 .background(hover ? YYColor.inset : .clear, in: .rect(cornerRadius: 6))
@@ -1270,6 +1273,8 @@ nonisolated enum ProtoIcon: String {
     case wave = "proto.wave"
     /// 书: a closed book, a bookmark ribbon hanging from its top (待定方案 7 · A).
     case book = "proto.book"
+    /// 漫画: Lucide's palette (ISC), brought in with catnap's Scripts/import-lucide-glyphs.py.
+    case comic = "proto.comic"
 
     var shape: some Shape { ProtoShape(icon: self) }
 
@@ -1278,6 +1283,7 @@ nonisolated enum ProtoIcon: String {
         switch self {
         case .wave: 1.6
         case .book: 1.3
+        case .comic: 1.3
         }
     }
 }
@@ -1315,6 +1321,27 @@ nonisolated struct ProtoShape: Shape {
             b.addLine(to: CGPoint(x: 10.5, y: 3.5))
             // Its 13 × 17 body centred and filling the 16 box, as tall as the icons beside it.
             p.addPath(b.applying(CGAffineTransform(translationX: 8, y: 8).scaledBy(x: 16 / 18.5, y: 16 / 18.5).translatedBy(x: -11.5, y: -12)))
+        case .comic:
+            // Lucide `palette`, in its 24 box (its four dots drawn by the line's own width).
+            var c = Path()
+            c.addEllipse(in: CGRect(x: 13.000, y: 6.000, width: 1.000, height: 1.000))
+            c.addEllipse(in: CGRect(x: 17.000, y: 10.000, width: 1.000, height: 1.000))
+            c.addEllipse(in: CGRect(x: 8.000, y: 7.000, width: 1.000, height: 1.000))
+            c.addEllipse(in: CGRect(x: 6.000, y: 12.000, width: 1.000, height: 1.000))
+            c.move(to: CGPoint(x: 12.000, y: 2.000))
+            c.addCurve(to: CGPoint(x: 2.000, y: 12.000), control1: CGPoint(x: 6.500, y: 2.000), control2: CGPoint(x: 2.000, y: 6.500))
+            c.addCurve(to: CGPoint(x: 12.000, y: 22.000), control1: CGPoint(x: 2.000, y: 17.500), control2: CGPoint(x: 6.500, y: 22.000))
+            c.addCurve(to: CGPoint(x: 13.648, y: 20.312), control1: CGPoint(x: 12.926, y: 22.000), control2: CGPoint(x: 13.648, y: 21.254))
+            c.addCurve(to: CGPoint(x: 13.211, y: 19.187), control1: CGPoint(x: 13.648, y: 19.875), control2: CGPoint(x: 13.468, y: 19.477))
+            c.addCurve(to: CGPoint(x: 12.773, y: 18.062), control1: CGPoint(x: 12.921, y: 18.898), control2: CGPoint(x: 12.773, y: 18.535))
+            c.addCurve(to: CGPoint(x: 13.253, y: 16.874), control1: CGPoint(x: 12.765, y: 17.617), control2: CGPoint(x: 12.939, y: 17.189))
+            c.addCurve(to: CGPoint(x: 14.441, y: 16.394), control1: CGPoint(x: 13.568, y: 16.560), control2: CGPoint(x: 13.996, y: 16.386))
+            c.addLine(to: CGPoint(x: 16.437, y: 16.394))
+            c.addCurve(to: CGPoint(x: 21.992, y: 10.840), control1: CGPoint(x: 19.488, y: 16.394), control2: CGPoint(x: 21.992, y: 13.891))
+            c.addCurve(to: CGPoint(x: 12.000, y: 2.000), control1: CGPoint(x: 21.965, y: 6.012), control2: CGPoint(x: 17.461, y: 2.000))
+            c.closeSubpath()
+            // The 20 × 20 it fills, centred in the 16 box like the book.
+            p.addPath(c.applying(CGAffineTransform(translationX: 8, y: 8).scaledBy(x: 16 / 19, y: 16 / 19).translatedBy(x: -12, y: -12)))
         }
         return p.applying(CGAffineTransform(translationX: rect.minX, y: rect.minY).scaledBy(x: rect.width / 16, y: rect.height / 16))
     }

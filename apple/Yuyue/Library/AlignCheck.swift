@@ -110,7 +110,7 @@ private struct AlignCheck: View {
     private var stopper: some View {
         HStack(spacing: 2) {
             Text(stops.isEmpty ? String(localized: "没有要看的地方") : String(localized: "第 \(stop.map { "\($0 + 1)" } ?? "–") / \(stops.count) 处"))
-                .font(.system(size: 11.5))
+                .font(.yy(size: 11.5))
                 .monospacedDigit()
                 .foregroundStyle(YYColor.t2)
                 .padding(.leading, 10)
@@ -123,7 +123,7 @@ private struct AlignCheck: View {
                 .help("下一处")
         }
         .buttonStyle(.plain)
-        .font(.system(size: 12, weight: .semibold))
+        .font(.yy(size: 12, weight: .semibold))
     }
 
     // MARK: The page
@@ -133,7 +133,7 @@ private struct AlignCheck: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("第 \(chapter) 章")
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.yy(size: 20, weight: .bold))
                         .foregroundStyle(paper.ink)
                         .padding(.bottom, 14)
                     words
@@ -180,7 +180,7 @@ private struct AlignCheck: View {
                         .padding(.horizontal, -16)
                     Label(fixed ? String(localized: "调过了") : String(localized: "这一段对得不太准"), systemImage: fixed ? "checkmark" : "exclamationmark.triangle")
                         .labelStyle(TightLabel())
-                        .font(.system(size: 10.5, weight: .semibold))
+                        .font(.yy(size: 10.5, weight: .semibold))
                         .foregroundStyle(tone)
                         .padding(.horizontal, 8)
                         .frame(height: 21)
@@ -211,7 +211,7 @@ private struct AlignCheck: View {
             if i == at {
                 part.foregroundColor = paper.paperAccent
                 part.backgroundColor = paper.paperAccent.opacity(0.13)
-                part.font = .system(size: 15, weight: .semibold)
+                part.font = .yy(size: 15, weight: .semibold)
             } else {
                 part.foregroundColor = i.map { timings.sentences[$0].start < 0 } == true ? paper.ink2 : paper.ink
                 if k % 2 == 1 { part.backgroundColor = paper.ink.opacity(0.06) }
@@ -220,7 +220,7 @@ private struct AlignCheck: View {
             text += part
         }
         return Text(text)
-            .font(.system(size: 15))
+            .font(.yy(size: 15))
             .tracking(0.3)
             .lineSpacing(15 * 1.05)
             .tint(paper.ink)
@@ -240,19 +240,19 @@ private struct AlignCheck: View {
                     // Ruler, every 2 seconds.
                     ForEach(ticks, id: \.self) { t in
                         Text(Self.clock(t, tenths: false))
-                            .font(.system(size: 10))
+                            .font(.yy(size: 10))
                             .monospacedDigit()
                             .foregroundStyle(paper.ink2)
                             .fixedSize()
                             .position(x: x(t), y: 7)
                     }
                     Rectangle().fill(paper.line).frame(width: w, height: 0.5).offset(x: 44, y: 16)
-                    Text("句子").font(.system(size: 10.5)).foregroundStyle(paper.ink2).offset(y: 32)
+                    Text("句子").font(.yy(size: 10.5)).foregroundStyle(paper.ink2).offset(y: 32)
                     blocks(x: x, width: w)
                         .frame(width: w, height: 26)
                         .mask(Rectangle().padding(.vertical, -6))
                         .offset(x: 44, y: 26)
-                    Text("录音").font(.system(size: 10.5)).foregroundStyle(paper.ink2).offset(y: 73)
+                    Text("录音").font(.yy(size: 10.5)).foregroundStyle(paper.ink2).offset(y: 73)
                     Canvas { ctx, size in
                         guard !levels.isEmpty else { return }
                         let step = size.width / CGFloat(levels.count)
@@ -269,7 +269,7 @@ private struct AlignCheck: View {
                     if px >= 44, px <= 44 + w {
                         Rectangle().fill(paper.paperAccent).frame(width: 1.5, height: 98).offset(x: px - 0.75, y: 6)
                         Text(Self.clock(sentence.start))
-                            .font(.system(size: 10, weight: .semibold))
+                            .font(.yy(size: 10, weight: .semibold))
                             .monospacedDigit()
                             .foregroundStyle(.white)
                             .padding(.horizontal, 5)
@@ -342,9 +342,9 @@ private struct AlignCheck: View {
         VStack(alignment: .leading, spacing: 14) {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Text("第 \(chapter) 章").font(.system(size: 14, weight: .bold))
+                    Text("第 \(chapter) 章").font(.yy(size: 14, weight: .bold))
                     Text("\(timings.sections.count) 章 · \(timings.troubled.isEmpty ? String(localized: "都对好了") : String(localized: "\(timings.troubled.count) 章要看一下"))")
-                        .font(.system(size: 10.5))
+                        .font(.yy(size: 10.5))
                         .foregroundStyle(YYColor.t3)
                     Spacer(minLength: 0)
                     chapterMenu
@@ -360,7 +360,7 @@ private struct AlignCheck: View {
                 HStack(spacing: 3) { Key(label: String(localized: "空格")); Text("试听这句") }
                 HStack(spacing: 3) { Key(label: "←"); Key(label: "→"); Text("微调 0.1 秒") }
             }
-            .font(.system(size: 10.5))
+            .font(.yy(size: 10.5))
             .foregroundStyle(YYColor.t3)
         }
         .foregroundStyle(YYColor.t1)
@@ -378,7 +378,7 @@ private struct AlignCheck: View {
             }
         } label: {
             Image(systemName: "chevron.down")
-                .font(.system(size: 11, weight: .semibold))
+                .font(.yy(size: 11, weight: .semibold))
                 .frame(width: 26, height: 26)
                 .background(YYColor.inset, in: .circle)
         }
@@ -414,9 +414,9 @@ private struct AlignCheck: View {
         let words = list.indices.contains(Int(sentence.sentence)) ? list[Int(sentence.sentence)] : ""
         return VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text("当前句").font(.system(size: 12, weight: .semibold))
+                Text("当前句").font(.yy(size: 12, weight: .semibold))
                 Spacer()
-                Text("第 \(sentence.sentence + 1) 句").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                Text("第 \(sentence.sentence + 1) 句").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
             }
             Text(words)
                 .font(YYUI.serif(13))
@@ -433,7 +433,7 @@ private struct AlignCheck: View {
                     .buttonStyle(YYButtonStyle(kind: .plain, wide: true))
             } else {
                 Text("录音里没有这句，用朗读补上了。")
-                    .font(.system(size: 11))
+                    .font(.yy(size: 11))
                     .foregroundStyle(YYColor.t2)
             }
         }
@@ -444,13 +444,13 @@ private struct AlignCheck: View {
     /// `.v-al-tm`: `开始 0:15.7 −0.1 +0.1`.
     private func time(_ label: String, _ t: Double, nudge: @escaping (Double) -> Void) -> some View {
         HStack(spacing: 6) {
-            Text(label).font(.system(size: 11)).foregroundStyle(YYColor.t2).frame(width: 30, alignment: .leading)
-            Text(Self.clock(t)).font(.system(size: 12, weight: .semibold, design: .monospaced)).monospacedDigit()
+            Text(label).font(.yy(size: 11)).foregroundStyle(YYColor.t2).frame(width: 30, alignment: .leading)
+            Text(Self.clock(t)).font(.yy(size: 12, weight: .semibold, design: .monospaced)).monospacedDigit()
             Spacer(minLength: 0)
             ForEach([-0.1, 0.1], id: \.self) { d in
                 Button { nudge(d) } label: {
                     Text(d < 0 ? "−0.1" : "+0.1")
-                        .font(.system(size: 10.5))
+                        .font(.yy(size: 10.5))
                         .monospacedDigit()
                         .frame(minWidth: 40, minHeight: 24)
                         .background(YYColor.inset, in: .rect(cornerRadius: 7))
@@ -467,10 +467,10 @@ private struct AlignCheck: View {
         let fixed = !r.contains { Timings.unsure(s[$0]) }
         return VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text("这一段").font(.system(size: 12, weight: .semibold))
+                Text("这一段").font(.yy(size: 12, weight: .semibold))
                 Spacer()
                 Text(fixed ? String(localized: "调过了") : String(localized: "只听清一部分"))
-                    .font(.system(size: 10, weight: .medium))
+                    .font(.yy(size: 10, weight: .medium))
                     .foregroundStyle(fixed ? YYColor.ok : YYColor.warn)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 3)
@@ -478,7 +478,7 @@ private struct AlignCheck: View {
             }
             Text(a == b ? String(localized: "第 \(a) 句。录音里这句只听清一部分，墨线可能跟声音错开。整段一起挪就能对上。")
                 : String(localized: "第 \(a)–\(b) 句。录音里这几句只听清一部分，墨线可能跟声音错开。整段一起挪就能对上。"))
-                .font(.system(size: 11))
+                .font(.yy(size: 11))
                 .lineSpacing(11 * 0.6)
                 .foregroundStyle(YYColor.t2)
                 .fixedSize(horizontal: false, vertical: true)
@@ -490,7 +490,7 @@ private struct AlignCheck: View {
             Button("用朗读补上这段") { change { $0.readWithVoice(r) } }
                 .buttonStyle(YYButtonStyle(kind: .raised, wide: true))
             Text("录音里缺了这段时用，换成听书里选的声音读。")
-                .font(.system(size: 10.5))
+                .font(.yy(size: 10.5))
                 .foregroundStyle(YYColor.t3)
         }
         .padding(.bottom, 14)
@@ -585,7 +585,7 @@ private struct Key: View {
 
     var body: some View {
         Text(label)
-            .font(.system(size: 10))
+            .font(.yy(size: 10))
             .foregroundStyle(YYColor.t1)
             .padding(.horizontal, 5)
             .frame(minWidth: 20, minHeight: 18)

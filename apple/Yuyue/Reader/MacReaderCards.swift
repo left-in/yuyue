@@ -9,6 +9,11 @@ struct TypesetCard: View {
     let model: ReaderModel
     @AppStorage("reader.twoColumns") private var twoColumns = true
     @State private var more = false
+    /// 调纸 open on this paper (a new one has no id yet).
+    @State private var editing: CustomPaper?
+    /// 重命名 asked for this paper.
+    @State private var renaming: CustomPaper?
+    @State private var newName = ""
     private let tint = YYTint.standard
 
     static let sizes = 12.0 ... 34.0
@@ -17,21 +22,34 @@ struct TypesetCard: View {
 
     var body: some View {
         Group {
-            if more { moreSettings } else { main }
+            if let editing {
+                PaperEditor(model: model, draft: editing) { saved in
+                    self.editing = nil
+                    if let saved { choose(saved) }
+                }
+                .id(editing.id)
+            } else if more { moreSettings } else { main }
         }
         // `.v-mr-aa`: 304 wide in all.
         #if os(macOS)
         .frame(width: 272)
         #endif
-        .padding(.horizontal, 16).padding(.top, 16).padding(.bottom, more ? 16 : 6)
+        .padding(.horizontal, 16).padding(.top, 16).padding(.bottom, more || editing != nil ? 16 : 6)
         .animation(.snappy(duration: 0.2), value: more)
+        .animation(.snappy(duration: 0.2), value: editing == nil)
+        .alert(String(localized: "重命名"), isPresented: Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } })) {
+            TextField(String(localized: "名字"), text: $newName)
+            Button(String(localized: "取消"), role: .cancel) { renaming = nil }
+            Button(String(localized: "好")) {
+                if let renaming { Papers.shared.rename(renaming, to: String(newName.prefix(20))) }
+                renaming = nil
+            }
+        }
     }
 
     private var main: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 4) {
-                ForEach(YYPaper.all) { paper in swatch(paper) }
-            }
+            papers
             Segments(items: [(ReaderFont?.none, String(localized: "系统")), (.serif, String(localized: "宋体")), (.kai, String(localized: "楷体")), (.wenKai, String(localized: "霞鹜文楷"))],
                      selection: binding(\.font)) { font, title in
                 Text(title).font(face(font)).lineLimit(1).minimumScaleFactor(0.8)
@@ -43,11 +61,13 @@ struct TypesetCard: View {
                 Text("A").font(YYUI.serif(12)).foregroundStyle(YYColor.t1)
                 Slider(value: binding(\.fontSize), in: Self.sizes, step: 1)
                     .controlSize(.small)
+                    .accessibilityLabel(Text("字号"))
+                    .accessibilityValue(Text("\(Int(model.settings.fontSize))"))
                     // A popover doesn't take the window's tint: without it the slider is system blue.
                     .tint(YYTint.standard.fill)
                 Text("A").font(YYUI.serif(18)).foregroundStyle(YYColor.t1)
                 Text("\(Int(model.settings.fontSize))")
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.yy(size: 12, weight: .bold))
                     .monospacedDigit()
                     .frame(minWidth: 26).frame(height: 26)
                     .background(YYColor.card, in: .rect(cornerRadius: 8))
@@ -58,11 +78,11 @@ struct TypesetCard: View {
             .background(YYColor.inset, in: .rect(cornerRadius: 12))
             // `.v-mr-two-seg`: 1 : 1.25.
             HStack(spacing: 8) {
-                Segments(items: Self.spacings.enumerated().map { ($0.offset, ["line.3.horizontal", "equal", "line.3.horizontal"][$0.offset]) },
+                Segments(items: Self.spacings.enumerated().map { ($0.offset, [String(localized: "行距紧"), String(localized: "行距适中"), String(localized: "行距松")][$0.offset]) },
                          selection: Binding(get: { Self.spacings.firstIndex(of: model.settings.lineHeight) ?? 1 },
                                             set: { i in model.update { $0.lineHeight = Self.spacings[i] } }), small: true) { i, symbol in
                     Image(systemName: i == 1 ? "text.justify" : "line.3.horizontal")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(.yy(size: 12, weight: .medium))
                         .scaleEffect(y: i == 0 ? 0.75 : i == 2 ? 1.25 : 1)
                         .help([String(localized: "行距紧"), String(localized: "行距适中"), String(localized: "行距松")][i])
                 }
@@ -84,13 +104,13 @@ struct TypesetCard: View {
                     .overlay(alignment: .top) { Rectangle().fill(YYColor.line).frame(height: 0.5) }
                 Button { more = true } label: {
                     HStack(spacing: 8) {
-                        Text("更多").font(.system(size: 12)).foregroundStyle(YYColor.t1)
+                        Text("更多").font(.yy(size: 12)).foregroundStyle(YYColor.t1)
                         Spacer()
                         HStack(spacing: 3) {
                             Text("段距、页边、翻页方式")
-                            Image(systemName: "chevron.right").font(.system(size: 9, weight: .semibold))
+                            Image(systemName: "chevron.right").font(.yy(size: 9, weight: .semibold))
                         }
-                        .font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                        .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
                     }
                     .frame(height: 38)
                     .overlay(alignment: .top) { Rectangle().fill(YYColor.line).frame(height: 0.5) }
@@ -106,7 +126,7 @@ struct TypesetCard: View {
         VStack(alignment: .leading, spacing: 14) {
             Button { more = false } label: {
                 Label("排版", systemImage: "chevron.left")
-                    .font(.system(size: 12.5, weight: .semibold))
+                    .font(.yy(size: 12.5, weight: .semibold))
                     .foregroundStyle(tint.accent)
                     .contentShape(.rect)
             }
@@ -141,10 +161,10 @@ struct TypesetCard: View {
                     model.rulesShown = true
                 } label: {
                     HStack {
-                        Text("替换规则").font(.system(size: 12.5)).foregroundStyle(YYColor.t1)
+                        Text("替换规则").font(.yy(size: 12.5)).foregroundStyle(YYColor.t1)
                         Spacer()
-                        Text("去广告、改读音").font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
-                        Image(systemName: "chevron.right").font(.system(size: 10, weight: .semibold)).foregroundStyle(YYColor.t3)
+                        Text("去广告、改读音").font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
+                        Image(systemName: "chevron.right").font(.yy(size: 10, weight: .semibold)).foregroundStyle(YYColor.t3)
                     }
                     .contentShape(.rect)
                 }
@@ -156,17 +176,17 @@ struct TypesetCard: View {
                     model.txtShown = true
                 } label: {
                     HStack {
-                        Text("编码和目录").font(.system(size: 12.5)).foregroundStyle(YYColor.t1)
+                        Text("编码和目录").font(.yy(size: 12.5)).foregroundStyle(YYColor.t1)
                         Spacer()
-                        Text("乱码、章节不对").font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
-                        Image(systemName: "chevron.right").font(.system(size: 10, weight: .semibold)).foregroundStyle(YYColor.t3)
+                        Text("乱码、章节不对").font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
+                        Image(systemName: "chevron.right").font(.yy(size: 10, weight: .semibold)).foregroundStyle(YYColor.t3)
                     }
                     .contentShape(.rect)
                 }
                 .buttonStyle(.plain)
             }
             Text("页边随窗口宽窄自动留，一行不超过三十来个字。")
-                .font(.system(size: 11))
+                .font(.yy(size: 11))
                 .foregroundStyle(YYColor.t3)
         }
     }
@@ -183,7 +203,7 @@ struct TypesetCard: View {
 
     private func row(_ title: String, @ViewBuilder _ content: () -> some View) -> some View {
         HStack {
-            Text(title).font(.system(size: 12.5)).foregroundStyle(YYColor.t1)
+            Text(title).font(.yy(size: 12.5)).foregroundStyle(YYColor.t1)
             Spacer()
             content()
         }
@@ -194,33 +214,113 @@ struct TypesetCard: View {
         case .serif: .custom("Songti SC", size: 12)
         case .kai: .custom("Kaiti SC", size: 12.5)
         case .wenKai: WenKai.shared.installed ? .custom("LXGW WenKai Lite", size: 12.5) : .custom("Kaiti SC", size: 12.5)
-        case .sans: .system(size: 12, weight: .medium)
-        default: .system(size: 12)
+        case .sans: .yy(size: 12, weight: .medium)
+        default: .yy(size: 12)
         }
     }
 
-    private func swatch(_ paper: YYPaper) -> some View {
-        let selected = model.settings.paper.tokens.id == paper.id
-        return Button {
-            if let id = Paper(id: paper.id) { model.update { $0.paper = id } }
-        } label: {
-            VStack(spacing: 6) {
-                Text("文")
-                    .font(YYUI.serif(15))
-                    .foregroundStyle(paper.ink)
-                    .frame(width: 46, height: 38)
-                    .background(paper.bg, in: .rect(cornerRadius: 10))
-                    .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(YYColor.line, lineWidth: paper.isDark ? 0 : 0.5))
-                    .padding(2)
-                    .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(selected ? tint.accent : .clear, lineWidth: 2))
-                Text(paper.name)
-                    .font(.system(size: 10.5, weight: selected ? .semibold : .regular))
-                    .foregroundStyle(selected ? YYColor.t1 : YYColor.t2)
-                    .lineLimit(1)
+    /// The presets, then 我的纸, then ＋. Too many for the card: they scroll, fading at the right edge.
+    /// The presets, then 我的纸, scrolling when there are too many; ＋ stays pinned at the right so
+    /// making one is always in sight.
+    private var papers: some View {
+        HStack(alignment: .top, spacing: 0) {
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal) {
+                    HStack(spacing: 4) {
+                        ForEach(YYPaper.all) { paper in
+                            PaperTile(paper: paper, texture: paper.hasNoiseTexture ? .grain : .none, name: paper.name, selected: model.settings.paperChoice == paper.id) {
+                                if let id = Paper(id: paper.id) { model.update { $0.paper = id; $0.customPaper = nil } }
+                            }
+                            .id(paper.id)
+                        }
+                        ForEach(Papers.shared.list, id: \.id) { mine in
+                            PaperTile(paper: YYPaper(custom: mine), texture: mine.texture, name: mine.name, selected: model.settings.paperChoice == mine.id) { choose(mine) }
+                                .id(mine.id)
+                                // 长按 / 右键: the prototype's menu card, 删除 in red in a group of its own.
+                                .contextMenu {
+                                    Button(String(localized: "调整颜色"), systemImage: "paintpalette") { editing = mine }
+                                    Button(String(localized: "重命名"), systemImage: "pencil") { newName = mine.name; renaming = mine }
+                                    Button(String(localized: "复制一张"), systemImage: "plus.square.on.square") { duplicate(mine) }
+                                    Divider()
+                                    Button(String(localized: "删除"), systemImage: "trash", role: .destructive) { delete(mine) }
+                                }
+                        }
+                    }
+                    .padding(.leading, 16).padding(.trailing, 12)
+                }
+                .scrollIndicators(.never)
+                // The paper the page is on stays in sight, a new one too.
+                .onAppear { proxy.scrollTo(model.settings.paperChoice, anchor: .center) }
+                .onChange(of: model.settings.paperChoice) { _, id in withAnimation { proxy.scrollTo(id, anchor: .center) } }
             }
+            .mask {
+                HStack(spacing: 0) {
+                    Rectangle()
+                    LinearGradient(colors: [.black, .black.opacity(0)], startPoint: .leading, endPoint: .trailing).frame(width: 20)
+                }
+            }
+            Button { editing = newPaper() } label: {
+                VStack(spacing: 6) {
+                    Image(systemName: "plus")
+                        .font(.yy(size: 15, weight: .medium))
+                        .foregroundStyle(YYColor.t2)
+                        .frame(width: 46, height: 38)
+                        .background(YYColor.inset, in: .rect(cornerRadius: 10))
+                        .padding(2)
+                    Text("新建").font(.yy(size: 10.5)).foregroundStyle(YYColor.t2).lineLimit(1)
+                }
+                .padding(.leading, 6)
+                .overlay(alignment: .leading) { Rectangle().fill(YYColor.line).frame(width: 0.5).padding(.vertical, 4) }
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .help(Text("自己调一张纸"))
+            .accessibilityLabel(Text("自己调一张纸"))
         }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(selected ? .isSelected : [])
+        .padding(.leading, -16)
+    }
+
+    private func choose(_ mine: CustomPaper) {
+        let preset = paperColors(paper: mine).preset
+        model.update { $0.customPaper = mine.id; $0.paper = preset }
+    }
+
+    /// ＋ starts from the paper the page is on: a copy of 我的纸, or the made colour closest to the
+    /// preset. No name: the core gives it one on 完成.
+    private func newPaper() -> CustomPaper {
+        if let mine = Papers.shared.paper(model.settings.customPaper) {
+            return CustomPaper(id: "", name: "", bg: mine.bg, ink: mine.ink, layout: mine.layout, texture: mine.texture)
+        }
+        let preset = model.settings.paper
+        let night = preset == .dark || preset == .kamiNight
+        let made = paperPalette(night: night).swatches
+        let start = night ? made[0] : made[preset == .kami ? 1 : preset == .eink ? 5 : 0]
+        return CustomPaper(id: "", name: "", bg: start.color, ink: nil,
+                           layout: preset == .plain || preset == .dark ? .plain : .kami, texture: preset == .eink ? .grain : .none)
+    }
+
+    /// 复制一张: straight onto the shelf of papers, named 豆沙绿 2 and so on, and on the page.
+    private func duplicate(_ mine: CustomPaper) {
+        var copy = mine
+        copy.id = ""
+        let base = mine.name.replacingOccurrences(of: #" \d+$"#, with: "", options: .regularExpression)
+        let taken = Set(Papers.shared.list.map(\.name))
+        copy.name = (2...).lazy.map { "\(base) \($0)" }.first { !taken.contains($0) } ?? base
+        if let saved = try? Papers.shared.save(copy) { choose(saved) }
+    }
+
+    /// 删除, with 撤销 for a few seconds.
+    private func delete(_ mine: CustomPaper) {
+        let wasOn = model.settings.customPaper == mine.id
+        if wasOn { model.update { $0.customPaper = nil } }
+        Papers.shared.delete(mine.id)
+        model.show(Library.Toast(icon: "trash", danger: true, title: String(localized: "已删除“\(mine.name)”"), detail: "", undo: { [model] in
+            Papers.shared.restore(mine.id)
+            if wasOn {
+                let preset = paperColors(paper: mine).preset
+                model.update { $0.customPaper = mine.id; $0.paper = preset }
+            }
+        }))
     }
 
     private func binding<T>(_ key: WritableKeyPath<ReaderSettings, T>) -> Binding<T> {
@@ -242,7 +342,7 @@ struct Segments<T: Hashable, Label: View>: View {
                 let on = selection == value
                 Button { selection = value } label: {
                     label(value, title)
-                        .font(.system(size: small ? 11 : 12, weight: on ? .semibold : .regular))
+                        .font(.yy(size: small ? 11 : 12, weight: on ? .semibold : .regular))
                         .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
                         .frame(maxWidth: .infinity)
                         .frame(height: small ? 24 : 30)
@@ -297,7 +397,7 @@ struct ListenCard: View {
         VStack(alignment: .leading, spacing: 12) {
             #if os(macOS)
             HStack(spacing: 4) {
-                Text("听书").font(.system(size: 13.5, weight: .bold)).foregroundStyle(YYColor.t1)
+                Text("听书").font(.yy(size: 13.5, weight: .bold)).foregroundStyle(YYColor.t1)
                 Spacer()
                 Key(String(localized: "空格"))
                 Text("暂停").padding(.trailing, 6)
@@ -305,7 +405,7 @@ struct ListenCard: View {
                 Key("⌘]")
                 Text("上一句 / 下一句")
             }
-            .font(.system(size: 10.5))
+            .font(.yy(size: 10.5))
             .foregroundStyle(YYColor.t3)
             #endif
             if let player {
@@ -340,17 +440,17 @@ struct ListenCard: View {
         // `.v-mr-lv`
         return HStack(spacing: 10) {
             Image(systemName: "waveform")
-                .font(.system(size: 14, weight: .medium))
+                .font(.yy(size: 14, weight: .medium))
                 .foregroundStyle(YYColor.t1)
                 .frame(width: 32, height: 32)
                 .background(YYColor.card, in: .rect(cornerRadius: 9))
                 .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(YYColor.line, lineWidth: 0.5))
             VStack(alignment: .leading, spacing: 2) {
                 Text(current.map(Voices.title) ?? String(localized: "没有能读的声音"))
-                    .font(.system(size: 12.5, weight: .semibold))
+                    .font(.yy(size: 12.5, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                 Text([languageName(language), current?.isOffline == false ? String(localized: "云端 · 读过的存在本机") : String(localized: "离线"), Self.here].joined(separator: " · "))
-                    .font(.system(size: 10.5))
+                    .font(.yy(size: 10.5))
                     .foregroundStyle(YYColor.t2)
             }
             .lineLimit(1)
@@ -358,10 +458,10 @@ struct ListenCard: View {
             if let current {
                 Button { player.preview(current, text: sample(language)) } label: {
                     HStack(spacing: 4) {
-                        Image(systemName: "play.fill").font(.system(size: 8.5))
+                        Image(systemName: "play.fill").font(.yy(size: 8.5))
                         Text("试听")
                     }
-                        .font(.system(size: 11, weight: .semibold))
+                        .font(.yy(size: 11, weight: .semibold))
                         .foregroundStyle(YYColor.t1)
                         .padding(.leading, 8).padding(.trailing, 10)
                         .frame(height: 26)
@@ -395,9 +495,9 @@ struct ListenCard: View {
             } label: {
                 HStack(spacing: 1) {
                     Text("换声音")
-                    Image(systemName: "chevron.right").font(.system(size: 9, weight: .semibold))
+                    Image(systemName: "chevron.right").font(.yy(size: 9, weight: .semibold))
                 }
-                .font(.system(size: 11))
+                .font(.yy(size: 11))
                 .foregroundStyle(YYColor.t2)
             }
             .menuStyle(.button)
@@ -413,14 +513,14 @@ struct ListenCard: View {
     private func narrator(_ player: Player) -> some View {
         HStack(spacing: 12) {
             Image(systemName: "person.wave.2")
-                .font(.system(size: 15, weight: .medium))
+                .font(.yy(size: 15, weight: .medium))
                 .foregroundStyle(player.usesRecording ? tint.accent : YYColor.t1)
                 .frame(width: 36, height: 36)
                 .background(player.usesRecording ? tint.accentSoft : YYColor.card, in: .rect(cornerRadius: 10))
             VStack(alignment: .leading, spacing: 2) {
-                Text("原声").font(.system(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
+                Text("原声").font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
                 Text(player.usesRecording ? String(localized: "读录音；录音里没有的句子，用下面的声音补上") : String(localized: "关着，用下面的声音读"))
-                    .font(.system(size: 10.5))
+                    .font(.yy(size: 10.5))
                     .foregroundStyle(YYColor.t2)
                     .lineLimit(2)
             }
@@ -435,10 +535,10 @@ struct ListenCard: View {
         // `.v-mr-ls`
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text("速度").font(.system(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t1)
-                Text(rateText(rate) + "×").font(.system(size: 17, weight: .bold)).foregroundStyle(YYColor.t1)
+                Text("速度").font(.yy(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                Text(rateText(rate) + "×").font(.yy(size: 17, weight: .bold)).foregroundStyle(YYColor.t1)
                 Text("不变调")
-                    .font(.system(size: 10, weight: .medium))
+                    .font(.yy(size: 10, weight: .medium))
                     .foregroundStyle(YYColor.t2)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 3)
@@ -446,7 +546,7 @@ struct ListenCard: View {
                     .alignmentGuide(.firstTextBaseline) { $0[VerticalAlignment.center] + 4 }
                 Spacer()
                 Text("这一\(unit)按这个速度还要 \(minutesLeft) 分钟")
-                    .font(.system(size: 10.5))
+                    .font(.yy(size: 10.5))
                     .foregroundStyle(YYColor.t3)
             }
             .monospacedDigit()
@@ -454,11 +554,13 @@ struct ListenCard: View {
             VStack(spacing: 2) {
             Slider(value: Binding(get: { Double(rate) }, set: { rate = Float(($0 * 10).rounded() / 10) }), in: 0.8 ... 2.0)
                 .controlSize(.small)
+                .accessibilityLabel(Text("速度"))
+                .accessibilityValue(Text(String(format: "%.1f×", rate)))
                 .tint(YYTint.standard.fill)
             GeometryReader { g in
                 ForEach(Self.rates, id: \.self) { mark in
                     Text(rateText(mark))
-                        .font(.system(size: 10, weight: abs(rate - mark) < 0.05 ? .bold : .regular))
+                        .font(.yy(size: 10, weight: abs(rate - mark) < 0.05 ? .bold : .regular))
                         .foregroundStyle(abs(rate - mark) < 0.05 ? YYColor.t1 : YYColor.t3)
                         .fixedSize()
                         .position(x: 8 + (g.size.width - 16) * CGFloat((mark - 0.8) / 1.2), y: 7)
@@ -474,9 +576,9 @@ struct ListenCard: View {
         // `.v-mr-lz` / `.v-mr-pseg`
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .firstTextBaseline) {
-                Text("睡眠定时").font(.system(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                Text("睡眠定时").font(.yy(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t1)
                 Spacer()
-                Text("停的时候自动加一个书签").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                Text("停的时候自动加一个书签").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
             }
             .padding(.horizontal, 2)
             HStack(spacing: 2) {
@@ -505,8 +607,8 @@ struct ListenCard: View {
         }
         return Button { player.sleep = on ? .off : value } label: {
             VStack(spacing: 1) {
-                Text(title).font(.system(size: 11, weight: on ? .bold : .regular))
-                if on, let detail { Text(detail).font(.system(size: 10)).foregroundStyle(YYColor.t2) }
+                Text(title).font(.yy(size: 11, weight: on ? .bold : .regular))
+                if on, let detail { Text(detail).font(.yy(size: 10)).foregroundStyle(YYColor.t2) }
             }
             .foregroundStyle(YYColor.t1)
             .monospacedDigit()
@@ -516,6 +618,7 @@ struct ListenCard: View {
             .shadow(color: .black.opacity(on ? 0.07 : 0), radius: 1.5, y: 0.5)
             .contentShape(.rect)
         }
+        .accessibilityAddTraits(on ? .isSelected : [])
         .buttonStyle(.plain)
     }
 
@@ -556,7 +659,7 @@ private struct Key: View {
 
     var body: some View {
         Text(text)
-            .font(.system(size: 10, weight: .semibold))
+            .font(.yy(size: 10, weight: .semibold))
             .foregroundStyle(YYColor.t1)
             .padding(.horizontal, 4)
             .frame(minWidth: 18).frame(height: 17)
@@ -578,10 +681,10 @@ private struct Tile: View {
         Button(action: action) {
             // `.v-mr-tiles`
             HStack(spacing: 9) {
-                Image(systemName: icon).font(.system(size: 14, weight: .medium)).frame(width: 16)
+                Image(systemName: icon).font(.yy(size: 14, weight: .medium)).frame(width: 16)
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(title).font(.system(size: 11.5, weight: .semibold))
-                    Text(detail).font(.system(size: 10)).foregroundStyle(on ? tint.accent : YYColor.t2)
+                    Text(title).font(.yy(size: 11.5, weight: .semibold))
+                    Text(detail).font(.yy(size: 10)).foregroundStyle(on ? tint.accent : YYColor.t2)
                 }
                 .lineLimit(1)
                 Spacer(minLength: 0)
@@ -630,18 +733,18 @@ struct CompanionPanel: View {
 
     private var header: some View {
         HStack(spacing: 8) {
-            Image(systemName: "sparkle").font(.system(size: 12, weight: .semibold))
+            Image(systemName: "sparkle").font(.yy(size: 12, weight: .semibold))
                 .foregroundStyle(tint.accent)
                 .frame(width: 24, height: 24)
                 .background(tint.accentSoft, in: .rect(cornerRadius: 7))
-            Text("书伴").font(.system(size: 14, weight: .bold)).foregroundStyle(YYColor.t1)
-            Text(model.detail?.summary.title ?? "").font(.system(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
+            Text("书伴").font(.yy(size: 14, weight: .bold)).foregroundStyle(YYColor.t1)
+            Text(model.detail?.summary.title ?? "").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
             Spacer()
             Menu {
                 Button("清空这次的对话") { companion.clear() }.disabled(companion.turns.isEmpty)
                 Button("书伴设置…") { openCompanionSettings() }
             } label: {
-                Image(systemName: "ellipsis").font(.system(size: 12, weight: .semibold))
+                Image(systemName: "ellipsis").font(.yy(size: 12, weight: .semibold))
                     .foregroundStyle(YYColor.t2)
                     .frame(width: 26, height: 26)
                     .background(YYColor.inset, in: .circle)
@@ -658,7 +761,7 @@ struct CompanionPanel: View {
             YYSegments(items: [(BookCompanion.Scope.read, String(localized: "只用读过的部分")), (.whole, String(localized: "问全书"))],
                        selection: Bindable(companion).scope, small: true)
             Text(companion.scope == .read ? readUpTo + String(localized: "，后面的事它不会说") : String(localized: "会用到整本书，可能提前知道结尾"))
-                .font(.system(size: 10.5)).foregroundStyle(YYColor.t3).padding(.horizontal, 2)
+                .font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).padding(.horizontal, 2)
         }
     }
 
@@ -698,12 +801,12 @@ struct CompanionPanel: View {
     @ViewBuilder private var welcome: some View {
         let config = CompanionConfig.current
         VStack(alignment: .leading, spacing: 8) {
-            Text("读到哪儿问到哪儿").font(.system(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
+            Text("读到哪儿问到哪儿").font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
             Text("可以问人物关系、这句是什么意思、前面发生了什么。回答标着出处，点一下就翻到那句。")
-                .font(.system(size: 12)).foregroundStyle(YYColor.t2).lineSpacing(3)
+                .font(.yy(size: 12)).foregroundStyle(YYColor.t2).lineSpacing(3)
             if !config.isReady {
                 Text(config.provider == .apple ? Companion.appleAvailability ?? "" : String(localized: "还没填好 \(config.provider.title) 的 Key"))
-                    .font(.system(size: 11.5)).foregroundStyle(YYColor.t3).lineSpacing(3)
+                    .font(.yy(size: 11.5)).foregroundStyle(YYColor.t3).lineSpacing(3)
                 Button("去设置 · 书伴") { openCompanionSettings() }
                     .buttonStyle(YYButtonStyle(kind: .soft, size: .small)).padding(.top, 2)
             }
@@ -717,7 +820,7 @@ struct CompanionPanel: View {
         HStack {
             Spacer(minLength: 40)
             Text(text)
-                .font(.system(size: 12))
+                .font(.yy(size: 12))
                 .lineSpacing(3)
                 .foregroundStyle(tint.onBlack)
                 .padding(.horizontal, 12).padding(.vertical, 8)
@@ -731,12 +834,12 @@ struct CompanionPanel: View {
             VStack(alignment: .leading, spacing: 6) {
                 if answer.notYet {
                     Text("\(readUpTo)，这件事可能要到后面才写。切到“问全书”就能回答，不过会提前知道后面的事。")
-                        .font(.system(size: 12.5)).lineSpacing(9).foregroundStyle(YYColor.t1)
+                        .font(.yy(size: 12.5)).lineSpacing(9).foregroundStyle(YYColor.t1)
                     Button { companion.ask(turn.question, quote: turn.quote, scope: .whole) } label: {
                         HStack(spacing: 8) {
-                            Text("用全书回答").font(.system(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                            Text("用全书回答").font(.yy(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t1)
                             Label("可能剧透", systemImage: "exclamationmark.triangle")
-                                .font(.system(size: 10, weight: .semibold)).foregroundStyle(YYColor.warn)
+                                .font(.yy(size: 10, weight: .semibold)).foregroundStyle(YYColor.warn)
                         }
                         .padding(.horizontal, 12).frame(height: 28)
                         .background(YYColor.card, in: .capsule)
@@ -747,7 +850,7 @@ struct CompanionPanel: View {
                     .padding(.top, 3)
                 } else {
                     Text(cited(answer))
-                        .font(.system(size: 12.5))
+                        .font(.yy(size: 12.5))
                         .lineSpacing(9)
                         .foregroundStyle(YYColor.t1)
                         .textSelection(.enabled)
@@ -756,19 +859,19 @@ struct CompanionPanel: View {
                             return .handled
                         })
                     HStack(spacing: 4) {
-                        Image(systemName: turn.scope == .whole ? "book" : "sparkle").font(.system(size: 9))
+                        Image(systemName: turn.scope == .whole ? "book" : "sparkle").font(.yy(size: 9))
                         Text(turn.scope == .whole ? answer.label + String(localized: " · 用了全书") : answer.label)
                     }
-                    .font(.system(size: 10)).foregroundStyle(YYColor.t3)
+                    .font(.yy(size: 10)).foregroundStyle(YYColor.t3)
                 }
             }
         } else if let failed = turn.failed {
             Label(failed, systemImage: "exclamationmark.circle")
-                .font(.system(size: 11.5)).foregroundStyle(YYColor.danger)
+                .font(.yy(size: 11.5)).foregroundStyle(YYColor.danger)
         } else {
             HStack(spacing: 8) {
                 ProgressView().controlSize(.small)
-                Text("正在翻书…").font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
+                Text("正在翻书…").font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
             }
         }
     }
@@ -784,7 +887,7 @@ struct CompanionPanel: View {
                 // Kept on one line.
                 let label = " " + place + (source.later == true ? String(localized: " · 没读到") : "") + " "
                 var tag = AttributedString(label.replacingOccurrences(of: " ", with: "\u{00A0}"))
-                tag.font = .system(size: 10, weight: .semibold)
+                tag.font = .yy(size: 10, weight: .semibold)
                 if source.later == true, companion.shown != source {
                     // 空心: from the part not read yet.
                     tag.foregroundColor = tint.accent
@@ -814,7 +917,7 @@ struct CompanionPanel: View {
                 .overlay(alignment: .leading) { Rectangle().fill(tint.accent).frame(width: 1.5) }
             Spacer(minLength: 0)
             Button { model.companionQuote = nil } label: {
-                Image(systemName: "xmark").font(.system(size: 9, weight: .bold)).foregroundStyle(YYColor.t3)
+                Image(systemName: "xmark").font(.yy(size: 9, weight: .bold)).foregroundStyle(YYColor.t3)
             }
             .buttonStyle(.plain)
             .help("不带这句")
@@ -829,7 +932,7 @@ struct CompanionPanel: View {
             ForEach(list, id: \.self) { s in
                 Button { send(s) } label: {
                     Text(s)
-                        .font(.system(size: 11)).foregroundStyle(YYColor.t2)
+                        .font(.yy(size: 11)).foregroundStyle(YYColor.t2)
                         .padding(.horizontal, 11).padding(.vertical, 6)
                         .background(YYColor.card, in: .capsule)
                         .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
@@ -844,13 +947,13 @@ struct CompanionPanel: View {
         HStack(spacing: 6) {
             TextField("", text: $draft, prompt: Text(companion.turns.isEmpty ? String(localized: "问这本书…") : String(localized: "继续问…")), axis: .vertical)
                 .textFieldStyle(.plain)
-                .font(.system(size: 12))
+                .font(.yy(size: 12))
                 .lineLimit(1 ... 4)
                 .focused($typing)
                 .onSubmit { send(draft) }
-            Text("↩").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+            Text("↩").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
             Button { send(draft) } label: {
-                Image(systemName: "arrow.up").font(.system(size: 12, weight: .bold))
+                Image(systemName: "arrow.up").font(.yy(size: 12, weight: .bold))
                     .foregroundStyle(tint.onBlack)
                     .frame(width: 30, height: 30)
                     .background(tint.black, in: .rect(cornerRadius: 10))
@@ -860,7 +963,7 @@ struct CompanionPanel: View {
         }
         .padding(.leading, 14).padding(.trailing, 6).padding(.vertical, 6)
         .frame(minHeight: 44)
-        .background(model.settings.paper.tokens.bg, in: .rect(cornerRadius: 14))
+        .background(model.paperTokens.bg, in: .rect(cornerRadius: 14))
         .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(YYColor.line, lineWidth: 0.5))
     }
 
@@ -887,16 +990,16 @@ struct ListenOnlyCover: View {
     let model: ReaderModel
 
     var body: some View {
-        let paper = model.settings.paper.tokens
+        let paper = model.paperTokens
         VStack(spacing: 14) {
             Image(systemName: "headphones")
-                .font(.system(size: 34, weight: .light))
+                .font(.yy(size: 34, weight: .light))
                 .foregroundStyle(paper.ink2)
             Text(model.chapterTitle ?? model.detail?.summary.title ?? "")
                 .font(YYUI.serif(17, .semibold))
                 .foregroundStyle(paper.ink)
             Text("只听 · 原文藏起来了")
-                .font(.system(size: 12))
+                .font(.yy(size: 12))
                 .foregroundStyle(paper.ink2)
             Button("显示原文") { model.listenOnly = false }
                 .buttonStyle(YYButtonStyle(kind: .raised, size: .small))

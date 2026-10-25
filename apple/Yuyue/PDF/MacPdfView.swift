@@ -25,17 +25,17 @@ struct MacPdfView: View {
         HStack(spacing: 0) {
             PdfPages(model: model, accent: tint.accent)
                 .ignoresSafeArea(edges: .bottom)
-                .overlay(alignment: .bottom) {
-                    VStack(spacing: 10) {
-                        if let toast = model.toast {
-                            UndoToast(toast: toast) { model.undoToast() }
-                                .frame(width: 360)
-                                .transition(.move(edge: .bottom).combined(with: .opacity))
-                        }
-                        capsule
+                .overlay(alignment: .top) {
+                    if let toast = model.toast {
+                        UndoToast(toast: toast) { model.undoToast() }
+                            .padding(.top, 10)
+                            .transition(UndoToast.transition)
+                            .id(toast.id)
                     }
-                    .padding(.bottom, 18)
-                    .animation(.snappy(duration: 0.25), value: model.toast?.id)
+                }
+                .animation(.spring(duration: 0.4, bounce: 0.3), value: model.toast?.id)
+                .overlay(alignment: .bottom) {
+                    capsule.padding(.bottom, 18)
                 }
             if let panel {
                 side(panel)
@@ -47,7 +47,7 @@ struct MacPdfView: View {
             }
         }
         .animation(.snappy(duration: 0.25), value: panel)
-        .background((model.night ? Color(white: 0.13) : Color(white: 0.9)).ignoresSafeArea())
+        .background((model.night ? Color(white: 0.13) : PdfDesk.color).ignoresSafeArea())
         .preferredColorScheme(model.night ? .dark : nil)
         .tint(tint.accent)
         .toolbar { toolbar }
@@ -92,11 +92,7 @@ struct MacPdfView: View {
                 model.writing = nil
             }
         }
-        .alert("出错了", isPresented: Binding(get: { model.failure != nil }, set: { if !$0 { model.failure = nil } })) {
-            Button("好") {}
-        } message: {
-            Text(model.failure ?? "")
-        }
+        .bookFailure($model.failure, opened: model.opened)
     }
 
     @ToolbarContentBuilder
@@ -107,10 +103,10 @@ struct MacPdfView: View {
         ToolbarItem(placement: .principal) {
             VStack(spacing: 1) {
                 Text(model.title)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.yy(size: 13, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                 Text(subtitle)
-                    .font(.system(size: 10.5))
+                    .font(.yy(size: 10.5))
                     .foregroundStyle(YYColor.t2)
                     .monospacedDigit()
             }
@@ -161,10 +157,10 @@ struct MacPdfView: View {
             Button { listenShown.toggle() } label: {
                 VStack(alignment: .leading, spacing: 1) {
                     Text(capsuleTitle)
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.yy(size: 12, weight: .semibold))
                         .foregroundStyle(YYColor.t1)
                     Text(speaking ? String(localized: "这一页还剩 \(model.minutesLeftOnPage) 分钟 · \(rateText)×") : String(localized: "点播放从这一页读起"))
-                        .font(.system(size: 10))
+                        .font(.yy(size: 10))
                         .foregroundStyle(YYColor.t2)
                 }
                 .monospacedDigit()
@@ -181,23 +177,26 @@ struct MacPdfView: View {
                     .presentationBackground(YYColor.card)
             }
             Button { step(forward: false) } label: {
-                Image(systemName: "chevron.left").font(.system(size: 13, weight: .semibold)).frame(width: 30, height: 36)
+                Image(systemName: "chevron.left").font(.yy(size: 13, weight: .semibold)).frame(width: 30, height: 36)
             }
             .help(speaking ? String(localized: "上一句 ⌘[") : String(localized: "上一页"))
+            .accessibilityLabel(speaking ? Text("上一句") : Text("上一页"))
             .keyboardShortcut("[", modifiers: .command)
             Button { model.togglePlay() } label: {
                 Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.yy(size: 14, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(width: 36, height: 36)
                     .background(tint.accent, in: .circle)
             }
             .help(model.isPlaying ? String(localized: "暂停") : String(localized: "朗读这一页"))
+            .accessibilityLabel(model.isPlaying ? Text("暂停") : Text("朗读这一页"))
             .disabled(player == nil)
             Button { step(forward: true) } label: {
-                Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).frame(width: 30, height: 36)
+                Image(systemName: "chevron.right").font(.yy(size: 13, weight: .semibold)).frame(width: 30, height: 36)
             }
             .help(speaking ? String(localized: "下一句 ⌘]") : String(localized: "下一页"))
+            .accessibilityLabel(speaking ? Text("下一句") : Text("下一页"))
             .keyboardShortcut("]", modifiers: .command)
         }
         .buttonStyle(.plain)
@@ -256,13 +255,13 @@ private struct ShowCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("显示").font(.system(size: 13, weight: .bold)).foregroundStyle(YYColor.t1)
+            Text("显示").font(.yy(size: 13, weight: .bold)).foregroundStyle(YYColor.t1)
             HStack(spacing: 8) {
                 ForEach(PdfModel.Layout.allCases, id: \.self) { l in
                     Button { model.layout = l } label: {
                         VStack(spacing: 6) {
-                            Image(systemName: l.symbol).font(.system(size: 17))
-                            Text(l.name).font(.system(size: 11))
+                            Image(systemName: l.symbol).font(.yy(size: 17))
+                            Text(l.name).font(.yy(size: 11))
                         }
                         .foregroundStyle(model.layout == l ? YYColor.t1 : YYColor.t2)
                         .frame(width: 76, height: 58)
@@ -289,15 +288,15 @@ private struct PdfToc: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
-                Text("目录").font(.system(size: 14, weight: .bold)).foregroundStyle(YYColor.t1)
+                Text("目录").font(.yy(size: 14, weight: .bold)).foregroundStyle(YYColor.t1)
                 Spacer()
-                Text("\(model.pageCount) 页").font(.system(size: 11)).foregroundStyle(YYColor.t3).monospacedDigit()
+                Text("\(model.pageCount) 页").font(.yy(size: 11)).foregroundStyle(YYColor.t3).monospacedDigit()
             }
             .padding(.horizontal, 16).padding(.top, 14).padding(.bottom, 10)
             if model.chapters.isEmpty {
                 VStack(spacing: 6) {
-                    Text("这个 PDF 没有目录").font(.system(size: 13, weight: .semibold)).foregroundStyle(YYColor.t2)
-                    Text("可以用书内搜索找内容").font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
+                    Text("这个 PDF 没有目录").font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t2)
+                    Text("可以用书内搜索找内容").font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
                 }
                 .frame(maxWidth: .infinity).padding(.top, 60)
             } else {
@@ -320,12 +319,12 @@ private struct PdfToc: View {
         Button { model.go(to: c.page) } label: {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Text(c.title)
-                    .font(.system(size: c.depth == 0 ? 13 : 12.5, weight: current ? .semibold : (c.depth == 0 ? .medium : .regular)))
+                    .font(.yy(size: c.depth == 0 ? 13 : 12.5, weight: current ? .semibold : (c.depth == 0 ? .medium : .regular)))
                     .foregroundStyle(current ? YYColor.t1 : (c.depth == 0 ? YYColor.t1 : YYColor.t2))
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
                 Spacer(minLength: 8)
-                Text(model.label(of: c.page)).font(.system(size: 11)).foregroundStyle(YYColor.t3).monospacedDigit()
+                Text(model.label(of: c.page)).font(.yy(size: 11)).foregroundStyle(YYColor.t3).monospacedDigit()
             }
             .padding(.leading, 10 + CGFloat(c.depth) * 14).padding(.trailing, 10).padding(.vertical, 7)
             .background(current ? YYColor.inset : .clear, in: .rect(cornerRadius: 8))
@@ -345,17 +344,17 @@ private struct PdfNotes: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
-                Text("笔记").font(.system(size: 14, weight: .bold)).foregroundStyle(YYColor.t1)
+                Text("笔记").font(.yy(size: 14, weight: .bold)).foregroundStyle(YYColor.t1)
                 Spacer()
                 if !model.marks.isEmpty {
-                    Text("\(model.marks.count) 条划线").font(.system(size: 11)).foregroundStyle(YYColor.t3).monospacedDigit()
+                    Text("\(model.marks.count) 条划线").font(.yy(size: 11)).foregroundStyle(YYColor.t3).monospacedDigit()
                 }
             }
             .padding(.horizontal, 16).padding(.top, 14).padding(.bottom, 4)
             if model.marks.isEmpty {
                 VStack(spacing: 6) {
-                    Text("还没有划线").font(.system(size: 13, weight: .semibold)).foregroundStyle(YYColor.t2)
-                    Text("选中文字，按 1–4 就划上，右键还能写想法").font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
+                    Text("还没有划线").font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t2)
+                    Text("选中文字，按 1–4 就划上，右键还能写想法").font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
                 }
                 .frame(maxWidth: .infinity).padding(.top, 60)
             } else {
@@ -383,7 +382,7 @@ private struct PdfNotes: View {
         return Button { model.go(to: mark) } label: {
             VStack(alignment: .leading, spacing: 8) {
                 Text(here ? String(localized: "第 \(model.label(of: Int(mark.start.sentence))) 页 · 这一页") : String(localized: "第 \(model.label(of: Int(mark.start.sentence))) 页"))
-                    .font(.system(size: 10.5, weight: here ? .semibold : .regular))
+                    .font(.yy(size: 10.5, weight: here ? .semibold : .regular))
                     .foregroundStyle(here ? tint.accent : YYColor.t3)
                 MarkText(mark: mark)
                     .font(YYUI.serif(13))
@@ -435,10 +434,10 @@ private struct PdfSearch: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 8) {
-                Image(systemName: "magnifyingglass").font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                Image(systemName: "magnifyingglass").font(.yy(size: 12)).foregroundStyle(YYColor.t3)
                 TextField("在这个 PDF 里找", text: $model.query)
                     .textFieldStyle(.plain)
-                    .font(.system(size: 13))
+                    .font(.yy(size: 13))
                     .focused(focused)
                     .onSubmit { model.search() }
                     .onKeyPress(.escape) { close(); return .handled }
@@ -446,6 +445,7 @@ private struct PdfSearch: View {
                     Button { model.query = ""; model.search() } label: {
                         Image(systemName: "xmark.circle.fill").foregroundStyle(YYColor.t3)
                     }
+                    .accessibilityLabel(Text("清空"))
                     .buttonStyle(.plain)
                 }
             }
@@ -464,7 +464,7 @@ private struct PdfSearch: View {
                 ProgressView().controlSize(.small).frame(maxWidth: .infinity).padding(.top, 30)
             } else if !model.query.trimmingCharacters(in: .whitespaces).isEmpty {
                 Text(model.hits.isEmpty ? String(localized: "没找到") : model.hits.count >= 300 ? String(localized: "300 多处") : String(localized: "\(model.hits.count) 处"))
-                    .font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                    .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
                     .padding(.horizontal, 16).padding(.bottom, 6)
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 0) {
@@ -474,9 +474,9 @@ private struct PdfSearch: View {
                                 model.go(to: hit.page, range: hit.range)
                             } label: {
                                 VStack(alignment: .leading, spacing: 3) {
-                                    Text("第 \(model.label(of: hit.page)) 页").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                                    Text("第 \(model.label(of: hit.page)) 页").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
                                     (Text(hit.before) + Text(hit.match).foregroundStyle(YYColor.t1).bold() + Text(hit.after))
-                                        .font(.system(size: 12.5)).foregroundStyle(YYColor.t2).lineLimit(2)
+                                        .font(.yy(size: 12.5)).foregroundStyle(YYColor.t2).lineLimit(2)
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 10).padding(.vertical, 8)
@@ -529,11 +529,11 @@ private struct PdfPages: NSViewRepresentable {
         view.model = model
         view.painter = context.coordinator.painter
         view.document = model.document
-        view.autoScales = true
         view.displayDirection = .vertical
-        view.pageShadowsEnabled = true
+        // The pages draw their own rounded edge; a square shadow behind would show at the corners.
+        view.pageShadowsEnabled = false
         view.displaysPageBreaks = true
-        view.pageBreakMargins = NSEdgeInsets(top: 10, left: 22, bottom: 14, right: 22)
+        view.pageBreakMargins = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         view.wantsLayer = true
         view.layerUsesCoreImageFilters = true
         #if DEBUG
@@ -562,7 +562,7 @@ private struct PdfPages: NSViewRepresentable {
                 view.displayMode = .twoUp
                 view.displaysAsBook = true
             }
-            view.autoScales = true
+            view.fitted = true
         }
         if c.night != model.night {
             c.night = model.night
@@ -571,14 +571,20 @@ private struct PdfPages: NSViewRepresentable {
             // Turned round, the hues put back so a red stays red, then softened: the paper a deep
             // grey rather than black, the ink a warm light grey rather than white.
             // The filters take in the grey round the pages too: light here comes out dark.
-            view.backgroundColor = NSColor(white: model.night ? 0.989 : 0.9, alpha: 1)
-            // A shadow turned round would be a glow.
-            view.pageShadowsEnabled = !model.night
+            view.backgroundColor = model.night ? NSColor(white: 0.989, alpha: 1) : NSColor(PdfDesk.color)
             view.contentFilters = model.night ? Self.nightFilters : []
         }
         if !c.placed, let page = model.document?.page(at: model.page) {
             c.placed = true
-            DispatchQueue.main.async { view.go(to: page) }
+            DispatchQueue.main.async {
+                // The first page from the very top, its margin above it showing, not tucked under the bar.
+                // (Only plain NSView calls here: the scroller inside PDFView is its own class.)
+                if model.page == 0, let doc = view.documentView {
+                    doc.scrollToVisible(NSRect(x: doc.bounds.midX, y: doc.isFlipped ? doc.bounds.minY : doc.bounds.maxY - 1, width: 1, height: 1))
+                } else {
+                    view.go(to: page)
+                }
+            }
         }
         if c.reading != model.reading {
             c.reading = model.reading
@@ -611,6 +617,53 @@ private struct PdfPages: NSViewRepresentable {
 final class MarkingPDFView: PDFView {
     var model: PdfModel?
     var painter: MarkPainter?
+
+    /// Sized by the window rather than by hand: the pages fill its width; on their own (单页, 双页)
+    /// the whole of them shows.
+    var fitted = true { didSet { if fitted { fit() } } }
+
+    override func layout() {
+        super.layout()
+        if fitted { fit() }
+    }
+
+    private func fit() {
+        guard let page = currentPage ?? document?.page(at: 0) else { return }
+        let size = page.bounds(for: displayBox).size
+        let turned = page.rotation % 180 != 0
+        let w = turned ? size.height : size.width, h = turned ? size.width : size.height
+        guard w > 0, h > 0, bounds.width > 0 else { return }
+        let m = pageBreakMargins
+        let across: CGFloat = displayMode == .twoUp || displayMode == .twoUpContinuous ? 2 : 1
+        let room = bounds.width - (m.left + m.right) * across
+        var scale = room / (w * across)
+        if displayMode == .singlePage || displayMode == .twoUp {
+            scale = min(scale, (bounds.height - m.top - m.bottom) / h)
+        }
+        scale = max(scale, 0.1)
+        if autoScales { autoScales = false }
+        guard abs(scaleFactor - scale) > 0.001 else { return }
+        // Where the reader is stays where it is through the change of size.
+        let place = currentDestination
+        scaleFactor = scale
+        if let place { go(to: place) }
+    }
+
+    // Zoomed by hand: the size is the reader's until the layout changes.
+    override func magnify(with event: NSEvent) {
+        fitted = false
+        super.magnify(with: event)
+    }
+
+    override func zoomIn(_ sender: Any?) {
+        fitted = false
+        super.zoomIn(sender)
+    }
+
+    override func zoomOut(_ sender: Any?) {
+        fitted = false
+        super.zoomOut(sender)
+    }
 
     override func keyDown(with event: NSEvent) {
         let keys = event.charactersIgnoringModifiers ?? ""

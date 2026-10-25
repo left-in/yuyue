@@ -153,10 +153,10 @@ final class ReaderModel {
         let own = (try? core.bookReaderSettings(bookId: bookID)) ?? nil
         var settings = own ?? (try? core.readerSettings()) ?? .standard
         // 我的 › 墨水屏: a book with its own paper reads on e-ink too.
-        if EInk.on { settings.paper = .eink }
+        if EInk.on { settings.paper = .eink; settings.customPaper = nil }
         self.settings = settings
         self.ownSettings = own != nil
-        pager = ReaderPager(core: core, bookID: bookID, mode: settings.mode, background: settings.paper.tokens.platformBackground)
+        pager = ReaderPager(core: core, bookID: bookID, mode: settings.mode, background: settings.paperTokens.platformBackground)
         player = detail.map { Player(core: core, detail: $0) }
         self.failure = failure
         companion.model = self
@@ -199,6 +199,13 @@ final class ReaderModel {
             Task { [weak self] in
                 for await _ in NotificationCenter.default.notifications(named: .readerSettingsChanged) {
                     self?.sharedSettingsChanged()
+                }
+            },
+            Task { [weak self] in
+                // 我的纸 changed: the page on one takes its new colours.
+                for await _ in NotificationCenter.default.notifications(named: Papers.changed) {
+                    guard let self, self.previewing == nil else { continue }
+                    self.applyToPager(self.settings)
                 }
             },
             Task { [weak self] in
@@ -522,10 +529,32 @@ final class ReaderModel {
     private func applyToPager(_ new: ReaderSettings) {
         pager.fontSize = new.fontSize
         pager.mode = new.mode
-        pager.background = new.paper.tokens.platformBackground
+        pager.background = new.paperTokens.platformBackground
         pager.apply(settings: new.script)
         applyImmersive()
     }
+
+    /// 调纸 being set: the page and the controls on `draft` until it is done or cancelled (nil).
+    func previewPaper(_ draft: CustomPaper?) {
+        guard let draft else {
+            guard previewing != nil else { return }
+            previewing = nil
+            applyToPager(settings)
+            return
+        }
+        let tokens = YYPaper(custom: draft)
+        previewing = tokens
+        pager.background = tokens.platformBackground
+        var script = settings.script
+        script["paper"] = paperColors(paper: draft).preset.tokens.id
+        script["paperStyle"] = paperStyle(paper: draft)
+        script["texture"] = draft.texture.css ?? NSNull()
+        pager.apply(settings: script)
+    }
+    /// The paper 调纸 shows, over the one in the settings.
+    private(set) var previewing: YYPaper?
+    /// The paper the page and the controls over it are drawn on.
+    var paperTokens: YYPaper { previewing ?? settings.paperTokens }
 
     // MARK: Progress
 
@@ -677,14 +706,17 @@ extension BookDetail {
 extension ReaderSettings {
     static let standard = ReaderSettings(
         paper: .plain, mode: .paginated, font: nil, fontSize: YYReader.defaultFontSize,
-        lineHeight: nil, paragraphSpacing: nil, justify: nil, indent: nil, compress: true
+        lineHeight: nil, paragraphSpacing: nil, justify: nil, indent: nil, compress: true, customPaper: nil
     )
 
     /// As `yy.applySettings` takes them (reader contract §4). nil means the paper's default.
     var script: [String: Any] {
         func js(_ value: Any?) -> Any { value ?? NSNull() }
+        let mine = Papers.shared.paper(customPaper)
         return [
             "paper": paper.tokens.id,
+            "paperStyle": js(mine.map { paperStyle(paper: $0) }),
+            "texture": js(mine?.texture.css),
             "mode": mode == .paginated ? "paginated" : "scrolled",
             "font": js(font?.name),
             "fontSize": fontSize,
@@ -742,15 +774,22 @@ enum EInk {
     static let key = "eink.on"
     /// The paper before, to go back to.
     static let previousKey = "eink.previous"
+    /// …and the 我的纸 it was, if one.
+    static let previousCustomKey = "eink.previousCustom"
     static var on: Bool { UserDefaults.standard.bool(forKey: key) }
 
     static func set(_ on: Bool, core: YuyueCore) {
         guard var shared = try? core.readerSettings() else { return }
         if on {
-            if shared.paper != .eink { UserDefaults.standard.set(shared.paper.tokens.id, forKey: previousKey) }
+            if shared.paper != .eink {
+                UserDefaults.standard.set(shared.paper.tokens.id, forKey: previousKey)
+                UserDefaults.standard.set(shared.customPaper, forKey: previousCustomKey)
+            }
             shared.paper = .eink
+            shared.customPaper = nil
         } else {
             shared.paper = UserDefaults.standard.string(forKey: previousKey).flatMap(Paper.init(id:)) ?? .plain
+            shared.customPaper = UserDefaults.standard.string(forKey: previousCustomKey)
         }
         UserDefaults.standard.set(on, forKey: key)
         try? core.setReaderSettings(settings: shared)

@@ -14,13 +14,14 @@ enum YYUI {
     static func s(_ px: CGFloat) -> CGFloat { px * k }
 
     static func font(_ px: CGFloat, _ weight: Font.Weight = .regular, design: Font.Design = .default) -> Font {
-        design == .serif ? serif(s(px), weight) : .system(size: s(px), weight: weight, design: design)
+        design == .serif ? serif(s(px), weight) : .yy(size: s(px), weight: weight, design: design)
     }
 
     /// `--serif`: Songti, as the prototype sets it. The system serif (New York) borrows its Chinese
     /// from a fallback that sets every ，and 。 nearly two characters wide.
     static func serif(_ size: CGFloat, _ weight: Font.Weight = .regular) -> Font {
-        hasSongti ? .custom("Songti SC", fixedSize: size).weight(weight) : .system(size: size, weight: weight, design: .serif)
+        let size = size * TextScale.shared.factor
+        return hasSongti ? .custom("Songti SC", fixedSize: size).weight(weight) : .system(size: size, weight: weight, design: .serif)
     }
 
     #if os(macOS)
@@ -28,6 +29,36 @@ enum YYUI {
     #else
     private static let hasSongti = UIFont(name: "Songti SC", size: 12) != nil
     #endif
+}
+
+/// 大字体: the system text size as a factor on the prototype's fixed sizes, on iPhone and iPad (the
+/// Mac has no such setting). Between 0.85 and 1.5, so the drawn layouts still hold. Views read it
+/// through `Font.yy`, so they draw again when the setting changes.
+@Observable final class TextScale {
+    static let shared = TextScale()
+    private(set) var factor: CGFloat = 1
+
+    private init() {
+        #if os(iOS)
+        update()
+        NotificationCenter.default.addObserver(forName: UIContentSizeCategory.didChangeNotification, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated { TextScale.shared.update() }
+        }
+        #endif
+    }
+
+    #if os(iOS)
+    private func update() {
+        factor = min(1.5, max(0.85, UIFontMetrics(forTextStyle: .body).scaledValue(for: 17) / 17))
+    }
+    #endif
+}
+
+extension Font {
+    /// `.system(size:)` that follows 大字体.
+    static func yy(size: CGFloat, weight: Font.Weight = .regular, design: Font.Design = .default) -> Font {
+        .system(size: size * TextScale.shared.factor, weight: weight, design: design)
+    }
 }
 
 /// A page of the prototype's pieces on its grey ground.
@@ -319,4 +350,11 @@ struct YYSheetHeader: View {
             .alignmentGuide(.firstTextBaseline) { $0[VerticalAlignment.center] + YYUI.s(5) }
         }
     }
+}
+
+/// The tab bar's own icons (the prototype's `#tab-shelf-f`, as Android draws it), for the places
+/// that stand for the same thing: the Mac sidebar's 全部 is the 书架 tab.
+enum PhoneTabIcon {
+    /// An asset in the catalogue, drawn as a template.
+    static let shelf = "tab-shelf"
 }

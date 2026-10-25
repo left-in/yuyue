@@ -1,8 +1,12 @@
 package app.yuyue.reader
 
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,38 +52,27 @@ import kotlin.math.roundToInt
 @Composable
 fun TypesetSheet(model: ReaderModel, dismiss: () -> Unit) {
     var more by remember { mutableStateOf(false) }
+    /** 调纸 open on this paper (a new one has no id yet). */
+    var editing by remember { mutableStateOf<uniffi.yuyue_core.CustomPaper?>(null) }
     ModalBottomSheet(dismiss, sheetState = rememberModalBottomSheetState(), containerColor = YY.c.card, scrimColor = androidx.compose.ui.graphics.Color.Transparent) {
         Column(Modifier.padding(horizontal = 16.dp).padding(bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            if (more) More(model) { more = false } else Main(model) { more = true }
+            val open = editing
+            when {
+                open != null -> PaperEditor(model, open) { saved -> editing = null; saved?.let { model.choose(it) } }
+                more -> More(model) { more = false }
+                else -> Main(model, { more = true }) { editing = it }
+            }
         }
     }
 }
 
-private val papers = listOf(Paper.PLAIN, Paper.DARK, Paper.KAMI, Paper.KAMI_NIGHT, Paper.EINK)
 /** 紧 · 适中 · 松; null is the paper's own. */
 private val spacings = listOf(1.6, null, 2.2)
 
 @Composable
-private fun Main(model: ReaderModel, openMore: () -> Unit) {
+private fun Main(model: ReaderModel, openMore: () -> Unit, edit: (uniffi.yuyue_core.CustomPaper) -> Unit) {
     val s = model.settings
-    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        for (p in papers) {
-            val tokens = p.tokens
-            val on = s.paper == p
-            Column(
-                Modifier.weight(1f).clickable { model.update { it.copy(paper = p) } },
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Box(
-                    Modifier.fillMaxWidth().height(44.dp).background(tokens.bg, RoundedCornerShape(10.dp))
-                        .border(if (on) 2.dp else 0.5.dp, if (on) YY.tint.accent else YY.c.line, RoundedCornerShape(10.dp)),
-                    contentAlignment = Alignment.Center,
-                ) { Text("文", fontFamily = FontFamily.Serif, fontSize = 16.sp, color = tokens.ink) }
-                Text(tokens.name.let { t(it) }, fontSize = 10.sp, color = if (on) YY.tint.accent else YY.c.t2, maxLines = 1)
-            }
-        }
-    }
+    PaperRow(model, edit)
     // Android phones have no 楷体 of their own, so 楷体 is 霞鹜文楷 here, downloaded when chosen.
     YYSegments(
         listOf<Pair<Font?, String>>(null to t("系统"), Font.SERIF to t("宋体"), Font.WEN_KAI to t("霞鹜文楷")),
@@ -93,7 +86,7 @@ private fun Main(model: ReaderModel, openMore: () -> Unit) {
         Text("A", fontFamily = FontFamily.Serif, fontSize = 13.sp, color = YY.c.t1)
         Slider(
             s.fontSize.toFloat(), { v -> model.update { it.copy(fontSize = v.roundToInt().toDouble()) } }, valueRange = 12f..34f, steps = 21,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).semantics { contentDescription = t("字号"); stateDescription = "${s.fontSize.roundToInt()}" },
             colors = SliderDefaults.colors(thumbColor = YY.c.card, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line, activeTickColor = androidx.compose.ui.graphics.Color.Transparent, inactiveTickColor = androidx.compose.ui.graphics.Color.Transparent),
         )
         Text("A", fontFamily = FontFamily.Serif, fontSize = 19.sp, color = YY.c.t1)
@@ -152,8 +145,8 @@ private fun Row2(title: String, content: @Composable () -> Unit) {
 
 @Composable
 fun SwitchRow(title: String, on: Boolean, set: (Boolean) -> Unit) {
-    Row(Modifier.fillMaxWidth().height(44.dp).clickable { set(!on) }, verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().height(44.dp).toggleable(on, role = androidx.compose.ui.semantics.Role.Switch, onValueChange = set), verticalAlignment = Alignment.CenterVertically) {
         Text(title, fontSize = 13.sp, color = YY.c.t1, modifier = Modifier.weight(1f))
-        Switch(on, set, colors = SwitchDefaults.colors(checkedTrackColor = YY.tint.fill, checkedThumbColor = YY.c.card, uncheckedTrackColor = YY.c.inset, uncheckedBorderColor = YY.c.line))
+        Switch(on, null, colors = SwitchDefaults.colors(checkedTrackColor = YY.tint.fill, checkedThumbColor = YY.c.card, uncheckedTrackColor = YY.c.inset, uncheckedBorderColor = YY.c.line))
     }
 }

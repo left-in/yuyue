@@ -63,11 +63,7 @@ struct PhoneComicView: View {
             let side = Int(UIScreen.main.bounds.height * UIScreen.main.scale)
             for url in model.upcoming { _ = await ComicImages.shared.image(url, pixels: side, crop: crop) }
         }
-        .alert("出错了", isPresented: Binding(get: { model.failure != nil }, set: { if !$0 { model.failure = nil } })) {
-            Button("好") {}
-        } message: {
-            Text(model.failure ?? "")
-        }
+        .bookFailure($model.failure, opened: model.current != nil)
     }
 
     // MARK: The page
@@ -104,6 +100,11 @@ struct PhoneComicView: View {
                 }
             }
             .onTapGesture { location in tapped(at: location, in: size) }
+            // VoiceOver: where it is, and the taps as actions.
+            .accessibilityElement()
+            .accessibilityLabel(Text("第 \(model.page + 1) 页"))
+            .accessibilityAction(named: Text("下一页")) { model.next() }
+            .accessibilityAction(named: Text("上一页")) { model.previous() }
             .gesture(MagnifyGesture()
                 .onChanged { pinch = $0.magnification }
                 .onEnded { _ in
@@ -177,15 +178,15 @@ struct PhoneComicView: View {
         VStack(spacing: 0) {
             HStack(spacing: 10) {
                 Button { dismiss() } label: {
-                    Image(systemName: "xmark").font(.system(size: 15, weight: .semibold)).frame(width: 40, height: 40)
+                    Image(systemName: "xmark").font(.yy(size: 15, weight: .semibold)).frame(width: 40, height: 40)
                 }
                 .accessibilityLabel("关闭")
                 Text(model.episodes.count > 1 ? "\(model.title) · \(model.current.map(model.name) ?? "")" : model.title)
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.yy(size: 15, weight: .semibold))
                     .lineLimit(1)
                     .frame(maxWidth: .infinity)
                 Text(model.current.map { "\(model.page + 1) / \($0.pages.count)" } ?? "")
-                    .font(.system(size: 12.5)).foregroundStyle(.secondary).monospacedDigit()
+                    .font(.yy(size: 12.5)).foregroundStyle(.secondary).monospacedDigit()
                     .frame(minWidth: 40, alignment: .trailing)
                     .padding(.trailing, 8)
             }
@@ -228,8 +229,8 @@ struct PhoneComicView: View {
     private func tool(_ title: String, _ symbol: String, on: Bool = false, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 4) {
-                Image(systemName: symbol).font(.system(size: 17))
-                Text(title).font(.system(size: 10.5))
+                Image(systemName: symbol).font(.yy(size: 17))
+                Text(title).font(.yy(size: 10.5))
             }
             .foregroundStyle(on ? tint.accent : .white)
             .frame(maxWidth: .infinity, minHeight: 44)
@@ -252,9 +253,11 @@ struct PhoneComicView: View {
                 }
             }
             .tint(tint.accent)
+            .accessibilityLabel(Text("翻页"))
+            .accessibilityValue(Text("第 \(model.page + 1) 页"))
             .overlay(alignment: .top) {
                 if let s = sliding {
-                    Text("第 \(Int(s) + 1) 页").font(.system(size: 12, weight: .semibold)).monospacedDigit()
+                    Text("第 \(Int(s) + 1) 页").font(.yy(size: 12, weight: .semibold)).monospacedDigit()
                         .padding(.horizontal, 10).padding(.vertical, 5)
                         .background(.regularMaterial, in: .capsule)
                         .offset(y: -34)
@@ -270,7 +273,7 @@ struct PhoneComicView: View {
         return Button(next ? String(localized: "下一话") : String(localized: "上一话")) {
             model.go(episode: model.episode + (next ? 1 : -1), page: 0)
         }
-        .font(.system(size: 12))
+        .font(.yy(size: 12))
         .foregroundStyle(can ? .white : .white.opacity(0.3))
         .disabled(!can)
     }
@@ -359,7 +362,7 @@ private struct PhoneComicStrip: View {
 
     private func header(_ e: ComicModel.Episode) -> some View {
         Text(model.name(of: e))
-            .font(.system(size: 15, weight: .semibold))
+            .font(.yy(size: 15, weight: .semibold))
             .foregroundStyle(.white.opacity(0.85))
             .frame(maxWidth: .infinity)
             .padding(.vertical, 28)
@@ -367,7 +370,7 @@ private struct PhoneComicStrip: View {
 
     private func seam(_ e: ComicModel.Episode) -> some View {
         VStack(spacing: 18) {
-            Text("\(model.name(of: e)) · 完").font(.system(size: 13)).foregroundStyle(.white.opacity(0.6))
+            Text("\(model.name(of: e)) · 完").font(.yy(size: 13)).foregroundStyle(.white.opacity(0.6))
             HStack(spacing: 10) {
                 seamButton(String(localized: "上一话"), "chevron.left", enabled: e.id > 0) { model.go(episode: e.id - 1, page: 0) }
                 seamButton(String(localized: "目录"), "list.bullet", enabled: true) { contents() }
@@ -381,7 +384,7 @@ private struct PhoneComicStrip: View {
     private func seamButton(_ title: String, _ symbol: String, enabled: Bool, strong: Bool = false, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Label(title, systemImage: symbol)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.yy(size: 13, weight: .semibold))
                 .padding(.horizontal, 16).frame(height: 38)
                 .foregroundStyle(strong ? .black : .white)
                 .background(strong ? Color.white : Color.white.opacity(0.14), in: .capsule)
@@ -409,7 +412,7 @@ private struct PhoneComicContents: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 14) {
                         Text(byPage ? String(localized: "读到 \(model.pageLabel)") : String(localized: "读到\(model.current.map(model.name) ?? "") · \(model.pageLabel)"))
-                            .font(.system(size: 13)).foregroundStyle(.secondary)
+                            .font(.yy(size: 13)).foregroundStyle(.secondary)
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 5), spacing: 10) {
                             if byPage, let e = model.current {
                                 ForEach(e.pages.indices, id: \.self) { p in
@@ -446,7 +449,7 @@ private struct PhoneComicContents: View {
             dismiss()
         } label: {
             Text("\(n)")
-                .font(.system(size: 15, weight: current ? .bold : .medium)).monospacedDigit()
+                .font(.yy(size: 15, weight: current ? .bold : .medium)).monospacedDigit()
                 .foregroundStyle(current ? .white : (read ? .secondary : .primary))
                 .frame(maxWidth: .infinity).frame(height: 44)
                 .background(current ? tint.accent : Color.primary.opacity(read ? 0.05 : 0.1), in: .rect(cornerRadius: 10))
@@ -508,7 +511,7 @@ private struct PhoneComicSettings: View {
                 .padding(.top, -YYUI.s(2))
                 label(String(localized: "所有漫画"))
                 VStack(spacing: 0) {
-                    row { Text("自动裁白边") } trailing: { YYSwitch(isOn: $crop) }
+                    row { Text("自动裁白边") } trailing: { YYSwitch(isOn: $crop, label: String(localized: "自动裁白边")) }
                     line
                     row { Text("预加载") } trailing: {
                         Menu {
@@ -531,7 +534,7 @@ private struct PhoneComicSettings: View {
                             Text("扫描版的双页图，竖着看时拆成两页").font(YYUI.font(10)).foregroundStyle(YYColor.t3)
                         }
                         Spacer(minLength: 0)
-                        YYSwitch(isOn: $splitSpreads)
+                        YYSwitch(isOn: $splitSpreads, label: String(localized: "竖屏时拆开跨页"))
                     }
                     .padding(.vertical, YYUI.s(8))
                 }
@@ -598,6 +601,7 @@ private struct PhoneComicSettings: View {
                     .contentShape(.rect)
                 }
                 .buttonStyle(.plain)
+                .accessibilityAddTraits(on ? .isSelected : [])
             }
         }
         .padding(YYUI.s(3))

@@ -186,6 +186,10 @@ pub struct ReaderSettings {
     pub justify: Option<bool>,
     pub indent: Option<bool>,
     pub compress: bool,
+    /// 我的纸 the page is on, over `paper` (which is then the preset it reads like, so an app
+    /// that doesn't know the paper still shows something close).
+    #[uniffi(default = None)]
+    pub custom_paper: Option<String>,
 }
 
 impl Default for ReaderSettings {
@@ -201,6 +205,7 @@ impl Default for ReaderSettings {
             justify: p.justify,
             indent: p.indent,
             compress: p.compress,
+            custom_paper: None,
         }
     }
 }
@@ -582,11 +587,19 @@ impl YuyueCore {
             justify: opt_bool("justify", d.justify),
             indent: opt_bool("indent", d.indent),
             compress: get("compress").as_bool().unwrap_or(d.compress),
+            custom_paper: get("customPaper").as_str().map(str::to_string),
         })
     }
 
-    fn set_settings_at(&self, entity: &str, settings: ReaderSettings) -> Result<()> {
+    fn set_settings_at(&self, entity: &str, mut settings: ReaderSettings) -> Result<()> {
         let current = self.settings_at(entity)?;
+        // On 我的纸, `paper` is the preset it reads like.
+        if let Some(id) = &settings.custom_paper {
+            match crate::paper::find_paper(&lock(&self.store), id)? {
+                Some(p) => settings.paper = crate::paper::paper_colors(p).preset,
+                None => settings.custom_paper = None,
+            }
+        }
         let mut fields: Vec<(&str, Value)> = Vec::new();
         let mut put = |name, changed: bool, value: Value| {
             if changed {
@@ -603,6 +616,7 @@ impl YuyueCore {
         put("justify", s.justify != current.justify, json!(s.justify));
         put("indent", s.indent != current.indent, json!(s.indent));
         put("compress", s.compress != current.compress, json!(s.compress));
+        put("customPaper", s.custom_paper != current.custom_paper, json!(s.custom_paper));
         if !fields.is_empty() {
             lock(&self.store).set_fields(entity, &fields)?;
         }
@@ -815,8 +829,15 @@ impl YuyueCore {
             Some(own) => own,
             None => self.reader_settings()?,
         };
+        let custom = match &r.custom_paper {
+            Some(id) => crate::paper::find_paper(&lock(&self.store), id)?,
+            None => None,
+        };
+        let colors = custom.clone().map(crate::paper::paper_colors);
         Ok(PageSettings {
-            paper: r.paper,
+            paper: colors.as_ref().map_or(r.paper, |c| c.preset),
+            paper_style: colors.as_ref().map(crate::paper::page_style),
+            texture: custom.and_then(|p| p.texture.css()),
             mode: r.mode,
             paging: g.paging,
             justify: r.justify,

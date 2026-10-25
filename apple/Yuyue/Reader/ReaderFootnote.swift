@@ -25,13 +25,13 @@ struct FootnoteCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .firstTextBaseline, spacing: 7) {
-                Text(open.label.isEmpty ? String(localized: "注") : String(localized: "注 \(open.label)")).font(.system(size: 13, weight: .semibold)).foregroundStyle(tint.accent)
+                Text(open.label.isEmpty ? String(localized: "注") : String(localized: "注 \(open.label)")).font(.yy(size: 13, weight: .semibold)).foregroundStyle(tint.accent)
                 if !open.before.isEmpty {
-                    Text(open.before).font(.system(size: 12)).foregroundStyle(YYColor.t3).lineLimit(1)
+                    Text(open.before).font(.yy(size: 12)).foregroundStyle(YYColor.t3).lineLimit(1)
                 }
                 Spacer()
                 Button(action: done) {
-                    Image(systemName: "xmark").font(.system(size: 10, weight: .bold)).foregroundStyle(YYColor.t3)
+                    Image(systemName: "xmark").font(.yy(size: 10, weight: .bold)).foregroundStyle(YYColor.t3)
                         .frame(width: 22, height: 22).contentShape(.rect)
                 }
                 .buttonStyle(.plain)
@@ -51,14 +51,14 @@ struct FootnoteCard: View {
             .padding(.top, 6)
             .padding(.bottom, 10)
             HStack {
-                Text(footer).font(.system(size: 11)).foregroundStyle(YYColor.t3).lineLimit(1)
+                Text(footer).font(.yy(size: 11)).foregroundStyle(YYColor.t3).lineLimit(1)
                 Spacer()
                 Button(action: toNotes) {
                     HStack(spacing: 2) {
                         Text("到注释页")
-                        Image(systemName: "chevron.right").font(.system(size: 9, weight: .semibold))
+                        Image(systemName: "chevron.right").font(.yy(size: 9, weight: .semibold))
                     }
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.yy(size: 12, weight: .medium))
                     .foregroundStyle(YYColor.t2)
                     .contentShape(.rect)
                 }

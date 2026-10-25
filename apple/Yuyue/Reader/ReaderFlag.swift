@@ -90,12 +90,12 @@ struct NarrationFlagCard: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 6) {
                 Circle().fill(YYColor.warn).frame(width: 6, height: 6)
-                Text("这一段对得不太准").font(.system(size: 12, weight: .semibold))
+                Text("这一段对得不太准").font(.yy(size: 12, weight: .semibold))
                 Spacer()
-                Text("第 \(flag.number) / \(flag.total) 处").font(.system(size: 10)).monospacedDigit().foregroundStyle(YYColor.t3)
+                Text("第 \(flag.number) / \(flag.total) 处").font(.yy(size: 10)).monospacedDigit().foregroundStyle(YYColor.t3)
             }
             Text(note)
-                .font(.system(size: 11))
+                .font(.yy(size: 11))
                 .lineSpacing(3)
                 .foregroundStyle(YYColor.t2)
                 .fixedSize(horizontal: false, vertical: true)

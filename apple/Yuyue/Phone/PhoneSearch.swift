@@ -82,6 +82,7 @@ struct PhoneSearch: View {
             .overlay(Capsule().strokeBorder(on ? .clear : YYColor.line, lineWidth: 0.5))
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(on ? .isSelected : [])
         .disabled(value != .all && (count ?? 0) == 0)
     }
 
@@ -114,8 +115,8 @@ struct PhoneSearch: View {
                         label(String(localized: "生词"), String(localized: "\(s.words.count) 个"))
                         card { ForEach(scope == .all ? Array(s.words.prefix(3)) : s.words, id: \.word) { wordRow($0) } }
                     }
-                    if s.titles.isEmpty, s.lines.isEmpty, s.notes.isEmpty, s.words.isEmpty {
-                        Text("书名、原文、笔记里都没有“\(q)”。可以问问书伴")
+                    if let none = nothing(s) {
+                        Text(none)
                             .font(YYUI.font(10.5)).foregroundStyle(YYColor.t3)
                             .frame(maxWidth: .infinity)
                             .padding(.top, YYUI.s(24))
@@ -126,6 +127,17 @@ struct PhoneSearch: View {
             .padding(.bottom, YYUI.s(24))
         }
         .scrollDismissesKeyboard(.immediately)
+    }
+
+    /// What to say when the chosen kind has nothing for the words; nil when something shows.
+    private func nothing(_ s: QuickSearch) -> String? {
+        switch scope {
+        case .all: s.titles.isEmpty && s.lines.isEmpty && s.notes.isEmpty && s.words.isEmpty ? String(localized: "书名、原文、笔记里都没有“\(q)”。可以问问书伴") : nil
+        case .books: s.titles.isEmpty ? String(localized: "没有书名里带“\(q)”的书") : nil
+        case .lines: s.lines.isEmpty ? String(localized: "书里的原文没有“\(q)”") : nil
+        case .notes: s.notes.isEmpty ? String(localized: "划线和想法里没有“\(q)”") : nil
+        case .words: s.words.isEmpty ? String(localized: "生词本里没有“\(q)”") : nil
+        }
     }
 
     /// `.v-fx-ask`: the row that's always first, handing the words to 书伴.

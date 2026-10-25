@@ -17,16 +17,17 @@ struct MacImportCard: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 8) {
                 Image(systemName: "arrow.down.to.line")
-                    .font(.system(size: 11, weight: .semibold))
+                    .font(.yy(size: 11, weight: .semibold))
                     .foregroundStyle(tint.accent)
                     .frame(width: 24, height: 24)
                     .background(tint.accentSoft, in: .rect(cornerRadius: 7))
-                Text(title).font(.system(size: 12.5, weight: .semibold)).foregroundStyle(YYColor.t1)
-                Text(note).font(.system(size: 11).monospacedDigit()).foregroundStyle(YYColor.t3)
+                Text(title).font(.yy(size: 12.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                Text(note).font(.yy(size: 11).monospacedDigit()).foregroundStyle(YYColor.t3)
                 Spacer(minLength: 0)
                 Button { withAnimation(.easeOut(duration: 0.2)) { library.closeImports() } } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 9, weight: .semibold))
+                        .accessibilityLabel(Text("关闭"))
+                        .font(.yy(size: 9, weight: .semibold))
                         .foregroundStyle(YYColor.t2)
                         .frame(width: 22, height: 22)
                         .background(YYColor.inset, in: .circle)
@@ -88,9 +89,9 @@ struct MacImportCard: View {
         HStack(spacing: 12) {
             cover(file)
             VStack(alignment: .leading, spacing: 1) {
-                Text(file.name).font(.system(size: 12, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1).truncationMode(.middle)
+                Text(file.name).font(.yy(size: 12, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1).truncationMode(.middle)
                 Text(detail(file))
-                    .font(.system(size: 10.5).monospacedDigit())
+                    .font(.yy(size: 10.5).monospacedDigit())
                     .foregroundStyle(file.state == .waiting || file.added ? YYColor.t3 : YYColor.t2)
                     .lineLimit(1)
             }
@@ -108,7 +109,7 @@ struct MacImportCard: View {
                 RoundedRectangle(cornerRadius: 2).fill(YYColor.inset)
                     .overlay {
                         Text(file.name.split(separator: ".").last.map { $0.uppercased() } ?? "")
-                            .font(.system(size: 6, weight: .heavy))
+                            .font(.yy(size: 6, weight: .heavy))
                             .foregroundStyle(YYColor.t3)
                     }
                     .opacity(file.state == .waiting ? 0.4 : 1)
@@ -143,21 +144,21 @@ struct MacImportCard: View {
         case .added:
             Label("已导入", systemImage: "checkmark")
                 .labelStyle(TightLabel())
-                .font(.system(size: 11, weight: .semibold))
+                .font(.yy(size: 11, weight: .semibold))
                 .foregroundStyle(YYColor.ok)
         case .already(let id):
             Button { reveal(id) } label: {
                 HStack(spacing: 2) {
                     Text("在书架里显示")
-                    Image(systemName: "chevron.right").font(.system(size: 9, weight: .semibold))
+                    Image(systemName: "chevron.right").font(.yy(size: 9, weight: .semibold))
                 }
-                .font(.system(size: 11, weight: .semibold))
+                .font(.yy(size: 11, weight: .semibold))
                 .foregroundStyle(tint.accent)
                 .contentShape(.rect)
             }
             .buttonStyle(.plain)
         case .failed:
-            Text("没导入").font(.system(size: 11, weight: .semibold)).foregroundStyle(YYColor.danger)
+            Text("没导入").font(.yy(size: 11, weight: .semibold)).foregroundStyle(YYColor.danger)
         }
     }
 
@@ -184,16 +185,16 @@ struct MacDropHint: View {
                 .padding(.leading, 10).padding(.trailing, 12).padding(.vertical, 12)
             VStack(spacing: 0) {
                 Image(systemName: "arrow.down.to.line")
-                    .font(.system(size: 26, weight: .light))
+                    .font(.yy(size: 26, weight: .light))
                     .foregroundStyle(tint.accent)
                     .frame(width: 64, height: 64)
                     .background(tint.accentSoft, in: .circle)
                     .padding(.bottom, 16)
                 Text(count > 1 ? String(localized: "松手就导入这 \(count) 个文件") : String(localized: "松手就导入"))
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.yy(size: 20, weight: .bold))
                     .foregroundStyle(YYColor.t1)
                 Text("放进“\(place)”。书名、作者和封面从文件里读出来，之后都能改")
-                    .font(.system(size: 12.5))
+                    .font(.yy(size: 12.5))
                     .foregroundStyle(YYColor.t2)
                     .padding(.top, 6)
                     .padding(.bottom, 20)
@@ -207,10 +208,10 @@ struct MacDropHint: View {
                 .shadow(color: .black.opacity(0.05), radius: 1, y: 1)
                 .shadow(color: .black.opacity(0.04), radius: 8, y: 4)
                 HStack(spacing: 6) {
-                    Image(systemName: "checkmark.circle").font(.system(size: 13)).foregroundStyle(YYColor.ok)
+                    Image(systemName: "checkmark.circle").font(.yy(size: 13)).foregroundStyle(YYColor.ok)
                     Text("同一个文件只导入一次：按内容认，改过名字也认得出来")
                 }
-                .font(.system(size: 11.5))
+                .font(.yy(size: 11.5))
                 .foregroundStyle(YYColor.t2)
                 .padding(.top, 16)
             }
@@ -223,13 +224,13 @@ struct MacDropHint: View {
     private func formats(_ kind: String, _ names: [String]) -> some View {
         HStack(spacing: 5) {
             Text(kind)
-                .font(.system(size: 11, weight: .semibold))
+                .font(.yy(size: 11, weight: .semibold))
                 .foregroundStyle(YYColor.t2)
                 .frame(width: 46, alignment: .trailing)
                 .padding(.trailing, 6)
             ForEach(names, id: \.self) { name in
                 Text(name)
-                    .font(.system(size: 10.5, weight: .medium))
+                    .font(.yy(size: 10.5, weight: .medium))
                     .foregroundStyle(YYColor.t2)
                     .padding(.horizontal, 7).padding(.vertical, 4)
                     .background(YYColor.inset, in: .rect(cornerRadius: 5))

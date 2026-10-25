@@ -37,6 +37,7 @@ struct PhoneCompanion: View {
                     } label: {
                         Image(systemName: "ellipsis")
                     }
+                    .accessibilityLabel(Text("更多"))
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("完成") { model.panel = nil }
@@ -63,7 +64,7 @@ struct PhoneCompanion: View {
             .labelsHidden()
             .pickerStyle(.segmented)
             Text(companion.scope == .read ? readUpTo + String(localized: "，后面的事它不会说") : String(localized: "会用到整本书，可能提前知道结尾"))
-                .font(.system(size: 12)).foregroundStyle(YYColor.t3).padding(.horizontal, 2)
+                .font(.yy(size: 12)).foregroundStyle(YYColor.t3).padding(.horizontal, 2)
         }
     }
 
@@ -103,12 +104,12 @@ struct PhoneCompanion: View {
     @ViewBuilder private var welcome: some View {
         let config = CompanionConfig.current
         VStack(alignment: .leading, spacing: 8) {
-            Text("读到哪儿问到哪儿").font(.system(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1)
+            Text("读到哪儿问到哪儿").font(.yy(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1)
             Text("可以问人物关系、这句是什么意思、前面发生了什么。回答标着出处，点一下就翻到那句。")
-                .font(.system(size: 14)).foregroundStyle(YYColor.t2).lineSpacing(3)
+                .font(.yy(size: 14)).foregroundStyle(YYColor.t2).lineSpacing(3)
             if !config.isReady {
                 Text(config.provider == .apple ? Companion.appleAvailability ?? "" : String(localized: "还没填好 \(config.provider.title) 的 Key"))
-                    .font(.system(size: 13)).foregroundStyle(YYColor.t3).lineSpacing(3)
+                    .font(.yy(size: 13)).foregroundStyle(YYColor.t3).lineSpacing(3)
                 Button("去设置 · 书伴") { settings = true }
                     .buttonStyle(.bordered).padding(.top, 2)
             }
@@ -122,7 +123,7 @@ struct PhoneCompanion: View {
         HStack {
             Spacer(minLength: 48)
             Text(text)
-                .font(.system(size: 15))
+                .font(.yy(size: 15))
                 .lineSpacing(3)
                 .foregroundStyle(tint.onBlack)
                 .padding(.horizontal, 14).padding(.vertical, 9)
@@ -136,12 +137,12 @@ struct PhoneCompanion: View {
             VStack(alignment: .leading, spacing: 8) {
                 if answer.notYet {
                     Text("\(readUpTo)，这件事可能要到后面才写。切到“问全书”就能回答，不过会提前知道后面的事。")
-                        .font(.system(size: 15)).lineSpacing(8).foregroundStyle(YYColor.t1)
+                        .font(.yy(size: 15)).lineSpacing(8).foregroundStyle(YYColor.t1)
                     Button { companion.ask(turn.question, quote: turn.quote, scope: .whole) } label: {
                         HStack(spacing: 8) {
-                            Text("用全书回答").font(.system(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
+                            Text("用全书回答").font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
                             Label("可能剧透", systemImage: "exclamationmark.triangle")
-                                .font(.system(size: 11, weight: .semibold)).foregroundStyle(YYColor.warn)
+                                .font(.yy(size: 11, weight: .semibold)).foregroundStyle(YYColor.warn)
                         }
                         .padding(.horizontal, 14).frame(height: 34)
                         .background(YYColor.card, in: .capsule)
@@ -151,7 +152,7 @@ struct PhoneCompanion: View {
                     .disabled(companion.busy)
                 } else {
                     Text(cited(answer))
-                        .font(.system(size: 15))
+                        .font(.yy(size: 15))
                         .lineSpacing(8)
                         .foregroundStyle(YYColor.t1)
                         .textSelection(.enabled)
@@ -160,19 +161,19 @@ struct PhoneCompanion: View {
                             return .handled
                         })
                     HStack(spacing: 4) {
-                        Image(systemName: turn.scope == .whole ? "book" : "sparkle").font(.system(size: 10))
+                        Image(systemName: turn.scope == .whole ? "book" : "sparkle").font(.yy(size: 10))
                         Text(turn.scope == .whole ? answer.label + String(localized: " · 用了全书") : answer.label)
                     }
-                    .font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                    .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
                 }
             }
         } else if let failed = turn.failed {
             Label(failed, systemImage: "exclamationmark.circle")
-                .font(.system(size: 13)).foregroundStyle(YYColor.danger)
+                .font(.yy(size: 13)).foregroundStyle(YYColor.danger)
         } else {
             HStack(spacing: 8) {
                 ProgressView()
-                Text("正在翻书…").font(.system(size: 13)).foregroundStyle(YYColor.t3)
+                Text("正在翻书…").font(.yy(size: 13)).foregroundStyle(YYColor.t3)
             }
         }
     }
@@ -187,7 +188,7 @@ struct PhoneCompanion: View {
                 let place = source.page.map { String(localized: "第 \($0) 页") } ?? String(localized: "出处")
                 let label = " " + place + (source.later == true ? String(localized: " · 没读到") : "") + " "
                 var tag = AttributedString(label.replacingOccurrences(of: " ", with: "\u{00A0}"))
-                tag.font = .system(size: 11, weight: .semibold)
+                tag.font = .yy(size: 11, weight: .semibold)
                 if source.later == true, companion.shown != source {
                     tag.foregroundColor = tint.accent
                     tag.underlineStyle = Text.LineStyle(pattern: .dash, color: tint.accent)
@@ -217,7 +218,7 @@ struct PhoneCompanion: View {
             Spacer(minLength: 0)
             Button("不带这句", systemImage: "xmark") { model.companionQuote = nil }
                 .labelStyle(.iconOnly)
-                .font(.system(size: 11, weight: .bold))
+                .font(.yy(size: 11, weight: .bold))
                 .foregroundStyle(YYColor.t3)
                 .buttonStyle(.plain)
         }
@@ -231,7 +232,7 @@ struct PhoneCompanion: View {
                 ForEach(list, id: \.self) { s in
                     Button { send(s) } label: {
                         Text(s)
-                            .font(.system(size: 13)).foregroundStyle(YYColor.t2)
+                            .font(.yy(size: 13)).foregroundStyle(YYColor.t2)
                             .padding(.horizontal, 13).frame(height: 32)
                             .background(YYColor.card, in: .capsule)
                             .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
@@ -247,18 +248,19 @@ struct PhoneCompanion: View {
     private var input: some View {
         HStack(alignment: .bottom, spacing: 8) {
             TextField("", text: $draft, prompt: Text(companion.turns.isEmpty ? String(localized: "问这本书…") : String(localized: "继续问…")), axis: .vertical)
-                .font(.system(size: 16))
+                .font(.yy(size: 16))
                 .lineLimit(1 ... 4)
                 .focused($typing)
                 .submitLabel(.send)
                 .onSubmit { send(draft) }
                 .padding(.vertical, 10)
             Button { send(draft) } label: {
-                Image(systemName: "arrow.up").font(.system(size: 14, weight: .bold))
+                Image(systemName: "arrow.up").font(.yy(size: 14, weight: .bold))
                     .foregroundStyle(tint.onBlack)
                     .frame(width: 34, height: 34)
                     .background(tint.black, in: .circle)
             }
+            .accessibilityLabel(Text("发送"))
             .buttonStyle(.plain)
             .padding(.bottom, 5)
             .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty || companion.busy)

@@ -139,15 +139,15 @@ struct QuoteCard: View {
                 .clipped()
                 .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(quote.title).font(.system(size: 11, weight: .semibold)).tracking(0.4).foregroundStyle(c.ink)
+                    Text(quote.title).font(.yy(size: 11, weight: .semibold)).tracking(0.4).foregroundStyle(c.ink)
                     let sub = [quote.author, quote.chapter].compactMap { $0 }.joined(separator: " · ")
                     if !sub.isEmpty {
-                        Text(sub).font(.system(size: 9.5)).foregroundStyle(c.ink2)
+                        Text(sub).font(.yy(size: 9.5)).foregroundStyle(c.ink2)
                     }
                 }
                 .lineLimit(1)
                 Spacer(minLength: 8)
-                Text("语阅").font(.system(size: 9.5)).tracking(1.2).foregroundStyle(c.ink2.opacity(0.8))
+                Text("语阅").font(.yy(size: 9.5)).tracking(1.2).foregroundStyle(c.ink2.opacity(0.8))
                     .frame(maxHeight: .infinity, alignment: .bottom)
             }
             .fixedSize(horizontal: false, vertical: true)
@@ -202,10 +202,11 @@ struct QuoteShareSheet: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("分享书摘").font(.system(size: 14, weight: .bold)).foregroundStyle(YYColor.t1)
+                Text("分享书摘").font(.yy(size: 14, weight: .bold)).foregroundStyle(YYColor.t1)
                 Spacer()
                 Button(action: done) {
-                    Image(systemName: "xmark").font(.system(size: 10, weight: .bold)).foregroundStyle(YYColor.t2)
+                    Image(systemName: "xmark").font(.yy(size: 10, weight: .bold)).foregroundStyle(YYColor.t2)
+                        .accessibilityLabel(Text("关闭"))
                         .frame(width: 24, height: 24).background(YYColor.inset, in: .circle)
                 }
                 .buttonStyle(.plain)
@@ -231,7 +232,7 @@ struct QuoteShareSheet: View {
                     .buttonStyle(.plain)
                     .help(l.name)
                 }
-                Text(look.name).font(.system(size: 11)).foregroundStyle(YYColor.t2).frame(width: 44, alignment: .leading)
+                Text(look.name).font(.yy(size: 11)).foregroundStyle(YYColor.t2).frame(width: 44, alignment: .leading)
             }
             .padding(.bottom, 14)
 

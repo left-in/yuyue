@@ -101,27 +101,27 @@ struct RecapCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 6) {
-                Image(systemName: "clock.arrow.circlepath").font(.system(size: 12, weight: .semibold)).foregroundStyle(tint.accent)
-                Text("前情提要").font(.system(size: 13, weight: .semibold))
+                Image(systemName: "clock.arrow.circlepath").font(.yy(size: 12, weight: .semibold)).foregroundStyle(tint.accent)
+                Text("前情提要").font(.yy(size: 13, weight: .semibold))
                 Spacer()
-                Text("\(recap.days) 天没读了").font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                Text("\(recap.days) 天没读了").font(.yy(size: 11)).foregroundStyle(YYColor.t3)
             }
             VStack(alignment: .leading, spacing: 5) {
                 ForEach(Array(recap.lines.enumerated()), id: \.offset) { i, line in
                     HStack(alignment: .firstTextBaseline, spacing: 7) {
-                        Text("\(i + 1).").font(.system(size: 11)).monospacedDigit().foregroundStyle(YYColor.t3)
-                        Text(line).font(.system(size: 13.5)).lineSpacing(4).foregroundStyle(YYColor.t1)
+                        Text("\(i + 1).").font(.yy(size: 11)).monospacedDigit().foregroundStyle(YYColor.t3)
+                        Text(line).font(.yy(size: 13.5)).lineSpacing(4).foregroundStyle(YYColor.t1)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
             .padding(.vertical, 11)
             HStack {
-                Text("只提要你读过的部分").font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                Text("只提要你读过的部分").font(.yy(size: 11)).foregroundStyle(YYColor.t3)
                 Spacer()
                 Button(action: done) {
                     Text("接着读")
-                        .font(.system(size: 12.5, weight: .semibold))
+                        .font(.yy(size: 12.5, weight: .semibold))
                         .foregroundStyle(tint.onBlack)
                         .padding(.horizontal, 15).frame(height: 30)
                         .background(tint.black, in: .rect(cornerRadius: 10))

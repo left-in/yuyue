@@ -3,6 +3,7 @@ package app.yuyue.design
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.yuyue.t
 
 /** A page of the prototype's pieces on its grey ground. */
 @Composable
@@ -54,7 +56,7 @@ fun YYPage(modifier: Modifier = Modifier, contentPadding: PaddingValues = Paddin
             .verticalScroll(rememberScrollState())
             .padding(contentPadding)
             .padding(horizontal = YY.s(16))
-            .padding(bottom = YY.s(20)),
+            .padding(bottom = YY.s(20) + app.yuyue.LocalTabBarHeight.current),
         content = content,
     )
 }
@@ -141,7 +143,7 @@ fun YYRow(
         Modifier
             .fillMaxWidth()
             .heightIn(min = YY.s(38))
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
+            .then(if (onClick != null) Modifier.clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = onClick) else Modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(YY.s(10)),
     ) {
@@ -187,7 +189,7 @@ fun <T> YYSegments(items: List<Pair<T, String>>, selection: T, onSelect: (T) -> 
                         if (on) Modifier.shadow(1.dp, RoundedCornerShape(YY.s(if (small) 7 else 9))).clip(RoundedCornerShape(YY.s(if (small) 7 else 9))).background(YY.c.card)
                         else Modifier.clip(RoundedCornerShape(YY.s(if (small) 7 else 9))),
                     )
-                    .clickable { onSelect(value) }
+                    .selectable(selected = on, role = androidx.compose.ui.semantics.Role.Tab) { onSelect(value) }
                     .padding(horizontal = if (small) YY.s(8) else 0.dp),
                 contentAlignment = Alignment.Center,
             ) {
@@ -281,9 +283,9 @@ fun YYSheetHeader(title: String, subtitle: String? = null, close: () -> Unit) {
         if (subtitle != null) Text(subtitle, style = YY.font(10f), color = YY.c.t3, maxLines = 1, modifier = Modifier.weight(1f, fill = false))
         Spacer(Modifier.weight(1f))
         Box(
-            Modifier.size(YY.s(26)).clip(CircleShape).background(YY.c.inset).clickable(onClick = close),
+            Modifier.size(YY.s(26)).clip(CircleShape).background(YY.c.inset).clickable(role = androidx.compose.ui.semantics.Role.Button, onClick = close),
             contentAlignment = Alignment.Center,
-        ) { Icon(Icons.close, null, tint = YY.c.t2, modifier = Modifier.size(YY.s(11))) }
+        ) { Icon(Icons.close, t("关上"), tint = YY.c.t2, modifier = Modifier.size(YY.s(11))) }
     }
 }
 

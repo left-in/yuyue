@@ -153,10 +153,10 @@ struct MacNotesView: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Text("笔记").font(.system(size: 22, weight: .bold)).foregroundStyle(YYColor.t1)
+            Text("笔记").font(.yy(size: 22, weight: .bold)).foregroundStyle(YYColor.t1)
                 .padding(.leading, headerInset)
             Text("\(allMarks.count) 条 · 来自 \(notes.count) 本书")
-                .font(.system(size: 12)).foregroundStyle(YYColor.t2)
+                .font(.yy(size: 12)).foregroundStyle(YYColor.t2)
             Spacer()
             Segments(items: [(false, String(localized: "按时间")), (true, String(localized: "按书"))], selection: $byBook, small: true) { Text($1) }
                 .frame(width: 156)
@@ -167,7 +167,7 @@ struct MacNotesView: View {
                            books: { exportBooks.map { NoteExport.Book(id: $0.book.id, title: $0.book.title, author: $0.book.author, chapters: chapters($0)) } },
                            book: byBook ? exportBooks.first?.book : nil) {
                 Label("导出", systemImage: "square.and.arrow.up")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.yy(size: 12, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                     .padding(.horizontal, 12).frame(height: 28)
                     .background(YYColor.card, in: .capsule)
@@ -181,7 +181,7 @@ struct MacNotesView: View {
     private var bookColumnToggle: some View {
         Button { withAnimation(.smooth(duration: 0.3)) { bookColumnShown.toggle() } } label: {
             Image(systemName: "sidebar.left")
-                .font(.system(size: 13.5, weight: .regular))
+                .font(.yy(size: 13.5, weight: .regular))
                 .foregroundStyle(YYColor.t2)
                 .frame(width: 30, height: 26)
                 .background(bookColumnShown ? .clear : YYColor.inset, in: .rect(cornerRadius: 7))
@@ -211,7 +211,7 @@ struct MacNotesView: View {
             HStack(spacing: 4) {
                 if let dot {
                     if dot == .wave {
-                        Image(systemName: "scribble").font(.system(size: 11, weight: .bold)).foregroundStyle(YYColor.hlR)
+                        Image(systemName: "scribble").font(.yy(size: 11, weight: .bold)).foregroundStyle(YYColor.hlR)
                     } else {
                         Circle().fill(dot.dot).frame(width: 10, height: 10)
                     }
@@ -220,7 +220,7 @@ struct MacNotesView: View {
                 Text(count.formatted()).monospacedDigit()
                     .foregroundStyle(on ? AnyShapeStyle(tint.onBlack.opacity(0.55)) : AnyShapeStyle(YYColor.t3))
             }
-            .font(.system(size: 11, weight: on ? .semibold : .regular))
+            .font(.yy(size: 11, weight: on ? .semibold : .regular))
             .foregroundStyle(on ? tint.onBlack : YYColor.t2)
             .padding(.horizontal, 11).frame(height: 26)
             .background(on ? AnyShapeStyle(tint.black) : AnyShapeStyle(YYColor.card), in: .capsule)
@@ -252,9 +252,9 @@ struct MacNotesView: View {
             ForEach(days) { day in
                 HStack(alignment: .top, spacing: 18) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(Notes.dayName(day.id)).font(.system(size: 13, weight: .bold)).foregroundStyle(YYColor.t1)
-                        Text(Notes.monthDay(day.id)).font(.system(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
-                        Text("\(day.items.count) 条").font(.system(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
+                        Text(Notes.dayName(day.id)).font(.yy(size: 13, weight: .bold)).foregroundStyle(YYColor.t1)
+                        Text(Notes.monthDay(day.id)).font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
+                        Text("\(day.items.count) 条").font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
                     }
                     .frame(width: 76, alignment: .leading)
                     .padding(.top, 14).padding(.leading, 2)
@@ -263,9 +263,9 @@ struct MacNotesView: View {
                             entry(n, mark) {
                                 HStack(spacing: 6) {
                                     BookCover(book: n.book).frame(width: 13)
-                                    Text(n.book.title).font(.system(size: 10.5, weight: .semibold)).foregroundStyle(YYColor.t2)
+                                    Text(n.book.title).font(.yy(size: 10.5, weight: .semibold)).foregroundStyle(YYColor.t2)
                                     if let chapter = n.detail?.chapterTitle(for: mark.section), chapter != n.book.title {
-                                        Text("· \(chapter)").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                                        Text("· \(chapter)").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
                                     }
                                     Spacer()
                                     NoteStamp(mark: mark, text: Notes.time(mark.at), size: 10.5)
@@ -286,9 +286,9 @@ struct MacNotesView: View {
             if bookColumnShown {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .firstTextBaseline) {
-                        Text("\(notes.count) 本书").font(.system(size: 12.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                        Text("\(notes.count) 本书").font(.yy(size: 12.5, weight: .semibold)).foregroundStyle(YYColor.t1)
                         Spacer()
-                        Text("最近记的在上面").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                        Text("最近记的在上面").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
                     }
                     .padding(.horizontal, 4)
                     // The card holds the rows only, scrolling once they outgrow the window.
@@ -325,13 +325,13 @@ struct MacNotesView: View {
             HStack(spacing: 10) {
                 BookCover(book: n.book).frame(width: 26)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(n.book.title).font(.system(size: 12, weight: .semibold))
+                    Text(n.book.title).font(.yy(size: 12, weight: .semibold))
                         .foregroundStyle(on ? tint.accent : YYColor.t1)
-                    Text(Notes.counts(n.marks)).font(.system(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
+                    Text(Notes.counts(n.marks)).font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
                 }
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                Text(Notes.shortDay(Notes.date(n.latest))).font(.system(size: 10.5)).monospacedDigit()
+                Text(Notes.shortDay(Notes.date(n.latest))).font(.yy(size: 10.5)).monospacedDigit()
                     .foregroundStyle(on ? tint.accent : YYColor.t3)
                     .frame(maxHeight: .infinity, alignment: .top).padding(.top, 4)
             }
@@ -348,11 +348,11 @@ struct MacNotesView: View {
             HStack(alignment: .bottom, spacing: 14) {
                 BookCover(book: n.book).frame(width: 46)
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(n.book.title).font(.system(size: 19, weight: .bold)).foregroundStyle(YYColor.t1).padding(.bottom, 3)
+                    Text(n.book.title).font(.yy(size: 19, weight: .bold)).foregroundStyle(YYColor.t1).padding(.bottom, 3)
                     Text([n.book.author, String(localized: "读到 \(n.book.percent)")].compactMap { $0 }.joined(separator: " · "))
                     Text(Notes.counts(n.marks) + String(localized: " · 按书里的顺序"))
                 }
-                .font(.system(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
+                .font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 smallButton(String(localized: "回顾这本书"), "arrow.trianglehead.2.clockwise") { reviewing = Review(core: library.core, book: n.book) }
@@ -362,9 +362,9 @@ struct MacNotesView: View {
             ForEach(chapters(n), id: \.0) { title, marks in
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .firstTextBaseline, spacing: 12) {
-                        Text(title).font(.system(size: 12, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
+                        Text(title).font(.yy(size: 12, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
                         Spacer()
-                        Text("\(marks.count) 条").font(.system(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
+                        Text("\(marks.count) 条").font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
                     }
                     .padding(.horizontal, 4)
                     NoteCard {
@@ -387,7 +387,7 @@ struct MacNotesView: View {
         Button(action: action) {
             Label(title, systemImage: icon)
                 .labelStyle(SmallButtonLabel())
-                .font(.system(size: 10.5, weight: .semibold))
+                .font(.yy(size: 10.5, weight: .semibold))
                 .foregroundStyle(YYColor.t1)
                 .padding(.horizontal, 10).frame(height: 26)
                 .background(YYColor.card, in: .capsule)
@@ -398,7 +398,7 @@ struct MacNotesView: View {
 
     private struct SmallButtonLabel: LabelStyle {
         func makeBody(configuration: Configuration) -> some View {
-            HStack(spacing: 5) { configuration.icon.font(.system(size: 11, weight: .medium)); configuration.title }
+            HStack(spacing: 5) { configuration.icon.font(.yy(size: 11, weight: .medium)); configuration.title }
         }
     }
 
@@ -463,10 +463,10 @@ struct MacNotesView: View {
 
     private var empty: some View {
         VStack(spacing: 10) {
-            Image(systemName: "quote.opening").font(.system(size: 28, weight: .light)).foregroundStyle(YYColor.t3)
-            Text("还没有笔记").font(.system(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
+            Image(systemName: "quote.opening").font(.yy(size: 28, weight: .light)).foregroundStyle(YYColor.t3)
+            Text("还没有笔记").font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
             Text("读书时选中文字，按 1–4 就划上；所有书的划线和想法都会在这里")
-                .font(.system(size: 12)).foregroundStyle(YYColor.t2)
+                .font(.yy(size: 12)).foregroundStyle(YYColor.t2)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

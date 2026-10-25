@@ -62,7 +62,8 @@ struct PhoneShelf: View {
             .safeAreaInset(edge: .bottom) {
                 if selecting { selectionBar }
             }
-            .overlay(alignment: .bottom) { toast }
+            .overlay(alignment: .top) { toast }
+            .animation(.spring(duration: 0.4, bounce: 0.3), value: library.toast?.id)
             .navigationDestination(isPresented: $wifiShown) { PhoneWifi(library: library) }
             .navigationDestination(isPresented: $remoteShown) { PhoneRemoteStart(library: library) }
             .navigationDestination(isPresented: $watchShown) { PhoneWatchedFolder(library: library) }
@@ -163,7 +164,7 @@ struct PhoneShelf: View {
                     .foregroundStyle(YYColor.t1)
                     .lineLimit(1)
                 Image(systemName: "chevron.down")
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.yy(size: 15, weight: .bold))
                     .foregroundStyle(YYColor.t3)
             }
             .contentShape(.rect)
@@ -240,6 +241,7 @@ struct PhoneShelf: View {
                         .contentShape(.capsule)
                 }
                 .buttonStyle(.plain)
+                .accessibilityAddTraits(kind == k ? .isSelected : [])
             }
             Spacer(minLength: 8)
             Menu {
@@ -249,7 +251,7 @@ struct PhoneShelf: View {
             } label: {
                 HStack(spacing: 4) {
                     Text(sort.name)
-                    Image(systemName: "chevron.up.chevron.down").font(.system(size: 10, weight: .semibold))
+                    Image(systemName: "chevron.up.chevron.down").font(.yy(size: 10, weight: .semibold))
                 }
                 .font(.footnote)
                 .foregroundStyle(YYColor.t2)
@@ -314,7 +316,7 @@ struct PhoneShelf: View {
             ("book.closed", String(localized: "这里还没有书"))
         }
         VStack(spacing: 12) {
-            Image(systemName: symbol).font(.system(size: 34, weight: .light)).foregroundStyle(YYColor.t3)
+            Image(systemName: symbol).font(.yy(size: 34, weight: .light)).foregroundStyle(YYColor.t3)
             Text(text).font(.subheadline).foregroundStyle(YYColor.t2).multilineTextAlignment(.center)
             if library.books.isEmpty {
                 Button("导入书") { importerShown = true }
@@ -343,13 +345,13 @@ struct PhoneShelf: View {
                     .overlay(alignment: .bottomTrailing) {
                         if selecting {
                             Image(systemName: selected.contains(book.id) ? "checkmark.circle.fill" : "circle")
-                                .font(.system(size: 22))
+                                .font(.yy(size: 22))
                                 .foregroundStyle(selected.contains(book.id) ? tint.accent : .white)
                                 .background(Circle().fill(selected.contains(book.id) ? .white : .black.opacity(0.25)).padding(2))
                                 .padding(6)
                         } else if !book.available {
                             Image(systemName: "icloud.and.arrow.down")
-                                .font(.system(size: 11, weight: .semibold))
+                                .font(.yy(size: 11, weight: .semibold))
                                 .foregroundStyle(YYColor.t2)
                                 .padding(6)
                                 .background(YYColor.card, in: .circle)
@@ -452,7 +454,7 @@ struct PhoneShelf: View {
     private func barButton(_ title: String, _ symbol: String, danger: Bool = false, _ action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 3) {
-                Image(systemName: symbol).font(.system(size: 17))
+                Image(systemName: symbol).font(.yy(size: 17))
                 Text(title).font(.caption2)
             }
             .foregroundStyle(danger ? YYColor.danger : YYColor.t1)
@@ -472,8 +474,8 @@ struct PhoneShelf: View {
         if let note = library.toast {
             UndoToast(toast: note, undo: { library.undo() })
                 .padding(.horizontal, 16)
-                .padding(.bottom, 10)
-                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .padding(.top, 6)
+                .transition(UndoToast.transition)
                 .id(note.id)
         }
     }

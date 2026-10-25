@@ -1,5 +1,7 @@
 package app.yuyue.reader
 
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -109,8 +111,9 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
             ReaderModel(library, bookID, pager, context)
         }
     }
-    val paper = model.paper.tokens
+    val paper = model.paperTokens
     model.pager.background = paper.bg.toArgb()
+    LaunchedEffect(model, Papers.version) { model.papersChanged() }
     DisposableEffect(model) {
         // 音量键翻页: on unless reading aloud, when the keys are for the volume.
         VolumeKeys.handler = { forward ->
@@ -165,6 +168,7 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
     Box(Modifier.fillMaxSize().background(paper.bg)) {
         AndroidView({ model.pager.also { (it.parent as? android.view.ViewGroup)?.removeView(it) } }, Modifier.fillMaxSize())
         PullMark(model, paper)
+        PageTapHint(model, paper)
         model.bookmarkHere?.takeIf { model.pull == 0f && !model.chromeShown && !model.searchShown }?.let {
             Icon(Icons.bookmark, null, tint = YY.tint.accent, modifier = Modifier.align(Alignment.TopEnd).padding(end = 22.dp).size(22.dp).offset(y = (-3).dp))
         }
@@ -172,9 +176,10 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
         Cards(model, paper) { thought = it }
         model.lookup?.let { WordCard(model, it) }
         model.toast?.let {
-            UndoToast(it, undo = { model.undoToast() }, modifier = Modifier.align(Alignment.BottomCenter).windowInsetsPadding(WindowInsets.navigationBars).padding(horizontal = 16.dp).padding(bottom = 72.dp))
+            UndoToast(it, undo = { model.undoToast() }, modifier = Modifier.align(Alignment.TopCenter).windowInsetsPadding(WindowInsets.statusBars).padding(horizontal = 16.dp, vertical = 6.dp))
         }
-        model.failure?.let { Text(it, color = paper.ink2, modifier = Modifier.align(Alignment.Center).padding(32.dp)) }
+        if (model.detail == null) app.yuyue.shelf.BookFailure(model.failure, close)
+        else model.failure?.let { app.yuyue.shelf.FailureDialog(it) { model.failure = null } }
     }
 
     if (model.tocShown) TocSheet(model) { model.tocShown = false }
@@ -369,7 +374,7 @@ private fun SearchField(model: ReaderModel, paper: YYPaper) {
                 model.query, { model.query = it; model.search() }, singleLine = true,
                 textStyle = androidx.compose.ui.text.TextStyle(fontSize = 15.sp, color = paper.ink),
                 cursorBrush = SolidColor(YY.tint.accent),
-                modifier = Modifier.weight(1f).focusRequester(focus),
+                modifier = Modifier.weight(1f).focusRequester(focus).semantics { contentDescription = t("搜这本书") },
                 decorationBox = { inner ->
                     if (model.query.isEmpty()) Text(t("搜这本书"), fontSize = 15.sp, color = paper.ink2)
                     inner()
@@ -520,4 +525,38 @@ fun ThoughtDialog(initial: String, done: (String?) -> Unit) {
 /** The volume keys while a book is open: the reader takes them to turn pages, or lets them be. */
 object VolumeKeys {
     var handler: ((forward: Boolean) -> Boolean)? = null
+}
+
+/** 第一次进阅读器 (prototype): three faint zones — 上一页, 菜单, 下一页 — over the page the first time
+ *  a book is opened, gone after three seconds and never shown again. */
+@Composable
+private fun PageTapHint(model: ReaderModel, paper: YYPaper) {
+    var shown by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        if (Prefs.bool("reader.tapHintShown", false) || model.settings.mode != uniffi.yuyue_core.LayoutMode.PAGINATED) return@LaunchedEffect
+        Prefs.set("reader.tapHintShown", true)
+        shown = true
+        kotlinx.coroutines.delay(3000)
+        shown = false
+    }
+    androidx.compose.animation.AnimatedVisibility(
+        shown,
+        enter = androidx.compose.animation.fadeIn(androidx.compose.animation.core.tween(300)),
+        exit = androidx.compose.animation.fadeOut(androidx.compose.animation.core.tween(600)),
+    ) {
+        Row(Modifier.fillMaxSize()) {
+            listOf(Triple(t("上一页"), Icons.chevronLeft, 0.3f), Triple(t("菜单"), Icons.more, 0.4f), Triple(t("下一页"), Icons.chevronRight, 0.3f))
+                .forEachIndexed { i, (title, icon, share) ->
+                    Column(
+                        Modifier.weight(share).fillMaxHeight().background(paper.ink.copy(alpha = if (i == 1) 0.07f else 0.035f)),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+                    ) {
+                        Icon(icon, null, tint = paper.ink.copy(alpha = 0.7f), modifier = Modifier.size(24.dp))
+                        Text(title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = paper.ink.copy(alpha = 0.7f))
+                    }
+                    if (i < 2) Box(Modifier.width(0.5.dp).fillMaxHeight().background(paper.ink.copy(alpha = 0.12f)))
+                }
+        }
+    }
 }

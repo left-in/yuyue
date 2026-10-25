@@ -79,7 +79,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         case .comics: String(localized: "漫画")
         case .listening: String(localized: "朗读")
         case .foreign: String(localized: "外文")
-        case .companion: String(localized: "AI 服务")
+        case .companion: String(localized: "书伴")
         case .sync: String(localized: "同步")
         case .storage: String(localized: "存储")
         case .data: String(localized: "数据")
@@ -90,8 +90,9 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         switch self {
         case .general: "slider.horizontal.3"
         case .appearance: "sun.max"
-        case .reading: "book.closed"
-        case .comics: "rectangle.split.2x2"
+        // 阅读 and 漫画 as in the shelf's sidebar.
+        case .reading: ProtoIcon.book.rawValue
+        case .comics: ProtoIcon.comic.rawValue
         case .listening: "headphones"
         case .foreign: "character.book.closed"
         case .companion: "sparkle"
@@ -138,12 +139,20 @@ struct SettingsTabs: View {
             page = p
         } label: {
             VStack(spacing: 4) {
-                Image(systemName: p.symbol)
-                    .font(.system(size: 16))
-                    .frame(height: 19)
-                    .foregroundStyle(on ? tint.accent : YYColor.t2)
+                Group {
+                    if let drawn = ProtoIcon(rawValue: p.symbol) {
+                        // The sidebar's drawing, its line grown with it from 14 to 18.
+                        drawn.shape
+                            .stroke(style: StrokeStyle(lineWidth: drawn.line * 18 / 14, lineCap: .round, lineJoin: .round))
+                            .frame(width: 18, height: 18)
+                    } else {
+                        Image(systemName: p.symbol).font(.yy(size: 16))
+                    }
+                }
+                .frame(height: 19)
+                .foregroundStyle(on ? tint.accent : YYColor.t2)
                 Text(p.title)
-                    .font(.system(size: 11, weight: on ? .semibold : .regular))
+                    .font(.yy(size: 11, weight: on ? .semibold : .regular))
                     .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
             }
             .frame(width: 64, height: 48)
@@ -344,9 +353,9 @@ struct SettingsRow<Trailing: View>: View {
         // `.v-ms-row`: 12.5 over 10.5, at least 46 high.
         HStack(alignment: .center, spacing: 18) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.system(size: 12.5, weight: .medium)).foregroundStyle(YYColor.t1)
+                Text(title).font(.yy(size: 12.5, weight: .medium)).foregroundStyle(YYColor.t1)
                 if let detail {
-                    Text(detail).font(.system(size: 10.5)).lineSpacing(2).foregroundStyle(YYColor.t3)
+                    Text(detail).font(.yy(size: 10.5)).lineSpacing(2).foregroundStyle(YYColor.t3)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
@@ -387,7 +396,7 @@ struct SettingsHeading: View {
     var body: some View {
         // `.v-ms-gl`
         Text(text)
-            .font(.system(size: 11.5, weight: .semibold))
+            .font(.yy(size: 11.5, weight: .semibold))
             .foregroundStyle(YYColor.t2)
             .padding(.leading, 4)
             .padding(.top, 2)
@@ -437,9 +446,9 @@ private struct AppearanceSettings: View {
             SettingsCard {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 3) {
-                        Text("界面").font(.system(size: 13, weight: .medium)).foregroundStyle(YYColor.t1)
+                        Text("界面").font(.yy(size: 13, weight: .medium)).foregroundStyle(YYColor.t1)
                         Text("书架、设置这些窗口；书页的纸色在读书窗口的 Aa 里另外选")
-                            .font(.system(size: 11.5)).foregroundStyle(YYColor.t2)
+                            .font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
                     }
                     Spacer()
                     HStack(spacing: 10) {
@@ -452,8 +461,8 @@ private struct AppearanceSettings: View {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 3) {
-                            Text("主题色").font(.system(size: 13, weight: .medium)).foregroundStyle(YYColor.t1)
-                            Text("墨蓝是默认；墨黑是你确认过的原样").font(.system(size: 11.5)).foregroundStyle(YYColor.t2)
+                            Text("主题色").font(.yy(size: 13, weight: .medium)).foregroundStyle(YYColor.t1)
+                            Text("墨蓝是默认；墨黑是你确认过的原样").font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
                         }
                         Spacer()
                         HStack(spacing: 14) {
@@ -461,14 +470,14 @@ private struct AppearanceSettings: View {
                         }
                     }
                     Text("按钮、开关、进度和选中都用这个颜色")
-                        .font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                        .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 .padding(16)
                 SettingsRow(String(localized: "看看效果")) {
                     HStack(spacing: 14) {
                         Text("接着读")
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(.yy(size: 12, weight: .semibold))
                             .foregroundStyle(tint.onBlack)
                             .padding(.horizontal, 13).frame(height: 26)
                             .background(tint.black, in: .capsule)
@@ -478,11 +487,11 @@ private struct AppearanceSettings: View {
                                 Capsule().fill(tint.fill).frame(width: 44)
                             }
                             .frame(width: 72, height: 3)
-                            Text("62%").font(.system(size: 11)).monospacedDigit().foregroundStyle(YYColor.t3)
+                            Text("62%").font(.yy(size: 11)).monospacedDigit().foregroundStyle(YYColor.t3)
                         }
                         Toggle("", isOn: $sample).labelsHidden().toggleStyle(.switch).controlSize(.small).tint(tint.fill)
                         Text("全部")
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(.yy(size: 12, weight: .semibold))
                             .foregroundStyle(tint.onBlack)
                             .padding(.horizontal, 11).frame(height: 26)
                             .background(tint.black, in: .capsule)
@@ -524,7 +533,7 @@ private struct AppearanceSettings: View {
                     .padding(3)
                     .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(on ? tint.accent : .clear, lineWidth: 2))
                 Text(m.title)
-                    .font(.system(size: 11.5, weight: on ? .semibold : .regular))
+                    .font(.yy(size: 11.5, weight: on ? .semibold : .regular))
                     .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
             }
         }
@@ -541,7 +550,7 @@ private struct AppearanceSettings: View {
                     .padding(3)
                     .overlay(Circle().strokeBorder(on ? t.black : .clear, lineWidth: 2))
                 Text(t.name)
-                    .font(.system(size: 11.5, weight: on ? .semibold : .regular))
+                    .font(.yy(size: 11.5, weight: on ? .semibold : .regular))
                     .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
             }
         }
@@ -621,15 +630,14 @@ private struct ReadingSettings: View {
                 SettingsRow(String(localized: "纸色"), detail: String(localized: "新打开的书用这个；单本书在 Aa 里另选")) {
                     HStack(spacing: 8) {
                         ForEach(YYPaper.all) { paper in
-                            Button { change { $0.paper = Paper(id: paper.id) ?? .plain } } label: {
-                                Circle().fill(paper.bg)
-                                    .frame(width: 22, height: 22)
-                                    .overlay(Circle().strokeBorder(YYColor.line))
-                                    .padding(2.5)
-                                    .overlay(Circle().strokeBorder(settings.paper.tokens.id == paper.id ? YYTint.standard.accent : .clear, lineWidth: 2))
+                            dot(paper, selected: settings.paperChoice == paper.id) { change { $0.paper = Paper(id: paper.id) ?? .plain; $0.customPaper = nil } }
+                        }
+                        // 我的纸 are made in the book's Aa.
+                        ForEach(Papers.shared.list, id: \.id) { mine in
+                            dot(YYPaper(custom: mine), selected: settings.paperChoice == mine.id) {
+                                let preset = paperColors(paper: mine).preset
+                                change { $0.customPaper = mine.id; $0.paper = preset }
                             }
-                            .buttonStyle(.plain)
-                            .help(paper.name)
                         }
                     }
                 }
@@ -677,7 +685,7 @@ private struct ReadingSettings: View {
             SettingsHeading(String(localized: "沉浸阅读"))
             SettingsCard {
                 SettingsRow(String(localized: "进出沉浸"), detail: String(localized: "全屏只留下字；指针移到最底下，胶囊就出来")) {
-                    Text("⌃⌘F 或 Esc").font(.system(size: 12)).foregroundStyle(YYColor.t2)
+                    Text("⌃⌘F 或 Esc").font(.yy(size: 12)).foregroundStyle(YYColor.t2)
                 }
                 SettingsRow(String(localized: "打开书就进沉浸"), detail: String(localized: "每本书一打开就只留下字")) { SettingsSwitch(isOn: $immersiveAlways) }
                 SettingsRow(String(localized: "留一条进度细线"), detail: String(localized: "屏幕最底下一条几乎看不见的线")) { SettingsSwitch(isOn: $immersiveLine) }
@@ -703,6 +711,18 @@ private struct ReadingSettings: View {
         try? library.core.setReaderSettings(settings: new)
         NotificationCenter.default.post(name: .readerSettingsChanged, object: nil)
     }
+
+    private func dot(_ paper: YYPaper, selected: Bool, pick: @escaping () -> Void) -> some View {
+        Button(action: pick) {
+            Circle().fill(paper.bg)
+                .frame(width: 22, height: 22)
+                .overlay(Circle().strokeBorder(YYColor.line))
+                .padding(2.5)
+                .overlay(Circle().strokeBorder(selected ? YYTint.standard.accent : .clear, lineWidth: 2))
+        }
+        .buttonStyle(.plain)
+        .help(paper.name)
+    }
 }
 
 // MARK: - 漫画
@@ -718,10 +738,10 @@ private struct ComicSettings: View {
         VStack(alignment: .leading, spacing: 12) {
             SettingsCard {
                 SettingsRow(String(localized: "阅读方式和方向"), detail: String(localized: "每部漫画分别记住，在漫画窗口右上角换")) {
-                    Text("单页 · 双页 · 条漫").font(.system(size: 12)).foregroundStyle(YYColor.t2)
+                    Text("单页 · 双页 · 条漫").font(.yy(size: 12)).foregroundStyle(YYColor.t2)
                 }
                 SettingsRow(String(localized: "翻页"), detail: String(localized: "点窗口左右两边，或按 ← →、空格；点中间呼出菜单")) {
-                    Text("左右跟着方向对调").font(.system(size: 12)).foregroundStyle(YYColor.t2)
+                    Text("左右跟着方向对调").font(.yy(size: 12)).foregroundStyle(YYColor.t2)
                 }
             }
             SettingsHeading(String(localized: "所有漫画"))
@@ -769,14 +789,14 @@ private struct ListeningSettings: View {
                 }
             }
             Text("系统声音在这台 Mac 上合成，不联网。想要更自然的声音：系统设置 › 辅助功能 › 朗读内容 › 系统声音 › 管理声音，下载“高级”的那几个")
-                .font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
                 .padding(.horizontal, 8)
             SettingsHeading(String(localized: "云端声音"))
             SettingsCard {
                 ForEach(CloudVoice.Provider.allCases) { CloudVoiceRow(provider: $0) }
             }
             Text("填你自己的 Key，费用直接走你的账号，语阅不经手。读过的句子存在这台 Mac 上，再听不花钱，断网也能听；听书时会把这一章提前合成好。")
-                .font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
                 .padding(.horizontal, 8)
             Spacer(minLength: 0)
         }
@@ -799,11 +819,11 @@ private struct CloudVoiceRow: View {
             HStack(spacing: 8) {
                 if provider == .azure {
                     TextField("", text: $region, prompt: Text(verbatim: "eastasia"))
-                        .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
+                        .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
                         .frame(width: 90)
                 }
                 SecureField("", text: $key, prompt: Text(provider.keyHint))
-                    .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
+                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
                     .frame(width: provider == .azure ? 130 : 200)
                 Button {
                     connect()
@@ -905,25 +925,25 @@ private struct NoteExportSettings: View {
             SettingsRow("Obsidian", detail: String(localized: "每本书一篇笔记，写进你选的文件夹；再发一次就更新那一篇")) {
                 HStack(spacing: 8) {
                     if let folder {
-                        Text(folder.lastPathComponent).font(.system(size: 12)).foregroundStyle(YYColor.t2).lineLimit(1)
+                        Text(folder.lastPathComponent).font(.yy(size: 12)).foregroundStyle(YYColor.t2).lineLimit(1)
                     }
                     Button(folder == nil ? String(localized: "选文件夹…") : String(localized: "换一个…")) { pick() }
                 }
             }
             SettingsRow("Notion", detail: String(localized: "在 notion.so/my-integrations 建一个集成，把令牌填在这里；再把要放书的页面共享给它，页面链接填在下面")) {
                 SecureField("", text: $notionToken, prompt: Text(verbatim: "ntn_…"))
-                    .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
+                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
                     .frame(width: 240)
                     .onChange(of: notionToken) { save(NoteExport.notionKey, notionToken) }
             }
             SettingsRow(String(localized: "Notion 页面"), detail: notionPage.isEmpty || NoteExport.pageID(from: notionPage) != nil ? nil : String(localized: "这不像一个 Notion 页面链接")) {
                 TextField("", text: $notionPage, prompt: Text(verbatim: "https://www.notion.so/…"))
-                    .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
+                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
                     .frame(width: 240)
             }
             SettingsRow("flomo", detail: String(localized: "flomo 网页版 › 设置 › API，拷那条以 https://flomoapp.com/iwh/ 开头的链接；每条划线成一条笔记")) {
                 SecureField("", text: $flomo, prompt: Text(verbatim: "https://flomoapp.com/iwh/…"))
-                    .textFieldStyle(.roundedBorder).font(.system(size: 12, design: .monospaced))
+                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
                     .frame(width: 240)
                     .onChange(of: flomo) { save(NoteExport.flomoKey, flomo) }
             }
@@ -979,9 +999,9 @@ private struct DataSettings: View {
                 HStack(spacing: 12) {
                     (Text(snapshots.parts.files ? String(localized: "含书文件 · 约 ") : String(localized: "不含书文件 · 约 "))
                         + Text(snapshots.counts == nil ? "…" : StorageSettings.size(snapshots.estimate)).fontWeight(.semibold).foregroundStyle(YYColor.t1))
-                        .font(.system(size: 12).monospacedDigit()).foregroundStyle(YYColor.t3)
+                        .font(.yy(size: 12).monospacedDigit()).foregroundStyle(YYColor.t3)
                     if let problem = snapshots.problem {
-                        Text(problem).font(.system(size: 11.5)).foregroundStyle(YYColor.danger).lineLimit(2)
+                        Text(problem).font(.yy(size: 11.5)).foregroundStyle(YYColor.danger).lineLimit(2)
                     }
                     Spacer()
                     Button("导入快照…") { pick() }
@@ -1031,7 +1051,7 @@ private struct DataSettings: View {
                 }
                 .buttonStyle(.link)
             }
-            .font(.system(size: 11)).foregroundStyle(YYColor.t3)
+            .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
             .padding(.leading, 8)
             Spacer(minLength: 0)
         }
@@ -1043,7 +1063,7 @@ private struct DataSettings: View {
     private func part(_ title: String, count: String?, _ key: WritableKeyPath<SnapshotParts, Bool>) -> some View {
         SettingsRow(title) {
             HStack(spacing: 12) {
-                if let count { Text(count).font(.system(size: 12).monospacedDigit()).foregroundStyle(YYColor.t3) }
+                if let count { Text(count).font(.yy(size: 12).monospacedDigit()).foregroundStyle(YYColor.t3) }
                 SettingsSwitch(isOn: Binding { snapshots.parts[keyPath: key] } set: { snapshots.parts[keyPath: key] = $0 })
             }
         }
@@ -1079,12 +1099,12 @@ private struct StorageSettings: View {
             SettingsCard {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(alignment: .firstTextBaseline) {
-                        Text("语阅一共用了").font(.system(size: 13)).foregroundStyle(YYColor.t2)
+                        Text("语阅一共用了").font(.yy(size: 13)).foregroundStyle(YYColor.t2)
                         Text(usage.map { Self.size($0.total) } ?? "…")
-                            .font(.system(size: 22, weight: .bold)).foregroundStyle(YYColor.t1)
+                            .font(.yy(size: 22, weight: .bold)).foregroundStyle(YYColor.t1)
                         Spacer()
                         if let free = usage?.free {
-                            Text("这台 Mac 还剩 \(Self.size(free))").font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
+                            Text("这台 Mac 还剩 \(Self.size(free))").font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
                         }
                     }
                     if let usage { bar(usage) }
@@ -1099,7 +1119,7 @@ private struct StorageSettings: View {
                 SettingsRow(String(localized: "书伴存下的回答"), detail: String(localized: "同一本书、读到同一章问同样的问题，直接用存下的，不再花钱")) {
                     HStack(spacing: 10) {
                         Text(Self.size(companionBytes))
-                            .font(.system(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)
+                            .font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)
                         Button("清掉") {
                             try? FileManager.default.removeItem(at: companionDir)
                             companionBytes = Self.bytes(in: companionDir)
@@ -1155,7 +1175,7 @@ private struct StorageSettings: View {
                 ForEach(parts, id: \.0) { p in
                     HStack(spacing: 5) {
                         Circle().fill(p.2).frame(width: 7, height: 7)
-                        Text("\(p.0) \(Self.size(p.1))").font(.system(size: 11)).foregroundStyle(YYColor.t2)
+                        Text("\(p.0) \(Self.size(p.1))").font(.yy(size: 11)).foregroundStyle(YYColor.t2)
                     }
                 }
             }

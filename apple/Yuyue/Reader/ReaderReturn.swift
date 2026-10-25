@@ -13,12 +13,12 @@ struct ElsewhereCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 6) {
-                Image(systemName: "laptopcomputer.and.iphone").font(.system(size: 11)).foregroundStyle(YYColor.t2)
+                Image(systemName: "laptopcomputer.and.iphone").font(.yy(size: 11)).foregroundStyle(YYColor.t2)
                 Text("\(elsewhere.progress.deviceName ?? String(localized: "另一台设备")) 上读到了更后面")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.yy(size: 12, weight: .semibold))
                 Spacer()
                 Text(Self.ago(Date(timeIntervalSince1970: Double(elsewhere.progress.at) / 1000)))
-                    .font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                    .font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
             }
             if let text = elsewhere.text {
                 Text(text)
@@ -32,17 +32,17 @@ struct ElsewhereCard: View {
             }
             HStack(spacing: 8) {
                 Text("\(elsewhere.chapter.map { $0 + " · " } ?? "")\(Self.percent(elsewhere.progress.fraction)) · 这台在 \(Self.percent(elsewhere.here))")
-                    .font(.system(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
+                    .font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
                     .lineLimit(1)
                 Spacer()
                 Button("留在这里", action: stay)
                     .buttonStyle(.plain)
-                    .font(.system(size: 11.5))
+                    .font(.yy(size: 11.5))
                     .foregroundStyle(YYColor.t2)
                     .padding(.horizontal, 10).frame(height: 28)
                 Button(action: jump) {
                     Text("跳过去")
-                        .font(.system(size: 11.5, weight: .semibold))
+                        .font(.yy(size: 11.5, weight: .semibold))
                         .foregroundStyle(tint.onBlack)
                         .padding(.horizontal, 14).frame(height: 28)
                         .background(tint.black, in: .rect(cornerRadius: 10))
@@ -97,14 +97,14 @@ struct DoubtPill: View {
             }
             Button(action: dismiss) {
                 Image(systemName: "xmark")
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.yy(size: 10, weight: .bold))
                     .foregroundStyle(paper.ink.opacity(0.5))
                     .frame(width: 30, height: 34)
                     .contentShape(.rect)
             }
             .accessibilityLabel("不用提示了")
         }
-        .font(.system(size: 12.5, weight: .semibold))
+        .font(.yy(size: 12.5, weight: .semibold))
         .yyGlass(Capsule(), fill: paper.glass, line: paper.line, shadow: paper.isDark ? 0.35 : 0.08, radius: 10, y: 3,
                  liquid: !paper.isEink)
         .buttonStyle(.plain)
@@ -119,7 +119,7 @@ struct ReturnPill: View {
     var body: some View {
         Button(action: action) {
             Label(page.map { String(localized: "回到第 \($0) 页") } ?? String(localized: "回到原处"), systemImage: "arrow.uturn.backward")
-                .font(.system(size: 12.5, weight: .semibold))
+                .font(.yy(size: 12.5, weight: .semibold))
                 .monospacedDigit()
                 .foregroundStyle(paper.ink)
                 .padding(.horizontal, 14)

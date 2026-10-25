@@ -1,5 +1,7 @@
 package app.yuyue.reader
 
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -90,7 +92,7 @@ fun ReplaceRulesSheet(core: YuyueCore, bookID: String, changed: () -> Unit, dism
                                 if (r.speechOnly) YYTag(t("只改朗读"), Icons.headphones)
                             }
                         }
-                        Switch(r.enabled, { on -> runCatching { core.setReplaceRuleEnabled(r.id, on) }; touched() },
+                        Switch(r.enabled, { on -> runCatching { core.setReplaceRuleEnabled(r.id, on) }; touched() }, modifier = Modifier.semantics { contentDescription = t("启用这条规则") },
                             colors = SwitchDefaults.colors(checkedTrackColor = YY.tint.fill, checkedThumbColor = YY.c.card, uncheckedTrackColor = YY.c.inset, uncheckedBorderColor = YY.c.line))
                     }
                 }

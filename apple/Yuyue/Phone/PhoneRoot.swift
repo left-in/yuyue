@@ -36,7 +36,7 @@ struct PhoneRoot: View {
 
     var body: some View {
         TabView(selection: $tab) {
-            Tab("书架", systemImage: "books.vertical", value: .shelf) {
+            Tab("书架", image: PhoneTabIcon.shelf, value: .shelf) {
                 PhoneShelf(library: library).nowPlayingBar(library)
             }
             Tab("笔记", systemImage: "highlighter", value: .notes) {
@@ -158,6 +158,7 @@ struct NowPlayingBar: View {
         .modifier(CapsuleGlass())
         .accessibilityElement(children: .contain)
         .accessibilityLabel("正在听《\(book.title)》")
+        .accessibilityAction(named: Text("回到正在读的页"), open)
     }
 }
 #endif

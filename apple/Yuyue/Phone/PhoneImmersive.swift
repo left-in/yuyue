@@ -26,7 +26,7 @@ struct PhoneImmersiveSheet: View {
                     } else {
                         always = on
                     }
-                })
+                }, label: String(localized: "沉浸阅读"))
             }
             Text(model == nil ? String(localized: "打开后每本书一打开就只留下字。下面这些会一起关掉，也可以逐项留下。") : String(localized: "打开后读书时只留下字。下面这些会一起关掉，也可以逐项留下。"))
                 .font(YYUI.font(10)).lineSpacing(YYUI.s(3)).foregroundStyle(YYColor.t3)
@@ -60,7 +60,7 @@ struct PhoneImmersiveSheet: View {
     }
 
     private func row(_ title: String, _ on: Binding<Bool>) -> some View {
-        YYRow(title: title) { YYSwitch(isOn: on) }
+        YYRow(title: title) { YYSwitch(isOn: on, label: title) }
     }
 }
 #endif
@@ -76,7 +76,7 @@ struct PhoneEInk: View {
         YYPage {
             YYGroup {
                 YYRow(title: String(localized: "墨水屏模式"), icon: "rectangle.portrait.on.rectangle.portrait") {
-                    YYSwitch(isOn: Binding { on } set: { EInk.set($0, core: library.core) })
+                    YYSwitch(isOn: Binding { on } set: { EInk.set($0, core: library.core) }, label: String(localized: "墨水屏模式"))
                 }
             }
             .padding(.top, YYUI.s(10))

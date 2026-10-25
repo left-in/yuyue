@@ -58,7 +58,9 @@ final class ComicModel {
     init(library: Library, bookID: String, wide: Bool) {
         core = library.core
         self.bookID = bookID
-        let detail = try? core.book(id: bookID)
+        var detail: BookDetail?
+        var failure: String?
+        do { detail = try core.book(id: bookID) } catch { failure = Library.message(for: error) }
         title = detail?.summary.title ?? ""
         var episodes: [Episode] = []
         for (i, s) in (detail?.sections ?? []).enumerated() where s.pages > 0 {
@@ -70,7 +72,8 @@ final class ComicModel {
         // A window wider than tall shows two pages, unless this comic was read otherwise.
         layout = d.string(forKey: "comic.layout.\(bookID)").flatMap(Layout.init) ?? (wide ? .double : .single)
         rightToLeft = d.object(forKey: "comic.rtl.\(bookID)") as? Bool ?? true
-        if detail == nil { failure = String(localized: "打不开这部漫画") }
+        if detail != nil, episodes.isEmpty { failure = String(localized: "这部漫画里没有能看的图片") }
+        self.failure = failure
 
         var position = (try? core.progress(bookId: bookID))?.position ?? (try? core.latestProgress(bookId: bookID))?.position
         if case .at(let there) = library.takeIntent(for: bookID) { position = there }

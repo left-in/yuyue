@@ -18,11 +18,11 @@ struct WordCard: View {
                     .font(.custom("Georgia", size: 21).weight(.bold))
                     .foregroundStyle(YYColor.t1)
                 if let phonetic = lookup.definition?.phonetic {
-                    Text(phonetic).font(.system(size: 11.5)).foregroundStyle(YYColor.t2)
+                    Text(phonetic).font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
                 }
                 Spacer(minLength: 8)
                 Button { model.say(lookup.word) } label: {
-                    Image(systemName: "headphones").font(.system(size: 12, weight: .medium)).foregroundStyle(YYColor.t1)
+                    Image(systemName: "headphones").font(.yy(size: 12, weight: .medium)).foregroundStyle(YYColor.t1)
                         .frame(width: 28, height: 28).background(YYColor.inset, in: .circle)
                 }
                 .buttonStyle(.plain)
@@ -43,7 +43,7 @@ struct WordCard: View {
             Divider().overlay(YYColor.line).padding(.top, 12)
             HStack(spacing: 6) {
                 // The buttons keep their words; a long source gives way (it cut 加入生词本 short).
-                Text(source).font(.system(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
+                Text(source).font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
                 Spacer(minLength: 4)
                 Button(lookup.html == nil ? String(localized: "更多释义") : full ? String(localized: "收起释义") : String(localized: "完整释义")) { more() }
                     .buttonStyle(CardButton(filled: false))
@@ -68,13 +68,13 @@ struct WordCard: View {
     @ViewBuilder private var meaning: some View {
         if let d = lookup.definition {
             (Text(d.partOfSpeech.map { $0 + " " } ?? "").font(.custom("Georgia", size: 13)).italic().foregroundStyle(YYColor.t3)
-                + Text(d.meaning).font(.system(size: 13)).foregroundStyle(YYColor.t1))
+                + Text(d.meaning).font(.yy(size: 13)).foregroundStyle(YYColor.t1))
                 .fixedSize(horizontal: false, vertical: true)
         } else if let gloss = lookup.gloss {
-            Text(gloss).font(.system(size: 13)).foregroundStyle(YYColor.t1)
+            Text(gloss).font(.yy(size: 13)).foregroundStyle(YYColor.t1)
         } else {
             Text("系统词典里没有这个词。可以在“词典”App 的设置里打开英汉词典。")
-                .font(.system(size: 12)).foregroundStyle(YYColor.t2).lineSpacing(3)
+                .font(.yy(size: 12)).foregroundStyle(YYColor.t2).lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -118,21 +118,21 @@ struct SentenceCard: View {
                 .font(.custom("Georgia", size: 12.5)).foregroundStyle(YYColor.t2)
                 .lineSpacing(3).lineLimit(4)
             if let t = item.translated {
-                Text(t).font(.system(size: 13.5)).foregroundStyle(YYColor.t1).lineSpacing(5)
+                Text(t).font(.yy(size: 13.5)).foregroundStyle(YYColor.t1).lineSpacing(5)
                     .textSelection(.enabled)
                     .fixedSize(horizontal: false, vertical: true)
             } else if let failed = item.failed {
                 Label(failed, systemImage: "exclamationmark.circle")
-                    .font(.system(size: 11.5)).foregroundStyle(YYColor.danger)
+                    .font(.yy(size: 11.5)).foregroundStyle(YYColor.danger)
             } else {
                 HStack(spacing: 6) {
                     ProgressView().controlSize(.small)
-                    Text("正在翻译…").font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
+                    Text("正在翻译…").font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
                 }
             }
             Divider().overlay(YYColor.line).padding(.top, 2)
             HStack {
-                Text("系统翻译 · 在这台 Mac 上").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                Text("系统翻译 · 在这台 Mac 上").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
                 Spacer()
                 if let t = item.translated {
                     Button("拷贝") {
@@ -159,7 +159,7 @@ struct CardButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .labelStyle(CardLabel())
-            .font(.system(size: 11, weight: .semibold))
+            .font(.yy(size: 11, weight: .semibold))
             .foregroundStyle(filled ? tint.onBlack : YYColor.t1)
             .padding(.horizontal, 9).frame(height: 24)
             .background(filled ? tint.black : YYColor.inset, in: .capsule)
@@ -170,7 +170,7 @@ struct CardButton: ButtonStyle {
 private struct CardLabel: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack(spacing: 4) {
-            configuration.icon.font(.system(size: 9.5, weight: .bold))
+            configuration.icon.font(.yy(size: 9.5, weight: .bold))
             configuration.title
         }
     }

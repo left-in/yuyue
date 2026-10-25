@@ -17,7 +17,7 @@ struct PhoneReaderChrome: View {
     @State private var exported: URL?
     @FocusState private var typing: Bool
 
-    private var paper: YYPaper { model.settings.paper.tokens }
+    private var paper: YYPaper { model.paperTokens }
     /// 沉浸阅读 hides the capsule until the middle is tapped.
     private var capsuleShown: Bool { !model.immersive || model.chromeShown || model.searchShown }
 
@@ -75,7 +75,7 @@ struct PhoneReaderChrome: View {
             if model.immersive, !capsuleShown {
                 if !hidesProgress {
                     Text(model.capsuleNote)
-                        .font(.system(size: 10).monospacedDigit())
+                        .font(.yy(size: 10).monospacedDigit())
                         .foregroundStyle(paper.ink2)
                         .padding(.bottom, 2)
                         .allowsHitTesting(false)
@@ -151,14 +151,14 @@ struct PhoneReaderChrome: View {
     private var top: some View {
         HStack(spacing: 8) {
             Button(action: close) {
-                Image(systemName: "chevron.left").font(.system(size: 15, weight: .semibold))
+                Image(systemName: "chevron.left").font(.yy(size: 15, weight: .semibold))
                     .frame(width: 40, height: 40)
                     .glass(paper, in: Circle())
             }
             .accessibilityLabel("返回书架")
             VStack(spacing: 1) {
-                Text(model.detail?.summary.title ?? "").font(.system(size: 13, weight: .semibold)).lineLimit(1)
-                Text(whereLine).font(.system(size: 11)).foregroundStyle(paper.ink2).lineLimit(1).monospacedDigit()
+                Text(model.detail?.summary.title ?? "").font(.yy(size: 13, weight: .semibold)).lineLimit(1)
+                Text(whereLine).font(.yy(size: 11)).foregroundStyle(paper.ink2).lineLimit(1).monospacedDigit()
             }
             .padding(.horizontal, 12)
             .frame(maxWidth: .infinity)
@@ -208,7 +208,7 @@ struct PhoneReaderChrome: View {
     }
 
     private func icon(_ name: String) -> some View {
-        Image(systemName: name).font(.system(size: 15, weight: .medium)).frame(width: 34, height: 34)
+        Image(systemName: name).font(.yy(size: 15, weight: .medium)).frame(width: 34, height: 34)
     }
 
     // MARK: The capsule
@@ -220,9 +220,9 @@ struct PhoneReaderChrome: View {
             Button { listenShown = true } label: {
                 VStack(alignment: .leading, spacing: 1) {
                     Text(model.sentenceCount > 0 ? String(localized: "第 \(min(model.sentence + 1, model.sentenceCount)) / \(model.sentenceCount) 句") : (model.chapterTitle ?? ""))
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.yy(size: 12, weight: .semibold))
                     Text(model.capsuleNote)
-                        .font(.system(size: 10.5))
+                        .font(.yy(size: 10.5))
                         .foregroundStyle(paper.ink2)
                 }
                 .monospacedDigit()
@@ -237,7 +237,7 @@ struct PhoneReaderChrome: View {
                 .accessibilityLabel(model.player?.spot != nil ? String(localized: "上一句") : String(localized: "上一页"))
             Button { model.togglePlay() } label: {
                 Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.yy(size: 14, weight: .semibold))
                     .foregroundStyle(paper.onMain)
                     .frame(width: 40, height: 40)
                     .background(paper.main, in: .circle)
@@ -247,7 +247,7 @@ struct PhoneReaderChrome: View {
             Button { step(forward: true) } label: { capButton("chevron.right") }
                 .accessibilityLabel(model.player?.spot != nil ? String(localized: "下一句") : String(localized: "下一页"))
             Button { model.settingsShown = true } label: {
-                Text("Aa").font(.system(size: 14, weight: .semibold)).frame(width: 36, height: 36).contentShape(.rect)
+                Text("Aa").font(.yy(size: 14, weight: .semibold)).frame(width: 36, height: 36).contentShape(.rect)
             }
             .accessibilityLabel("排版")
         }
@@ -266,7 +266,7 @@ struct PhoneReaderChrome: View {
     }
 
     private func capButton(_ name: String) -> some View {
-        Image(systemName: name).font(.system(size: 14, weight: .semibold)).frame(width: 34, height: 40).contentShape(.rect)
+        Image(systemName: name).font(.yy(size: 14, weight: .semibold)).frame(width: 34, height: 40).contentShape(.rect)
     }
 
     private var chapterProgress: Double {
@@ -302,9 +302,9 @@ struct PhoneReaderChrome: View {
     private var searchField: some View {
         HStack(spacing: 8) {
             HStack(spacing: 6) {
-                Image(systemName: "magnifyingglass").font(.system(size: 14, weight: .medium)).foregroundStyle(paper.ink2)
+                Image(systemName: "magnifyingglass").font(.yy(size: 14, weight: .medium)).foregroundStyle(paper.ink2)
                 TextField("", text: $model.query, prompt: Text("搜这本书").foregroundStyle(paper.ink2))
-                    .font(.system(size: 15))
+                    .font(.yy(size: 15))
                     .focused($typing)
                     .submitLabel(.search)
                     .onChange(of: model.query) { model.search() }
@@ -319,7 +319,7 @@ struct PhoneReaderChrome: View {
             .frame(height: 40)
             .glass(paper, in: Capsule())
             Button { model.endSearch() } label: {
-                Image(systemName: "xmark").font(.system(size: 14, weight: .semibold))
+                Image(systemName: "xmark").font(.yy(size: 14, weight: .semibold))
                     .frame(width: 40, height: 40)
                     .glass(paper, in: Circle())
             }
@@ -344,9 +344,9 @@ struct PhoneReaderChrome: View {
                         Text("第 \((model.hitIndex ?? 0) + 1) / \(model.hits.count) 处")
                     }
                 }
-                .font(.system(size: 12, weight: .semibold))
+                .font(.yy(size: 12, weight: .semibold))
                 Text(hitChapter ?? (q.isEmpty ? String(localized: "输完直接跳到第一处") : String(localized: "可以问问书伴")))
-                    .font(.system(size: 10.5)).foregroundStyle(paper.ink2)
+                    .font(.yy(size: 10.5)).foregroundStyle(paper.ink2)
             }
             .monospacedDigit()
             .lineLimit(1)
@@ -483,7 +483,8 @@ struct PhoneReaderChrome: View {
         guard let library = model.library else { return }
         let noted = NotedBook.load(library, only: [model.bookID])
         guard !noted.isEmpty else {
-            model.failure = String(localized: "这本书还没有划线和想法")
+            // Nothing to export isn't a failure: a passing note.
+            model.show(Library.Toast(icon: "highlighter", title: String(localized: "这本书还没有划线和想法"), detail: String(localized: "选中文字点“划线”，就会出现在这里")))
             return
         }
         let title = model.detail?.summary.title ?? String(localized: "笔记")
@@ -494,7 +495,7 @@ struct PhoneReaderChrome: View {
             try Data(NotedBook.markdown(noted, title: title).utf8).write(to: url)
             exported = url
         } catch {
-            model.failure = error.localizedDescription
+            model.failure = String(localized: "没导出来，再试一次")
         }
     }
 }

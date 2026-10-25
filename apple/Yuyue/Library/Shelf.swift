@@ -242,7 +242,7 @@ extension Library {
 struct AudioBadge: View {
     var body: some View {
         Image(systemName: "headphones")
-            .font(.system(size: 9, weight: .bold))
+            .font(.yy(size: 9, weight: .bold))
             .foregroundStyle(.white)
             .frame(width: 18, height: 18)
             .background(Color(red: 16 / 255, green: 18 / 255, blue: 20 / 255).opacity(0.72), in: .circle)

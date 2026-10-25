@@ -1,5 +1,8 @@
 package app.yuyue.comics
 
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -118,13 +121,8 @@ fun ComicScreen(library: Library, bookID: String, close: () -> Unit) {
     }
     if (tocShown) Contents(model) { tocShown = false }
     if (settingsShown) Settings(model) { settingsShown = false }
-    model.failure?.let { message ->
-        androidx.compose.material3.AlertDialog(
-            onDismissRequest = { model.failure = null }, containerColor = YY.c.card,
-            title = { Text(t("出错了"), color = YY.c.t1) }, text = { Text(message, color = YY.c.t2) },
-            confirmButton = { androidx.compose.material3.TextButton({ model.failure = null }) { Text(t("好"), color = YY.tint.accent) } },
-        )
-    }
+    if (model.episodes.isEmpty()) app.yuyue.shelf.BookFailure(model.failure, close)
+    else model.failure?.let { app.yuyue.shelf.FailureDialog(it) { model.failure = null } }
 }
 
 @Composable
@@ -316,7 +314,8 @@ private fun PageSlider(model: ComicModel, onTouch: () -> Unit) {
             val canOn = model.episode + 1 < model.episodes.size
             Text(t("上一话"), fontSize = 12.sp, color = Color.White.copy(alpha = if (canBack) 1f else 0.3f), modifier = Modifier.clickable(enabled = canBack) { model.go(model.episode - 1, 0) })
             Slider(
-                sliding ?: model.page.toFloat(), { sliding = it; onTouch() }, valueRange = 0f..maxOf(1, count - 1).toFloat(), modifier = Modifier.weight(1f),
+                sliding ?: model.page.toFloat(), { sliding = it; onTouch() }, valueRange = 0f..maxOf(1, count - 1).toFloat(),
+                modifier = Modifier.weight(1f).semantics { contentDescription = t("翻页"); stateDescription = t("第 %lld 页", model.page + 1) },
                 onValueChangeFinished = { sliding?.let { model.go(model.episode, it.roundToInt()) }; sliding = null },
                 colors = SliderDefaults.colors(thumbColor = Color.White, activeTrackColor = YY.tint.accent, inactiveTrackColor = Color.White.copy(alpha = 0.25f)),
             )

@@ -118,14 +118,17 @@ final class Sync {
         running = Task {
             do {
                 var applied = try await Self.exchange(core: core, folder: folder)
+                var missed = 0
                 if books {
-                    let (gotBooks, gotAudio) = await Self.exchangeFiles(core: core, folder: folder, audiobooks: audio)
+                    let (gotBooks, notGot, gotAudio) = await Self.exchangeFiles(core: core, folder: folder, audiobooks: audio)
                     applied += gotBooks
+                    missed = notGot
                     if gotAudio { Audiobooks.shared?.reload() }
                 }
                 lastSynced = Date()
                 UserDefaults.standard.set(lastSynced, forKey: Keys.last)
-                state = .idle
+                // Notes and progress went across; a book file that didn't come down isn't 已同步.
+                state = missed > 0 ? .failed(String(localized: "有 \(missed) 本书的文件没下载下来，下次同步再试")) : .idle
                 if applied > 0 { changed?() }
             } catch {
                 state = .failed(Self.message(for: error))
@@ -303,11 +306,12 @@ final class Sync {
     /// with `info.json` written last, so a device takes it only once all of it is there. One file
     /// failing doesn't stop the rest; it's tried again next time. Returns the books taken, and
     /// whether any 听读书 came.
-    @concurrent private static func exchangeFiles(core: YuyueCore, folder: any SyncFolder, audiobooks: URL?) async -> (UInt32, Bool) {
-        guard let files = try? await folder.list() else { return (0, false) }
+    @concurrent private static func exchangeFiles(core: YuyueCore, folder: any SyncFolder, audiobooks: URL?) async -> (UInt32, Int, Bool) {
+        guard let files = try? await folder.list() else { return (0, 0, false) }
         let fm = FileManager.default
         let books = (try? core.books()) ?? []
         var took: UInt32 = 0
+        var missed = 0
         // Up: each book here the folder doesn't have yet.
         for book in books where book.available && !files.keys.contains(where: { $0.hasPrefix(book.id + ".book.") }) {
             guard !Task.isCancelled, let path = try? core.originalFile(bookId: book.id) else { continue }
@@ -327,11 +331,11 @@ final class Sync {
                 try await folder.download(name, to: url)
                 _ = try await Library.importBook(core, path: url.path(percentEncoded: false))
                 took += 1
-            } catch {}
+            } catch { missed += 1 }
             try? fm.removeItem(at: url)
         }
-        guard let audiobooks else { return (took, false) }
-        return (took, await exchangeAudiobooks(folder: folder, files: files, dir: audiobooks))
+        guard let audiobooks else { return (took, missed, false) }
+        return (took, missed, await exchangeAudiobooks(folder: folder, files: files, dir: audiobooks))
     }
 
     @concurrent private static func exchangeAudiobooks(folder: any SyncFolder, files: [String: String], dir: URL) async -> Bool {

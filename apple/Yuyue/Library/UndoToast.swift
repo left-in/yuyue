@@ -1,73 +1,56 @@
 import SwiftUI
 
-/// The glass note at the bottom after deleting or importing, with 撤销 and a line running out
-/// over the seconds it stays. A delete shows red.
+/// The note after deleting or importing, as 即刻's toast (its “已设置”, measured off a screenshot):
+/// a pale grey capsule at the top, as wide as its one line, the same room either side, a small
+/// filled round icon before the words. When the thing can be undone, 撤销 follows the words.
 struct UndoToast: View {
     let toast: Library.Toast
     let undo: () -> Void
-    @State private var left: CGFloat = 1
-    private let tint = YYTint.standard
+    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @Environment(\.colorScheme) private var scheme
+
+    /// 即刻's green tick; a deletion is red.
+    static let done = Color(red: 0x2D / 255, green: 0xBE / 255, blue: 0x60 / 255)
+
+    /// Every screen puts it centred at the top, coming down from above.
+    static var transition: AnyTransition {
+        .move(edge: .top).combined(with: .opacity).combined(with: .scale(scale: 0.92, anchor: .top))
+    }
 
     var body: some View {
-        HStack(spacing: 9) {
-            Image(systemName: toast.icon)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(toast.danger ? YYColor.danger : tint.accent)
-                .frame(width: 36, height: 36)
-                .background((toast.danger ? YYColor.danger.opacity(0.14) : tint.accentSoft), in: .circle)
-            VStack(alignment: .leading, spacing: 1) {
-                Text(toast.title)
-                    .font(.system(size: 12.5, weight: .semibold))
-                    .foregroundStyle(YYColor.t1)
-                    .lineLimit(1)
-                Text(detail)
-                    .font(.system(size: 10.5))
-                    .foregroundStyle(YYColor.t2)
-                    .lineLimit(1)
+        HStack(spacing: 11) {
+            ZStack {
+                Circle().fill(toast.danger ? YYColor.danger : Self.done)
+                Image(systemName: toast.danger ? "xmark" : "checkmark")
+                    .font(.yy(size: 9, weight: .heavy))
+                    .foregroundStyle(.white)
             }
-            Spacer(minLength: 0)
+            .frame(width: 17, height: 17)
+            Text(toast.title)
+                .font(.yy(size: 15))
+                .foregroundStyle(scheme == .dark ? Color(white: 0.92) : Color(white: 0.2))
+                .lineLimit(1)
             if toast.undo != nil {
                 Button(action: undo) {
-                    Label("撤销", systemImage: "arrow.uturn.backward")
-                        .labelStyle(TightLabel())
-                        .font(.system(size: 12.5, weight: .semibold))
-                        .foregroundStyle(tint.onBlack)
-                        .padding(.horizontal, 14)
+                    Text("撤销")
+                        .font(.yy(size: 15, weight: .medium))
+                        .foregroundStyle(tint.accent)
+                        .padding(.horizontal, 4)
                         .frame(height: 36)
-                        .background(tint.black, in: .capsule)
-                        .contentShape(.capsule)
+                        .contentShape(.rect)
                 }
                 .buttonStyle(.plain)
                 .keyboardShortcut("z")
             }
         }
-        .padding(.horizontal, 6)
-        .frame(height: 48)
-        .yyGlass(Capsule(), fill: YYColor.glass.opacity(0.5), shadow: 0)
-        .overlay(alignment: .bottom) {
-            GeometryReader { g in
-                Capsule()
-                    .fill(tint.accent.opacity(0.55))
-                    .frame(width: g.size.width * left, height: 2)
-            }
-            .frame(height: 2)
-            .padding(.horizontal, 24)
-        }
-        .clipShape(.capsule)
-        .overlay(Capsule().strokeBorder(YYColor.line.opacity(0.6), lineWidth: 0.5))
-        .shadow(color: .black.opacity(0.12), radius: 15, y: 8)
-        .onAppear {
-            withAnimation(.linear(duration: Library.toastSeconds)) { left = 0 }
-        }
+        .padding(.horizontal, 25)
+        .frame(height: 45)
+        .background(scheme == .dark ? Color(white: 0.2).opacity(0.96) : Color(white: 0.915).opacity(0.97), in: .capsule)
+        .shadow(color: .black.opacity(scheme == .dark ? 0.3 : 0.08), radius: 10, y: 3)
+        .frame(maxWidth: 420)
+        .help(toast.detail)
         .accessibilityElement(children: .combine)
         .accessibilityAction(named: "撤销", undo)
-    }
-
-    private var detail: String {
-        #if os(macOS)
-        toast.undo != nil ? String(localized: "\(toast.detail) · ⌘Z 也能撤销") : toast.detail
-        #else
-        toast.detail
-        #endif
     }
 }

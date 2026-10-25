@@ -28,6 +28,10 @@ html {
 html[data-yy-paper="kami"], html[data-yy-paper="kaminight"], html[data-yy-paper="eink"] {
   --yy-p-title-font-en: var(--yy-latin-serif);
 }
+/* 纹理 on 我的纸, drawn over its colour (core paper.rs). */
+html[data-yy-texture="grain"] { --yy-p-texture:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+html[data-yy-texture="xuan"] { --yy-p-texture:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .35' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .44 0 0 0 0 .32 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+html[data-yy-texture="linen"] { --yy-p-texture:repeating-linear-gradient(0deg, rgba(128,128,128,.07) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(128,128,128,.07) 0 1px, transparent 1px 3px); }
 html[data-yy-indent="1"] { --yy-ind: 2em; }
 html[data-yy-indent="0"] { --yy-ind: 0em; }
 html[data-yy-justify="1"] { --yy-al: justify; --yy-al-en: justify; }

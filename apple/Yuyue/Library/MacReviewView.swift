@@ -78,9 +78,9 @@ struct ReviewDeckCard: View {
     var body: some View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 3) {
-                Text("今天回顾").font(.system(size: 13, weight: .bold)).foregroundStyle(YYColor.t1)
+                Text("今天回顾").font(.yy(size: 13, weight: .bold)).foregroundStyle(YYColor.t1)
                 Text(review.items.isEmpty ? String(localized: "看完了") : String(localized: "\(review.items.count) 条 · 约 \(review.minutes) 分钟"))
-                    .font(.system(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
+                    .font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
             }
             .padding(.trailing, 18)
             .overlay(alignment: .trailing) { Rectangle().fill(YYColor.line).frame(width: 1) }
@@ -88,7 +88,7 @@ struct ReviewDeckCard: View {
                 // The book's words verbatim: interpolated into a localized string they lose Songti.
                 HStack(alignment: .firstTextBaseline, spacing: 10) {
                     Text(verbatim: "“" + first.mark.text + "”").font(YYUI.serif(13.5)).foregroundStyle(YYColor.t1)
-                    Text(title(first)).font(.system(size: 10.5)).foregroundStyle(YYColor.t3).layoutPriority(-1)
+                    Text(title(first)).font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).layoutPriority(-1)
                 }
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -97,7 +97,7 @@ struct ReviewDeckCard: View {
                 }
                 Button(action: start) {
                     Text("开始")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.yy(size: 12, weight: .semibold))
                         .foregroundStyle(tint.onBlack)
                         .padding(.horizontal, 16).frame(height: 28)
                         .background(tint.black, in: .capsule)
@@ -105,7 +105,7 @@ struct ReviewDeckCard: View {
                 .buttonStyle(.plain)
             } else {
                 Text("今天的 \(review.doneToday) 条看完了。留下的以后还会再出现。")
-                    .font(.system(size: 12.5)).foregroundStyle(YYColor.t2)
+                    .font(.yy(size: 12.5)).foregroundStyle(YYColor.t2)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
@@ -182,11 +182,11 @@ struct MacReviewSheet: View {
         HStack {
             roundButton("xmark") { dismiss() }.keyboardShortcut(.cancelAction)
             Spacer()
-            Text(heading).font(.system(size: 13, weight: .bold)).monospacedDigit().foregroundStyle(YYColor.t1)
+            Text(heading).font(.yy(size: 13, weight: .bold)).monospacedDigit().foregroundStyle(YYColor.t1)
             Spacer()
             if let item = review.current {
                 ShareLink(item: shareText(item)) {
-                    Image(systemName: "square.and.arrow.up").font(.system(size: 12, weight: .medium))
+                    Image(systemName: "square.and.arrow.up").font(.yy(size: 12, weight: .medium))
                         .foregroundStyle(YYColor.t2)
                         .frame(width: 30, height: 30)
                         .background(YYColor.card, in: .circle)
@@ -200,7 +200,7 @@ struct MacReviewSheet: View {
 
     private func roundButton(_ symbol: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Image(systemName: symbol).font(.system(size: 11, weight: .semibold))
+            Image(systemName: symbol).font(.yy(size: 11, weight: .semibold))
                 .foregroundStyle(YYColor.t2)
                 .frame(width: 30, height: 30)
                 .background(YYColor.card, in: .circle)
@@ -244,17 +244,17 @@ struct MacReviewSheet: View {
             HStack(spacing: 10) {
                 if let book { BookCover(book: book).frame(width: 26) }
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(book?.title ?? "").font(.system(size: 12, weight: .semibold)).foregroundStyle(YYColor.t1)
-                    Text(source(item, book)).font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                    Text(book?.title ?? "").font(.yy(size: 12, weight: .semibold)).foregroundStyle(YYColor.t1)
+                    Text(source(item, book)).font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
                 }
                 .lineLimit(1)
                 Spacer()
                 Button { open(item) } label: {
                     HStack(spacing: 2) {
                         Text("回原文")
-                        Image(systemName: "chevron.right").font(.system(size: 9, weight: .semibold))
+                        Image(systemName: "chevron.right").font(.yy(size: 9, weight: .semibold))
                     }
-                    .font(.system(size: 11)).foregroundStyle(YYColor.t2)
+                    .font(.yy(size: 11)).foregroundStyle(YYColor.t2)
                 }
                 .buttonStyle(.plain)
             }
@@ -314,7 +314,7 @@ struct MacReviewSheet: View {
             Text(review.book == nil ? String(localized: "今天的 \(review.items.count) 条看完了") : String(localized: "这本书的 \(review.items.count) 条看完了"))
                 .font(YYUI.serif(19, .semibold)).tracking(0.4).foregroundStyle(YYColor.t1)
             Text(String(localized: "留下 \(kept) 条") + (dropped > 0 ? String(localized: " · 不要了 \(dropped) 条") : ""))
-                .font(.system(size: 11.5)).monospacedDigit().foregroundStyle(YYColor.t2).padding(.top, 6)
+                .font(.yy(size: 11.5)).monospacedDigit().foregroundStyle(YYColor.t2).padding(.top, 6)
             VStack(spacing: 0) {
                 ForEach(Array(review.items.enumerated()), id: \.element.mark.id) { i, item in
                     if i > 0 { Rectangle().fill(YYColor.line).frame(height: 1) }
@@ -323,7 +323,7 @@ struct MacReviewSheet: View {
             }
             .padding(.top, 18)
             Text("留下的以后还会再出现。不要了的只是不再回顾，笔记还在；点一条可以改主意。")
-                .font(.system(size: 11)).lineSpacing(4).foregroundStyle(YYColor.t3).padding(.top, 14)
+                .font(.yy(size: 11)).lineSpacing(4).foregroundStyle(YYColor.t3).padding(.top, 14)
             Spacer(minLength: 12)
             Rectangle().fill(YYColor.line).frame(height: 1)
             Menu {
@@ -332,10 +332,10 @@ struct MacReviewSheet: View {
                 }
             } label: {
                 HStack(spacing: 8) {
-                    Image(systemName: "book").font(.system(size: 13)).foregroundStyle(YYColor.t2)
-                    Text("只回顾某一本书").font(.system(size: 12.5, weight: .medium)).foregroundStyle(YYColor.t1)
+                    Image(systemName: "book").font(.yy(size: 13)).foregroundStyle(YYColor.t2)
+                    Text("只回顾某一本书").font(.yy(size: 12.5, weight: .medium)).foregroundStyle(YYColor.t1)
                     Spacer()
-                    Image(systemName: "chevron.right").font(.system(size: 10, weight: .semibold)).foregroundStyle(YYColor.t3)
+                    Image(systemName: "chevron.right").font(.yy(size: 10, weight: .semibold)).foregroundStyle(YYColor.t3)
                 }
                 .contentShape(.rect)
             }
@@ -361,9 +361,9 @@ struct MacReviewSheet: View {
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 if keep {
-                    Image(systemName: "checkmark").font(.system(size: 11, weight: .semibold)).foregroundStyle(YYColor.t2)
+                    Image(systemName: "checkmark").font(.yy(size: 11, weight: .semibold)).foregroundStyle(YYColor.t2)
                 } else {
-                    Text("不要了").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                    Text("不要了").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
                 }
             }
             .frame(height: 40)
@@ -399,12 +399,12 @@ struct MacReviewSheet: View {
                 }
                 .keyboardShortcut(.defaultAction)
             }
-            .font(.system(size: 13, weight: .semibold))
+            .font(.yy(size: 13, weight: .semibold))
             .buttonStyle(.plain)
         } else {
             Button { dismiss() } label: {
                 Text("完成")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.yy(size: 13, weight: .semibold))
                     .frame(maxWidth: .infinity).frame(height: 44)
                     .foregroundStyle(tint.onBlack)
                     .background(tint.black, in: .capsule)

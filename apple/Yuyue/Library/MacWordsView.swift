@@ -43,21 +43,21 @@ struct MacWordsView: View {
                         chips.padding(.bottom, 4)
                         if shown.isEmpty {
                             Text(showKnown ? String(localized: "还没有掌握的词。在学的词点“掌握了”，就挪到这里") : String(localized: "都掌握了。新查的词加进生词本，会出现在这里"))
-                                .font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                                .font(.yy(size: 12)).foregroundStyle(YYColor.t3)
                                 .frame(maxWidth: .infinity).padding(.top, 60)
                         }
                         LazyVStack(alignment: .leading, spacing: 18) {
                             ForEach(groups, id: \.id) { group in
-                                HStack(alignment: .top, spacing: 24) {
+                                HStack(alignment: .top, spacing: 14) {
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text(group.title).font(.system(size: 14, weight: .semibold)).foregroundStyle(YYColor.t1)
+                                        Text(group.title).font(.yy(size: 14, weight: .semibold)).foregroundStyle(YYColor.t1)
                                             .lineLimit(3)
                                         if let sub = group.subtitle {
-                                            Text(sub).font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
+                                            Text(sub).font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
                                         }
-                                        Text("\(group.words.count) 个").font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
+                                        Text("\(group.words.count) 个").font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
                                     }
-                                    .frame(width: 90, alignment: .leading)
+                                    .frame(width: 76, alignment: .leading)
                                     .padding(.top, 18)
                                     NoteCard {
                                         ForEach(group.words, id: \.word) { row($0) }
@@ -109,11 +109,11 @@ struct MacWordsView: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Text("生词本").font(.system(size: 22, weight: .bold)).foregroundStyle(YYColor.t1)
+            Text("生词本").font(.yy(size: 22, weight: .bold)).foregroundStyle(YYColor.t1)
                 .padding(.leading, headerInset)
             if !words.isEmpty {
                 (Text("\(learning.count)").fontWeight(.semibold).foregroundStyle(YYColor.t1) + Text(" 个在学 · 掌握了 \(known.count) 个"))
-                    .font(.system(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)
+                    .font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)
             }
             Spacer()
             Segments(items: [(false, String(localized: "按时间")), (true, String(localized: "按书"))], selection: $byBook, small: true) { Text($1) }
@@ -123,7 +123,7 @@ struct MacWordsView: View {
                 Button("CSV 表格…") { export = .csv(shown, title: source) }
             } label: {
                 Label("导出 Anki · CSV", systemImage: "square.and.arrow.up")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.yy(size: 12, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                     .padding(.horizontal, 12).frame(height: 28)
                     .background(YYColor.card, in: .capsule)
@@ -149,7 +149,7 @@ struct MacWordsView: View {
         let on = showKnown == value
         return Button { showKnown = value } label: {
             Text(text).monospacedDigit()
-                .font(.system(size: 12, weight: on ? .semibold : .regular))
+                .font(.yy(size: 12, weight: on ? .semibold : .regular))
                 .foregroundStyle(on ? tint.onBlack : YYColor.t2)
                 .padding(.horizontal, 13).frame(height: 28)
                 .background(on ? AnyShapeStyle(tint.black) : AnyShapeStyle(YYColor.card), in: .capsule)
@@ -212,11 +212,11 @@ struct MacWordsView: View {
             HStack(alignment: .firstTextBaseline, spacing: 9) {
                 Text(w.word).font(.custom("Georgia", size: 19).weight(.bold)).foregroundStyle(YYColor.t1)
                 if let p = w.phonetic {
-                    Text(p).font(.system(size: 12)).foregroundStyle(YYColor.t2)
+                    Text(p).font(.yy(size: 12)).foregroundStyle(YYColor.t2)
                 }
                 Spacer(minLength: 8)
                 Button { say(w) } label: {
-                    Image(systemName: "speaker.wave.2").font(.system(size: 12, weight: .medium)).foregroundStyle(YYColor.t1)
+                    Image(systemName: "speaker.wave.2").font(.yy(size: 12, weight: .medium)).foregroundStyle(YYColor.t1)
                         .frame(width: 28, height: 28).background(YYColor.inset, in: .circle)
                 }
                 .buttonStyle(.plain)
@@ -225,7 +225,7 @@ struct MacWordsView: View {
             }
             if let meaning {
                 (Text(meaning.pos.map { $0 + " " } ?? "").font(.custom("Georgia", size: 13)).italic().foregroundStyle(YYColor.t3)
-                    + Text(meaning.text).font(.system(size: 13)).foregroundStyle(YYColor.t1))
+                    + Text(meaning.text).font(.yy(size: 13)).foregroundStyle(YYColor.t1))
                     .padding(.top, 4)
             }
             if !w.context.isEmpty {
@@ -239,9 +239,9 @@ struct MacWordsView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     // 按书 has the title beside the group already.
                     Text(byBook ? chapters[w.book]?.chapterTitle(for: w.section) ?? "" : source(w))
-                        .font(.system(size: 11, weight: .semibold)).foregroundStyle(YYColor.t2).lineLimit(1)
+                        .font(.yy(size: 11, weight: .semibold)).foregroundStyle(YYColor.t2).lineLimit(1)
                     if let spread = Vocab.spread(counts[w.word.lowercased()]) {
-                        Text(spread).font(.system(size: 11)).monospacedDigit().foregroundStyle(YYColor.t3)
+                        Text(spread).font(.yy(size: 11)).monospacedDigit().foregroundStyle(YYColor.t3)
                     }
                 }
                 Spacer()
@@ -291,10 +291,10 @@ struct MacWordsView: View {
 
     private var empty: some View {
         VStack(spacing: 10) {
-            Image(systemName: "character.book.closed").font(.system(size: 28, weight: .light)).foregroundStyle(YYColor.t3)
-            Text("还没有生词").font(.system(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
+            Image(systemName: "character.book.closed").font(.yy(size: 28, weight: .light)).foregroundStyle(YYColor.t3)
+            Text("还没有生词").font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
             Text("读外文书时点一个词，在释义卡片里点“加入生词本”，就记在这里，带着原句")
-                .font(.system(size: 12)).foregroundStyle(YYColor.t2)
+                .font(.yy(size: 12)).foregroundStyle(YYColor.t2)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

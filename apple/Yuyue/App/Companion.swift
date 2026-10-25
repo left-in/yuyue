@@ -77,12 +77,12 @@ struct CompanionConfig: Equatable {
     var model: String
     /// Empty: the service's own address.
     var url: String
-    /// The connected service's name (设置 · AI 服务), for the line under each answer.
-    var name: String?
 
-    /// 书伴's, as chosen in 设置 · AI 服务.
     static var current: CompanionConfig {
-        get { AIServices.shared.companionConfig }
+        get {
+            let p = UserDefaults.standard.string(forKey: "companion.provider").flatMap(CompanionProvider.init) ?? .apple
+            return saved(p)
+        }
         set {
             let d = UserDefaults.standard
             d.set(newValue.provider.rawValue, forKey: "companion.provider")
@@ -118,7 +118,6 @@ struct CompanionConfig: Equatable {
             #else
             String(localized: "Apple 智能 · 在这台设备上")
             #endif
-        case _ where name != nil: "\(name!) · \(model)"
         case .openai: model
         default: "\(provider.title) · \(model)"
         }
@@ -136,9 +135,9 @@ enum CompanionError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .notReady: String(localized: "书伴还没接上：在设置 · AI 服务里接一个")
+        case .notReady: String(localized: "书伴还没接上：在设置 · 书伴里选一个")
         case .unavailable(let why): why
-        case .badKey: String(localized: "Key 不对，去设置 · AI 服务里重新接")
+        case .badKey: String(localized: "Key 不对，去设置 · 书伴里重新填")
         case .noCredit: String(localized: "账号余额不够了")
         case .busy: String(localized: "问得太快了，等一会儿再问")
         case .status(let code, let message): message.map { String(localized: "服务器回了 \(code)：\($0)") } ?? String(localized: "服务器回了 \(code)")

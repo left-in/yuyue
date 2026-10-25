@@ -64,7 +64,7 @@ struct ForeignSettings: View {
             }
             if let failed {
                 Label(failed, systemImage: "exclamationmark.circle")
-                    .font(.system(size: 11)).foregroundStyle(YYColor.danger)
+                    .font(.yy(size: 11)).foregroundStyle(YYColor.danger)
                     .padding(.leading, 8)
             }
             Spacer(minLength: 0)
@@ -89,11 +89,11 @@ struct ForeignSettings: View {
         let words: [(String, String?, UInt8)] = [("an ", nil, 0), ("amiable", "亲切的", 4), (" young man of ", nil, 0), ("tolerable", "可容忍的", 5),
                                                  (" fortune, ", nil, 0), ("eager", String(localized: "热心的"), 2), (" to ", nil, 0), ("ascertain", String(localized: "确定"), 3), (" her views…", nil, 0)]
         return HStack(alignment: .lastTextBaseline, spacing: 0) {
-            Text("预览").font(.system(size: 10.5)).foregroundStyle(YYColor.t3).padding(.trailing, 10)
+            Text("预览").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).padding(.trailing, 10)
             ForEach(Array(words.enumerated()), id: \.offset) { _, w in
                 let shown = gloss && !glossVocab && w.1 != nil && w.2 >= level
                 VStack(spacing: 1) {
-                    Text(shown ? w.1! : " ").font(.system(size: 9)).foregroundStyle(YYColor.t2)
+                    Text(shown ? w.1! : " ").font(.yy(size: 9)).foregroundStyle(YYColor.t2)
                     Text(w.0).font(.custom("Georgia", size: 13.5)).foregroundStyle(YYColor.t1)
                 }
                 .fixedSize()
@@ -108,14 +108,14 @@ struct ForeignSettings: View {
         switch status {
         case .installed?:
             Label("英文 → 中文 已下载", systemImage: "checkmark")
-                .font(.system(size: 12)).foregroundStyle(YYColor.t2)
+                .font(.yy(size: 12)).foregroundStyle(YYColor.t2)
         case .supported?:
             Button("下载英文 → 中文") {
                 download = .init(source: Locale.Language(identifier: "en"), target: Translator.target)
             }
             .disabled(download != nil)
         case .unsupported?:
-            Text("这台 Mac 不支持").font(.system(size: 12)).foregroundStyle(YYColor.t3)
+            Text("这台 Mac 不支持").font(.yy(size: 12)).foregroundStyle(YYColor.t3)
         default:
             ProgressView().controlSize(.small)
         }

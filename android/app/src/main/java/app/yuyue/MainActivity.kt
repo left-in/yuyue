@@ -1,5 +1,6 @@
 package app.yuyue
 
+import androidx.compose.foundation.layout.statusBars
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,11 +11,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +32,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -38,12 +43,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.IntentCompat
 import app.yuyue.design.Icons
+import app.yuyue.design.TabIcons
 import app.yuyue.design.YY
 import app.yuyue.design.YuyueTheme
 import app.yuyue.design.Prefs
@@ -51,6 +59,13 @@ import app.yuyue.design.rememberPref
 import app.yuyue.library.Library
 import app.yuyue.reader.ReaderScreen
 import app.yuyue.shelf.ShelfScreen
+import dev.chrisbanes.haze.HazeInput
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.blur.HazeBlurStyle
+import dev.chrisbanes.haze.blur.HazeColorEffect
+import dev.chrisbanes.haze.blur.hazeBlur
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -127,9 +142,13 @@ fun Root(library: Library) {
         }
     }
 
+    val haze = rememberHazeState()
+    val density = LocalDensity.current
+    var barHeight by remember { mutableStateOf(0.dp) }
     Box(Modifier.fillMaxSize().background(YY.c.bg)) {
-        Column(Modifier.fillMaxSize()) {
-            Box(Modifier.weight(1f)) {
+        // The page runs under the tab bar (and 播放条), which blurs what scrolls beneath it.
+        CompositionLocalProvider(LocalTabBarHeight provides barHeight) {
+            Box(Modifier.fillMaxSize().hazeSource(haze)) {
                 when (val page = pages.lastOrNull()) {
                     null -> when (tab) {
                         Tab.Shelf -> ShelfScreen(library, openWifi = { pages += Page.Wifi }, openRemote = { pages += Page.Remote }, openWatched = { pages += Page.Watched })
@@ -142,8 +161,13 @@ fun Root(library: Library) {
                     Page.Watched -> app.yuyue.me.SubPage(t("监听一个文件夹"), { pages.removeAt(pages.lastIndex) }) { app.yuyue.shelf.WatchedPage(library) }
                 }
             }
+        }
+        Column(Modifier.align(Alignment.BottomCenter).fillMaxWidth().onSizeChanged { barHeight = with(density) { it.height.toDp() } }) {
             NowPlayingBar(library)
-            TabBar(tab) { tab = it; pages.clear() }
+            TabBar(tab, haze) { tab = it; pages.clear() }
+        }
+        library.toast?.let {
+            app.yuyue.shelf.UndoToast(it, { library.undo() }, Modifier.align(Alignment.TopCenter).windowInsetsPadding(WindowInsets.statusBars).padding(horizontal = 16.dp, vertical = 6.dp))
         }
         BackHandler(enabled = pages.isNotEmpty()) { pages.removeAt(pages.lastIndex) }
 
@@ -184,33 +208,48 @@ fun Root(library: Library) {
     }
 }
 
-/** The tab bar flush with the bottom edge: the prototype's Android 底栏. */
+/** How much of the bottom the tab bar (and 播放条) covers: a tab's list pads its end by this so
+ *  the last row scrolls clear of it. */
+val LocalTabBarHeight = staticCompositionLocalOf { 0.dp }
+
+/** The tab bar flush with the bottom edge, the prototype's Android 底栏 (`.v-tabs`): paper colour
+ *  at 88% over a blur of the page, a hairline on top; four tabs with icon and word, the one that
+ *  is on filled and in the theme's fill colour. */
 @Composable
-private fun TabBar(tab: Tab, select: (Tab) -> Unit) {
-    Column(Modifier.fillMaxWidth().background(YY.c.card)) {
+private fun TabBar(tab: Tab, haze: HazeState, select: (Tab) -> Unit) {
+    val paper = YY.c.bg
+    val style = remember(paper) {
+        HazeBlurStyle {
+            blurRadius(20.dp)
+            backgroundColor(paper)
+            colorEffects(listOf(HazeColorEffect.tint(paper.copy(alpha = 0.88f))))
+        }
+    }
+    Column(Modifier.fillMaxWidth().hazeBlur(HazeInput.Sources(haze), style)) {
         Box(Modifier.fillMaxWidth().height(0.5.dp).background(YY.c.line))
         Row(
-            Modifier.fillMaxWidth().windowInsetsPadding(WindowInsets.navigationBars).height(56.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            Modifier.fillMaxWidth().windowInsetsPadding(WindowInsets.navigationBars).padding(start = 4.dp, end = 4.dp, top = 5.dp, bottom = 7.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TabItem(Icons.books, t("书架"), tab == Tab.Shelf) { select(Tab.Shelf) }
-            TabItem(Icons.highlighter, t("笔记"), tab == Tab.Notes) { select(Tab.Notes) }
-            TabItem(Icons.person, t("我的"), tab == Tab.Me) { select(Tab.Me) }
-            TabItem(Icons.search, t("搜索"), tab == Tab.Search) { select(Tab.Search) }
+            TabItem(TabIcons.shelf, TabIcons.shelfOn, t("书架"), tab == Tab.Shelf) { select(Tab.Shelf) }
+            TabItem(TabIcons.notes, TabIcons.notesOn, t("笔记"), tab == Tab.Notes) { select(Tab.Notes) }
+            TabItem(TabIcons.me, TabIcons.meOn, t("我的"), tab == Tab.Me) { select(Tab.Me) }
+            TabItem(TabIcons.search, TabIcons.searchOn, t("搜索"), tab == Tab.Search) { select(Tab.Search) }
         }
     }
 }
 
 @Composable
-private fun TabItem(icon: ImageVector, title: String, on: Boolean, onClick: () -> Unit) {
-    val color = if (on) YY.tint.accent else YY.c.t2
+private fun RowScope.TabItem(icon: ImageVector, iconOn: ImageVector, title: String, on: Boolean, onClick: () -> Unit) {
+    val color = if (on) YY.tint.fill else YY.c.t2
     Column(
-        Modifier.clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onClick).padding(horizontal = 18.dp, vertical = 4.dp),
+        Modifier.weight(1f).height(44.dp)
+            .selectable(on, interactionSource = remember { MutableInteractionSource() }, indication = null, role = androidx.compose.ui.semantics.Role.Tab, onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
     ) {
-        Icon(icon, title, tint = color, modifier = Modifier.size(24.dp))
-        Text(title, fontSize = 10.sp, fontWeight = if (on) FontWeight.SemiBold else FontWeight.Medium, color = color)
+        Icon(if (on) iconOn else icon, null, tint = color, modifier = Modifier.size(24.dp))
+        Text(title, fontSize = 10.sp, lineHeight = 12.sp, fontWeight = if (on) FontWeight.SemiBold else FontWeight.Medium, color = if (on) YY.tint.fill else YY.c.t2)
     }
 }
 
@@ -236,7 +275,7 @@ private fun NowPlayingBar(library: Library) {
     Box(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
         Row(
             Modifier.fillMaxWidth().background(YY.c.card, androidx.compose.foundation.shape.CircleShape)
-                .clickable { library.presented = book.id }.padding(start = 10.dp, end = 8.dp, top = 7.dp, bottom = 7.dp),
+                .clickable(onClickLabel = t("回到正在读的页"), role = androidx.compose.ui.semantics.Role.Button) { library.presented = book.id }.padding(start = 10.dp, end = 8.dp, top = 7.dp, bottom = 7.dp),
             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             app.yuyue.shelf.BookCover(book, Modifier.size(width = 30.dp, height = 45.dp))

@@ -172,7 +172,7 @@ struct PhoneRemoteBrowser: View {
                 if chips.count > 1 { chipRow }
                 if let problem {
                     VStack(spacing: YYUI.s(12)) {
-                        Image(systemName: "exclamationmark.triangle").font(.system(size: 26, weight: .light)).foregroundStyle(YYColor.t3)
+                        Image(systemName: "exclamationmark.triangle").font(.yy(size: 26, weight: .light)).foregroundStyle(YYColor.t3)
                         Text(problem).font(YYUI.font(11.5)).foregroundStyle(YYColor.t2).multilineTextAlignment(.center)
                         Button("再试一次") { Task { await load() } }.buttonStyle(YYButtonStyle(kind: .raised))
                     }

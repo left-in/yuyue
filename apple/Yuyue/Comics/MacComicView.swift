@@ -83,11 +83,7 @@ struct MacComicView: View {
             }
             return .handled
         }
-        .alert("出错了", isPresented: Binding(get: { model.failure != nil }, set: { if !$0 { model.failure = nil } })) {
-            Button("好") {}
-        } message: {
-            Text(model.failure ?? "")
-        }
+        .bookFailure($model.failure, opened: model.current != nil)
     }
 
     /// ← is the next page when the comic reads right to left.
@@ -147,7 +143,7 @@ struct MacComicView: View {
                     HStack {
                         ForEach(Array(pageNumbers(pages).enumerated()), id: \.offset) { i, n in
                             if i > 0 { Spacer() }
-                            Text("\(n)").font(.system(size: 10.5)).monospacedDigit().foregroundStyle(.white.opacity(0.4))
+                            Text("\(n)").font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(.white.opacity(0.4))
                         }
                     }
                     .padding(.horizontal, 6)
@@ -187,7 +183,7 @@ struct MacComicView: View {
             HStack(spacing: 10) {
                 Button { openWindow(id: "library") } label: {
                     Label("书架", systemImage: "chevron.left").labelStyle(.titleAndIcon)
-                        .font(.system(size: 12))
+                        .font(.yy(size: 12))
                         .padding(.leading, 7).padding(.trailing, 12).frame(height: 30)
                         .comicGlass(in: Capsule())
                 }
@@ -220,8 +216,8 @@ struct MacComicView: View {
         VStack(spacing: 1) {
             // A comic of one episode is named after itself: once is enough.
             Text(model.current.map { e in [model.title, model.name(of: e)].uniqued().joined(separator: " · ") } ?? model.title)
-                .font(.system(size: 12.5, weight: .semibold))
-            Text(model.pageLabel).font(.system(size: 10.5)).monospacedDigit().foregroundStyle(Color(white: 0.6))
+                .font(.yy(size: 12.5, weight: .semibold))
+            Text(model.pageLabel).font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(Color(white: 0.6))
         }
         .lineLimit(1)
         .frame(maxWidth: narrow ? 170 : 340)
@@ -231,11 +227,12 @@ struct MacComicView: View {
     private var tools: some View {
         HStack(spacing: 2) {
             Button { tocShown.toggle() } label: {
-                Image(systemName: "list.bullet").font(.system(size: 13, weight: .medium))
+                Image(systemName: "list.bullet").font(.yy(size: 13, weight: .medium))
                     .frame(width: 34, height: 28).contentShape(.rect)
             }
             .buttonStyle(.plain)
             .help("目录")
+            .accessibilityLabel(Text("目录"))
             .popover(isPresented: $tocShown, arrowEdge: .bottom) {
                 ComicContents(model: model) { tocShown = false }
                     .environment(\.colorScheme, .dark)
@@ -246,7 +243,7 @@ struct MacComicView: View {
                     let on = model.layout == l
                     Button { model.layout = l } label: {
                         tag(l.name, l.symbol)
-                            .font(.system(size: 11.5, weight: on ? .semibold : .regular))
+                            .font(.yy(size: 11.5, weight: on ? .semibold : .regular))
                             .foregroundStyle(on ? .white : Color(white: 0.66))
                             .padding(.leading, 7).padding(.trailing, narrow ? 7 : 9).frame(height: 24)
                             .background(on ? Color.white.opacity(0.2) : .clear, in: .capsule)
@@ -262,7 +259,7 @@ struct MacComicView: View {
             if model.layout != .strip {
                 Button { model.rightToLeft.toggle() } label: {
                     tag(String(localized: "从右往左"), "arrow.left.to.line")
-                        .font(.system(size: 11.5, weight: model.rightToLeft ? .semibold : .regular))
+                        .font(.yy(size: 11.5, weight: model.rightToLeft ? .semibold : .regular))
                         .foregroundStyle(model.rightToLeft ? .white : Color(white: 0.85))
                         .padding(.leading, 8).padding(.trailing, narrow ? 8 : 10).frame(height: 28)
                         .background(model.rightToLeft ? Color.white.opacity(0.16) : .clear, in: .capsule)
@@ -273,13 +270,14 @@ struct MacComicView: View {
             }
             // `i-sliders`: what holds for every comic, the same switches as 设置 · 漫画.
             Button { settingsShown.toggle() } label: {
-                Image(systemName: "slider.horizontal.3").font(.system(size: 12.5, weight: .medium))
+                Image(systemName: "slider.horizontal.3").font(.yy(size: 12.5, weight: .medium))
                     .foregroundStyle(settingsShown ? .white : Color(white: 0.85))
                     .frame(width: 32, height: 28)
                     .contentShape(.capsule)
             }
             .buttonStyle(.plain)
             .help("漫画阅读设置")
+            .accessibilityLabel(Text("漫画阅读设置"))
             .popover(isPresented: $settingsShown, arrowEdge: .bottom) {
                 ComicQuickSettings()
                     .environment(\.colorScheme, .dark)
@@ -343,7 +341,7 @@ private struct ComicSlider: View {
                         .shadow(color: .black.opacity(0.5), radius: 2, y: 1)
                         .position(x: x, y: geo.size.height / 2)
                     Text(label(for: shown, count: count))
-                        .font(.system(size: 10.5, weight: .semibold)).monospacedDigit()
+                        .font(.yy(size: 10.5, weight: .semibold)).monospacedDigit()
                         .foregroundStyle(Color(white: 0.07))
                         .padding(.horizontal, 7).padding(.vertical, 4)
                         .background(.white, in: .rect(cornerRadius: 7))
@@ -380,11 +378,11 @@ private struct ComicSlider: View {
         let target = model.episode + (forward ? 1 : -1)
         Button { model.go(episode: target, page: 0) } label: {
             HStack(spacing: 2) {
-                if first { Image(systemName: "chevron.left").font(.system(size: 10, weight: .semibold)) }
+                if first { Image(systemName: "chevron.left").font(.yy(size: 10, weight: .semibold)) }
                 Text(forward ? String(localized: "下一话") : String(localized: "上一话"))
-                if !first { Image(systemName: "chevron.right").font(.system(size: 10, weight: .semibold)) }
+                if !first { Image(systemName: "chevron.right").font(.yy(size: 10, weight: .semibold)) }
             }
-            .font(.system(size: 11.5))
+            .font(.yy(size: 11.5))
             .foregroundStyle(Color(white: 0.79))
             .contentShape(.rect)
         }
@@ -411,17 +409,17 @@ private struct ComicContents: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .center, spacing: 10) {
                 VStack(alignment: .leading, spacing: 2) {
-                    (Text("目录").font(.system(size: 13, weight: .bold))
-                        + Text(" · 共 \(model.episodes.count) 话").font(.system(size: 10.5)).foregroundStyle(.secondary))
+                    (Text("目录").font(.yy(size: 13, weight: .bold))
+                        + Text(" · 共 \(model.episodes.count) 话").font(.yy(size: 10.5)).foregroundStyle(.secondary))
                     if let e = model.current {
                         Text("读到\(model.name(of: e)) · \(model.pageLabel)")
-                            .font(.system(size: 10)).monospacedDigit().foregroundStyle(accent)
+                            .font(.yy(size: 10)).monospacedDigit().foregroundStyle(accent)
                     }
                 }
                 Spacer()
                 Button { newestFirst.toggle() } label: {
                     Label(newestFirst ? String(localized: "倒序") : String(localized: "正序"), systemImage: "arrow.up.arrow.down").labelStyle(.titleAndIcon)
-                        .font(.system(size: 10.5)).foregroundStyle(.secondary)
+                        .font(.yy(size: 10.5)).foregroundStyle(.secondary)
                 }
                 .buttonStyle(.plain)
                 Picker("", selection: $list) {
@@ -453,7 +451,7 @@ private struct ComicContents: View {
                 let here = e.id == model.episode, read = e.id < model.episode
                 Button { go(e) } label: {
                     Text("\(e.id + 1)")
-                        .font(.system(size: 12, weight: read ? .medium : .semibold)).monospacedDigit()
+                        .font(.yy(size: 12, weight: read ? .medium : .semibold)).monospacedDigit()
                         .foregroundStyle(here ? .white : read ? Color(white: 0.45) : Color(white: 0.92))
                         .frame(maxWidth: .infinity).frame(height: 38)
                         .background(here ? AnyShapeStyle(accent) : AnyShapeStyle(Color.white.opacity(read ? 0.035 : 0.09)),
@@ -474,11 +472,11 @@ private struct ComicContents: View {
                 let here = e.id == model.episode
                 Button { go(e) } label: {
                     HStack {
-                        Text(model.name(of: e)).font(.system(size: 13, weight: here ? .semibold : .regular))
+                        Text(model.name(of: e)).font(.yy(size: 13, weight: here ? .semibold : .regular))
                             .foregroundStyle(e.id < model.episode ? .secondary : .primary)
                         Spacer()
                         Text(here ? String(localized: "读到这里") : String(localized: "\(e.pages.count) 页"))
-                            .font(.system(size: 11)).monospacedDigit()
+                            .font(.yy(size: 11)).monospacedDigit()
                             .foregroundStyle(here ? accent : .secondary)
                     }
                     .padding(.horizontal, 10).frame(height: 30)
@@ -602,9 +600,9 @@ private struct ComicStrip: View {
             .overlay(alignment: .top) {
                 VStack(spacing: 1) {
                     Text(model.current.map { e in [model.title, model.name(of: e)].uniqued().joined(separator: " · ") } ?? model.title)
-                        .font(.system(size: 12.5, weight: .semibold))
+                        .font(.yy(size: 12.5, weight: .semibold))
                     Text("条漫 · " + (model.page + 1 >= (model.current?.pages.count ?? 0) ? String(localized: "这一话看完了") : String(localized: "第 \(model.page + 1) / \(model.current?.pages.count ?? 0) 张")))
-                        .font(.system(size: 10.5)).monospacedDigit().foregroundStyle(Color(white: 0.6))
+                        .font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(Color(white: 0.6))
                 }
                 .lineLimit(1)
                 .padding(.horizontal, 18).frame(height: 36)
@@ -621,7 +619,7 @@ private struct ComicStrip: View {
             HStack(spacing: 10) {
                 Rectangle().fill(Color.white.opacity(0.22)).frame(width: 40, height: 0.5)
                 Text(e.id == model.episodes.count - 1 ? String(localized: "\(model.name(of: e)) · 完 · 已经是最后一话") : String(localized: "\(model.name(of: e)) · 完"))
-                    .font(.system(size: 11)).tracking(0.9).foregroundStyle(.white.opacity(0.5))
+                    .font(.yy(size: 11)).tracking(0.9).foregroundStyle(.white.opacity(0.5))
                 Rectangle().fill(Color.white.opacity(0.22)).frame(width: 40, height: 0.5)
             }
             HStack(spacing: 6) {
@@ -643,9 +641,9 @@ private struct ComicStrip: View {
 
     private func header(_ e: ComicModel.Episode) -> some View {
         VStack(spacing: 3) {
-            Text("第 \(e.id + 1) 话").font(.system(size: 10)).tracking(1.4).foregroundStyle(.white.opacity(0.5))
+            Text("第 \(e.id + 1) 话").font(.yy(size: 10)).tracking(1.4).foregroundStyle(.white.opacity(0.5))
             if !e.title.isEmpty, e.title != String(localized: "第\(e.id + 1)话") {
-                Text(e.title).font(.system(size: 14, weight: .semibold)).foregroundStyle(.white.opacity(0.88))
+                Text(e.title).font(.yy(size: 14, weight: .semibold)).foregroundStyle(.white.opacity(0.88))
             }
         }
         .padding(.top, 8).padding(.bottom, 24)
@@ -656,11 +654,11 @@ private struct ComicStrip: View {
     private func seamButton(_ title: String, icon: String, leading: Bool, strong: Bool = false, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 4) {
-                if leading { Image(systemName: icon).font(.system(size: 10, weight: .semibold)) }
+                if leading { Image(systemName: icon).font(.yy(size: 10, weight: .semibold)) }
                 Text(title)
-                if !leading { Image(systemName: icon).font(.system(size: 10, weight: .semibold)) }
+                if !leading { Image(systemName: icon).font(.yy(size: 10, weight: .semibold)) }
             }
-            .font(.system(size: 11.5, weight: strong ? .semibold : .regular))
+            .font(.yy(size: 11.5, weight: strong ? .semibold : .regular))
             .foregroundStyle(.white.opacity(strong ? 1 : 0.88))
             .padding(.horizontal, 13).frame(height: 32)
             .comicGlass(in: Capsule())
@@ -680,7 +678,7 @@ private struct ComicQuickSettings: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("所有漫画")
-                .font(.system(size: 11, weight: .semibold))
+                .font(.yy(size: 11, weight: .semibold))
                 .foregroundStyle(Color(white: 0.6))
                 .padding(.bottom, 8)
             row(String(localized: "自动裁白边"), String(localized: "扫描版四周的白边裁掉，画大一些")) {
@@ -706,8 +704,8 @@ private struct ComicQuickSettings: View {
     private func row(_ title: String, _ detail: String?, @ViewBuilder control: () -> some View) -> some View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.system(size: 12.5)).foregroundStyle(Color(white: 0.93))
-                if let detail { Text(detail).font(.system(size: 10.5)).foregroundStyle(Color(white: 0.55)) }
+                Text(title).font(.yy(size: 12.5)).foregroundStyle(Color(white: 0.93))
+                if let detail { Text(detail).font(.yy(size: 10.5)).foregroundStyle(Color(white: 0.55)) }
             }
             Spacer(minLength: 8)
             control()

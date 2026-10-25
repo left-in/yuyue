@@ -77,6 +77,10 @@ pub enum Font {
 #[derive(Clone, Debug, PartialEq)]
 pub struct PageSettings {
     pub paper: Paper,
+    /// 我的纸's colours over the preset's (`paper::page_style`).
+    pub paper_style: Option<String>,
+    /// 纹理 on 我的纸 (`data-yy-texture`).
+    pub texture: Option<&'static str>,
     pub mode: LayoutMode,
     pub paging: Paging,
     /// `None`: the paper's default.
@@ -103,6 +107,8 @@ impl Default for PageSettings {
     fn default() -> Self {
         PageSettings {
             paper: Paper::Plain,
+            paper_style: None,
+            texture: None,
             mode: LayoutMode::Paginated,
             paging: Paging::Snap,
             justify: None,
@@ -129,7 +135,7 @@ pub fn section_document(manifest: &Manifest, n: u32, content: &str, settings: &P
     html.push_str("<!DOCTYPE html>\n");
     let _ = write!(
         html,
-        r#"<html lang="{}" data-yy-paper="{}" data-yy-mode="{}" data-yy-paging="{}" data-yy-justify="{}" data-yy-indent="{}" data-yy-compress="{}" data-yy-motion="{}" style="{}">"#,
+        r#"<html lang="{}" data-yy-paper="{}" data-yy-mode="{}" data-yy-paging="{}" data-yy-justify="{}" data-yy-indent="{}" data-yy-compress="{}" data-yy-motion="{}"{} style="{}">"#,
         escape(&html_lang(manifest.section_lang(n))),
         s.paper.css(),
         match s.mode {
@@ -144,6 +150,7 @@ pub fn section_document(manifest: &Manifest, n: u32, content: &str, settings: &P
         tristate(s.indent),
         u8::from(s.compress),
         if s.reduced_motion || s.paper == Paper::Eink { "reduced" } else { "full" },
+        s.texture.map(|t| format!(r#" data-yy-texture="{t}""#)).unwrap_or_default(),
         escape(&custom_properties(s)),
     );
     html.push_str("\n<head>\n<meta charset=\"utf-8\">\n");
@@ -212,6 +219,9 @@ fn custom_properties(s: &PageSettings) -> String {
         };
         let _ = write!(css, ";--yy-font:var(--yy-{name});--yy-font-en:var(--yy-{latin})");
     }
+    if let Some(style) = &s.paper_style {
+        let _ = write!(css, ";{style}");
+    }
     css
 }
 
@@ -278,6 +288,8 @@ mod tests {
         let m = manifest();
         let s = PageSettings {
             paper: Paper::KamiNight,
+            paper_style: None,
+            texture: None,
             mode: LayoutMode::Scrolled,
             paging: Paging::Native,
             justify: Some(false),
@@ -299,5 +311,10 @@ mod tests {
         assert!(html.contains(r#"data-section="1" data-kind="image""#));
         let eink = PageSettings { paper: Paper::Eink, ..PageSettings::default() };
         assert!(section_document(&m, 0, "", &eink).contains(r#"data-yy-motion="reduced""#));
+        // 我的纸: the preset's typography, its own colours and texture.
+        let mine = PageSettings { paper_style: Some("--yy-p-bg:#CCE3CB;color-scheme:light".into()), texture: Some("xuan"), ..PageSettings::default() };
+        let html = section_document(&m, 0, "", &mine);
+        assert!(html.contains(r#"data-yy-paper="plain""#) && html.contains(r#"data-yy-motion="full" data-yy-texture="xuan" style="#), "{html}");
+        assert!(html.contains(";--yy-p-bg:#CCE3CB;color-scheme:light\""), "{html}");
     }
 }

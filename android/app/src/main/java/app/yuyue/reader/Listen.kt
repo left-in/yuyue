@@ -1,7 +1,11 @@
 package app.yuyue.reader
 
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -134,12 +138,13 @@ private fun Speed(model: ReaderModel, player: Player) {
         }
         Slider(
             player.rate, { player.changeRate((it * 10).roundToInt() / 10f) }, valueRange = 0.8f..2.0f,
+            modifier = Modifier.semantics { contentDescription = t("语速"); stateDescription = rateText(player.rate) },
             colors = SliderDefaults.colors(thumbColor = YY.c.card, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line),
         )
         Row(Modifier.fillMaxWidth().padding(horizontal = 6.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             for (r in rates) {
                 val on = abs(player.rate - r) < 0.05f
-                Text(rateText(r), fontSize = 10.sp, fontWeight = if (on) FontWeight.Bold else FontWeight.Normal, color = if (on) YY.c.t1 else YY.c.t3, modifier = Modifier.clickable { player.changeRate(r) })
+                Text(rateText(r), fontSize = 10.sp, fontWeight = if (on) FontWeight.Bold else FontWeight.Normal, color = if (on) YY.c.t1 else YY.c.t3, modifier = Modifier.selectable(on, role = androidx.compose.ui.semantics.Role.RadioButton) { player.changeRate(r) })
             }
         }
     }

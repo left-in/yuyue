@@ -1,5 +1,8 @@
 package app.yuyue.pdf
 
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
@@ -136,7 +139,11 @@ class PdfModel(private val library: Library, val bookID: String, private val con
                 aspects = DoubleArray(r.pageCount) { i -> r.openPage(i).use { p -> p.width.toDouble() / maxOf(1, p.height) } }
             }
         } catch (e: Exception) {
-            failure = t("这个 PDF 读不出来")
+            failure = when {
+                file == null || !file.exists() -> t("找不到这本书的文件，可能被移走或删掉了。从书架上删掉，再导入一次就好")
+                e is SecurityException -> t("这个 PDF 设了密码，打不开")
+                else -> t("这个 PDF 读不出来，文件可能坏了")
+            }
         }
         var position = runCatching { core.progress(bookID) }.getOrNull()?.position ?: runCatching { core.latestProgress(bookID) }.getOrNull()?.position
         (library.takeIntent(bookID) as? Library.OpenIntent.At)?.let { position = it.position }
@@ -297,13 +304,8 @@ fun PdfScreen(library: Library, bookID: String, close: () -> Unit) {
             confirmButton = { androidx.compose.material3.TextButton({ model.player.failure = null }) { Text(t("好"), color = YY.tint.accent) } },
         )
     }
-    model.failure?.let { message ->
-        androidx.compose.material3.AlertDialog(
-            onDismissRequest = { model.failure = null; close() }, containerColor = YY.c.card,
-            title = { Text(t("出错了"), color = YY.c.t1) }, text = { Text(message, color = YY.c.t2) },
-            confirmButton = { androidx.compose.material3.TextButton({ model.failure = null; close() }) { Text(t("好"), color = YY.tint.accent) } },
-        )
-    }
+    if (model.pageCount == 0) app.yuyue.shelf.BookFailure(model.failure, close)
+    else model.failure?.let { app.yuyue.shelf.FailureDialog(it) { model.failure = null } }
 }
 
 /** 夜间: the page's colours turned round, so white paper reads dark. */
@@ -362,6 +364,7 @@ private fun Bars(model: PdfModel, close: () -> Unit) {
             if (model.pageCount > 1) Slider(
                 sliding ?: model.page.toFloat(), { sliding = it }, valueRange = 0f..(model.pageCount - 1).toFloat(),
                 onValueChangeFinished = { sliding?.let { model.go(it.roundToInt()) }; sliding = null },
+                modifier = Modifier.semantics { contentDescription = t("翻页"); stateDescription = t("第 %lld 页", model.page + 1) },
                 colors = SliderDefaults.colors(thumbColor = YY.c.card, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line),
             )
             if (!model.canListen) Text(t("这台手机的系统读不出 PDF 里的字，Android 15 起才能朗读 PDF"), fontSize = 11.sp, color = YY.c.t3, modifier = Modifier.padding(bottom = 4.dp))

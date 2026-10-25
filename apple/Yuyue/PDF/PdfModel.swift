@@ -52,6 +52,8 @@ final class PdfModel {
     let title: String
     let author: String?
     let document: PDFDocument?
+    /// Its pages can be shown: there, readable, not locked.
+    var opened: Bool { document.map { !$0.isLocked } ?? false }
     let chapters: [Chapter]
     /// The page in view, from 0.
     private(set) var page = 0
@@ -118,7 +120,13 @@ final class PdfModel {
         night = d.bool(forKey: "pdf.night.\(bookID)")
         lastStyle = d.string(forKey: "reader.markStyle").flatMap(MarkStyle.init(css:)) ?? .yellow
         language = summary?.language ?? ""
-        if document == nil { failure = String(localized: "打不开这个 PDF") }
+        if url == nil {
+            failure = String(localized: "找不到这本书的文件，可能被移走或删掉了。从书架上删掉，再导入一次就好")
+        } else if document == nil {
+            failure = String(localized: "这个 PDF 读不出来，文件可能坏了")
+        } else if document?.isLocked == true {
+            failure = String(localized: "这个 PDF 设了密码，打不开")
+        }
 
         let intent = library.takeIntent(for: bookID)
         var position = (try? core.progress(bookId: bookID))?.position ?? (try? core.latestProgress(bookId: bookID))?.position

@@ -65,7 +65,7 @@ struct SelectionCard: View {
                             #if os(macOS)
                             // The key that makes it, with the text still selected.
                             Text("\(i + 1)")
-                                .font(.system(size: 10, weight: .semibold))
+                                .font(.yy(size: 10, weight: .semibold))
                                 .foregroundStyle(ringed(style) ? YYColor.t1 : YYColor.t2)
                                 .frame(width: 16, height: 15)
                                 .background(YYColor.inset, in: .rect(cornerRadius: 4))
@@ -75,6 +75,8 @@ struct SelectionCard: View {
                     }
                     .buttonStyle(.plain)
                     .help("\(style.name) · 按 \(i + 1)")
+                    .accessibilityLabel(style.name)
+                    .accessibilityAddTraits(ringed(style) ? .isSelected : [])
                 }
                 Spacer(minLength: 16)
                 ForEach(MarkStyle.lines, id: \.self) { style in
@@ -88,14 +90,17 @@ struct SelectionCard: View {
                     }
                     .buttonStyle(.plain)
                     .help(style.name)
+                    .accessibilityLabel(style.name)
+                    .accessibilityAddTraits(ringed(style) ? .isSelected : [])
                 }
                 if let current {
                     Button { model.deleteMark(current) } label: {
                         Image(systemName: "trash")
-                            .font(.system(size: 12.5))
+                            .font(.yy(size: 12.5))
                             .foregroundStyle(YYColor.danger)
                             .frame(width: 26, height: 26)
                     }
+                    .accessibilityLabel(Text("删除划线"))
                     .buttonStyle(.plain)
                     .help("删除划线")
                 }
@@ -135,7 +140,7 @@ struct SelectionCard: View {
             if style == .wave {
                 Circle().fill(Self.touch ? YYColor.hlR.opacity(0.14) : YYColor.inset)
                 Text("~")
-                    .font(.system(size: 17, weight: .medium))
+                    .font(.yy(size: 17, weight: .medium))
                     .foregroundStyle(YYColor.hlR)
                     .offset(y: -1.5)
             } else {
@@ -159,8 +164,8 @@ struct SelectionCard: View {
     private func action(_ title: String, _ symbol: String, _ run: @escaping () -> Void, accent: Bool = false) -> some View {
         Button(action: run) {
             VStack(spacing: 4) {
-                Image(systemName: symbol).font(.system(size: Self.touch ? 13.5 : 14.5)).frame(height: 16)
-                Text(title).font(.system(size: Self.touch ? 10.5 : 11, weight: accent ? .semibold : .regular))
+                Image(systemName: symbol).font(.yy(size: Self.touch ? 13.5 : 14.5)).frame(height: 16)
+                Text(title).font(.yy(size: Self.touch ? 10.5 : 11, weight: accent ? .semibold : .regular))
             }
             .foregroundStyle(accent ? tint.accent : YYColor.t1)
             .frame(maxWidth: .infinity)

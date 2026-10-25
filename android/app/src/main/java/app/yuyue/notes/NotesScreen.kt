@@ -62,7 +62,6 @@ import app.yuyue.reader.ReaderModel
 import app.yuyue.reader.ThoughtDialog
 import app.yuyue.shelf.BookCover
 import app.yuyue.shelf.Item
-import app.yuyue.shelf.UndoToast
 import app.yuyue.t
 import uniffi.yuyue_core.BookDetail
 import uniffi.yuyue_core.BookSummary
@@ -212,7 +211,6 @@ fun NotesScreen(library: Library) {
             }
             if (selecting) SelectionBar(shown, selected, library) { stopSelecting() }
         }
-        library.toast?.let { UndoToast(it, undo = { library.undo() }, modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp)) }
     }
     writing?.let { (n, m) -> ThoughtDialog(m.note ?: "") { text -> if (text != null) library.setNote(text.trim().ifEmpty { null }, n.id, m); writing = null } }
     sharing?.let { QuoteShareSheet(it) { sharing = null } }
@@ -238,7 +236,7 @@ private fun Timeline(
 ) {
     val items = shown.flatMap { n -> n.marks.map { n to it } }.sortedByDescending { it.second.at }
     val days = items.groupBy { Notes.date(it.second.at) }.toList()
-    LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 96.dp)) {
+    LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = app.yuyue.LocalTabBarHeight.current + 16.dp)) {
         if (deck != null) item(key = "deck") { Box(Modifier.padding(top = 8.dp)) { DeckCard(deck, library, startReview) } }
         for ((d, list) in days) {
             item(key = "h$d") {
@@ -315,7 +313,7 @@ fun NoteRow(mark: Mark, selected: Boolean?, act: (String) -> Unit, footer: @Comp
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             if (selected != null) {
-                Icon(if (selected) Icons.checkCircle else Icons.circle, null, tint = if (selected) YY.tint.accent else YY.c.t3, modifier = Modifier.padding(top = 3.dp).size(22.dp))
+                Icon(if (selected) Icons.checkCircle else Icons.circle, if (selected) t("已选") else t("未选"), tint = if (selected) YY.tint.accent else YY.c.t3, modifier = Modifier.padding(top = 3.dp).size(22.dp))
             }
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 MarkText(mark, androidx.compose.ui.text.TextStyle(fontFamily = YY.serif, fontSize = 16.sp, lineHeight = 26.sp), YY.c.t1)
@@ -341,7 +339,7 @@ fun NoteRow(mark: Mark, selected: Boolean?, act: (String) -> Unit, footer: @Comp
 
 @Composable
 private fun BookList(shown: List<NotedBook>, open: (String) -> Unit) {
-    LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 96.dp)) {
+    LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = app.yuyue.LocalTabBarHeight.current + 16.dp)) {
         item {
             Row(Modifier.padding(start = 4.dp, end = 4.dp, top = 12.dp, bottom = 8.dp)) {
                 Text(t("%lld 本书 · %lld 条", shown.size, shown.sumOf { it.marks.size }), fontSize = 12.sp, color = YY.c.t3, modifier = Modifier.weight(1f))
@@ -385,7 +383,7 @@ private fun BookNotes(library: Library, n: NotedBook, thoughtsOnly: Boolean, bac
                 }
             }
         }
-        LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 96.dp)) {
+        LazyColumn(contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = app.yuyue.LocalTabBarHeight.current + 16.dp)) {
             item {
                 Row(Modifier.padding(4.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                     BookCover(n.book, Modifier.width(52.dp))

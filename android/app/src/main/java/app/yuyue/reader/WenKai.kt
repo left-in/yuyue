@@ -1,5 +1,6 @@
 package app.yuyue.reader
 
+import app.yuyue.library.Library
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -63,12 +64,15 @@ object WenKai {
             try {
                 withContext(Dispatchers.IO) {
                     dir.mkdirs()
+                    // Said before the first byte, not after 20 MB of it.
+                    if (dir.usableSpace in 1 until 40_000_000L) throw java.io.IOException("ENOSPC")
                     val http = OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS).build()
                     files.forEachIndexed { i, name ->
                         val target = File(dir, name)
                         if (target.isFile) return@forEachIndexed
                         val temp = File(dir, "$name.part")
-                        http.newCall(Request.Builder().url(BASE + name).build()).execute().use { r ->
+                        // Half a file is no use to anyone: gone again if the download stops.
+                        try { http.newCall(Request.Builder().url(BASE + name).build()).execute().use { r ->
                             if (!r.isSuccessful) throw java.io.IOException("HTTP ${r.code}")
                             val body = r.body!!
                             val total = body.contentLength().coerceAtLeast(1)
@@ -85,13 +89,18 @@ object WenKai {
                                     }
                                 }
                             }
-                        }
+                        } } catch (e: Exception) { temp.delete(); throw e }
                         temp.renameTo(target)
                     }
                 }
                 version++
             } catch (e: Exception) {
-                failure = if (e is java.net.UnknownHostException) t("没有联网") else t("没下载下来")
+                failure = when {
+                    Library.outOfSpace(e) -> t("存储空间不够，要约 30 MB")
+                    e is java.net.UnknownHostException -> t("没有联网")
+                    e is java.net.SocketTimeoutException || e is java.net.SocketException -> t("网断了，没下完")
+                    else -> t("没下载下来")
+                }
             }
             progress = null
             job = null

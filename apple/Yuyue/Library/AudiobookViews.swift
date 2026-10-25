@@ -158,7 +158,7 @@ private struct AudiobookPair: View {
                     places
                 }
                 YYGroup {
-                    YYRow(title: String(localized: "以后同名的书都这样配")) { YYSwitch(isOn: $autoPair) }
+                    YYRow(title: String(localized: "以后同名的书都这样配")) { YYSwitch(isOn: $autoPair, label: String(localized: "以后同名的书都这样配")) }
                 }
                 VStack(spacing: YYUI.s(4)) {
                     Button("开始合成", action: start)
@@ -604,7 +604,7 @@ private struct AudiobookPage: View {
         switch state {
         case .done, .check:
             Image(systemName: "checkmark")
-                .font(.system(size: YYUI.s(9), weight: .bold))
+                .font(.yy(size: YYUI.s(9), weight: .bold))
                 .foregroundStyle(tint.onBlack)
                 .frame(width: size, height: size)
                 .background(tint.fill, in: .circle)
@@ -703,7 +703,7 @@ private struct AudiobookPage: View {
                             .frame(width: YYUI.s(58), height: YYUI.s(87))
                             .liftedCover(4)
                             Image(systemName: "headphones")
-                                .font(.system(size: YYUI.s(11), weight: .semibold))
+                                .font(.yy(size: YYUI.s(11), weight: .semibold))
                                 .foregroundStyle(tint.onBlack)
                                 .frame(width: YYUI.s(24), height: YYUI.s(24))
                                 .background(tint.black, in: .circle)
@@ -930,7 +930,7 @@ struct TimingAdjust: View {
             wave
             nudges
             YYGroup {
-                YYRow(title: String(localized: "这一段后面的句子跟着挪")) { YYSwitch(isOn: $follow) }
+                YYRow(title: String(localized: "这一段后面的句子跟着挪")) { YYSwitch(isOn: $follow, label: String(localized: "这一段后面的句子跟着挪")) }
             }
             HStack(spacing: YYUI.s(8)) {
                 Button { go(-1) } label: { Image(systemName: "chevron.left").frame(maxWidth: .infinity) }
@@ -1064,7 +1064,7 @@ struct TimingAdjust: View {
     private var arrow: some View {
         ZStack(alignment: .trailing) {
             Rectangle().fill(YYColor.t3).frame(height: 1).padding(.leading, 3).padding(.trailing, 8)
-            Image(systemName: "chevron.right").font(.system(size: 7)).foregroundStyle(YYColor.t3).padding(.trailing, 6)
+            Image(systemName: "chevron.right").font(.yy(size: 7)).foregroundStyle(YYColor.t3).padding(.trailing, 6)
         }
     }
 

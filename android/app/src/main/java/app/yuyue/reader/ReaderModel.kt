@@ -42,7 +42,8 @@ data class OpenMark(val mark: Mark, val x: Double, val y: Double)
 /** One open book: where the reader is, how the pages look, the notes in it (as `ReaderModel` on iPhone). */
 class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPager, val context: Context) : ReaderPager.Listener {
     val core = library.core
-    var detail: BookDetail? by mutableStateOf(runCatching { core.book(bookID) }.getOrNull())
+    private val opening = runCatching { core.book(bookID) }
+    var detail: BookDetail? by mutableStateOf(opening.getOrNull())
         private set
     var failure by mutableStateOf<String?>(null)
     var settings by mutableStateOf(ReaderSettings(Paper.PLAIN, LayoutMode.PAGINATED, null, 18.0, null, null, null, null, true))
@@ -120,7 +121,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         val own = runCatching { core.bookReaderSettings(bookID) }.getOrNull()
         var s = own ?: runCatching { core.readerSettings() }.getOrNull() ?: settings
         // 我的 › 墨水屏: a book with its own paper reads on e-ink too.
-        if (Prefs.bool("eink.on", false)) s = s.copy(paper = Paper.EINK)
+        if (Prefs.bool("eink.on", false)) s = s.copy(paper = Paper.EINK, customPaper = null)
         settings = s
         ownSettings = own != null
         pager.listener = this
@@ -142,7 +143,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         }
         val d = detail
         if (d == null) {
-            failure = t("找不到这本书的文件")
+            failure = opening.exceptionOrNull()?.let { Library.message(it) } ?: t("找不到这本书的文件，可能被移走或删掉了。从书架上删掉，再导入一次就好")
         } else {
             val intent = library.takeIntent(bookID)
             val start = Position(d.start, 0u)
@@ -430,6 +431,70 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         if (!on) runCatching { core.readerSettings() }.getOrNull()?.takeIf { it != settings }?.let { settings = it; apply(it) }
     }
 
+    /** ＋ starts from the paper the page is on: a copy of 我的纸, or the made colour closest to the
+     *  preset. No name: the core gives it one on 完成. */
+    fun newPaper(): uniffi.yuyue_core.CustomPaper {
+        Papers.paper(settings.customPaper)?.let { return it.copy(id = "", name = "") }
+        val p = settings.paper
+        val night = p == Paper.DARK || p == Paper.KAMI_NIGHT
+        val made = uniffi.yuyue_core.paperPalette(night).swatches
+        val start = if (night) made[0] else made[when (p) { Paper.KAMI -> 1; Paper.EINK -> 5; else -> 0 }]
+        return uniffi.yuyue_core.CustomPaper("", "", start.color, null,
+            if (p == Paper.PLAIN || p == Paper.DARK) Paper.PLAIN else Paper.KAMI,
+            if (p == Paper.EINK) uniffi.yuyue_core.PaperTexture.GRAIN else uniffi.yuyue_core.PaperTexture.NONE)
+    }
+
+    /** 复制一张: straight onto the shelf of papers, named 豆沙绿 2 and so on, and on the page. */
+    fun duplicatePaper(mine: uniffi.yuyue_core.CustomPaper) {
+        val base = mine.name.replace(Regex(" \\d+$"), "")
+        val taken = Papers.list.map { it.name }.toSet()
+        val name = generateSequence(2) { it + 1 }.map { "$base $it" }.first { it !in taken }
+        runCatching { Papers.save(mine.copy(id = "", name = name)) }.getOrNull()?.let { choose(it) }
+    }
+
+    /** 删除, with 撤销 for a few seconds. */
+    fun deletePaper(mine: uniffi.yuyue_core.CustomPaper) {
+        val wasOn = settings.customPaper == mine.id
+        if (wasOn) update { it.copy(customPaper = null) }
+        Papers.delete(mine.id)
+        show(Library.Toast(Library.Toast.Icon.Delete, app.yuyue.t("已删除“%@”", mine.name), "", danger = true) {
+            Papers.restore(mine.id)
+            if (wasOn) choose(mine)
+        })
+    }
+
+    fun choose(mine: uniffi.yuyue_core.CustomPaper) {
+        val preset = uniffi.yuyue_core.paperColors(mine).preset
+        update { it.copy(customPaper = mine.id, paper = preset) }
+    }
+
+    /** The paper 调纸 shows, over the one in the settings. */
+    var previewing by mutableStateOf<app.yuyue.design.YYPaper?>(null)
+        private set
+    /** The paper the page and the controls over it are drawn on. */
+    val paperTokens: app.yuyue.design.YYPaper get() = previewing ?: settings.paperTokens
+
+    /** 调纸 being set: the page and the controls on `draft` until it is done or cancelled (null). */
+    fun previewPaper(draft: uniffi.yuyue_core.CustomPaper?) {
+        if (draft == null) {
+            if (previewing == null) return
+            previewing = null
+            apply(settings)
+            return
+        }
+        previewing = customTokens(draft)
+        pager.apply(settings.script(pager.geometry()).apply {
+            put("paper", uniffi.yuyue_core.paperColors(draft).preset.tokens.id)
+            put("paperStyle", uniffi.yuyue_core.paperStyle(draft))
+            put("texture", draft.texture.css ?: JSONObject.NULL)
+        })
+    }
+
+    /** 我的纸 changed: the page on one takes its new colours. */
+    fun papersChanged() {
+        if (previewing == null) apply(settings)
+    }
+
     private fun apply(s: ReaderSettings) {
         pager.fontSize = s.fontSize
         val modeChanged = pager.mode != s.mode
@@ -696,6 +761,9 @@ val MarkStyle.css: String
 /** The reader's `applySettings` for these settings (contract §4). */
 fun ReaderSettings.script(g: uniffi.yuyue_core.PageGeometry): JSONObject = JSONObject().apply {
     put("paper", when (paper) { Paper.PLAIN -> "plain"; Paper.DARK -> "dark"; Paper.KAMI -> "kami"; Paper.KAMI_NIGHT -> "kaminight"; Paper.EINK -> "eink" })
+    val mine = Papers.paper(customPaper)
+    put("paperStyle", mine?.let { uniffi.yuyue_core.paperStyle(it) } ?: JSONObject.NULL)
+    put("texture", mine?.texture?.css ?: JSONObject.NULL)
     put("mode", if (mode == LayoutMode.SCROLLED) "scrolled" else "paginated")
     put("fontSize", fontSize)
     put("lineHeight", lineHeight ?: JSONObject.NULL)

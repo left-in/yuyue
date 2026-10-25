@@ -51,9 +51,9 @@ struct SyncSettings: View {
                 HStack(spacing: 8) {
                     if signingIn {
                         ProgressView().controlSize(.small)
-                        Text("在弹出的窗口里登录 Google…").font(.system(size: 11.5)).foregroundStyle(YYColor.t2)
+                        Text("在弹出的窗口里登录 Google…").font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
                     } else if let googleProblem {
-                        Label(googleProblem, systemImage: "exclamationmark.circle").font(.system(size: 11.5)).foregroundStyle(YYColor.danger)
+                        Label(googleProblem, systemImage: "exclamationmark.circle").font(.yy(size: 11.5)).foregroundStyle(YYColor.danger)
                     }
                 }
                 .padding(.leading, 8)
@@ -68,7 +68,7 @@ struct SyncSettings: View {
                 }
             }
             Label("不用注册账号，数据只在你的设备和你自己的网盘之间走", systemImage: "lock")
-                .font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
                 .padding(.leading, 8)
             Spacer(minLength: 0)
         }
@@ -101,14 +101,14 @@ struct SyncSettings: View {
                 HStack(spacing: 12) {
                     statusIcon
                     VStack(alignment: .leading, spacing: 3) {
-                        Text(headline).font(.system(size: 13.5, weight: .semibold)).foregroundStyle(YYColor.t1)
-                        Text(subline).font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                        Text(headline).font(.yy(size: 13.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                        Text(subline).font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
                     }
                     Spacer()
                     if sync.isOn {
                         Button { sync.now() } label: {
                             Label("立即同步", systemImage: "arrow.triangle.2.circlepath")
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.yy(size: 12, weight: .semibold))
                         }
                         .buttonStyle(YYButtonStyle(kind: .raised, size: .small))
                         .disabled(sync.state == .syncing)
@@ -131,7 +131,7 @@ struct SyncSettings: View {
         case .idle: sync.isOn ? ("checkmark", YYColor.ok) : ("icloud.slash", YYColor.t3)
         }
         Image(systemName: symbol)
-            .font(.system(size: 14, weight: .bold))
+            .font(.yy(size: 14, weight: .bold))
             .foregroundStyle(color)
             .symbolEffect(.rotate, isActive: sync.state == .syncing)
             .frame(width: 32, height: 32)
@@ -164,17 +164,17 @@ struct SyncSettings: View {
         // `.v-ms-dv`
         HStack(spacing: 8) {
             Image(systemName: Self.symbol(d.platform))
-                .font(.system(size: 14))
+                .font(.yy(size: 14))
                 .foregroundStyle(YYColor.t2)
                 .frame(width: 16)
             VStack(alignment: .leading, spacing: 1) {
                 Text(d.name.isEmpty ? String(localized: "设备") : d.name)
-                    .font(.system(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
-                Text(detail(of: d)).font(.system(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3).lineLimit(1)
+                    .font(.yy(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
+                Text(detail(of: d)).font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3).lineLimit(1)
             }
             Spacer(minLength: 0)
             if d.thisDevice {
-                Text("这台").font(.system(size: 10.5)).foregroundStyle(YYColor.t2)
+                Text("这台").font(.yy(size: 10.5)).foregroundStyle(YYColor.t2)
             }
         }
         .padding(.horizontal, 10).padding(.vertical, 8)
@@ -218,18 +218,18 @@ struct SyncSettings: View {
             VStack(alignment: .leading, spacing: 2) {
                 HStack(alignment: .top) {
                     Image(systemName: symbol)
-                        .font(.system(size: 12.5, weight: .medium))
+                        .font(.yy(size: 12.5, weight: .medium))
                         .foregroundStyle(on ? tint.accent : YYColor.t1)
                         .frame(width: 28, height: 28)
                         .background(on ? tint.soft : YYColor.inset, in: .rect(cornerRadius: 8))
                     Spacer()
                     if on {
-                        Image(systemName: "checkmark.circle").font(.system(size: 14, weight: .semibold)).foregroundStyle(tint.accent)
+                        Image(systemName: "checkmark.circle").font(.yy(size: 14, weight: .semibold)).foregroundStyle(tint.accent)
                     }
                 }
                 .padding(.bottom, 6)
-                Text(title).font(.system(size: 12.5, weight: .semibold)).foregroundStyle(YYColor.t1)
-                Text(detail).font(.system(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
+                Text(title).font(.yy(size: 12.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                Text(detail).font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
             }
             .padding(.horizontal, 14).padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -316,7 +316,7 @@ private struct WebDAVForm: View {
                 }
                 HStack {
                     if let check {
-                        Text("连接检查 · \(check.summary)").font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
+                        Text("连接检查 · \(check.summary)").font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
                     }
                     Spacer()
                     Button(check?.failed == true ? String(localized: "重试") : sync.method == .webdav ? String(localized: "重新连接") : String(localized: "连接")) { run() }

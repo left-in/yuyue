@@ -206,7 +206,7 @@ private struct ComicStack: ViewModifier {
                 }
                 .overlay(alignment: .bottomLeading) {
                     Text("\(episodes) 话")
-                        .font(.system(size: 10)).monospacedDigit()
+                        .font(.yy(size: 10)).monospacedDigit()
                         .foregroundStyle(.white)
                         .padding(.horizontal, 5).padding(.vertical, 3)
                         .background(.black.opacity(0.58), in: .rect(cornerRadius: 4))

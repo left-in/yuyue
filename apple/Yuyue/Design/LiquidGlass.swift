@@ -105,9 +105,9 @@ struct GlassTool: View {
         Button(action: action) {
             Group {
                 if let symbol {
-                    Image(systemName: symbol).font(.system(size: 13, weight: .medium))
+                    Image(systemName: symbol).font(.yy(size: 13, weight: .medium))
                 } else {
-                    Text("Aa").font(.system(size: 12.5, weight: .semibold))
+                    Text("Aa").font(.yy(size: 12.5, weight: .semibold))
                 }
             }
             .foregroundStyle(on ? accent : ink)
@@ -143,8 +143,8 @@ struct ShelfButtonToolbar: ToolbarContent {
             ToolbarItem(placement: .navigation) {
                 Button(action: open) {
                     HStack(spacing: 2) {
-                        Image(systemName: "chevron.left").font(.system(size: 11, weight: .semibold))
-                        Text("书架").font(.system(size: 12))
+                        Image(systemName: "chevron.left").font(.yy(size: 11, weight: .semibold))
+                        Text("书架").font(.yy(size: 12))
                     }
                     .foregroundStyle(ink)
                     .padding(.leading, 7)

@@ -1,4 +1,5 @@
 import PDFKit
+import SwiftUI
 import YuyueCore
 import os
 
@@ -26,6 +27,14 @@ nonisolated final class MarkedPage: PDFPage {
 
     override func draw(with box: PDFDisplayBox, to context: CGContext) {
         super.draw(with: box, to: context)
+        // Pages run edge to edge on white: a hairline at the foot of each is where one ends.
+        if !Self.night, let doc = document, doc.index(for: self) < doc.pageCount - 1 {
+            let r = bounds(for: box)
+            context.saveGState()
+            context.setFillColor(CGColor(gray: 0, alpha: 0.08))
+            context.fill(CGRect(x: r.minX, y: r.minY, width: r.width, height: max(0.5, r.height * 0.0008)))
+            context.restoreGState()
+        }
         let fills = self.fills
         if !fills.isEmpty {
             context.saveGState()
@@ -56,6 +65,11 @@ nonisolated final class MarkedPage: PDFPage {
         context.restoreGState()
         #endif
     }
+}
+
+/// Behind the pages: the paper's own white, so a page filling the window has no edge to show.
+enum PdfDesk {
+    static let color = Color.white
 }
 
 nonisolated final class MarkedPages: NSObject, PDFDocumentDelegate, Sendable {

@@ -232,7 +232,7 @@ struct ReadingExportSheet: View {
         return VStack(alignment: .leading, spacing: YYUI.s(3)) {
             ForEach(Array(lines.enumerated()), id: \.offset) { i, line in
                 Text(line)
-                    .font(.system(size: YYUI.s(9.5), weight: i == 0 ? .bold : .regular, design: .monospaced))
+                    .font(.yy(size: YYUI.s(9.5), weight: i == 0 ? .bold : .regular, design: .monospaced))
                     .foregroundStyle(i == 0 ? YYColor.t1 : YYColor.t2)
                     .lineLimit(1)
                     .truncationMode(.tail)

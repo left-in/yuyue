@@ -72,6 +72,7 @@ class Library(private val context: Context) {
         try {
             books = core.books()
             collections = core.collections()
+            app.yuyue.reader.Papers.load(core)
         } catch (e: Exception) {
             alert = message(e)
         }
@@ -332,19 +333,30 @@ class Library(private val context: Context) {
             is CoreException.Unsupported -> t("不支持这种文件，目前能打开 EPUB、PDF、MOBI、AZW3、TXT 和漫画（CBZ、CBR、ZIP、RAR、一文件夹图片）")
             is CoreException.Protected -> t("这本书有版权保护（DRM），打不开")
             is CoreException.BadBook -> when {
-                e.detail.contains("password") -> t("这个压缩包设了密码，打不开")
+                e.detail.contains("password", ignoreCase = true) -> t("这个压缩包设了密码，打不开")
                 e.detail.contains("no pictures") -> t("里面没有图片，不是漫画")
-                else -> t("这本书读不出来（%@）", e.detail)
+                e.detail.contains("too large") -> t("这本书太大了，读不进来")
+                else -> t("这本书读不出来，文件可能坏了，或者不是它看起来的格式")
             }
-            is CoreException.NotFound -> t("找不到这本书的文件")
+            is CoreException.NotFound -> t("找不到这本书的文件，可能被移走或删掉了。从书架上删掉，再导入一次就好")
             is CoreException.Io -> when {
                 e.detail.contains("os error 28)") -> t("磁盘满了，腾点地方再导入")
                 else -> t("出错了（%@）", e.detail)
             }
             is CoreException.Db -> t("出错了（%@）", e.detail)
             is CoreException.Invalid -> t("出错了（%@）", e.detail)
+            is java.net.UnknownHostException -> t("没有联网，连上网再试")
+            is java.net.SocketTimeoutException, is java.net.SocketException -> t("网断了，下载停在半路。连好网再点一次，会重新下")
+            is java.io.IOException -> when {
+                outOfSpace(e) -> t("存储空间不够了，腾出一些地方再试")
+                else -> t("读写文件时出了问题，再试一次")
+            }
             else -> e.localizedMessage ?: e.toString()
         }
+
+        /** The disk is full, whichever layer said so. */
+        fun outOfSpace(e: Throwable): Boolean =
+            generateSequence(e) { it.cause }.any { it.message?.contains("ENOSPC") == true || it.message?.contains("No space") == true }
 
         fun deviceName(context: Context): String =
             Settings.Global.getString(context.contentResolver, Settings.Global.DEVICE_NAME)

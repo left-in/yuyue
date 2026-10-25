@@ -109,13 +109,13 @@ struct BookMenuCard: View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Text(book.title)
-                    .font(.system(size: 13, weight: .bold))
+                    .font(.yy(size: 13, weight: .bold))
                     .foregroundStyle(YYColor.t1)
                     .lineLimit(1)
                     .layoutPriority(1)
                 if let author = book.author {
                     Text(author)
-                        .font(.system(size: 10.5))
+                        .font(.yy(size: 10.5))
                         .foregroundStyle(YYColor.t3)
                         .lineLimit(1)
                 }
@@ -124,7 +124,7 @@ struct BookMenuCard: View {
                 // Not started: no line, only 还没读.
                 if book.progress > 0 { ProgressLine(value: book.progress, height: 2.5) }
                 Text(book.remaining)
-                    .font(.system(size: 10.5))
+                    .font(.yy(size: 10.5))
                     .foregroundStyle(YYColor.t2)
                     .fixedSize()
             }
@@ -144,10 +144,10 @@ struct BookMenuCard: View {
         return Button { perform(action) } label: {
             HStack {
                 Text(action.title(for: book))
-                    .font(.system(size: 12.5, weight: action == .resume ? .semibold : .regular))
+                    .font(.yy(size: 12.5, weight: action == .resume ? .semibold : .regular))
                 Spacer()
                 Image(systemName: action.symbol(for: book))
-                    .font(.system(size: 13))
+                    .font(.yy(size: 13))
                     .frame(width: 15)
             }
             .foregroundStyle(color)

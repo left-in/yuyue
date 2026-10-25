@@ -1,5 +1,7 @@
 package app.yuyue.reader
 
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import android.app.AutomaticZenRule
 import android.app.NotificationManager
 import android.content.ComponentName
@@ -109,6 +111,7 @@ object DoNotDisturb {
 object EInk {
     const val KEY = "eink.on"
     private const val PREVIOUS = "eink.previous"
+    private const val PREVIOUS_CUSTOM = "eink.previousCustom"
     private const val CHECKED = "eink.checked"
 
     val on get() = Prefs.bool(KEY, false)
@@ -116,13 +119,17 @@ object EInk {
     fun set(on: Boolean, core: YuyueCore) {
         val shared = runCatching { core.readerSettings() }.getOrNull() ?: return
         val paper = if (on) {
-            if (shared.paper != Paper.EINK) Prefs.set(PREVIOUS, shared.paper.name)
+            if (shared.paper != Paper.EINK) {
+                Prefs.set(PREVIOUS, shared.paper.name)
+                Prefs.set(PREVIOUS_CUSTOM, shared.customPaper ?: "")
+            }
             Paper.EINK
         } else {
             Paper.entries.firstOrNull { it.name == Prefs.string(PREVIOUS) } ?: Paper.PLAIN
         }
+        val custom = if (on) null else Prefs.string(PREVIOUS_CUSTOM)?.takeIf { it.isNotEmpty() }
         Prefs.set(KEY, on)
-        runCatching { core.setReaderSettings(shared.copy(paper = paper)) }
+        runCatching { core.setReaderSettings(shared.copy(paper = paper, customPaper = custom)) }
     }
 
     /** The makers whose phones and readers have e-ink screens. */
@@ -160,6 +167,7 @@ fun ImmersiveSettings(model: ReaderModel?) {
         Switch(
             model?.immersive ?: always,
             { on -> if (model != null) { model.chromeShown = false; model.immersive = on } else always = on },
+            modifier = Modifier.semantics { contentDescription = t("沉浸阅读") },
             colors = SwitchDefaults.colors(checkedTrackColor = YY.tint.fill, checkedThumbColor = YY.c.card, uncheckedTrackColor = YY.c.inset, uncheckedBorderColor = YY.c.line),
         )
     }
@@ -193,7 +201,7 @@ fun EInkPage(core: YuyueCore) {
         YYGroup {
             row {
                 YYRow(t("墨水屏模式"), Icons.book, trailing = {
-                    Switch(on, { EInk.set(it, core); on = it }, colors = SwitchDefaults.colors(checkedTrackColor = YY.tint.fill, checkedThumbColor = YY.c.card, uncheckedTrackColor = YY.c.inset, uncheckedBorderColor = YY.c.line))
+                    Switch(on, { EInk.set(it, core); on = it }, modifier = Modifier.semantics { contentDescription = t("墨水屏模式") }, colors = SwitchDefaults.colors(checkedTrackColor = YY.tint.fill, checkedThumbColor = YY.c.card, uncheckedTrackColor = YY.c.inset, uncheckedBorderColor = YY.c.line))
                 })
             }
         }

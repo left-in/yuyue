@@ -18,22 +18,26 @@ struct PhonePdfView: View {
     var body: some View {
         PdfPhonePages(model: model, clear: clear, selected: { selection = $0 }, tappedMark: { tappedMark = $0 }) { chrome.toggle() }
             .ignoresSafeArea()
-            .background((model.night ? Color(white: 0.12) : Color(white: 0.92)).ignoresSafeArea())
+            .background((model.night ? Color(white: 0.12) : PdfDesk.color).ignoresSafeArea())
             .overlay {
                 if chrome { bars.transition(.opacity) }
             }
             .overlay(alignment: .bottom) {
                 VStack(spacing: 10) {
                     if let selection { selectionBar(selection) }
-                    if let toast = model.toast {
-                        UndoToast(toast: toast) { model.undoToast() }
-                            .padding(.horizontal, 16)
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
-                    }
                 }
                 .padding(.bottom, chrome ? 64 : 24)
-                .animation(.snappy(duration: 0.25), value: model.toast?.id)
             }
+            .overlay(alignment: .top) {
+                if let toast = model.toast {
+                    UndoToast(toast: toast) { model.undoToast() }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 6)
+                        .transition(UndoToast.transition)
+                        .id(toast.id)
+                }
+            }
+            .animation(.spring(duration: 0.4, bounce: 0.3), value: model.toast?.id)
             .confirmationDialog(tappedMark.map { "“\($0.text.prefix(24))”" } ?? "", isPresented: Binding(get: { tappedMark != nil }, set: { if !$0 { tappedMark = nil } }), titleVisibility: .visible) {
                 if let mark = tappedMark {
                     Button(mark.note == nil ? String(localized: "写想法") : String(localized: "改想法")) { model.writing = mark }
@@ -61,11 +65,7 @@ struct PhonePdfView: View {
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
             }
-            .alert("出错了", isPresented: Binding(get: { model.failure != nil }, set: { if !$0 { model.failure = nil } })) {
-                Button("好") {}
-            } message: {
-                Text(model.failure ?? "")
-            }
+            .bookFailure($model.failure, opened: model.opened)
     }
 
     private var bars: some View {
@@ -106,6 +106,7 @@ struct PhonePdfView: View {
                     } label: {
                         Image(systemName: "headphones").frame(width: 44, height: 44)
                     }
+                    .accessibilityLabel(Text("朗读"))
                 }
                 Menu {
                     Picker("显示", selection: $model.layout) {
@@ -117,6 +118,7 @@ struct PhonePdfView: View {
                 } label: {
                     Image(systemName: "textformat.size").frame(width: 44, height: 44)
                 }
+                .accessibilityLabel(Text("版式和夜间"))
             }
             .font(.caption)
             .padding(.leading, 20)
@@ -156,7 +158,7 @@ struct PhonePdfView: View {
             clear += 1
         } label: {
             VStack(spacing: 3) {
-                Image(systemName: symbol).font(.system(size: 16))
+                Image(systemName: symbol).font(.yy(size: 16))
                 Text(title).font(.caption2)
             }
             .frame(width: 66, height: 52)
@@ -216,7 +218,8 @@ private struct PdfPhonePages: UIViewRepresentable {
         view.document = model.document
         view.autoScales = true
         view.displayDirection = .vertical
-        view.pageShadowsEnabled = true
+        // The pages draw their own rounded edge; a square shadow behind would show at the corners.
+        view.pageShadowsEnabled = false
         let tap = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.tap(_:)))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
@@ -274,8 +277,7 @@ private struct PdfPhonePages: UIViewRepresentable {
             let redraw = c.night != nil
             c.night = model.night
             MarkedPage.night = model.night
-            view.backgroundColor = model.night ? UIColor(white: 0.08, alpha: 1) : UIColor(white: 0.92, alpha: 1)
-            view.pageShadowsEnabled = !model.night
+            view.backgroundColor = model.night ? UIColor(white: 0.08, alpha: 1) : UIColor(PdfDesk.color)
             if redraw, let doc = view.document, let page = view.currentPage {
                 // The pages are drawn again only when the document is put back.
                 view.document = nil

@@ -56,14 +56,15 @@ class ComicModel(private val library: Library, val bookID: String, wide: Boolean
     private var lastTurn = System.currentTimeMillis()
 
     init {
-        val detail = runCatching { core.book(bookID) }.getOrNull()
+        val opening = runCatching { core.book(bookID) }
+        val detail = opening.getOrNull()
         title = detail?.summary?.title ?: ""
         episodes = (detail?.sections ?: emptyList()).withIndex().filter { it.value.pages > 0u }.mapIndexed { n, (i, s) ->
             Episode(n, i, s.title ?: "", runCatching { core.comicPages(bookID, i.toUInt()) }.getOrDefault(emptyList()))
         }
         layout = Layout.entries.firstOrNull { it.key == Prefs.string("comic.layout.$bookID") } ?: if (wide) Layout.Double else Layout.Single
         rightToLeft = Prefs.bool("comic.rtl.$bookID", true)
-        if (detail == null) failure = t("打不开这部漫画")
+        failure = opening.exceptionOrNull()?.let { Library.message(it) } ?: if (episodes.isEmpty()) t("这部漫画里没有能看的图片") else null
         var position = runCatching { core.progress(bookID) }.getOrNull()?.position ?: runCatching { core.latestProgress(bookID) }.getOrNull()?.position
         (library.takeIntent(bookID) as? Library.OpenIntent.At)?.let { position = it.position }
         position?.let { p ->

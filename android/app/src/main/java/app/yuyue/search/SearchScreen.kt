@@ -1,5 +1,7 @@
 package app.yuyue.search
 
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -121,7 +123,7 @@ fun SearchScreen(library: Library) {
         ) {
             Icon(Icons.search, null, tint = YY.c.t3, modifier = Modifier.size(18.dp))
             BasicTextField(
-                query, { query = it }, singleLine = true, modifier = Modifier.weight(1f),
+                query, { query = it }, singleLine = true, modifier = Modifier.weight(1f).semantics { contentDescription = t("搜索") },
                 textStyle = androidx.compose.ui.text.TextStyle(fontSize = 16.sp, color = YY.c.t1), cursorBrush = SolidColor(YY.tint.accent),
                 decorationBox = { inner -> if (query.isEmpty()) Text(t("书名、原文、笔记、生词"), fontSize = 16.sp, color = YY.c.t3); inner() },
             )
@@ -136,7 +138,7 @@ fun SearchScreen(library: Library) {
                 Chip(t("生词"), words.size, scope == Scope.Words) { scope = Scope.Words }
             }
         }
-        LazyColumn(Modifier.weight(1f).padding(horizontal = 16.dp)) {
+        LazyColumn(Modifier.weight(1f).padding(horizontal = 16.dp), contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = app.yuyue.LocalTabBarHeight.current + 16.dp)) {
             if (q.isEmpty()) {
                 if (titles.isNotEmpty()) {
                     item { YYLabel(t("最近读过")) }
@@ -177,8 +179,15 @@ fun SearchScreen(library: Library) {
                     item { YYLabel(t("生词"), t("%lld 个", words.size)) }
                     item { YYGroup { for (w in if (scope == Scope.All) words.take(3) else words) row { WordRow(w) } } }
                 }
-                if (titles.isEmpty() && lines.isEmpty() && notes.isEmpty() && words.isEmpty()) {
-                    item { Text(t("书名、原文、笔记里都没有“%@”。可以问问书伴", q), style = YY.font(10.5f), color = YY.c.t3, modifier = Modifier.fillMaxWidth().padding(top = 24.dp)) }
+                val nothing = when (scope) {
+                    Scope.All -> if (titles.isEmpty() && lines.isEmpty() && notes.isEmpty() && words.isEmpty()) t("书名、原文、笔记里都没有“%@”。可以问问书伴", q) else null
+                    Scope.Books -> if (titles.isEmpty()) t("没有书名里带“%@”的书", q) else null
+                    Scope.Lines -> if (lines.isEmpty()) t("书里的原文没有“%@”", q) else null
+                    Scope.Notes -> if (notes.isEmpty()) t("划线和想法里没有“%@”", q) else null
+                    Scope.Words -> if (words.isEmpty()) t("生词本里没有“%@”", q) else null
+                }
+                if (nothing != null) {
+                    item { Text(nothing, style = YY.font(10.5f), color = YY.c.t3, modifier = Modifier.fillMaxWidth().padding(top = 24.dp)) }
                 }
             }
             item { Box(Modifier.height(80.dp)) }

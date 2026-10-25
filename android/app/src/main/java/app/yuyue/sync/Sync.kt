@@ -152,10 +152,12 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
         running = library.scope.launch {
             try {
                 var applied = withContext(Dispatchers.IO) { exchange(folder) }
-                if (syncsFiles && onWifi()) applied += withContext(Dispatchers.IO) { exchangeFiles(folder) }
+                var missed = 0
+                if (syncsFiles && onWifi()) withContext(Dispatchers.IO) { exchangeFiles(folder) }.let { (took, notGot) -> applied += took; missed = notGot }
                 lastSynced = System.currentTimeMillis()
                 Prefs.set(LAST, lastSynced!!)
-                state = State.Idle
+                // Notes and progress went across; a book file that didn't come down isn't 已同步.
+                state = if (missed > 0) State.Failed(t("有 %lld 本书的文件没下载下来，下次同步再试", missed)) else State.Idle
                 if (applied > 0) library.reload()
             } catch (e: CancellationException) {
                 state = State.Idle
@@ -211,10 +213,11 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
 
     /** 书文件: a book's file is `<id>.book.<ext>`; ids are the file's hash, so the same file
      *  imported anywhere is the same book. One failing doesn't stop the rest. */
-    private suspend fun exchangeFiles(folder: SyncFolder): Int {
-        val files = runCatching { folder.list() }.getOrNull() ?: return 0
+    private suspend fun exchangeFiles(folder: SyncFolder): Pair<Int, Int> {
+        val files = runCatching { folder.list() }.getOrNull() ?: return 0 to 0
         val books = runCatching { core.books() }.getOrDefault(emptyList())
         var took = 0
+        var missed = 0
         for (b in books.filter { it.available }) {
             if (files.keys.any { it.startsWith(b.id + ".book.") }) continue
             coroutineContext.ensureActive()
@@ -232,13 +235,13 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
                     folder.download(name, file)
                     library.importPath(file.path)
                     took++
-                }
+                }.onFailure { if (it is CancellationException) throw it; missed++ }
                 file.delete()
             }
         } finally {
             temp.deleteRecursively()
         }
-        return took
+        return took to missed
     }
 
     class Status(val code: Int) : IOException("HTTP $code")

@@ -168,10 +168,10 @@ test('null resets to the defaults; missing keys keep their value', async ({ page
   });
   expect(await state()).toEqual({
     paper: 'kami', mode: 'scrolled', paging: 'native', justify: '0', indent: '1', compress: '0', motion: 'reduced', tint: 'ink',
-    fs: '22px', lh: '1.8', ps: '0.5em', font: 'var(--yy-kai)', 'font-en': 'var(--yy-latin-serif)', margin: '30px', top: '60px', bottom: '90px', cols: '2',
+    fs: '22px', lh: '1.8', ps: '0.5em', font: 'var(--yy-kaiti)', 'font-en': 'var(--yy-latin-serif)', margin: '30px', top: '60px', bottom: '90px', cols: '2',
   });
   await apply(page, { fontSize: 20 });
-  expect(await state()).toMatchObject({ paper: 'kami', fs: '20px', font: 'var(--yy-kai)' });
+  expect(await state()).toMatchObject({ paper: 'kami', fs: '20px', font: 'var(--yy-kaiti)' });
   await apply(page, {
     paper: null, mode: null, paging: null, justify: null, indent: null, compress: null, motion: null, tint: null,
     fontSize: null, lineHeight: null, paragraphSpacing: null, font: null, margin: null, top: null, bottom: null, cols: null,
@@ -180,6 +180,23 @@ test('null resets to the defaults; missing keys keep their value', async ({ page
     paper: 'plain', mode: 'paginated', paging: 'native', justify: 'auto', indent: 'auto', compress: '1', motion: 'full', tint: null,
     fs: '18px', lh: null, ps: null, font: null, 'font-en': null, margin: '24px', top: '56px', bottom: '88px', cols: '1',
   });
+});
+
+test('我的纸: its colours and texture over the preset, and gone again with null', async ({ page }) => {
+  await open(page, 'beiying/s/0.html');
+  const look = (): Promise<{ bg: string; ink: string; scheme: string; texture: string; ps: string }> =>
+    page.evaluate(() => {
+      const r = getComputedStyle(document.documentElement);
+      const s = getComputedStyle(document.querySelector('#yy-content p .s') as Element);
+      return { bg: r.backgroundColor, ink: s.color, scheme: r.colorScheme, texture: r.backgroundImage, ps: r.getPropertyValue('--yy-p-ps').trim() };
+    });
+  await apply(page, { paper: 'kaminight', paperStyle: '--yy-p-bg:#18202B;--yy-p-ink:#C9D3DE;color-scheme:dark;--yy-x:red', texture: 'linen' });
+  const mine = await look();
+  expect(mine).toMatchObject({ bg: 'rgb(24, 32, 43)', ink: 'rgb(201, 211, 222)', scheme: 'dark', ps: '.3em' });
+  expect(mine.texture).toContain('repeating-linear-gradient');
+  expect(await page.evaluate(() => document.documentElement.style.getPropertyValue('--yy-x'))).toBe('');
+  await apply(page, { paper: 'plain', paperStyle: null, texture: null });
+  expect(await look()).toMatchObject({ bg: 'rgb(255, 255, 255)', texture: 'none' });
 });
 
 test('font keywords choose the CJK face and a matching Latin face', async ({ page }) => {

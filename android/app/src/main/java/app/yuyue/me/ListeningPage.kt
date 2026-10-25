@@ -1,5 +1,8 @@
 package app.yuyue.me
 
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import android.content.Intent
 import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.background
@@ -78,7 +81,8 @@ fun ListeningPage() {
                 Row(Modifier.heightIn(min = YY.s(38)), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(YY.s(10))) {
                     Text(t("语速"), style = YY.font(11.5f), color = YY.c.t1)
                     Slider(
-                        if (rate == 0f) 1f else rate, { rate = (it * 10).roundToInt() / 10f }, valueRange = 0.8f..2f, modifier = Modifier.weight(1f),
+                        if (rate == 0f) 1f else rate, { rate = (it * 10).roundToInt() / 10f }, valueRange = 0.8f..2f,
+                        modifier = Modifier.weight(1f).semantics { contentDescription = t("语速"); stateDescription = "%.1f×".format(if (rate == 0f) 1f else rate) },
                         colors = SliderDefaults.colors(thumbColor = YY.c.card, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line),
                     )
                     Text("%.1f×".format(if (rate == 0f) 1f else rate), style = YY.font(10.5f, FontWeight.Medium), color = YY.c.t2)

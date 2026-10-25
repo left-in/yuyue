@@ -73,9 +73,9 @@ struct CollectionWall: View {
                 .padding(.trailing, 26)
             if library.collections.isEmpty {
                 VStack(spacing: 10) {
-                    Image(systemName: "square.stack").font(.system(size: 28, weight: .light)).foregroundStyle(YYColor.t3)
+                    Image(systemName: "square.stack").font(.yy(size: 28, weight: .light)).foregroundStyle(YYColor.t3)
                     Text("还没有合集。点右上角“新建合集”，或者在一本书上右键“加入合集…”")
-                        .font(.system(size: 12.5)).foregroundStyle(YYColor.t2)
+                        .font(.yy(size: 12.5)).foregroundStyle(YYColor.t2)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
@@ -103,10 +103,10 @@ struct CollectionWall: View {
     private var header: some View {
         HStack(alignment: .firstTextBaseline, spacing: 10) {
             Text("全部合集")
-                .font(.system(size: 22, weight: .bold))
+                .font(.yy(size: 22, weight: .bold))
                 .foregroundStyle(YYColor.t1)
             Text("\(library.collections.count) 个")
-                .font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                .font(.yy(size: 12)).foregroundStyle(YYColor.t3)
             Spacer()
             Menu {
                 Picker("排序", selection: $sort) {
@@ -117,9 +117,9 @@ struct CollectionWall: View {
             } label: {
                 HStack(spacing: 4) {
                     Text(sort.title)
-                    Image(systemName: "chevron.up.chevron.down").font(.system(size: 9, weight: .semibold))
+                    Image(systemName: "chevron.up.chevron.down").font(.yy(size: 9, weight: .semibold))
                 }
-                .font(.system(size: 11.5))
+                .font(.yy(size: 11.5))
                 .foregroundStyle(YYColor.t2)
                 .contentShape(.rect)
             }
@@ -132,7 +132,7 @@ struct CollectionWall: View {
                 naming = Naming(collection: nil)
             } label: {
                 Text("新建合集")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.yy(size: 12, weight: .semibold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 14)
                     .frame(height: 28)
@@ -165,18 +165,18 @@ struct CollectionWall: View {
                     if books.isEmpty {
                         RoundedRectangle(cornerRadius: 4).fill(YYColor.inset)
                             .frame(width: 72, height: 108)
-                            .overlay(Image(systemName: CollectionIcon.symbol(for: c)).font(.system(size: 20, weight: .light)).foregroundStyle(YYColor.t3))
+                            .overlay(Image(systemName: CollectionIcon.symbol(for: c)).font(.yy(size: 20, weight: .light)).foregroundStyle(YYColor.t3))
                             .offset(x: 2, y: 16)
                     }
                 }
                 .frame(width: 128, height: 128, alignment: .topLeading)
                 .overlay(alignment: .topTrailing) { pin(c, isPinned: isPinned, hover: hover) }
                 Text(c.name)
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.yy(size: 12, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                     .lineLimit(1)
                 Text(String(localized: "\(Int(c.count)) 本") + " · " + used(c))
-                    .font(.system(size: 10.5).monospacedDigit())
+                    .font(.yy(size: 10.5).monospacedDigit())
                     .foregroundStyle(YYColor.t3)
                     .lineLimit(1)
                     .padding(.top, -4)
@@ -217,7 +217,8 @@ struct CollectionWall: View {
         if hover {
             Button { togglePin(c.id) } label: {
                 Image(systemName: isPinned ? "pin.slash" : "pin")
-                    .font(.system(size: 12, weight: .medium))
+                    .accessibilityLabel(isPinned ? Text("取消固定") : Text("固定到侧栏"))
+                    .font(.yy(size: 12, weight: .medium))
                     .foregroundStyle(tint.accent)
                     .frame(width: 26, height: 26)
                     .background(YYColor.card, in: .circle)
@@ -228,7 +229,7 @@ struct CollectionWall: View {
             .help(isPinned ? String(localized: "取消固定") : String(localized: "固定到侧栏"))
         } else if isPinned {
             Image(systemName: "pin.fill")
-                .font(.system(size: 11))
+                .font(.yy(size: 11))
                 .foregroundStyle(tint.accent)
                 .padding(4)
                 .accessibilityHidden(true)
@@ -315,7 +316,7 @@ struct CollectionDropList: View {
         VStack(alignment: .leading, spacing: 2) {
             TextField("", text: $query, prompt: Text("放进哪个合集… 打字找"))
                 .textFieldStyle(.plain)
-                .font(.system(size: 11.5))
+                .font(.yy(size: 11.5))
                 .padding(.horizontal, 9)
                 .frame(height: 28)
                 .background(YYColor.inset, in: .rect(cornerRadius: 8))
@@ -347,9 +348,9 @@ struct CollectionDropList: View {
         return HStack {
             Text(title).lineLimit(1)
             Spacer(minLength: 4)
-            if let count { Text("\(count)").font(.system(size: 10.5)).foregroundStyle(hot ? .white.opacity(0.8) : YYColor.t3) }
+            if let count { Text("\(count)").font(.yy(size: 10.5)).foregroundStyle(hot ? .white.opacity(0.8) : YYColor.t3) }
         }
-        .font(.system(size: 12))
+        .font(.yy(size: 12))
         .foregroundStyle(hot ? .white : accent ? tint.accent : YYColor.t1)
         .padding(.horizontal, 9)
         .frame(height: 28)

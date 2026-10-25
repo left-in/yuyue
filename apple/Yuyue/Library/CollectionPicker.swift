@@ -50,10 +50,10 @@ struct CollectionPicker: View {
         ZStack {
             VStack(spacing: 1) {
                 Text("加入合集")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.yy(size: 13, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                 Text(book?.title ?? "")
-                    .font(.system(size: 10.5))
+                    .font(.yy(size: 10.5))
                     .foregroundStyle(YYColor.t3)
                     .lineLimit(1)
             }
@@ -61,18 +61,19 @@ struct CollectionPicker: View {
             HStack {
                 Button { startSearch() } label: {
                     Image(systemName: "magnifyingglass")
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.yy(size: 13, weight: .medium))
                         .foregroundStyle(YYColor.t1)
                         .frame(width: 30, height: 30)
                         .background(YYColor.card, in: .circle)
                         .shadow(color: .black.opacity(0.06), radius: 1.5, y: 0.5)
                 }
+                .accessibilityLabel(Text("找合集"))
                 .buttonStyle(.plain)
                 .help("找合集")
                 Spacer()
                 Button { startSearch() } label: {
                     Text("新建合集")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.yy(size: 12, weight: .semibold))
                         .foregroundStyle(YYColor.t1)
                         .padding(.horizontal, 13)
                         .frame(height: 30)
@@ -87,11 +88,11 @@ struct CollectionPicker: View {
     private var field: some View {
         HStack(spacing: 7) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 12, weight: .medium))
+                .font(.yy(size: 12, weight: .medium))
                 .foregroundStyle(YYColor.t2)
             TextField("找合集，或打个新名字", text: $query)
                 .textFieldStyle(.plain)
-                .font(.system(size: 13))
+                .font(.yy(size: 13))
                 .focused($focus, equals: .field)
                 .onKeyPress(phases: .down) { key(press: $0) }
                 .onSubmit { activate() }
@@ -99,9 +100,10 @@ struct CollectionPicker: View {
             if !query.isEmpty {
                 Button { query = "" } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 13))
+                        .font(.yy(size: 13))
                         .foregroundStyle(YYColor.t3)
                 }
+                .accessibilityLabel(Text("清空"))
                 .buttonStyle(.plain)
             }
         }
@@ -133,7 +135,7 @@ struct CollectionPicker: View {
             }
             if library.collections.isEmpty {
                 Text("还没有合集，点右上角建一个")
-                    .font(.system(size: 12))
+                    .font(.yy(size: 12))
                     .foregroundStyle(YYColor.t3)
                     .frame(maxWidth: .infinity, minHeight: 60)
                     .background(YYColor.card, in: .rect(cornerRadius: YYRadius.block))
@@ -164,11 +166,11 @@ struct CollectionPicker: View {
                         tile("plus", background: tint.accentSoft, color: tint.accent)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("新建合集“\(name)”")
-                                .font(.system(size: 13, weight: .semibold))
+                                .font(.yy(size: 13, weight: .semibold))
                                 .foregroundStyle(tint.accent)
                                 .lineLimit(1)
                             Text("建好就把这本书放进去")
-                                .font(.system(size: 11))
+                                .font(.yy(size: 11))
                                 .foregroundStyle(YYColor.t3)
                         }
                         Spacer(minLength: 0)
@@ -183,7 +185,7 @@ struct CollectionPicker: View {
                 .background(YYColor.card, in: .rect(cornerRadius: YYRadius.block))
             } else if found.isEmpty {
                 Text("打个名字就能建一个合集")
-                    .font(.system(size: 12))
+                    .font(.yy(size: 12))
                     .foregroundStyle(YYColor.t3)
                     .frame(maxWidth: .infinity, minHeight: 60)
                     .background(YYColor.card, in: .rect(cornerRadius: YYRadius.block))
@@ -212,17 +214,17 @@ struct CollectionPicker: View {
                 tile(CollectionIcon.symbol(for: c), background: YYColor.inset, color: YYColor.t1)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(searching ? matcher.highlighted(c.name, color: tint.accent) : AttributedString(c.name))
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.yy(size: 13, weight: .semibold))
                         .foregroundStyle(YYColor.t1)
                         .lineLimit(1)
                     Text("\(c.count) 本")
-                        .font(.system(size: 11))
+                        .font(.yy(size: 11))
                         .foregroundStyle(YYColor.t3)
                 }
                 Spacer(minLength: 0)
                 if on {
                     Image(systemName: "checkmark")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.yy(size: 13, weight: .semibold))
                         .foregroundStyle(tint.accent)
                         .transition(.scale.combined(with: .opacity))
                 }
@@ -241,7 +243,7 @@ struct CollectionPicker: View {
 
     private func tile(_ symbol: String, background: Color, color: Color) -> some View {
         Image(systemName: symbol)
-            .font(.system(size: 14, weight: .regular))
+            .font(.yy(size: 14, weight: .regular))
             .foregroundStyle(color)
             .frame(width: 32, height: 32)
             .background(background, in: .rect(cornerRadius: 9))

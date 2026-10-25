@@ -103,7 +103,7 @@ struct PhoneSnapshot: View {
 
     private func part(_ title: String, _ value: String?, _ key: WritableKeyPath<SnapshotParts, Bool>) -> some View {
         YYRow(title: title, value: value) {
-            YYSwitch(isOn: Binding { snapshots.parts[keyPath: key] } set: { snapshots.parts[keyPath: key] = $0 })
+            YYSwitch(isOn: Binding { snapshots.parts[keyPath: key] } set: { snapshots.parts[keyPath: key] = $0 }, label: title)
         }
     }
 

@@ -135,7 +135,7 @@ fun ShelfScreen(library: Library, openWifi: () -> Unit, openRemote: () -> Unit, 
         LazyVerticalGrid(
             columns = GridCells.Adaptive(96.dp),
             modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.statusBars),
-            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 96.dp),
+            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = app.yuyue.LocalTabBarHeight.current + 16.dp),
             horizontalArrangement = Arrangement.spacedBy(18.dp),
             verticalArrangement = Arrangement.spacedBy(22.dp),
         ) {
@@ -190,7 +190,7 @@ fun ShelfScreen(library: Library, openWifi: () -> Unit, openRemote: () -> Unit, 
             }
         }
 
-        Column(Modifier.align(Alignment.BottomCenter).padding(horizontal = 16.dp, vertical = 10.dp)) {
+        Column(Modifier.align(Alignment.BottomCenter).padding(bottom = app.yuyue.LocalTabBarHeight.current).padding(horizontal = 8.dp, vertical = 8.dp)) {
             if (selecting) {
                 SelectionBar(
                     enabled = selected.isNotEmpty(),
@@ -204,7 +204,6 @@ fun ShelfScreen(library: Library, openWifi: () -> Unit, openRemote: () -> Unit, 
                     },
                 )
             }
-            library.toast?.let { UndoToast(it, undo = { library.undo() }) }
         }
     }
 
@@ -428,7 +427,7 @@ private fun Cell(
                 when {
                     selecting -> Box(Modifier.align(Alignment.BottomEnd).padding(6.dp)) {
                         Icon(
-                            if (chosen) Icons.checkCircle else Icons.circle, null,
+                            if (chosen) Icons.checkCircle else Icons.circle, if (chosen) t("已选") else t("未选"),
                             tint = if (chosen) tint.accent else Color.White,
                             modifier = Modifier.size(24.dp).clip(CircleShape).background(if (chosen) Color.White else Color.Black.copy(alpha = 0.25f)),
                         )

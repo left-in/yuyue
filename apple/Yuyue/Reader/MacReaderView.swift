@@ -37,7 +37,7 @@ struct MacReaderView: View {
     /// 墨水屏 has no glass.
     private var liquid: Bool { liquidChosen && LiquidGlass.supported && !paper.isEink }
 
-    private var paper: YYPaper { model.settings.paper.tokens }
+    private var paper: YYPaper { model.paperTokens }
 
     var body: some View {
         HStack(spacing: 0) {
@@ -238,16 +238,20 @@ struct MacReaderView: View {
             if model.listenOnly { ListenOnlyCover(model: model).transition(.opacity) }
             cards
         }
+        .overlay(alignment: .top) {
+            if let toast = model.toast {
+                UndoToast(toast: toast) { model.undoToast() }
+                    .padding(.top, 10)
+                    .transition(UndoToast.transition)
+                    .id(toast.id)
+            }
+        }
+        .animation(.spring(duration: 0.4, bounce: 0.3), value: model.toast?.id)
         .overlay(alignment: .bottom) {
             VStack(spacing: 10) {
                 if let e = model.elsewhere {
                     ElsewhereCard(elsewhere: e, tint: tint, stay: { model.elsewhere = nil }, jump: { model.jumpElsewhere() })
                         .frame(width: 396)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
-                }
-                if let toast = model.toast {
-                    UndoToast(toast: toast) { model.undoToast() }
-                        .frame(width: 360)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
                 if let open = model.openNote {
@@ -364,10 +368,10 @@ struct MacReaderView: View {
             ToolbarItem(placement: .principal) {
                 VStack(spacing: 1) {
                     Text(model.detail?.summary.title ?? "")
-                        .font(.system(size: 13, weight: .semibold))
+                        .font(.yy(size: 13, weight: .semibold))
                         .foregroundStyle(paper.ink)
                     Text(subtitle)
-                        .font(.system(size: 10.5))
+                        .font(.yy(size: 10.5))
                         .foregroundStyle(paper.ink2)
                         .monospacedDigit()
                 }
@@ -432,11 +436,11 @@ struct MacReaderView: View {
     private var searchField: some View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 12, weight: .medium))
+                .font(.yy(size: 12, weight: .medium))
                 .foregroundStyle(paper.ink2)
             TextField("书内搜索", text: $model.query)
                 .textFieldStyle(.plain)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.yy(size: 13, weight: .semibold))
                 .focused($searchFocused)
                 .frame(width: 130)
                 .onSubmit { model.nextHit(forward: true) }
@@ -447,21 +451,24 @@ struct MacReaderView: View {
                 }
             if !model.query.isEmpty {
                 Text(model.hits.isEmpty ? String(localized: "没找到") : String(localized: "第 \((model.hitIndex ?? 0) + 1) / \(model.hits.count) 处"))
-                    .font(.system(size: 11.5, weight: .semibold))
+                    .font(.yy(size: 11.5, weight: .semibold))
                     .foregroundStyle(model.hits.isEmpty ? paper.ink2 : paper.ink)
                     .monospacedDigit()
                     .fixedSize()
             }
             Divider().frame(height: 14)
             Button { model.nextHit(forward: false) } label: { Image(systemName: "chevron.left") }
+                .accessibilityLabel(Text("上一处"))
                 .buttonStyle(.borderless)
                 .disabled(model.hits.isEmpty)
             Button { model.nextHit(forward: true) } label: { Image(systemName: "chevron.right") }
+                .accessibilityLabel(Text("下一处"))
                 .buttonStyle(.borderless)
                 .disabled(model.hits.isEmpty)
             Button { closeSearch() } label: {
                 Image(systemName: "xmark")
-                    .font(.system(size: 10, weight: .bold))
+                    .accessibilityLabel(Text("结束搜索"))
+                    .font(.yy(size: 10, weight: .bold))
                     .frame(width: 22, height: 22)
                     .background(paper.line, in: .circle)
             }
@@ -506,17 +513,18 @@ struct MacReaderView: View {
         HStack(spacing: 4) {
             Button { panel = panel == .toc ? nil : .toc } label: {
                 Image(systemName: "list.bullet")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.yy(size: 13, weight: .medium))
                     .frame(width: 32, height: 36)
             }
             .help("目录")
+            .accessibilityLabel(Text("目录"))
             Button { listenShown.toggle() } label: {
                 VStack(alignment: .leading, spacing: 1) {
                     Text(model.sentenceCount > 0 ? String(localized: "第 \(min(model.sentence + 1, model.sentenceCount)) / \(model.sentenceCount) 句") : (model.chapterTitle ?? ""))
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.yy(size: 12, weight: .semibold))
                         .foregroundStyle(paper.ink)
                     Text(model.capsuleNote)
-                        .font(.system(size: 10))
+                        .font(.yy(size: 10))
                         .foregroundStyle(paper.ink2)
                 }
                 .monospacedDigit()
@@ -533,21 +541,24 @@ struct MacReaderView: View {
                     .presentationBackground(YYColor.card)
             }
             Button { step(forward: false) } label: {
-                Image(systemName: "chevron.left").font(.system(size: 13, weight: .semibold)).frame(width: 30, height: 36)
+                Image(systemName: "chevron.left").font(.yy(size: 13, weight: .semibold)).frame(width: 30, height: 36)
             }
             .help(model.player?.spot != nil ? String(localized: "上一句 ⌘[") : String(localized: "上一页 ←"))
+            .accessibilityLabel(model.player?.spot != nil ? Text("上一句") : Text("上一页"))
             Button { model.togglePlay() } label: {
                 Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.yy(size: 14, weight: .semibold))
                     .foregroundStyle(paper.onMain)
                     .frame(width: 36, height: 36)
                     .background(paper.main, in: .circle)
             }
             .help(model.isPlaying ? String(localized: "暂停 空格") : String(localized: "朗读 空格"))
+            .accessibilityLabel(model.isPlaying ? Text("暂停") : Text("朗读"))
             Button { step(forward: true) } label: {
-                Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).frame(width: 30, height: 36)
+                Image(systemName: "chevron.right").font(.yy(size: 13, weight: .semibold)).frame(width: 30, height: 36)
             }
             .help(model.player?.spot != nil ? String(localized: "下一句 ⌘]") : String(localized: "下一页 →"))
+            .accessibilityLabel(model.player?.spot != nil ? Text("下一句") : Text("下一页"))
         }
         .buttonStyle(.plain)
         .foregroundStyle(paper.ink)
@@ -737,15 +748,15 @@ struct ThoughtSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("想法")
-                .font(.system(size: 15, weight: .bold))
+                .font(.yy(size: 15, weight: .bold))
             Text(mark.text)
-                .font(.system(size: 12.5))
+                .font(.yy(size: 12.5))
                 .foregroundStyle(YYColor.t2)
                 .lineLimit(3)
                 .padding(.leading, 10)
                 .overlay(alignment: .leading) { Rectangle().fill(mark.style.fills ? mark.style.fill : YYColor.hlR).frame(width: 3) }
             TextEditor(text: $text)
-                .font(.system(size: 13.5))
+                .font(.yy(size: 13.5))
                 .scrollContentBackground(.hidden)
                 .padding(6)
                 .frame(height: 110)
@@ -784,7 +795,7 @@ private struct PanelTabs<T: Hashable>: View {
             ForEach(items, id: \.0) { value, title in
                 Button { selection = value } label: {
                     Text(title)
-                        .font(.system(size: 11.5, weight: selection == value ? .semibold : .regular))
+                        .font(.yy(size: 11.5, weight: selection == value ? .semibold : .regular))
                         .foregroundStyle(selection == value ? YYColor.t1 : YYColor.t2)
                         .monospacedDigit()
                         .frame(maxWidth: .infinity)
@@ -845,10 +856,10 @@ private struct TocPanel: View {
                 }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(book?.title ?? "")
-                        .font(.system(size: 14, weight: .bold))
+                        .font(.yy(size: 14, weight: .bold))
                         .foregroundStyle(YYColor.t1)
                     Text([book?.authors.first, chapterCount > 1 ? String(localized: "共 \(chapterCount) \(unit)") : nil].compactMap { $0 }.joined(separator: " · "))
-                        .font(.system(size: 10.5))
+                        .font(.yy(size: 10.5))
                         .foregroundStyle(YYColor.t3)
                 }
                 .lineLimit(1)
@@ -858,12 +869,12 @@ private struct TocPanel: View {
                 .padding(.horizontal, 2).padding(.top, 12)
             HStack(alignment: .firstTextBaseline) {
                 Text("读到\(model.chapterTitle.map { ChapterTitle($0).number ?? String(localized: "这里") } ?? String(localized: "这里")) · \(Int((model.bookFraction * 100).rounded()))%")
-                    .font(.system(size: 11, weight: .semibold))
+                    .font(.yy(size: 11, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                 Spacer()
                 if read + listen > 0 {
                     Text([read > 0 ? String(localized: "读 \(durationText(seconds: read))") : nil, listen > 0 ? String(localized: "听 \(durationText(seconds: listen))") : nil].compactMap { $0 }.joined(separator: " · "))
-                        .font(.system(size: 10.5))
+                        .font(.yy(size: 10.5))
                         .monospacedDigit()
                         .foregroundStyle(YYColor.t3)
                 }
@@ -873,7 +884,15 @@ private struct TocPanel: View {
         }
     }
 
-    private var list: some View {
+    @ViewBuilder private var list: some View {
+        if chapters.isEmpty {
+            empty(String(localized: "这本书没有目录"), String(localized: "书里没写章节，往后翻就行"))
+        } else {
+            chapterList
+        }
+    }
+
+    private var chapterList: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(spacing: 0) {
@@ -905,21 +924,21 @@ private struct TocPanel: View {
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 if let number = t.number {
                     Text(number)
-                        .font(.system(size: 11, weight: current ? .semibold : .regular))
+                        .font(.yy(size: 11, weight: current ? .semibold : .regular))
                         .monospacedDigit()
                         .foregroundStyle(current ? tint.accent : past ? YYColor.t3 : YYColor.t2)
                         .frame(width: 44, alignment: .leading)
                 }
                 VStack(alignment: .leading, spacing: 3) {
                     Text(t.name)
-                        .font(.system(size: current ? 12.5 : 12, weight: current ? .semibold : .regular))
+                        .font(.yy(size: current ? 12.5 : 12, weight: current ? .semibold : .regular))
                         .lineSpacing(current ? 4 : 0)
                         .lineLimit(current ? nil : 1)
                         .foregroundStyle(current ? tint.accent : past ? YYColor.t3 : YYColor.t1)
                         .multilineTextAlignment(.leading)
                         .padding(.leading, CGFloat(c.depth) * 12)
                     Text(note(c, current: current, past: past))
-                        .font(.system(size: 10.5, weight: current ? .medium : .regular))
+                        .font(.yy(size: 10.5, weight: current ? .medium : .regular))
                         .foregroundStyle(current ? tint.accent : YYColor.t3)
                         .monospacedDigit()
                         .lineLimit(1)
@@ -974,15 +993,15 @@ private struct BookmarkList: View {
                         Button { model.jump(section: mark.section, sentence: Int(mark.sentence)) } label: {
                             VStack(alignment: .leading, spacing: 5) {
                                 HStack(spacing: 5) {
-                                    Image(systemName: "bookmark.fill").font(.system(size: 9)).foregroundStyle(tint.accent)
+                                    Image(systemName: "bookmark.fill").font(.yy(size: 9)).foregroundStyle(tint.accent)
                                     Text(pageLabel(model, section: mark.section, sentence: Int(mark.sentence)))
-                                        .font(.system(size: 10.5, weight: .medium))
+                                        .font(.yy(size: 10.5, weight: .medium))
                                         .foregroundStyle(YYColor.t3)
                                     Spacer()
-                                    Text(mark.at.dayText).font(.system(size: 10)).foregroundStyle(YYColor.t3)
+                                    Text(mark.at.dayText).font(.yy(size: 10)).foregroundStyle(YYColor.t3)
                                 }
                                 Text(mark.text)
-                                    .font(.system(size: 12.5))
+                                    .font(.yy(size: 12.5))
                                     .foregroundStyle(YYColor.t1)
                                     .lineLimit(2)
                                     .multilineTextAlignment(.leading)
@@ -1015,8 +1034,8 @@ private func pageLabel(_ model: ReaderModel, section: UInt32, sentence: Int) -> 
 
 private func empty(_ title: String, _ detail: String) -> some View {
     VStack(spacing: 6) {
-        Text(title).font(.system(size: 13, weight: .semibold)).foregroundStyle(YYColor.t2)
-        Text(detail).font(.system(size: 11.5)).foregroundStyle(YYColor.t3)
+        Text(title).font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t2)
+        Text(detail).font(.yy(size: 11.5)).foregroundStyle(YYColor.t3)
     }
     .frame(maxWidth: .infinity)
     .padding(.top, 60)
@@ -1033,14 +1052,14 @@ private struct NotesPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text("笔记").font(.system(size: 15, weight: .bold)).foregroundStyle(YYColor.t1)
-                Text("按书里的顺序").font(.system(size: 11)).foregroundStyle(YYColor.t3)
+                Text("笔记").font(.yy(size: 15, weight: .bold)).foregroundStyle(YYColor.t1)
+                Text("按书里的顺序").font(.yy(size: 11)).foregroundStyle(YYColor.t3)
                 Spacer()
                 NoteExportMenu(sender: model.noteSender, markdown: markdown,
                                name: String(localized: "\(model.detail?.summary.title ?? "") 笔记.md"),
                                books: { exportBook.map { [$0] } ?? [] }, book: model.detail?.summary) {
                     Image(systemName: "square.and.arrow.up")
-                        .font(.system(size: 12, weight: .medium))
+                        .font(.yy(size: 12, weight: .medium))
                         .foregroundStyle(YYColor.t1)
                         .frame(width: 28, height: 28)
                         .background(YYColor.inset, in: .circle)
@@ -1125,23 +1144,23 @@ private struct WordList: View {
             VStack(alignment: .leading, spacing: 5) {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(label)
-                        .font(.system(size: 10.5, weight: here ? .semibold : .regular))
+                        .font(.yy(size: 10.5, weight: here ? .semibold : .regular))
                         .foregroundStyle(here ? tint.accent : YYColor.t3)
                     Spacer()
                     if w.known {
-                        Text("掌握了").font(.system(size: 10)).foregroundStyle(YYColor.t3)
+                        Text("掌握了").font(.yy(size: 10)).foregroundStyle(YYColor.t3)
                     }
                 }
                 HStack(alignment: .firstTextBaseline, spacing: 7) {
                     Text(w.word).font(.custom("Georgia", size: 15).weight(.bold))
                         .foregroundStyle(w.known ? YYColor.t2 : YYColor.t1)
                     if let p = w.phonetic {
-                        Text(p).font(.system(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
+                        Text(p).font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
                     }
                 }
                 if let meaning {
                     (Text(meaning.pos.map { $0 + " " } ?? "").font(.custom("Georgia", size: 12)).italic().foregroundStyle(YYColor.t3)
-                        + Text(meaning.text).font(.system(size: 12)).foregroundStyle(YYColor.t1))
+                        + Text(meaning.text).font(.yy(size: 12)).foregroundStyle(YYColor.t1))
                         .lineLimit(2)
                 }
                 if !w.context.isEmpty {
@@ -1197,7 +1216,7 @@ private struct NoteList: View {
         return Button { model.go(to: mark) } label: {
             VStack(alignment: .leading, spacing: 8) {
                 Text(label)
-                    .font(.system(size: 10.5, weight: here ? .semibold : .regular))
+                    .font(.yy(size: 10.5, weight: here ? .semibold : .regular))
                     .foregroundStyle(here ? tint.accent : YYColor.t3)
                 MarkText(mark: mark)
                     .font(YYUI.serif(13))
@@ -1274,9 +1293,9 @@ private struct SearchPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text("搜索结果").font(.system(size: 14, weight: .bold)).foregroundStyle(YYColor.t1)
+                Text("搜索结果").font(.yy(size: 14, weight: .bold)).foregroundStyle(YYColor.t1)
                 if !model.query.isEmpty {
-                    Text("“\(model.query)” · \(model.hits.count) 处").font(.system(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
+                    Text("“\(model.query)” · \(model.hits.count) 处").font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
                 }
             }
             .padding(.horizontal, 2)
@@ -1294,11 +1313,11 @@ private struct SearchPanel: View {
                             ForEach(Array(groups.enumerated()), id: \.element.id) { g, group in
                                 HStack(alignment: .firstTextBaseline) {
                                     Text(group.label.replacingOccurrences(of: String(localized: " · 这一页"), with: ""))
-                                        .font(.system(size: 11, weight: .semibold))
+                                        .font(.yy(size: 11, weight: .semibold))
                                         .foregroundStyle(YYColor.t1)
                                     Spacer()
                                     Text("\(group.hits.count) 处\(group.label.hasSuffix(String(localized: "这一页")) ? String(localized: " · 这一页") : "")")
-                                        .font(.system(size: 10))
+                                        .font(.yy(size: 10))
                                         .foregroundStyle(YYColor.t3)
                                 }
                                 .monospacedDigit()

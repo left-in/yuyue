@@ -204,7 +204,7 @@ private struct ReaderContent: View {
     @State private var tapHint = false
     #endif
 
-    private var paper: YYPaper { model.settings.paper.tokens }
+    private var paper: YYPaper { model.paperTokens }
 
     var body: some View {
         pages
@@ -212,11 +212,7 @@ private struct ReaderContent: View {
             .onChange(of: scenePhase) { _, phase in
                 if phase != .active { model.flush() }
             }
-            .alert("出错了", isPresented: Binding(get: { model.failure != nil }, set: { if !$0 { model.failure = nil } })) {
-                Button("好") {}
-            } message: {
-                Text(model.failure ?? "")
-            }
+            .bookFailure($model.failure, opened: model.detail != nil)
             .alert("朗读出错了", isPresented: Binding(get: { model.player?.failure != nil }, set: { if !$0 { model.player?.failure = nil } })) {
                 Button("好") {}
             } message: {
@@ -233,7 +229,7 @@ private struct ReaderContent: View {
             .overlay(alignment: .topTrailing) {
                 if pull == 0, model.bookmarkHere != nil, !model.chromeShown, !model.searchShown {
                     Image(systemName: "bookmark.fill")
-                        .font(.system(size: 18))
+                        .font(.yy(size: 18))
                         .foregroundStyle(YYTint.standard.accent)
                         .padding(.trailing, 22)
                         .offset(y: -3)
@@ -242,8 +238,12 @@ private struct ReaderContent: View {
                         .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
+            // VoiceOver: the taps on the page, as actions.
+            .accessibilityAction(named: Text("下一页")) { model.turn(forward: true) }
+            .accessibilityAction(named: Text("上一页")) { model.turn(forward: false) }
+            .accessibilityAction(named: Text("菜单")) { model.chromeShown.toggle() }
             .overlay {
-                if tapHint { PageTapHint(paper: paper).transition(.opacity) }
+                if tapHint { PageTapHint(paper: paper).transition(.opacity).accessibilityHidden(true) }
             }
             .overlay {
                 if model.listenOnly { ListenOnlyCover(model: model) }
@@ -260,15 +260,16 @@ private struct ReaderContent: View {
                 }
             }
             .animation(.snappy(duration: 0.22), value: model.lookup?.word)
-            .overlay(alignment: .bottom) {
+            .overlay(alignment: .top) {
                 if let toast = model.toast {
                     UndoToast(toast: toast) { model.undoToast() }
                         .padding(.horizontal, 16)
-                        .padding(.bottom, model.immersive && !model.chromeShown ? 24 : 72)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .padding(.top, 6)
+                        .transition(UndoToast.transition)
+                        .id(toast.id)
                 }
             }
-            .animation(.snappy(duration: 0.25), value: model.toast?.id)
+            .animation(.spring(duration: 0.4, bounce: 0.3), value: model.toast?.id)
             .animation(.easeOut(duration: 0.15), value: model.selection)
             .animation(.easeOut(duration: 0.15), value: model.openMark)
             .sheet(item: $thought) { mark in
@@ -324,11 +325,11 @@ private struct ReaderContent: View {
             let adding = model.bookmarkHere == nil
             VStack(spacing: 6) {
                 Image(systemName: adding ? "bookmark.fill" : "bookmark.slash")
-                    .font(.system(size: 20))
+                    .font(.yy(size: 20))
                     .foregroundStyle(reached ? YYTint.standard.accent : paper.ink2)
                     .scaleEffect(reached ? 1.1 : 0.9)
                 Text(reached ? (adding ? String(localized: "松手加书签") : String(localized: "松手删掉书签")) : (adding ? String(localized: "下拉加书签") : String(localized: "下拉删掉书签")))
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.yy(size: 12, weight: .medium))
                     .foregroundStyle(paper.ink2)
             }
             .frame(height: pull, alignment: .bottom)
@@ -477,7 +478,15 @@ private struct TocList: View {
 
     // MARK: 目录
 
-    private func toc(_ chapters: [TocChapter], _ current: Int?) -> some View {
+    @ViewBuilder private func toc(_ chapters: [TocChapter], _ current: Int?) -> some View {
+        if chapters.isEmpty {
+            empty(String(localized: "这本书没有目录"), String(localized: "书里没写章节，往后翻就行"))
+        } else {
+            tocList(chapters, current)
+        }
+    }
+
+    private func tocList(_ chapters: [TocChapter], _ current: Int?) -> some View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(spacing: 0) {
@@ -678,8 +687,8 @@ private struct PageTapHint: View {
     private func zone(_ title: String, _ symbol: String, _ share: CGFloat) -> some View {
         GeometryReader { g in
             VStack(spacing: 8) {
-                Image(systemName: symbol).font(.system(size: 20, weight: .medium))
-                Text(title).font(.system(size: 14, weight: .semibold))
+                Image(systemName: symbol).font(.yy(size: 20, weight: .medium))
+                Text(title).font(.yy(size: 14, weight: .semibold))
             }
             .foregroundStyle(paper.ink.opacity(0.7))
             .frame(width: g.size.width, height: g.size.height)

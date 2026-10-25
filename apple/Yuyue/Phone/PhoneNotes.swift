@@ -166,7 +166,8 @@ struct PhoneNotes: View {
             .safeAreaInset(edge: .bottom) {
                 if selecting { selectionBar }
             }
-            .overlay(alignment: .bottom) { toast }
+            .overlay(alignment: .top) { toast }
+            .animation(.spring(duration: 0.4, bounce: 0.3), value: library.toast?.id)
             .navigationDestination(for: String.self) { id in
                 PhoneBookNotes(library: library, bookID: id, thoughtsOnly: kind == .thoughts)
             }
@@ -250,9 +251,9 @@ struct PhoneNotes: View {
                         NoteRow(mark: item.mark, selecting: selecting) { act($0, item) } footer: {
                             HStack(spacing: 7) {
                                 BookCover(book: item.noted.book).frame(width: 13)
-                                Text(item.noted.book.title).font(.system(size: 12, weight: .semibold)).foregroundStyle(YYColor.t2)
+                                Text(item.noted.book.title).font(.yy(size: 12, weight: .semibold)).foregroundStyle(YYColor.t2)
                                 if let chapter = item.noted.chapter(of: item.mark) {
-                                    Text("· \(chapter)").font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                                    Text("· \(chapter)").font(.yy(size: 12)).foregroundStyle(YYColor.t3)
                                 }
                                 Spacer(minLength: 6)
                                 NoteStamp(mark: item.mark, text: Notes.time(item.mark.at), size: 11.5)
@@ -263,10 +264,10 @@ struct PhoneNotes: View {
                     }
                 } header: {
                     HStack(alignment: .firstTextBaseline, spacing: 6) {
-                        Text(Notes.dayName(day.id)).font(.system(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1)
-                        Text(Notes.monthDay(day.id)).font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                        Text(Notes.dayName(day.id)).font(.yy(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1)
+                        Text(Notes.monthDay(day.id)).font(.yy(size: 12)).foregroundStyle(YYColor.t3)
                         Spacer()
-                        Text("\(day.items.count) 条").font(.system(size: 12)).monospacedDigit().foregroundStyle(YYColor.t3)
+                        Text("\(day.items.count) 条").font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t3)
                     }
                     .textCase(nil)
                 }
@@ -287,11 +288,11 @@ struct PhoneNotes: View {
                         HStack(spacing: 12) {
                             BookCover(book: n.book).frame(width: 38)
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(n.book.title).font(.system(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
-                                Text(Notes.counts(n.marks)).font(.system(size: 12)).monospacedDigit().foregroundStyle(YYColor.t3)
+                                Text(n.book.title).font(.yy(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
+                                Text(Notes.counts(n.marks)).font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t3)
                             }
                             Spacer(minLength: 8)
-                            Text(Notes.shortDay(Notes.date(n.latest))).font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                            Text(Notes.shortDay(Notes.date(n.latest))).font(.yy(size: 12)).foregroundStyle(YYColor.t3)
                         }
                         .padding(.vertical, 3)
                     }
@@ -302,7 +303,7 @@ struct PhoneNotes: View {
                     Spacer()
                     Text("最近记的在上面")
                 }
-                .font(.system(size: 12))
+                .font(.yy(size: 12))
                 .foregroundStyle(YYColor.t3)
                 .textCase(nil)
             }
@@ -360,7 +361,7 @@ struct PhoneNotes: View {
 
     private func barLabel(_ title: String, _ symbol: String, danger: Bool = false) -> some View {
         VStack(spacing: 3) {
-            Image(systemName: symbol).font(.system(size: 17))
+            Image(systemName: symbol).font(.yy(size: 17))
             Text(title).font(.caption2)
         }
         .foregroundStyle(danger ? YYColor.danger : YYColor.t1)
@@ -391,8 +392,8 @@ struct PhoneNotes: View {
         if let note = library.toast {
             UndoToast(toast: note, undo: { library.undo() })
                 .padding(.horizontal, 16)
-                .padding(.bottom, 10)
-                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .padding(.top, 6)
+                .transition(UndoToast.transition)
                 .id(note.id)
         }
     }
@@ -445,9 +446,9 @@ struct PhoneBookNotes: View {
                             }
                         } header: {
                             HStack {
-                                Text(title).font(.system(size: 14, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
+                                Text(title).font(.yy(size: 14, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
                                 Spacer()
-                                Text("\(marks.count) 条").font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                                Text("\(marks.count) 条").font(.yy(size: 12)).foregroundStyle(YYColor.t3)
                             }
                             .textCase(nil)
                         }
@@ -498,10 +499,10 @@ struct PhoneBookNotes: View {
         HStack(spacing: 14) {
             BookCover(book: n.book).frame(width: 52)
             VStack(alignment: .leading, spacing: 4) {
-                Text(n.book.title).font(.system(size: 19, weight: .bold)).foregroundStyle(YYColor.t1).lineLimit(2)
+                Text(n.book.title).font(.yy(size: 19, weight: .bold)).foregroundStyle(YYColor.t1).lineLimit(2)
                 Text([n.book.author, String(localized: "读到 \(n.book.percent)")].compactMap { $0 }.joined(separator: " · "))
-                    .font(.system(size: 12)).foregroundStyle(YYColor.t2)
-                Text(Notes.counts(n.marks) + String(localized: " · 按书里的顺序")).font(.system(size: 12)).foregroundStyle(YYColor.t2)
+                    .font(.yy(size: 12)).foregroundStyle(YYColor.t2)
+                Text(Notes.counts(n.marks) + String(localized: " · 按书里的顺序")).font(.yy(size: 12)).foregroundStyle(YYColor.t2)
             }
             Spacer(minLength: 0)
         }
@@ -547,12 +548,12 @@ struct PhoneBookNotes: View {
                     if dot.fills {
                         Circle().fill(dot.dot).frame(width: 9, height: 9)
                     } else {
-                        Image(systemName: dot == .wave ? "scribble" : "underline").font(.system(size: 10, weight: .bold)).foregroundStyle(dot.dot)
+                        Image(systemName: dot == .wave ? "scribble" : "underline").font(.yy(size: 10, weight: .bold)).foregroundStyle(dot.dot)
                     }
                 }
                 Text(text).monospacedDigit()
             }
-            .font(.system(size: 13, weight: on ? .semibold : .regular))
+            .font(.yy(size: 13, weight: on ? .semibold : .regular))
             .foregroundStyle(on ? tint.onBlack : YYColor.t2)
             .padding(.horizontal, 13).frame(height: 30)
             .background(on ? AnyShapeStyle(tint.black) : AnyShapeStyle(YYColor.card), in: .capsule)
@@ -657,9 +658,9 @@ struct PhoneDeckCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text("今天回顾").font(.system(size: 15, weight: .bold)).foregroundStyle(YYColor.t1)
+                Text("今天回顾").font(.yy(size: 15, weight: .bold)).foregroundStyle(YYColor.t1)
                 Text(review.items.isEmpty ? String(localized: "看完了") : String(localized: "\(review.items.count) 条 · 约 \(review.minutes) 分钟"))
-                    .font(.system(size: 12)).monospacedDigit().foregroundStyle(YYColor.t3)
+                    .font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t3)
             }
             if let first = review.items.first {
                 Text(verbatim: "“" + first.mark.text + "”")
@@ -671,11 +672,11 @@ struct PhoneDeckCard: View {
                     HStack(spacing: -6) {
                         ForEach(covers, id: \.id) { BookCover(book: $0).frame(width: 18) }
                     }
-                    Text("来自 \(covers.count) 本书").font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                    Text("来自 \(covers.count) 本书").font(.yy(size: 12)).foregroundStyle(YYColor.t3)
                     Spacer()
                     Button(action: start) {
                         Text("开始")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.yy(size: 14, weight: .semibold))
                             .foregroundStyle(tint.onBlack)
                             .padding(.horizontal, 20).frame(height: 34)
                             .background(tint.black, in: .capsule)
@@ -684,7 +685,7 @@ struct PhoneDeckCard: View {
                 }
             } else {
                 Text("今天的 \(review.doneToday) 条看完了。留下的以后还会再出现。")
-                    .font(.system(size: 13)).foregroundStyle(YYColor.t2)
+                    .font(.yy(size: 13)).foregroundStyle(YYColor.t2)
             }
         }
         .padding(18)
@@ -853,10 +854,10 @@ struct PhoneWords: View {
                             ForEach(day.words, id: \.word) { row($0) }
                         } header: {
                             HStack(alignment: .firstTextBaseline, spacing: 6) {
-                                Text(Notes.dayName(day.id)).font(.system(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1)
-                                Text(Notes.monthDay(day.id)).font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                                Text(Notes.dayName(day.id)).font(.yy(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1)
+                                Text(Notes.monthDay(day.id)).font(.yy(size: 12)).foregroundStyle(YYColor.t3)
                                 Spacer()
-                                Text("\(day.words.count) 个").font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                                Text("\(day.words.count) 个").font(.yy(size: 12)).foregroundStyle(YYColor.t3)
                             }
                             .textCase(nil)
                         }
@@ -907,11 +908,11 @@ struct PhoneWords: View {
             HStack(alignment: .firstTextBaseline, spacing: 9) {
                 Text(w.word).font(.custom("Georgia", size: 20).weight(.bold)).foregroundStyle(YYColor.t1)
                 if let p = w.phonetic {
-                    Text(p).font(.system(size: 13)).foregroundStyle(YYColor.t2)
+                    Text(p).font(.yy(size: 13)).foregroundStyle(YYColor.t2)
                 }
                 Spacer(minLength: 8)
                 Button { say(w) } label: {
-                    Image(systemName: "speaker.wave.2").font(.system(size: 13, weight: .medium)).foregroundStyle(YYColor.t1)
+                    Image(systemName: "speaker.wave.2").font(.yy(size: 13, weight: .medium)).foregroundStyle(YYColor.t1)
                         .frame(width: 32, height: 32).background(YYColor.inset, in: .circle)
                 }
                 .buttonStyle(.borderless)
@@ -920,7 +921,7 @@ struct PhoneWords: View {
             }
             if let meaning {
                 (Text(meaning.pos.map { $0 + " " } ?? "").font(.custom("Georgia", size: 14)).italic().foregroundStyle(YYColor.t3)
-                    + Text(meaning.text).font(.system(size: 14)).foregroundStyle(YYColor.t1))
+                    + Text(meaning.text).font(.yy(size: 14)).foregroundStyle(YYColor.t1))
                     .padding(.top, 4)
             }
             if !w.context.isEmpty {
@@ -931,7 +932,7 @@ struct PhoneWords: View {
                     .padding(.top, 9)
             }
             Text(source(w))
-                .font(.system(size: 12, weight: .semibold)).foregroundStyle(YYColor.t3).lineLimit(1)
+                .font(.yy(size: 12, weight: .semibold)).foregroundStyle(YYColor.t3).lineLimit(1)
                 .padding(.top, 10)
         }
         .padding(.vertical, 8)

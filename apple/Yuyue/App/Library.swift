@@ -91,6 +91,7 @@ final class Library {
         do {
             books = try core.books()
             collections = try core.collections()
+            Papers.shared.load(core)
         } catch {
             alert = Self.message(for: error)
         }
@@ -249,9 +250,9 @@ final class Library {
     }
 
     #if DEBUG
-    /// A delete note that puts nothing back, to look at it.
+    /// A delete note that puts nothing back, to look at it; it stays until something replaces it.
     func debugToast() {
-        show(Toast(icon: "trash", danger: true, title: String(localized: "已删除《三体》"), detail: String(localized: "笔记和进度都留着")) {})
+        toast = Toast(icon: "trash", danger: true, title: String(localized: "已删除《三体》"), detail: String(localized: "笔记和进度都留着")) {}
     }
     #endif
 
@@ -514,18 +515,39 @@ final class Library {
         if let error = error as? PdfInfoReader.Failure {
             return error == .locked ? String(localized: "这个 PDF 设了密码，打不开") : String(localized: "这个 PDF 读不出来")
         }
+        if isOutOfSpace(error) { return String(localized: "存储空间不够了，腾出一些地方再试") }
+        if let lost = offline(error) { return lost }
         guard let error = error as? CoreError else { return error.localizedDescription }
         switch error {
         case .Unsupported: return String(localized: "不支持这种文件，目前能打开 EPUB、PDF、MOBI、AZW3、TXT 和漫画（CBZ、CBR、ZIP、RAR、一文件夹图片）")
         case .Protected: return String(localized: "这本书有版权保护（DRM），打不开")
-        case .BadBook(let message) where message.contains("password"): return String(localized: "这个压缩包设了密码，打不开")
+        case .BadBook(let message) where message.lowercased().contains("password"): return String(localized: "这个压缩包设了密码，打不开")
         case .BadBook(let message) where message.contains("no pictures"): return String(localized: "里面没有图片，不是漫画")
-        case .BadBook(let message): return String(localized: "这本书读不出来（\(message)）")
-        case .NotFound: return String(localized: "找不到这本书的文件")
+        case .BadBook(let message) where message.contains("too large"): return String(localized: "这本书太大了，读不进来")
+        case .BadBook: return String(localized: "这本书读不出来，文件可能坏了，或者不是它看起来的格式")
+        case .NotFound: return String(localized: "找不到这本书的文件，可能被移走或删掉了。从书架上删掉，再导入一次就好")
         case .Io(let message) where message.contains("os error 1)") || message.contains("os error 13)"):
             return String(localized: "没有权限读这个文件，从访达拖进来或用“导入”选一次就行")
         case .Io(let message) where message.contains("os error 28)"): return String(localized: "磁盘满了，腾点地方再导入")
         case .Io(let message), .Db(let message), .Invalid(let message): return String(localized: "出错了（\(message)）")
+        }
+    }
+
+    /// The disk is full, whichever layer said so.
+    static func isOutOfSpace(_ error: Error) -> Bool {
+        let e = error as NSError
+        if e.domain == NSCocoaErrorDomain, e.code == NSFileWriteOutOfSpaceError { return true }
+        if e.domain == NSPOSIXErrorDomain, e.code == Int(ENOSPC) { return true }
+        if let under = e.userInfo[NSUnderlyingErrorKey] as? Error { return isOutOfSpace(under) }
+        return false
+    }
+
+    /// The network went, or was never there: said plainly, with what happens next.
+    static func offline(_ error: Error) -> String? {
+        switch (error as? URLError)?.code {
+        case .notConnectedToInternet?: String(localized: "没有联网，连上网再试")
+        case .networkConnectionLost?, .timedOut?: String(localized: "网断了，下载停在半路。连好网再点一次，会重新下")
+        default: nil
         }
     }
 

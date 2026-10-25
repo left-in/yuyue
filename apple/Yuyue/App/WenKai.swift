@@ -39,6 +39,9 @@ final class WenKai {
             defer { task = nil }
             do {
                 try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+                // Said before the first byte, not after 20 MB of it.
+                let free = (try? dir.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]))?.volumeAvailableCapacityForImportantUsage
+                if let free, free < 40_000_000 { throw CocoaError(.fileWriteOutOfSpace) }
                 for (i, name) in Self.files.enumerated() {
                     let target = dir.appending(path: name)
                     if FileManager.default.fileExists(atPath: target.path(percentEncoded: false)) { continue }
@@ -54,7 +57,10 @@ final class WenKai {
                 NotificationCenter.default.post(name: .fontsChanged, object: nil)
             } catch {
                 progress = nil
-                failure = (error as? URLError)?.code == .notConnectedToInternet ? String(localized: "没有联网") : String(localized: "没下载下来")
+                failure = Library.isOutOfSpace(error) ? String(localized: "存储空间不够，要约 30 MB")
+                    : (error as? URLError)?.code == .notConnectedToInternet ? String(localized: "没有联网")
+                    : Library.offline(error) != nil ? String(localized: "网断了，没下完")
+                    : String(localized: "没下载下来")
             }
         }
     }
@@ -74,6 +80,9 @@ final class WenKai {
         FileManager.default.createFile(atPath: temp.path(percentEncoded: false), contents: nil)
         let handle = try FileHandle(forWritingTo: temp)
         defer { try? handle.close() }
+        // Half a file is no use to anyone: gone again if the download stops.
+        var finished = false
+        defer { if !finished { try? FileManager.default.removeItem(at: temp) } }
         var buffer = Data()
         buffer.reserveCapacity(1 << 20)
         var written: Int64 = 0
@@ -87,6 +96,7 @@ final class WenKai {
             }
         }
         try handle.write(contentsOf: buffer)
+        finished = true
         return temp
     }
 }
@@ -105,12 +115,12 @@ struct WenKaiStatus: View {
         if chosen, let p = w.progress {
             HStack(spacing: 8) {
                 ProgressView(value: p).progressViewStyle(.linear).tint(YYTint.standard.fill).frame(width: 90)
-                Text("霞鹜文楷正在下载 \(Int(p * 100))%，先用楷体").font(.system(size: 11)).foregroundStyle(YYColor.t2)
+                Text("霞鹜文楷正在下载 \(Int(p * 100))%，先用楷体").font(.yy(size: 11)).foregroundStyle(YYColor.t2)
             }
         } else if chosen, let f = w.failure {
             HStack(spacing: 8) {
-                Text("霞鹜文楷\(f)").font(.system(size: 11)).foregroundStyle(YYColor.danger)
-                Button("再试一次") { w.ensure() }.font(.system(size: 11)).buttonStyle(.plain).foregroundStyle(YYTint.standard.accent)
+                Text("霞鹜文楷\(f)").font(.yy(size: 11)).foregroundStyle(YYColor.danger)
+                Button("再试一次") { w.ensure() }.font(.yy(size: 11)).buttonStyle(.plain).foregroundStyle(YYTint.standard.accent)
             }
         }
     }

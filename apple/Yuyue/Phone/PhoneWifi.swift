@@ -7,6 +7,8 @@ import UIKit
 struct PhoneWifi: View {
     @State private var transfer: WifiTransfer
     @State private var copied = false
+    /// No computer has come for a while: perhaps 本地网络 was turned down for 语阅.
+    @State private var stuck = false
     @Environment(\.scenePhase) private var phase
     private let tint = YYTint.standard
 
@@ -32,6 +34,7 @@ struct PhoneWifi: View {
                         ForEach(transfer.items) { row($0) }
                     }
                 }
+                if stuck, transfer.client == nil, transfer.problem == nil { stuckCard.padding(.top, YYUI.s(12)) }
                 YYNote(String(localized: "传的时候让这一页亮着；锁屏会断开，回来后从断的地方接着传。"))
             }
             .padding(.horizontal, YYUI.s(16))
@@ -51,6 +54,31 @@ struct PhoneWifi: View {
         .onChange(of: phase) { _, now in
             if now == .active { transfer.start() } else if now == .background { transfer.stop() }
         }
+        .task {
+            try? await Task.sleep(for: .seconds(25))
+            withAnimation(.snappy) { stuck = true }
+        }
+    }
+
+    /// The computer can't open the address: the two things it usually is, and the way to the switch.
+    private var stuckCard: some View {
+        VStack(alignment: .leading, spacing: YYUI.s(6)) {
+            Text("电脑打不开这个地址？").font(YYUI.font(12.5, .semibold)).foregroundStyle(YYColor.t1)
+            Text("看看电脑和 iPhone 是不是连的同一个 Wi‑Fi。都对的话，多半是没让语阅用“本地网络”：在设置 › 语阅 里把它打开，再回来。")
+                .font(YYUI.font(10.5)).lineSpacing(YYUI.s(10.5) * 0.4).foregroundStyle(YYColor.t2)
+                .fixedSize(horizontal: false, vertical: true)
+            Button {
+                if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+            } label: {
+                Text("去设置")
+            }
+            .buttonStyle(YYButtonStyle(kind: .raised, size: .small))
+            .padding(.top, YYUI.s(4))
+        }
+        .padding(YYUI.s(14))
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .yyCard()
+        .transition(.opacity)
     }
 
     /// `.v-lib-url`: 在电脑浏览器里打开, the address and 复制, then whether a computer has come.
@@ -60,7 +88,7 @@ struct PhoneWifi: View {
             HStack(spacing: YYUI.s(8)) {
                 if let address = transfer.address, transfer.problem == nil {
                     Text(address)
-                        .font(.system(size: YYUI.s(19), weight: .bold, design: .monospaced).monospacedDigit())
+                        .font(.yy(size: YYUI.s(19), weight: .bold, design: .monospaced).monospacedDigit())
                         .tracking(YYUI.s(19) * 0.02)
                         .foregroundStyle(YYColor.t1)
                         .textSelection(.enabled)
@@ -101,7 +129,7 @@ struct PhoneWifi: View {
             HStack(spacing: YYUI.s(6)) {
                 Circle().fill(YYColor.tint).frame(width: YYUI.s(6), height: YYUI.s(6))
                 Text(transfer.address ?? " ")
-                    .font(.system(size: YYUI.s(9.5), design: .monospaced))
+                    .font(.yy(size: YYUI.s(9.5), design: .monospaced))
                     .foregroundStyle(YYColor.t3)
                     .frame(maxWidth: .infinity)
                     .padding(.trailing, YYUI.s(24))

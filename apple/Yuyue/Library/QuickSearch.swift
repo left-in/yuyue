@@ -216,10 +216,10 @@ struct QuickSearchPanel: View {
 
     private var field: some View {
         HStack(spacing: 12) {
-            Image(systemName: "magnifyingglass").font(.system(size: 18)).foregroundStyle(YYColor.t2)
+            Image(systemName: "magnifyingglass").font(.yy(size: 18)).foregroundStyle(YYColor.t2)
             TextField("", text: $search.query, prompt: Text("搜书名、原文、笔记，或者问书伴"))
                 .textFieldStyle(.plain)
-                .font(.system(size: 20))
+                .font(.yy(size: 20))
                 .focused($focused)
                 .onKeyPress(.upArrow) { search.move(-1); return .handled }
                 .onKeyPress(.downArrow) { search.move(1); return .handled }
@@ -262,7 +262,7 @@ struct QuickSearchPanel: View {
                     }
                     if !search.query.isEmpty && rows.count == 1 {
                         Text("书里和笔记里都没找到。按 ⌘↩ 问书伴试试")
-                            .font(.system(size: 12)).foregroundStyle(YYColor.t3)
+                            .font(.yy(size: 12)).foregroundStyle(YYColor.t3)
                             .padding(.horizontal, 10).padding(.vertical, 14)
                     }
                 }
@@ -285,7 +285,7 @@ struct QuickSearchPanel: View {
             content()
             if on, i > 0 {
                 Text("↩ 打开")
-                    .font(.system(size: 10.5, weight: .semibold))
+                    .font(.yy(size: 10.5, weight: .semibold))
                     .foregroundStyle(tint.accent)
                     .padding(.horizontal, 8).padding(.vertical, 5)
                     .background(YYColor.card, in: .rect(cornerRadius: 5))
@@ -303,9 +303,9 @@ struct QuickSearchPanel: View {
 
     private func group(_ title: String, _ count: String) -> some View {
         HStack(alignment: .firstTextBaseline) {
-            Text(title).font(.system(size: 10.5, weight: .semibold))
+            Text(title).font(.yy(size: 10.5, weight: .semibold))
             Spacer()
-            Text(count).font(.system(size: 10.5)).monospacedDigit()
+            Text(count).font(.yy(size: 10.5)).monospacedDigit()
         }
         .foregroundStyle(YYColor.t3)
         .padding(.horizontal, 10).padding(.top, 8).padding(.bottom, 2)
@@ -313,14 +313,14 @@ struct QuickSearchPanel: View {
 
     private var askRow: some View {
         HStack(spacing: 12) {
-            Image(systemName: "sparkle").font(.system(size: 14))
+            Image(systemName: "sparkle").font(.yy(size: 14))
                 .foregroundStyle(tint.accent)
                 .frame(width: 30, height: 30)
                 .background(tint.soft, in: .rect(cornerRadius: 9))
             VStack(alignment: .leading, spacing: 2) {
                 Text(search.query.isEmpty ? String(localized: "问书伴") : String(localized: "问书伴：“\(search.query)”"))
-                    .font(.system(size: 13, weight: .semibold)).foregroundStyle(tint.accent).lineLimit(1)
-                Text("只用你读过的部分回答，带出处").font(.system(size: 10.5)).foregroundStyle(YYColor.t3)
+                    .font(.yy(size: 13, weight: .semibold)).foregroundStyle(tint.accent).lineLimit(1)
+                Text("只用你读过的部分回答，带出处").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
             }
             Spacer(minLength: 0)
             Key("⌘↩")
@@ -338,8 +338,8 @@ struct QuickSearchPanel: View {
                         Text(NameMatcher(search.query).highlighted(t.book.title, color: tint.accent))
                     }
                 }
-                .font(.system(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
-                Text(detail(t)).font(.system(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3).lineLimit(1)
+                .font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
+                Text(detail(t)).font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3).lineLimit(1)
             }
             Spacer(minLength: 0)
         }
@@ -364,7 +364,7 @@ struct QuickSearchPanel: View {
                     .font(YYUI.serif(13)).tracking(0.26)
                     .foregroundStyle(YYColor.t1).lineLimit(1)
                 Text([l.book.title, l.chapter].compactMap { $0 }.uniqued().joined(separator: " · "))
-                    .font(.system(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
+                    .font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
             }
             Spacer(minLength: 0)
         }
@@ -385,7 +385,7 @@ struct QuickSearchPanel: View {
             }
             Spacer(minLength: 8)
             Text([n.book.title, n.chapter].compactMap { $0 }.uniqued().joined(separator: " · "))
-                .font(.system(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
+                .font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(1)
         }
     }
 
@@ -420,7 +420,7 @@ struct QuickSearchPanel: View {
             Spacer()
             Text("在 \(search.bookCount) 本书和 \(search.allNotes) 条笔记里搜")
         }
-        .font(.system(size: 10.5))
+        .font(.yy(size: 10.5))
         .foregroundStyle(YYColor.t3)
         .padding(.horizontal, 18)
         .frame(height: 36)
@@ -466,7 +466,7 @@ private struct Key: View {
 
     var body: some View {
         Text(text)
-            .font(.system(size: 10.5)).monospacedDigit()
+            .font(.yy(size: 10.5)).monospacedDigit()
             .foregroundStyle(YYColor.t2)
             .padding(.horizontal, 6).padding(.vertical, 3)
             .background(YYColor.inset, in: .rect(cornerRadius: 5))

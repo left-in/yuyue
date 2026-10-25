@@ -4,6 +4,10 @@
 
 export interface Settings {
   paper?: string | null;
+  /** 我的纸: its colours over the preset's, as `--yy-p-bg:#…;…;color-scheme:…` (null: none). */
+  paperStyle?: string | null;
+  /** 纹理 on 我的纸: 'grain' | 'xuan' | 'linen' (null: none). */
+  texture?: string | null;
   mode?: string | null;
   paging?: string | null;
   justify?: string | number | boolean | null;
@@ -30,6 +34,7 @@ const ATTRS: { [k: string]: { attr: string; kind: Kind; values?: string[]; def: 
   justify: { attr: 'data-yy-justify', kind: 'tri', def: 'auto' },
   indent: { attr: 'data-yy-indent', kind: 'tri', def: 'auto' },
   compress: { attr: 'data-yy-compress', kind: 'bool', def: '1' },
+  texture: { attr: 'data-yy-texture', kind: 'enum', values: ['grain', 'xuan', 'linen'], def: null },
   motion: { attr: 'data-yy-motion', kind: 'enum', values: ['full', 'reduced'], def: 'full' },
   tint: { attr: 'data-yy-tint', kind: 'enum', values: ['blue', 'ink'], def: null },
 };
@@ -44,6 +49,10 @@ const VARS: { [k: string]: [string, string, string | null] } = {
   bottom: ['--yy-bottom', 'px', '88px'],
   cols: ['--yy-cols', '', '1'],
 };
+
+// What 我的纸 may set over its preset: the colours, and light or dark.
+const PAPER_PROPS = ['--yy-p-bg', '--yy-p-ink', '--yy-p-ink-2', '--yy-p-line', '--yy-p-accent', '--yy-p-hl', '--yy-p-wave',
+  '--yy-p-glass', '--yy-p-main', '--yy-p-on-main', '--yy-p-pa', 'color-scheme'];
 
 // Font keywords. Latin text (:lang(en)) gets a matching Latin face; CJK faces have poor Latin.
 const FONTS: { [k: string]: [string, string] } = {
@@ -104,6 +113,16 @@ export function applyToRoot(s: Settings): boolean {
     let value = isAuto(v) ? def : withUnit(v as number | string, unit);
     if (key === 'cols' && value != null) value = String(Math.max(1, Math.min(2, parseInt(value, 10) || 1)));
     setVar(name, value);
+  }
+
+  if ('paperStyle' in src) {
+    const own: { [name: string]: string } = {};
+    for (const part of String(src.paperStyle || '').split(';')) {
+      const i = part.indexOf(':');
+      const name = part.slice(0, i).trim();
+      if (i > 0 && PAPER_PROPS.indexOf(name) >= 0) own[name] = part.slice(i + 1).trim();
+    }
+    for (const name of PAPER_PROPS) setVar(name, own[name] || null);
   }
 
   if ('font' in src) {

@@ -146,6 +146,7 @@ private fun Header(model: ReaderModel, chapters: List<TocChapter>, current: Int?
 
 @Composable
 private fun Chapters(model: ReaderModel, chapters: List<TocChapter>, current: Int?, dismiss: () -> Unit) {
+    if (chapters.isEmpty()) return Empty(t("这本书没有目录"), t("书里没写章节，往后翻就行"))
     val state = rememberLazyListState()
     LaunchedEffect(current) { current?.let { state.scrollToItem(maxOf(0, it - 3)) } }
     LazyColumn(

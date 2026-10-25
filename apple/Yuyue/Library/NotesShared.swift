@@ -42,8 +42,8 @@ struct NoteStamp: View {
 
     var body: some View {
         HStack(spacing: 3) {
-            if mark.heard { Image(systemName: "headphones").font(.system(size: size - 1.5)).accessibilityLabel("听书时划的") }
-            Text(text).font(.system(size: size)).monospacedDigit()
+            if mark.heard { Image(systemName: "headphones").font(.yy(size: size - 1.5)).accessibilityLabel("听书时划的") }
+            Text(text).font(.yy(size: size)).monospacedDigit()
         }
         .foregroundStyle(YYColor.t3)
     }

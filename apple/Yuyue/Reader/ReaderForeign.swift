@@ -262,7 +262,11 @@ extension ReaderModel {
             }
         }
         loadVocab()
-        if UserDefaults.standard.bool(forKey: translateKey) { setTranslateShown(true) }
+        // 译 left on last time comes back only when it can run as it is: a book opening (or the app
+        // restoring its windows) never puts the system's download sheet up unasked.
+        if UserDefaults.standard.bool(forKey: translateKey) {
+            Task { if await translator.installed() { setTranslateShown(true) } }
+        }
     }
 
     private var translateKey: String { "translate.\(bookID)" }
