@@ -1286,7 +1286,8 @@ nonisolated enum ProtoIcon: String {
         switch self {
         case .wave: 1.6
         case .book: 1.3
-        case .comic: 1.5
+        // The SVG's 1.5 in its 16 box, drawn at 14.
+        case .comic: 1.3
         }
     }
 }
@@ -1325,14 +1326,12 @@ nonisolated struct ProtoShape: Shape {
             // Its 13 × 17 body centred and filling the 16 box, as tall as the icons beside it.
             p.addPath(b.applying(CGAffineTransform(translationX: 8, y: 8).scaledBy(x: 16 / 18.5, y: 16 / 18.5).translatedBy(x: -11.5, y: -12)))
         case .comic:
-            // In the 16 box: <circle cx="8" cy="8" r="5.5"/> and two filled eyes of r .6 at (6, 7)
-            // and (9.5, 6). Grown about the middle to fill the box like 读完's circle beside it.
-            let k = 6.6 / 5.5
-            func at(_ x: CGFloat, _ y: CGFloat) -> CGPoint { CGPoint(x: 8 + (x - 8) * k, y: 8 + (y - 8) * k) }
-            p.addEllipse(in: CGRect(x: 8 - 6.6, y: 8 - 6.6, width: 13.2, height: 13.2))
-            for eye in [at(6, 7), at(9.5, 6)] {
-                // The shape is stroked: a dot is the line's round cap on a near-zero segment.
-                p.move(to: eye); p.addLine(to: CGPoint(x: eye.x + 0.01, y: eye.y))
+            // comic-face.svg, as given: <circle cx="8" cy="8" r="5.5"/> and two eyes,
+            // <circle r=".6"/> at (6, 7) and (9.5, 6), filled and stroked with the same line, so
+            // each is a solid dot the line's width wider than .6.
+            p.addEllipse(in: CGRect(x: 2.5, y: 2.5, width: 11, height: 11))
+            for eye in [CGPoint(x: 6, y: 7), CGPoint(x: 9.5, y: 6)] {
+                p.addEllipse(in: CGRect(x: eye.x - 0.6, y: eye.y - 0.6, width: 1.2, height: 1.2))
             }
         }
         return p.applying(CGAffineTransform(translationX: rect.minX, y: rect.minY).scaledBy(x: rect.width / 16, y: rect.height / 16))
