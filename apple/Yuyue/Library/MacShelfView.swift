@@ -273,7 +273,8 @@ struct MacShelfView: View {
             }
             sidebarGroup(String(localized: "笔记"), key: "notes")
             if !closedGroups.contains("notes") {
-                sidebarRow(.notes, String(localized: "笔记"), "quote.opening", noteCount)
+                // The phone's 笔记 tab icon.
+                sidebarRow(.notes, String(localized: "笔记"), "highlighter", noteCount)
                 sidebarRow(.words, String(localized: "生词本"), "translate", wordCount)
             }
             sidebarGroup(String(localized: "合集"), key: "collections")
@@ -1275,7 +1276,7 @@ nonisolated enum ProtoIcon: String {
     case wave = "proto.wave"
     /// 书: a closed book, a bookmark ribbon hanging from its top (待定方案 7 · A).
     case book = "proto.book"
-    /// 漫画: Lucide's palette (ISC), brought in with catnap's Scripts/import-lucide-glyphs.py.
+    /// 漫画: a round face, two dots for eyes.
     case comic = "proto.comic"
 
     var shape: some Shape { ProtoShape(icon: self) }
@@ -1285,7 +1286,7 @@ nonisolated enum ProtoIcon: String {
         switch self {
         case .wave: 1.6
         case .book: 1.3
-        case .comic: 1.3
+        case .comic: 1.5
         }
     }
 }
@@ -1324,26 +1325,15 @@ nonisolated struct ProtoShape: Shape {
             // Its 13 × 17 body centred and filling the 16 box, as tall as the icons beside it.
             p.addPath(b.applying(CGAffineTransform(translationX: 8, y: 8).scaledBy(x: 16 / 18.5, y: 16 / 18.5).translatedBy(x: -11.5, y: -12)))
         case .comic:
-            // Lucide `palette`, in its 24 box (its four dots drawn by the line's own width).
-            var c = Path()
-            c.addEllipse(in: CGRect(x: 13.000, y: 6.000, width: 1.000, height: 1.000))
-            c.addEllipse(in: CGRect(x: 17.000, y: 10.000, width: 1.000, height: 1.000))
-            c.addEllipse(in: CGRect(x: 8.000, y: 7.000, width: 1.000, height: 1.000))
-            c.addEllipse(in: CGRect(x: 6.000, y: 12.000, width: 1.000, height: 1.000))
-            c.move(to: CGPoint(x: 12.000, y: 2.000))
-            c.addCurve(to: CGPoint(x: 2.000, y: 12.000), control1: CGPoint(x: 6.500, y: 2.000), control2: CGPoint(x: 2.000, y: 6.500))
-            c.addCurve(to: CGPoint(x: 12.000, y: 22.000), control1: CGPoint(x: 2.000, y: 17.500), control2: CGPoint(x: 6.500, y: 22.000))
-            c.addCurve(to: CGPoint(x: 13.648, y: 20.312), control1: CGPoint(x: 12.926, y: 22.000), control2: CGPoint(x: 13.648, y: 21.254))
-            c.addCurve(to: CGPoint(x: 13.211, y: 19.187), control1: CGPoint(x: 13.648, y: 19.875), control2: CGPoint(x: 13.468, y: 19.477))
-            c.addCurve(to: CGPoint(x: 12.773, y: 18.062), control1: CGPoint(x: 12.921, y: 18.898), control2: CGPoint(x: 12.773, y: 18.535))
-            c.addCurve(to: CGPoint(x: 13.253, y: 16.874), control1: CGPoint(x: 12.765, y: 17.617), control2: CGPoint(x: 12.939, y: 17.189))
-            c.addCurve(to: CGPoint(x: 14.441, y: 16.394), control1: CGPoint(x: 13.568, y: 16.560), control2: CGPoint(x: 13.996, y: 16.386))
-            c.addLine(to: CGPoint(x: 16.437, y: 16.394))
-            c.addCurve(to: CGPoint(x: 21.992, y: 10.840), control1: CGPoint(x: 19.488, y: 16.394), control2: CGPoint(x: 21.992, y: 13.891))
-            c.addCurve(to: CGPoint(x: 12.000, y: 2.000), control1: CGPoint(x: 21.965, y: 6.012), control2: CGPoint(x: 17.461, y: 2.000))
-            c.closeSubpath()
-            // The 20 × 20 it fills, centred in the 16 box like the book.
-            p.addPath(c.applying(CGAffineTransform(translationX: 8, y: 8).scaledBy(x: 16 / 19, y: 16 / 19).translatedBy(x: -12, y: -12)))
+            // In the 16 box: <circle cx="8" cy="8" r="5.5"/> and two filled eyes of r .6 at (6, 7)
+            // and (9.5, 6). Grown about the middle to fill the box like 读完's circle beside it.
+            let k = 6.6 / 5.5
+            func at(_ x: CGFloat, _ y: CGFloat) -> CGPoint { CGPoint(x: 8 + (x - 8) * k, y: 8 + (y - 8) * k) }
+            p.addEllipse(in: CGRect(x: 8 - 6.6, y: 8 - 6.6, width: 13.2, height: 13.2))
+            for eye in [at(6, 7), at(9.5, 6)] {
+                // The shape is stroked: a dot is the line's round cap on a near-zero segment.
+                p.move(to: eye); p.addLine(to: CGPoint(x: eye.x + 0.01, y: eye.y))
+            }
         }
         return p.applying(CGAffineTransform(translationX: rect.minX, y: rect.minY).scaledBy(x: rect.width / 16, y: rect.height / 16))
     }
