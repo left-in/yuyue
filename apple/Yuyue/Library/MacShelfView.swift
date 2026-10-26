@@ -262,7 +262,7 @@ struct MacShelfView: View {
             if !closedGroups.contains("library") {
                 sidebarRow(.all, String(localized: "全部"), "asset." + PhoneTabIcon.shelf, library.books.count)
                 sidebarRow(.books, String(localized: "书"), ProtoIcon.book.rawValue, library.books.count { !$0.isComic })
-                sidebarRow(.comics, String(localized: "漫画"), ProtoIcon.comic.rawValue, library.books.count(where: \.isComic))
+                sidebarRow(.comics, String(localized: "漫画"), "asset." + PhoneTabIcon.comic, library.books.count(where: \.isComic))
                 sidebarRow(.audio, String(localized: "有声"), ProtoIcon.wave.rawValue, library.books.count(where: library.hasAudio))
             }
             sidebarGroup(String(localized: "状态"), key: "status")
@@ -1045,7 +1045,7 @@ private struct SidebarRow<Title: View>: View {
                 if let drawn = ProtoIcon(rawValue: symbol) {
                     drawn.shape.stroke(style: StrokeStyle(lineWidth: drawn.line, lineCap: .round, lineJoin: .round))
                 } else if symbol.hasPrefix("asset.") {
-                    // 全部: the phone's 书架 tab icon, from the asset catalogue.
+                    // 全部 (the phone's 书架 tab icon) and 漫画: SVGs in the asset catalogue.
                     Image(String(symbol.dropFirst(6))).resizable().renderingMode(.template).scaledToFit()
                 } else {
                     Image(systemName: symbol).resizable().scaledToFit()
@@ -1276,8 +1276,6 @@ nonisolated enum ProtoIcon: String {
     case wave = "proto.wave"
     /// 书: a closed book, a bookmark ribbon hanging from its top (待定方案 7 · A).
     case book = "proto.book"
-    /// 漫画: a round face, two dots for eyes.
-    case comic = "proto.comic"
 
     var shape: some Shape { ProtoShape(icon: self) }
 
@@ -1286,8 +1284,6 @@ nonisolated enum ProtoIcon: String {
         switch self {
         case .wave: 1.6
         case .book: 1.3
-        // The SVG's 1.5 in its 16 box, drawn at 14.
-        case .comic: 1.3
         }
     }
 }
@@ -1325,14 +1321,6 @@ nonisolated struct ProtoShape: Shape {
             b.addLine(to: CGPoint(x: 10.5, y: 3.5))
             // Its 13 × 17 body centred and filling the 16 box, as tall as the icons beside it.
             p.addPath(b.applying(CGAffineTransform(translationX: 8, y: 8).scaledBy(x: 16 / 18.5, y: 16 / 18.5).translatedBy(x: -11.5, y: -12)))
-        case .comic:
-            // comic-face.svg, as given: <circle cx="8" cy="8" r="5.5"/> and two eyes,
-            // <circle r=".6"/> at (6, 7) and (9.5, 6), filled and stroked with the same line, so
-            // each is a solid dot the line's width wider than .6.
-            p.addEllipse(in: CGRect(x: 2.5, y: 2.5, width: 11, height: 11))
-            for eye in [CGPoint(x: 6, y: 7), CGPoint(x: 9.5, y: 6)] {
-                p.addEllipse(in: CGRect(x: eye.x - 0.6, y: eye.y - 0.6, width: 1.2, height: 1.2))
-            }
         }
         return p.applying(CGAffineTransform(translationX: rect.minX, y: rect.minY).scaledBy(x: rect.width / 16, y: rect.height / 16))
     }

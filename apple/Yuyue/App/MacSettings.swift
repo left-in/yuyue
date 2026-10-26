@@ -92,7 +92,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         case .appearance: "sun.max"
         // 阅读 and 漫画 as in the shelf's sidebar.
         case .reading: ProtoIcon.book.rawValue
-        case .comics: ProtoIcon.comic.rawValue
+        case .comics: "asset." + PhoneTabIcon.comic
         case .listening: "headphones"
         case .foreign: "character.book.closed"
         case .companion: "sparkle"
@@ -144,6 +144,9 @@ struct SettingsTabs: View {
                         // The sidebar's drawing, its line grown with it from 14 to 18.
                         drawn.shape
                             .stroke(style: StrokeStyle(lineWidth: drawn.line * 18 / 14, lineCap: .round, lineJoin: .round))
+                            .frame(width: 18, height: 18)
+                    } else if p.symbol.hasPrefix("asset.") {
+                        Image(String(p.symbol.dropFirst(6))).resizable().renderingMode(.template).scaledToFit()
                             .frame(width: 18, height: 18)
                     } else {
                         Image(systemName: p.symbol).font(.yy(size: 16))
