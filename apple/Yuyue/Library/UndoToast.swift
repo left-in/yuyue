@@ -10,6 +10,16 @@ struct UndoToast: View {
     /// 即刻's green tick for a plain note; a deletion is red.
     static let done = Color(red: 0x2D / 255, green: 0xBE / 255, blue: 0x60 / 255)
 
+    /// The prototype draws the phone at its own pixels (a point is 1.2 of them) and the Mac
+    /// window at its real size, so the Mac's banner and capsule are a fifth smaller.
+    #if os(macOS)
+    static let k: CGFloat = 1
+    static let bannerWidth: CGFloat = 360
+    #else
+    static let k: CGFloat = 1.2
+    static let bannerWidth: CGFloat = 460
+    #endif
+
     /// Every screen puts it centred at the top, coming down from above.
     static var transition: AnyTransition {
         .move(edge: .top).combined(with: .opacity).combined(with: .scale(scale: 0.94, anchor: .top))
@@ -27,24 +37,25 @@ struct UndoToast: View {
 /// White capsule, as wide as its one line: a round red or green dot with a tick, then the words.
 private struct NoteCapsule: View {
     let toast: Library.Toast
+    private let k = UndoToast.k
 
     var body: some View {
-        HStack(spacing: 7) {
+        HStack(spacing: 7 * k) {
             ZStack {
                 Circle().fill(toast.danger ? YYColor.danger : UndoToast.done)
                 Image(systemName: "checkmark")
-                    .font(.yy(size: 8, weight: .heavy))
+                    .font(.yy(size: 7 * k, weight: .heavy))
                     .foregroundStyle(.white)
             }
-            .frame(width: 15, height: 15)
+            .frame(width: 15 * k, height: 15 * k)
             Text(toast.detail.isEmpty ? toast.title : "\(toast.title) · \(toast.detail)")
-                .font(.yy(size: 11.5 * 1.2))
+                .font(.yy(size: 11.5 * k))
                 .foregroundStyle(YYColor.t1)
                 .lineLimit(1)
         }
-        .padding(.leading, 11 * 1.2)
-        .padding(.trailing, 14 * 1.2)
-        .frame(height: 34 * 1.2)
+        .padding(.leading, 11 * k)
+        .padding(.trailing, 14 * k)
+        .frame(height: 34 * k)
         .background(YYColor.card, in: .capsule)
         .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
         .shadow(color: .black.opacity(0.09), radius: 12, y: 4)
@@ -60,25 +71,26 @@ private struct NoteCapsule: View {
 private struct UndoBanner: View {
     let toast: Library.Toast
     let undo: () -> Void
+    private let k = UndoToast.k
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
     @State private var start = Date.now
     @State private var done = false
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 12 * k) {
             TimelineView(.animation(paused: done)) { context in
                 let left = max(0, 1 - context.date.timeIntervalSince(start) / Library.undoSeconds)
                 CountdownRing(left: left, done: done)
             }
-            .frame(width: 26 * 1.2, height: 26 * 1.2)
-            VStack(alignment: .leading, spacing: 2) {
+            .frame(width: 26 * k, height: 26 * k)
+            VStack(alignment: .leading, spacing: 2 * k) {
                 Text(toast.title)
-                    .font(.yy(size: 13 * 1.2, weight: .semibold))
+                    .font(.yy(size: 13 * k, weight: .semibold))
                     .foregroundStyle(YYColor.t1)
                 if !toast.detail.isEmpty {
                     Text(toast.detail)
-                        .font(.yy(size: 10.5 * 1.2))
+                        .font(.yy(size: 10.5 * k))
                         .foregroundStyle(YYColor.t2)
                 }
             }
@@ -87,9 +99,9 @@ private struct UndoBanner: View {
             // B3: a round glass button with only the arrow; it fades as the tick comes.
             Button(action: undo) {
                 Image(systemName: "arrow.uturn.backward")
-                    .font(.yy(size: 15, weight: .semibold))
+                    .font(.yy(size: 12.5 * k, weight: .semibold))
                     .foregroundStyle(tint.accent)
-                    .frame(width: 36 * 1.2, height: 36 * 1.2)
+                    .frame(width: 36 * k, height: 36 * k)
                     .background(YYColor.t1.opacity(0.06), in: .circle)
                     .overlay(Circle().strokeBorder(YYColor.line, lineWidth: 0.5))
                     .contentShape(.circle)
@@ -101,15 +113,15 @@ private struct UndoBanner: View {
             .scaleEffect(done ? 0.9 : 1)
             .disabled(done)
         }
-        .padding(.leading, 13 * 1.2)
-        .padding(.trailing, 10 * 1.2)
-        .padding(.vertical, 11 * 1.2)
+        .padding(.leading, 13 * k)
+        .padding(.trailing, 10 * k)
+        .padding(.vertical, 11 * k)
         // The prototype's glass: near-white over a blur of the page.
-        .background(YYColor.glass, in: .rect(cornerRadius: 20 * 1.2))
-        .background(.ultraThinMaterial, in: .rect(cornerRadius: 20 * 1.2))
-        .overlay(RoundedRectangle(cornerRadius: 20 * 1.2).strokeBorder(YYColor.line, lineWidth: 0.5))
+        .background(YYColor.glass, in: .rect(cornerRadius: 20 * k))
+        .background(.ultraThinMaterial, in: .rect(cornerRadius: 20 * k))
+        .overlay(RoundedRectangle(cornerRadius: 20 * k).strokeBorder(YYColor.line, lineWidth: 0.5))
         .shadow(color: .black.opacity(0.16), radius: 18, y: 8)
-        .frame(maxWidth: 460)
+        .frame(maxWidth: UndoToast.bannerWidth)
         .accessibilityElement(children: .combine)
         .accessibilityAction(named: "撤销") { if !done { undo() } }
         .task(id: toast.id) {
@@ -125,6 +137,7 @@ private struct UndoBanner: View {
 private struct CountdownRing: View {
     let left: Double
     let done: Bool
+    private let k = UndoToast.k
 
     var body: some View {
         ZStack {
@@ -132,23 +145,23 @@ private struct CountdownRing: View {
                 Circle().fill(YYColor.danger)
                     .overlay {
                         Image(systemName: "checkmark")
-                            .font(.yy(size: 13, weight: .heavy))
+                            .font(.yy(size: 11 * k, weight: .heavy))
                             .foregroundStyle(.white)
                     }
                     .transition(.scale(scale: 0.4).combined(with: .opacity))
             } else {
-                Circle().stroke(YYColor.danger.opacity(0.18), lineWidth: 2.2 * 1.2)
+                Circle().stroke(YYColor.danger.opacity(0.18), lineWidth: 2.2 * k)
                 // Drains anticlockwise from the top, as Telegram's does.
                 Circle().trim(from: 1 - left, to: 1)
-                    .stroke(YYColor.danger, style: StrokeStyle(lineWidth: 2.2 * 1.2, lineCap: .round))
+                    .stroke(YYColor.danger, style: StrokeStyle(lineWidth: 2.2 * k, lineCap: .round))
                     .rotationEffect(.degrees(-90))
                 Text("\(max(1, Int((left * Library.undoSeconds).rounded(.up))))")
-                    .font(.yy(size: 11.5 * 1.2, weight: .bold).monospacedDigit())
+                    .font(.yy(size: 11.5 * k, weight: .bold).monospacedDigit())
                     .foregroundStyle(YYColor.danger)
                     .contentTransition(.numericText(countsDown: true))
                     .animation(.snappy(duration: 0.28), value: Int((left * Library.undoSeconds).rounded(.up)))
             }
         }
-        .padding(1.2)
+        .padding(k)
     }
 }
