@@ -67,6 +67,10 @@ struct MacShelfView: View {
                 .allowsHitTesting(sidebarShown)
                 .accessibilityHidden(!sidebarShown)
         }
+        // Over every page beside the sidebar (书架, 笔记, 生词本, 合集), so deleting a mark, a
+        // word or a collection shows its banner too, not only deleting a book.
+        .overlay(alignment: .top) { toast.padding(.leading, sidebarShown ? 228 : 0).padding(.horizontal, 16) }
+        .animation(.spring(duration: 0.4, bounce: 0.3), value: library.toast?.id)
         .ignoresSafeArea(.container, edges: .top)
         .onReceive(NotificationCenter.default.publisher(for: .toggleShelfSidebar)) { _ in toggleSidebar() }
         .onGeometryChange(for: Bool.self) { $0.size.width < 760 } action: { narrow in
@@ -675,8 +679,6 @@ struct MacShelfView: View {
         .background(YYColor.bg)
         .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { mainFrame = $0 }
         .overlay { menuLayer }
-        .overlay(alignment: .top) { toast }
-        .animation(.spring(duration: 0.4, bounce: 0.3), value: library.toast?.id)
         .overlay { dropHint }
         .onDrop(of: [.fileURL], delegate: ShelfDrop(hovering: $dropCount) { urls in
             Task { await library.importFiles(urls, into: currentCollection) }
