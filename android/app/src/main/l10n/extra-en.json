@@ -62,5 +62,6 @@
   "%lld 个词条": "%lld entries",
   "点词先查这里导入的词典，查不到再用语阅自带的英汉词典（不联网，变形词能找回原词）。长按一本可以移除。": "Tapped words are looked up in these dictionaries first, then in Yuyue's built-in English–Chinese dictionary (offline; inflected forms find their base word). Long-press one to remove it.",
   "完整释义": "Full Entry",
-  "收起释义": "Hide Entry"
+  "收起释义": "Hide Entry",
+  "第 %lld / %lld 句 · 本章还剩 %lld 分钟": "Sentence %1$lld of %2$lld · %3$lld min left in chapter"
 }

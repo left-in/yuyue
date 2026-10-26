@@ -195,6 +195,9 @@ class Player(private val context: Context, private val core: YuyueCore, val deta
     /** The sentence being read or paused on, for the 播放条 and the notification. */
     val line: String? get() = spot?.let { sentences(it.section).getOrNull(it.sentence) }
 
+    /** Sentences in the section being read, for the 播放条's `第 4 / 24 句`. */
+    val sentenceCount: Int get() = spot?.let { sentences(it.section).size } ?: 0
+
     val sectionProgress: Double get() = spot?.let { s -> sentences(s.section).size.takeIf { it > 0 }?.let { (s.sentence + 1.0) / it } } ?: 0.0
 
     val language: String get() = spot?.let { lang(it.section) } ?: detail.summary.language

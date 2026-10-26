@@ -397,7 +397,7 @@ extension ReaderModel {
     func show(_ toast: Library.Toast) {
         self.toast = toast
         Task { [weak self] in
-            try? await Task.sleep(for: .seconds(Library.toastSeconds))
+            try? await Task.sleep(for: .seconds(Library.lifetime(of: toast)))
             if self?.toast?.id == toast.id { self?.toast = nil }
         }
     }

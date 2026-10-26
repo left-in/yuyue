@@ -1,0 +1,245 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>语阅 · 删除后撤销 · U3 定稿</title>
+<style>
+/* A review sheet: the same 书架 in every phone, only the undo differs. Colours are the prototype's (v0.29). */
+:root{--bg:#F6F5F3;--card:#FFFFFF;--inset:#EFEEEB;--line:#E7E5E1;--t1:#2A2B2E;--t2:#85827F;--t3:#A8A49F;
+  --accent:#2B4C7E;--on-accent:#fff;--danger:#C2473A;--glass:rgba(255,255,255,.86);--sheet:#EEEDEA;--ink:#141517;--on-ink:#F4F3F0;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB",sans-serif;--serif:"Songti SC","Noto Serif SC",serif;
+  --sh:0 8px 24px rgba(0,0,0,.09),0 0 0 .5px var(--line)}
+:root[data-theme="dark"]{--bg:#101112;--card:#1B1C1E;--inset:#26272A;--line:#2C2D30;--t1:#EDEDEE;--t2:#9A9895;--t3:#75726E;
+  --accent:#8FA8C8;--on-accent:#101214;--danger:#E0685A;--glass:rgba(36,37,40,.84);--sheet:#0A0A0B;--ink:#F1F0EC;--on-ink:#141517;
+  --sh:0 10px 30px rgba(0,0,0,.5),0 0 0 .5px rgba(255,255,255,.08);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sheet);color:var(--t1);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 20px 90px;display:flex;flex-direction:column;gap:30px}
+h1{margin:0;font-family:var(--serif);font-size:30px;letter-spacing:.02em}
+.lead{margin:8px 0 0;color:var(--t2);line-height:1.8;font-size:14.5px;max-width:64em}
+.bar{position:sticky;top:12px;z-index:50;align-self:flex-start;display:flex;gap:6px;padding:5px;border-radius:14px;background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:var(--sh)}
+.bar button{font:inherit;font-size:13px;border:0;border-radius:10px;padding:7px 13px;background:none;color:var(--t2);cursor:pointer}
+.bar button.on{background:var(--card);color:var(--t1);font-weight:600;box-shadow:0 0 0 .5px var(--line)}
+.bar .sep{width:1px;background:var(--line);margin:4px 2px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:44px 28px}
+@media (max-width:1060px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.grid{grid-template-columns:minmax(0,1fr)}}
+figure{margin:0;display:flex;flex-direction:column;gap:14px;align-items:center}
+figcaption{width:100%;max-width:330px;font-size:13px;line-height:1.75;color:var(--t2)}
+figcaption b{display:flex;align-items:center;gap:8px;color:var(--t1);font-size:15.5px;margin-bottom:4px}
+figcaption b i{font-style:normal;font-size:11px;font-weight:600;padding:1px 8px;border-radius:9px;background:var(--inset);color:var(--t2)}
+figcaption ul{margin:6px 0 0;padding-left:1.1em}
+figcaption li{margin:2px 0}
+/* ---- the phone, drawn at the prototype's own pixels (a real point is 1.2 of these) ---- */
+.phone{position:relative;width:330px;aspect-ratio:9/19.5;border-radius:40px;overflow:hidden;background:var(--bg);box-shadow:0 0 0 1px var(--line),0 24px 60px rgba(51,46,41,.1);font-size:11px;color:var(--t1);isolation:isolate}
+.st{display:flex;justify-content:space-between;padding:14px 26px 0;font-size:12px;font-weight:600;height:40px}
+.st i{width:22px;height:11px;border-radius:3px;border:1px solid currentColor;opacity:.8;position:relative}
+.st i::after{content:"";position:absolute;inset:1.5px;right:4px;background:currentColor;border-radius:1px}
+.ttl{text-align:center;font-size:13px;font-weight:600;padding:6px 0 10px}
+.chips{display:flex;gap:6px;padding:0 16px 12px;align-items:center}
+.chips span{height:26px;padding:0 11px;border-radius:13px;display:grid;place-items:center;font-size:11px;color:var(--t2);background:var(--card);box-shadow:0 0 0 .5px var(--line)}
+.chips span.on{background:var(--accent);color:var(--on-accent);box-shadow:none;font-weight:600}
+.chips em{margin-left:auto;font-style:normal;font-size:10.5px;color:var(--t2)}
+.books{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 14px;padding:0 16px}
+.bk{display:flex;flex-direction:column;gap:2px;min-width:0;position:relative}
+.cv{display:block;width:100%;aspect-ratio:2/3;border-radius:3px;overflow:hidden;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.12),0 4px 10px rgba(30,30,30,.13)}
+.cv svg{display:block;width:100%;height:100%}
+.bk b{font-size:11px;font-weight:600;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk small{font-size:10px;color:var(--t3)}
+/* the iPhone glass tab bar */
+.tabs{position:absolute;left:14px;right:14px;bottom:20px;height:60px;display:flex;gap:8px;z-index:5}
+.tabs .tb{flex:1;display:grid;grid-template-columns:repeat(3,1fr);padding:4px;border-radius:30px;background:var(--glass);-webkit-backdrop-filter:blur(20px) saturate(1.6);backdrop-filter:blur(20px) saturate(1.6);box-shadow:var(--sh)}
+.tabs .tb>span{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:26px;font-size:10px;font-weight:500}
+.tabs .tb>span.on{background:color-mix(in srgb,var(--t1) 7%,transparent);color:var(--accent);font-weight:600}
+.tabs .sq{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:var(--sh)}
+.tabs .tb>span>svg,.tabs .sq>svg:not(.rg){width:24px;height:24px}
+.ico{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.mini{width:22px;height:33px;border-radius:2.5px;overflow:hidden;flex:none;box-shadow:0 0 0 .5px rgba(0,0,0,.15),0 2px 5px rgba(0,0,0,.18)}
+.mini svg{display:block;width:100%;height:100%}
+/* countdown: every option that has one runs it for the app's 8 seconds */
+@keyframes drain{from{stroke-dashoffset:0}to{stroke-dashoffset:var(--len)}}
+@keyframes shrink{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+@keyframes up{from{transform:translateY(22px) scale(.96);opacity:0}}
+@keyframes down{from{transform:translateY(-18px) scale(.96);opacity:0}}
+@keyframes fade{from{opacity:0}}
+.go .anim-up{animation:up .42s cubic-bezier(.2,.9,.25,1.15) both}
+.go .anim-down{animation:down .42s cubic-bezier(.2,.9,.25,1.15) both}
+.go .ring circle.r{animation:drain 8s linear .4s both}
+.go .line i{animation:shrink 8s linear .4s both}
+.line{position:absolute;height:2px;border-radius:1px;overflow:hidden;background:color-mix(in srgb,currentColor 12%,transparent)}
+.line i{display:block;height:100%;background:currentColor;transform-origin:left}
+
+/* ---- 定稿 · U3: red ring counting down, ends in a red tick ---- */
+.rows{display:flex;flex-direction:column;gap:28px}
+.row{display:grid;grid-template-columns:330px minmax(0,1fr);gap:40px;align-items:start;background:var(--card);border-radius:26px;padding:28px;box-shadow:0 0 0 .5px var(--line)}
+@media (max-width:1060px){.row{grid-template-columns:minmax(0,1fr);justify-items:center}}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0;width:100%}
+.cap h2{margin:0 0 8px;font-size:19px}
+.cap p{margin:0;font-size:13.5px;line-height:1.85;color:var(--t2)}
+.cap p+p{margin-top:4px}
+.zoom{position:relative;height:230px;border-radius:20px;background:var(--bg);box-shadow:inset 0 0 0 .5px var(--line);display:grid;place-items:center;overflow:hidden}
+.zoom .z{zoom:2.2;position:relative}
+.zoom::after{content:"放大 2.2 倍 · 会动";position:absolute;right:12px;top:10px;font-size:10.5px;color:var(--t3);background:var(--card);padding:2px 8px;border-radius:8px;box-shadow:0 0 0 .5px var(--line)}
+.steps{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.steps .s{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:78px;padding:10px 22px;border-radius:16px;background:var(--bg);box-shadow:inset 0 0 0 .5px var(--line)}
+.steps .s small{font-size:12px;color:var(--t2);line-height:1.5}
+.steps .s small b{display:block;color:var(--t1);font-size:13px}
+.steps .s .z{zoom:1.5;position:relative}
+.spec{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.spec div{padding:10px 12px;border-radius:12px;background:var(--bg);box-shadow:inset 0 0 0 .5px var(--line);font-size:11.5px;color:var(--t2);line-height:1.55}
+.spec b{display:block;color:var(--t1);font-size:12.5px}
+
+/* the pill: 40 tall now (was 34), type 13 (was 11.5) */
+.tg{display:flex;align-items:center;height:40px;padding:0 6px 0 8px;border-radius:20px;background:var(--card);box-shadow:var(--sh);font-size:13px;white-space:nowrap;color:var(--t1)}
+.tg .tx{padding:0 4px 0 9px}
+.tg .u{display:grid;place-items:center;height:30px;max-width:64px;padding:0 12px;border-radius:15px;overflow:hidden;color:var(--accent);font-weight:600;transition:max-width .32s cubic-bezier(.4,0,.2,1),padding .32s cubic-bezier(.4,0,.2,1),opacity .2s ease}
+.tg.done .u{max-width:0;padding:0;opacity:0}
+.tg.done{padding-right:10px;transition:padding .32s cubic-bezier(.4,0,.2,1)}
+/* the ring: red, its seconds inside; at 0 it fills into the tick */
+.tc{position:relative;width:24px;height:24px;flex:none;display:grid;place-items:center;color:var(--danger)}
+.tc svg.c{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg) scaleY(-1);transition:opacity .18s ease}
+.tc circle{fill:none;stroke-width:2.2;stroke-linecap:round}
+.tc circle.bg{stroke:color-mix(in srgb,currentColor 16%,transparent)}
+.tc circle.r{stroke:currentColor;stroke-dasharray:100;stroke-dashoffset:var(--off,0)}
+.tc .num{position:relative;height:13px;overflow:hidden;font-size:11px;font-weight:700;line-height:13px;font-variant-numeric:tabular-nums;transition:opacity .15s ease}
+.tc .num b{display:block;font-weight:700}
+.tc .num b.in{animation:numin .28s cubic-bezier(.2,.8,.3,1) both}
+@keyframes numin{from{transform:translateY(-100%);opacity:0}}
+.tc .tick{position:absolute;inset:0;border-radius:50%;background:var(--danger);display:grid;place-items:center;transform:scale(.4);opacity:0;transition:transform .34s cubic-bezier(.3,1.6,.5,1),opacity .15s ease}
+.tc .tick svg{width:13px;height:13px;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:20;stroke-dashoffset:20;transition:stroke-dashoffset .3s ease .12s}
+.tg.done .tc svg.c,.tg.done .tc .num{opacity:0}
+.tg.done .tc .tick{transform:none;opacity:1}
+.tg.done .tc .tick svg{stroke-dashoffset:0}
+/* in the phone */
+.at{position:absolute;left:50%;top:318px;z-index:9;transform:translateX(-50%)}
+.at.show{animation:pillin .38s cubic-bezier(.2,.9,.3,1.15) both}
+@keyframes pillin{from{opacity:0;transform:translate(-50%,-6px) scale(.94)}}
+.at.hide{animation:pillout .3s ease both}
+@keyframes pillout{to{opacity:0;transform:translate(-50%,4px) scale(.97)}}
+.old{opacity:.55}
+
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><symbol id="cvA" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#2F3A33"/>
+      <rect x="9" y="9" width="102" height="162" fill="none" stroke="#C8BFA6" stroke-width=".7" opacity=".7"/>
+      <text x="86" y="34" font-size="24" fill="#F1EADA" font-family="Noto Serif SC,Songti SC,serif" font-weight="600" writing-mode="tb" letter-spacing="8">背影</text>
+      <text x="62" y="36" font-size="8" fill="#C8BFA6" font-family="Noto Serif SC,Songti SC,serif" writing-mode="tb" letter-spacing="3">朱自清</text>
+      <rect x="20" y="146" width="12" height="12" fill="#B5473A"/>
+    </symbol>
+<symbol id="cvB" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#22324A"/>
+      <text x="14" y="46" font-size="25" fill="#F4F1EA" font-family="Noto Serif SC,Songti SC,serif" font-weight="700">MOBY</text>
+      <text x="14" y="72" font-size="25" fill="#F4F1EA" font-family="Noto Serif SC,Songti SC,serif" font-weight="700">DICK</text>
+      <text x="14" y="88" font-size="6.5" fill="#8FA8C8" font-family="PingFang SC,sans-serif" letter-spacing="1.5">HERMAN MELVILLE</text>
+      <g fill="none" stroke="#8FA8C8" stroke-width="1.2" opacity=".8"><path d="M0 140q15-8 30 0t30 0 30 0 30 0"/><path d="M0 152q15-8 30 0t30 0 30 0 30 0" opacity=".6"/><path d="M0 164q15-8 30 0t30 0 30 0 30 0" opacity=".35"/></g>
+    </symbol>
+<symbol id="cvD" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#8C2F26"/>
+      <path d="M22 48h76M22 92h76" stroke="#E2C68C" stroke-width=".8"/>
+      <text x="60" y="78" font-size="21" fill="#F3E3C3" font-family="Noto Serif SC,Songti SC,serif" font-weight="700" text-anchor="middle" letter-spacing="3">红楼梦</text>
+      <text x="60" y="110" font-size="7.5" fill="#E2C68C" font-family="Noto Serif SC,Songti SC,serif" text-anchor="middle" letter-spacing="2">曹雪芹</text>
+    </symbol>
+<symbol id="cvE" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#111418"/>
+      <circle cx="60" cy="66" r="34" fill="none" stroke="#5B6470" stroke-width=".8"/>
+      <circle cx="44" cy="46" r="5" fill="#F2F2F2"/><circle cx="88" cy="74" r="3.5" fill="#E8B04B"/><circle cx="52" cy="98" r="2.5" fill="#8FA8C8"/>
+      <text x="14" y="150" font-size="24" fill="#F2F2F2" font-family="Noto Serif SC,Songti SC,serif" font-weight="700">三体</text>
+      <text x="14" y="164" font-size="7" fill="#8C939C" font-family="Noto Serif SC,Songti SC,serif">刘慈欣</text>
+    </symbol>
+<symbol id="cvG" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#B33A2E"/>
+      <rect x="30" y="40" width="60" height="30" fill="#141414"/>
+      <text x="60" y="61" font-size="15" fill="#B33A2E" font-family="Noto Serif SC,Songti SC,serif" font-weight="700" text-anchor="middle" letter-spacing="6">呐喊</text>
+      <text x="60" y="84" font-size="7" fill="#141414" font-family="Noto Serif SC,Songti SC,serif" text-anchor="middle" letter-spacing="3">鲁迅</text>
+    </symbol>
+<symbol id="cvH" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#D9A55B"/>
+      <circle cx="60" cy="116" r="30" fill="none" stroke="#3A2A18" stroke-width="1.4"/>
+      <path d="M60 86v60M30 116h60M39 95l42 42M81 95l-42 42" stroke="#3A2A18" stroke-width=".7" opacity=".55"/>
+      <text x="60" y="46" font-size="19" fill="#2B1F12" font-family="Noto Serif SC,Songti SC,serif" font-weight="700" text-anchor="middle" letter-spacing="3">骆驼祥子</text>
+      <text x="60" y="62" font-size="7" fill="#5A4426" font-family="Noto Serif SC,serif" text-anchor="middle" letter-spacing="2">老舍</text>
+    </symbol>
+<symbol id="cvI" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#DCE3E1"/>
+      <path d="M0 132q22-14 44-4t40-2 36 4V180H0z" fill="#9FB3AE" opacity=".55"/>
+      <path d="M0 146q26-10 50-2t42-2 28 2V180H0z" fill="#6F8A84" opacity=".5"/>
+      <circle cx="88" cy="40" r="11" fill="#C9553F" opacity=".85"/>
+      <text x="36" y="30" font-size="17" fill="#22302C" font-family="Noto Serif SC,Songti SC,serif" font-weight="600" writing-mode="tb" letter-spacing="5">浮生六记</text>
+      <text x="18" y="32" font-size="7" fill="#4E5F5A" font-family="Noto Serif SC,serif" writing-mode="tb" letter-spacing="2">沈复</text>
+    </symbol>
+<symbol id="cvJ" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#141B2D"/>
+      <g stroke="#D4AF6A" stroke-width=".8" fill="none"><path d="M60 20v40M44 26l16 34 16-34M30 40l30 20 30-20"/><path d="M14 150h92M22 156h76" opacity=".7"/></g>
+      <text x="60" y="92" font-size="9" fill="#D4AF6A" font-family="Georgia,serif" text-anchor="middle" letter-spacing="3">THE GREAT</text>
+      <text x="60" y="114" font-size="20" fill="#F1E3C2" font-family="Georgia,serif" text-anchor="middle" letter-spacing="2">GATSBY</text>
+      <text x="60" y="132" font-size="6" fill="#B89A5E" font-family="Georgia,serif" text-anchor="middle" letter-spacing="1.5">F. SCOTT FITZGERALD</text>
+    </symbol>
+<symbol id="cvM" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#E3E6D6"/>
+      <path d="M96 150q-18-40-10-96" stroke="#5E6B4A" stroke-width="1.2" fill="none"/>
+      <g fill="#D97A6C"><circle cx="86" cy="62" r="5"/><circle cx="96" cy="82" r="4"/><circle cx="84" cy="100" r="4.5"/></g>
+      <g fill="#F2E3B3"><circle cx="86" cy="62" r="1.6"/><circle cx="96" cy="82" r="1.3"/><circle cx="84" cy="100" r="1.4"/></g>
+      <text x="36" y="30" font-size="16" fill="#2E3324" font-family="Noto Serif SC,Songti SC,serif" font-weight="600" writing-mode="tb" letter-spacing="4">朝花夕拾</text>
+      <text x="18" y="32" font-size="7" fill="#5E6B4A" font-family="Noto Serif SC,serif" writing-mode="tb" letter-spacing="2">鲁迅</text>
+    </symbol>
+<symbol id="cvC" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#E7DFCC"/>
+      <circle cx="60" cy="58" r="24" fill="none" stroke="#A8352B" stroke-width="1.2"/>
+      <text x="66" y="98" font-size="15" fill="#2A2721" font-family="Noto Serif SC,Songti SC,serif" font-weight="600" writing-mode="tb" letter-spacing="4">人间词话</text>
+      <text x="44" y="100" font-size="7" fill="#7A7466" font-family="Noto Serif SC,Songti SC,serif" writing-mode="tb" letter-spacing="2">王国维</text>
+    </symbol>
+<symbol id="i-trash" viewBox="0 0 16 16"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.2a1 1 0 0 0 1 .8h3.8a1 1 0 0 0 1-.8l.6-8.2"/></symbol>
+<symbol id="i-undo" viewBox="0 0 16 16"><path d="M5.5 3.5 2.5 6.5l3 3M2.5 6.5h7a3.5 3.5 0 0 1 0 7H7"/></symbol>
+<symbol id="i-check" viewBox="0 0 16 16"><path d="m3.5 8.5 3 3 6-6.5"/></symbol>
+<symbol id="i-x" viewBox="0 0 16 16"><path d="m4 4 8 8M12 4l-8 8"/></symbol>
+<symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+<symbol id="i-more" viewBox="0 0 16 16"><circle cx="3.5" cy="8" r=".6"/><circle cx="8" cy="8" r=".6"/><circle cx="12.5" cy="8" r=".6"/></symbol>
+<symbol id="i-down" viewBox="0 0 16 16"><path d="M3.5 6 8 10.5 12.5 6"/></symbol>
+<symbol id="i-updown" viewBox="0 0 16 16"><path d="M5 6l3-3 3 3M5 10l3 3 3-3"/></symbol>
+<symbol id="tab-shelf-f" viewBox="0 0 24 24"><g fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2.75" y="4.25" width="4.5" height="15.5" rx="1.2"/><rect x="8.75" y="6.75" width="4.5" height="13" rx="1.2"/><path d="M17.67 19.75 21.73 18.66 18.31 5.91 14.25 7Z"/></g></symbol>
+<symbol id="tab-notes" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4.75" y="3.75" width="14.5" height="16.5" rx="2.6"/><path d="M8.5 8.75h7M8.5 12.25h7M8.5 15.75h4.5"/></g></symbol>
+<symbol id="tab-me" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.25" r="3.75"/><path d="M4.75 20.25c.7-3.9 3.5-6.25 7.25-6.25s6.55 2.35 7.25 6.25"/></g></symbol>
+<symbol id="tab-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.75" cy="10.75" r="6.25"/><path d="M15.5 15.5 20.25 20.25"/></g></symbol>
+<symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.3"/></symbol>
+<symbol id="i-open" viewBox="0 0 16 16"><path d="M1.8 4.2c2.3-.9 4.4-.8 6.2.6 1.8-1.4 3.9-1.5 6.2-.6v8.4c-2.3-.9-4.4-.8-6.2.6-1.8-1.4-3.9-1.5-6.2-.6zM8 4.8v8.4"/></symbol>
+<symbol id="i-ear" viewBox="0 0 16 16"><path d="M3 10V8a5 5 0 0 1 10 0v2"/><rect x="2.5" y="9.5" width="3" height="4" rx="1"/><rect x="10.5" y="9.5" width="3" height="4" rx="1"/></symbol>
+<symbol id="i-pen" viewBox="0 0 16 16"><path d="M3 13.5 3.6 11 11 3.6a1.4 1.4 0 0 1 2 2L5.6 13z"/></symbol>
+<symbol id="i-shelf" viewBox="0 0 16 16"><rect x="2.5" y="6.5" width="11" height="7" rx="1.5"/><path d="M4.2 4.2h7.6M5.8 2h4.4"/></symbol></svg>
+<div class="wrap">
+<div><h1>删除后撤销 · U3 定稿</h1>
+<p class="lead">照你说的改了三处：圈和数字用删除的红色；数到 0 圈收成一颗红底白勾，就是你最早圈中那颗；整颗胶囊大了一号。“撤销”还是主题色。数完能不能再撤销？我按“不能了”画：勾出来的同时“撤销”收起，胶囊只剩红勾和一行字，约 1 秒后淡掉。之后还能去“最近删除”放回。</p></div>
+<div class="bar"><button class="on" data-t="light">浅色</button><button data-t="dark">深色</button><span class="sep"></span><button id="replay">再放一遍</button></div>
+<div class="rows"><section class="row"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books"><div class="bk"><span class="cv"><svg><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="at"><div class="tg live"><span class="tc" style="--off:0"><svg class="c" viewBox="0 0 24 24"><circle class="bg" cx="12" cy="12" r="10"/><circle class="r" pathLength="100" cx="12" cy="12" r="10"/></svg><span class="num"><b>5</b></span><span class="tick"><svg viewBox="0 0 14 14"><path pathLength="20" d="M3.2 7.3 5.9 9.9 10.8 4.4"/></svg></span></span><span class="tx">已删除《三体》</span><span class="u">撤销</span></div></div><div class="tabs"><div class="tb"><span class="on"><svg><use href="#tab-shelf-f"/></svg>书架</span><span><svg><use href="#tab-notes"/></svg>笔记</span><span><svg><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg><use href="#tab-search"/></svg></span></div></div>
+<div class="side"><div class="cap"><h2>U3 · 圈是红的，数完是红勾</h2>
+<p>在书架上删一本书，原地出现这颗胶囊：左边红圈里数 5、4、3、2、1，圈一点点退掉；中间“已删除《三体》”；右边主题色“撤销”。</p>
+<p>红色管“删掉了”，蓝色管“能反悔”。数完红圈收成红勾，告诉你这次删除已经定了。</p></div>
+<div class="zoom"><div class="z"><div class="tg live"><span class="tc" style="--off:0"><svg class="c" viewBox="0 0 24 24"><circle class="bg" cx="12" cy="12" r="10"/><circle class="r" pathLength="100" cx="12" cy="12" r="10"/></svg><span class="num"><b>5</b></span><span class="tick"><svg viewBox="0 0 14 14"><path pathLength="20" d="M3.2 7.3 5.9 9.9 10.8 4.4"/></svg></span></span><span class="tx">已删除《三体》</span><span class="u">撤销</span></div></div></div>
+<div class="steps"><div class="s"><small><b>刚删完</b>红圈满的，里面 5</small><div class="z"><div class="tg"><span class="tc" style="--off:0"><svg class="c" viewBox="0 0 24 24"><circle class="bg" cx="12" cy="12" r="10"/><circle class="r" pathLength="100" cx="12" cy="12" r="10"/></svg><span class="num"><b>5</b></span><span class="tick"><svg viewBox="0 0 14 14"><path pathLength="20" d="M3.2 7.3 5.9 9.9 10.8 4.4"/></svg></span></span><span class="tx">已删除《三体》</span><span class="u">撤销</span></div></div></div><div class="s"><small><b>还剩 3 秒</b>圈退了一小半，数字往下跳</small><div class="z"><div class="tg"><span class="tc" style="--off:40"><svg class="c" viewBox="0 0 24 24"><circle class="bg" cx="12" cy="12" r="10"/><circle class="r" pathLength="100" cx="12" cy="12" r="10"/></svg><span class="num"><b>3</b></span><span class="tick"><svg viewBox="0 0 14 14"><path pathLength="20" d="M3.2 7.3 5.9 9.9 10.8 4.4"/></svg></span></span><span class="tx">已删除《三体》</span><span class="u">撤销</span></div></div></div><div class="s"><small><b>最后 1 秒</b>只剩一小截</small><div class="z"><div class="tg"><span class="tc" style="--off:80"><svg class="c" viewBox="0 0 24 24"><circle class="bg" cx="12" cy="12" r="10"/><circle class="r" pathLength="100" cx="12" cy="12" r="10"/></svg><span class="num"><b>1</b></span><span class="tick"><svg viewBox="0 0 14 14"><path pathLength="20" d="M3.2 7.3 5.9 9.9 10.8 4.4"/></svg></span></span><span class="tx">已删除《三体》</span><span class="u">撤销</span></div></div></div><div class="s"><small><b>数完</b>圈收成红底白勾，“撤销”收起，约 1 秒后整颗淡掉</small><div class="z"><div class="tg done"><span class="tc" style="--off:100"><svg class="c" viewBox="0 0 24 24"><circle class="bg" cx="12" cy="12" r="10"/><circle class="r" pathLength="100" cx="12" cy="12" r="10"/></svg><span class="num"><b>5</b></span><span class="tick"><svg viewBox="0 0 14 14"><path pathLength="20" d="M3.2 7.3 5.9 9.9 10.8 4.4"/></svg></span></span><span class="tx">已删除《三体》</span><span class="u">撤销</span></div></div></div></div>
+<div class="spec"><div><b>胶囊</b>高 34 → 40，圆角跟着变；白底、柔和阴影不变</div><div><b>字</b>11.5 → 13，常规字重</div><div><b>红圈</b>22 → 24，线 2.2，数字 11 粗体；红色是删除红</div><div><b>撤销</b>主题色、粗一点，点按区域 30 高</div></div></div></section></div>
+<div class="note"><b>还要定的一件小事：</b>Telegram 是 5 秒，图里也按 5 秒画；App 里现在是 8 秒。我建议改成 5 秒，和 Telegram 一样。点“撤销”书回原位，笔记、划线、进度原样；Mac 上 ⌘Z 也能撤销；读屏念“已删除《三体》，撤销，还剩 5 秒”。</div>
+</div>
+<script>
+const root=document.documentElement;if(location.search.includes('dark')){root.dataset.theme='dark'}
+const sync=()=>document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x.dataset.t==(root.dataset.theme||'light')));sync();
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{root.dataset.theme=b.dataset.t;sync()});
+const D=5000;let t0=0,raf=0,tm=[];
+function frame(now){
+  const e=Math.min(D,now-t0),left=Math.max(1,Math.ceil((D-e)/1000));
+  document.querySelectorAll('.tg.live').forEach(p=>{
+    const tc=p.querySelector('.tc');tc.style.setProperty('--off',(e/D*100).toFixed(2));
+    const b=tc.querySelector('.num b');if(b.textContent!==String(left)){b.textContent=left;b.classList.remove('in');void b.offsetWidth;b.classList.add('in')}
+  });
+  if(e<D){raf=requestAnimationFrame(frame);return}
+  document.querySelectorAll('.tg.live').forEach(p=>p.classList.add('done'));
+  tm.push(setTimeout(()=>document.querySelectorAll('.at').forEach(a=>a.classList.add('hide')),1100));
+  tm.push(setTimeout(play,2400));
+}
+function play(){
+  cancelAnimationFrame(raf);tm.forEach(clearTimeout);tm=[];
+  document.querySelectorAll('.tg.live').forEach(p=>{p.classList.remove('done');p.querySelector('.num b').textContent='5'});
+  document.querySelectorAll('.at').forEach(a=>{a.classList.remove('hide','show');void a.offsetWidth;a.classList.add('show')});
+  t0=performance.now();raf=requestAnimationFrame(frame);
+}
+document.getElementById('replay').onclick=play;
+if(location.search.includes('done')){document.querySelectorAll('.tg.live').forEach(p=>p.classList.add('done'))}
+else if(location.search.includes('still')){document.querySelectorAll('.tg.live .tc').forEach(t=>t.style.setProperty('--off',40));document.querySelectorAll('.tg.live .num b').forEach(b=>b.textContent='3')}
+else play();
+</script>
+</body></html>

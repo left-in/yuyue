@@ -10,6 +10,15 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
+import kotlin.math.roundToInt
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -163,8 +173,7 @@ fun Root(library: Library) {
             }
         }
         Column(Modifier.align(Alignment.BottomCenter).fillMaxWidth().onSizeChanged { barHeight = with(density) { it.height.toDp() } }) {
-            NowPlayingBar(library)
-            TabBar(tab, haze) { tab = it; pages.clear() }
+            TabBar(tab, haze, { NowPlayingBar(library) }) { tab = it; pages.clear() }
         }
         library.toast?.let {
             app.yuyue.shelf.UndoToast(it, { library.undo() }, Modifier.align(Alignment.TopCenter).windowInsetsPadding(WindowInsets.statusBars).padding(horizontal = 16.dp, vertical = 6.dp))
@@ -214,9 +223,10 @@ val LocalTabBarHeight = staticCompositionLocalOf { 0.dp }
 
 /** The tab bar flush with the bottom edge, the prototype's Android 底栏 (`.v-tabs`): paper colour
  *  at 88% over a blur of the page, a hairline on top; four tabs with icon and word, the one that
- *  is on filled and in the theme's fill colour. */
+ *  is on filled and in the theme's fill colour (墨蓝 by default, ink under 墨黑). While a book is read aloud the 播放条 sits inside it, on
+ *  the same blurred paper, above the tabs. */
 @Composable
-private fun TabBar(tab: Tab, haze: HazeState, select: (Tab) -> Unit) {
+private fun TabBar(tab: Tab, haze: HazeState, playing: @Composable () -> Unit, select: (Tab) -> Unit) {
     val paper = YY.c.bg
     val style = remember(paper) {
         HazeBlurStyle {
@@ -226,9 +236,12 @@ private fun TabBar(tab: Tab, haze: HazeState, select: (Tab) -> Unit) {
         }
     }
     Column(Modifier.fillMaxWidth().hazeBlur(HazeInput.Sources(haze), style)) {
-        Box(Modifier.fillMaxWidth().height(0.5.dp).background(YY.c.line))
+        Box(Modifier.fillMaxWidth().height(YY.s(0.5f)).background(YY.c.line))
+        playing()
+        // The prototype leaves 35px under the tabs, the system's handle included.
+        val inset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
         Row(
-            Modifier.fillMaxWidth().windowInsetsPadding(WindowInsets.navigationBars).padding(start = 4.dp, end = 4.dp, top = 5.dp, bottom = 7.dp),
+            Modifier.fillMaxWidth().padding(start = YY.s(4), end = YY.s(4), top = YY.s(5), bottom = maxOf(YY.s(35), inset + 7.dp)),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             TabItem(TabIcons.shelf, TabIcons.shelfOn, t("书架"), tab == Tab.Shelf) { select(Tab.Shelf) }
@@ -243,13 +256,14 @@ private fun TabBar(tab: Tab, haze: HazeState, select: (Tab) -> Unit) {
 private fun RowScope.TabItem(icon: ImageVector, iconOn: ImageVector, title: String, on: Boolean, onClick: () -> Unit) {
     val color = if (on) YY.tint.fill else YY.c.t2
     Column(
-        Modifier.weight(1f).height(44.dp)
+        Modifier.weight(1f).height(YY.s(44))
             .selectable(on, interactionSource = remember { MutableInteractionSource() }, indication = null, role = androidx.compose.ui.semantics.Role.Tab, onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+        // 2px in the prototype; Android's line box for the word already adds about 1.6 of it.
+        verticalArrangement = Arrangement.spacedBy(YY.s(0.4f), Alignment.CenterVertically),
     ) {
-        Icon(if (on) iconOn else icon, null, tint = color, modifier = Modifier.size(24.dp))
-        Text(title, fontSize = 10.sp, lineHeight = 12.sp, fontWeight = if (on) FontWeight.SemiBold else FontWeight.Medium, color = if (on) YY.tint.fill else YY.c.t2)
+        Icon(if (on) iconOn else icon, null, tint = color, modifier = Modifier.size(YY.s(24)))
+        Text(title, style = YY.font(10f, if (on) FontWeight.SemiBold else FontWeight.Medium).copy(lineHeight = YY.sp(12f)), color = color)
     }
 }
 
@@ -260,8 +274,9 @@ fun Placeholder(title: String) {
     }
 }
 
-/** Cover, the sentence being read, ‹ ▶ ›, and a thin line for the chapter underneath, while a
- *  book is read aloud with its pages closed. A tap anywhere else goes back to the page. */
+/** The prototype's 播放条 (`.v-acc`) while a book is read aloud with its pages closed: a small card
+ *  over the tab bar with the cover, `背影 · 第一章` and `第 4 / 24 句 · 本章还剩 7 分钟`, ‹ ▶ ›,
+ *  and a thin line for the chapter along its bottom. A tap anywhere else goes back to the page. */
 @Composable
 private fun NowPlayingBar(library: Library) {
     val model = library.nowPlaying as? app.yuyue.reader.ReaderModel ?: return
@@ -272,24 +287,45 @@ private fun NowPlayingBar(library: Library) {
         return
     }
     val tint = YY.tint
-    Box(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
+    val spot = player.spot
+    val chapter = spot?.let { s -> model.detail?.let { app.yuyue.reader.ReaderModel.chapterTitle(it, s.section) } }
+    val n = player.sentenceCount
+    val note = if (spot != null && n > 0) {
+        val left = maxOf(1, (model.minutes(spot.section).toDouble() * (n - spot.sentence) / n).roundToInt())
+        t("第 %lld / %lld 句 · 本章还剩 %lld 分钟", minOf(spot.sentence + 1, n), n, left)
+    } else null
+    val shape = RoundedCornerShape(YY.s(14))
+    Box(
+        Modifier.fillMaxWidth().padding(start = YY.s(8), end = YY.s(8), top = YY.s(8), bottom = YY.s(6)).height(YY.s(54))
+            .shadow(if (YY.dark) 0.dp else 6.dp, shape, ambientColor = Color(0x14000000), spotColor = Color(0x14000000))
+            .clip(shape).background(YY.c.card.copy(alpha = 0.92f)).border(0.5.dp, YY.c.line, shape)
+            .clickable(onClickLabel = t("回到正在读的页"), role = androidx.compose.ui.semantics.Role.Button) { library.presented = book.id },
+    ) {
         Row(
-            Modifier.fillMaxWidth().background(YY.c.card, androidx.compose.foundation.shape.CircleShape)
-                .clickable(onClickLabel = t("回到正在读的页"), role = androidx.compose.ui.semantics.Role.Button) { library.presented = book.id }.padding(start = 10.dp, end = 8.dp, top = 7.dp, bottom = 7.dp),
-            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
+            Modifier.fillMaxSize().padding(start = YY.s(9), end = YY.s(6)),
+            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(YY.s(2)),
         ) {
-            app.yuyue.shelf.BookCover(book, Modifier.size(width = 30.dp, height = 45.dp))
+            app.yuyue.shelf.BookCover(book, Modifier.padding(end = YY.s(6)).size(width = YY.s(24), height = YY.s(36)))
             Column(Modifier.weight(1f)) {
-                Text(player.line ?: book.title, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = YY.c.t1, maxLines = 1)
-                Text(book.title, fontSize = 11.sp, color = YY.c.t3, maxLines = 1)
+                Text(if (chapter != null) t("%@ · %@", book.title, chapter) else book.title, style = YY.font(11.5f, FontWeight.SemiBold), color = YY.c.t1, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(note ?: player.line ?: "", style = YY.font(10f).copy(fontFeatureSettings = "tnum"), color = YY.c.t2, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
-            Icon(Icons.previous, t("上一句"), tint = YY.c.t1, modifier = Modifier.size(34.dp).clickable { player.skip(false) }.padding(6.dp))
+            Box(Modifier.size(YY.s(32)).clip(CircleShape).clickable(onClickLabel = t("上一句")) { player.skip(false) }, contentAlignment = Alignment.Center) {
+                Icon(Icons.chevronLeft, t("上一句"), tint = YY.c.t1, modifier = Modifier.size(YY.s(20)))
+            }
             val playing = player.state == app.yuyue.speech.Player.State.Playing || player.state == app.yuyue.speech.Player.State.Loading
-            Icon(if (playing) Icons.pause else Icons.play, if (playing) t("暂停") else t("接着听"), tint = YY.c.t1, modifier = Modifier.size(38.dp).clickable { player.toggle() }.padding(5.dp))
-            Icon(Icons.next, t("下一句"), tint = YY.c.t1, modifier = Modifier.size(34.dp).clickable { player.skip(true) }.padding(6.dp))
+            val label = if (playing) t("暂停") else t("接着听")
+            Box(Modifier.size(YY.s(36)).clip(CircleShape).background(tint.black).clickable(onClickLabel = label) { player.toggle() }, contentAlignment = Alignment.Center) {
+                Icon(if (playing) Icons.pause else Icons.play, label, tint = tint.onBlack, modifier = Modifier.size(YY.s(17)))
+            }
+            Box(Modifier.size(YY.s(32)).clip(CircleShape).clickable(onClickLabel = t("下一句")) { player.skip(true) }, contentAlignment = Alignment.Center) {
+                Icon(Icons.chevronRight, t("下一句"), tint = YY.c.t1, modifier = Modifier.size(YY.s(20)))
+            }
         }
-        androidx.compose.foundation.layout.BoxWithConstraints(Modifier.align(Alignment.BottomStart).padding(horizontal = 22.dp).fillMaxWidth().height(2.dp)) {
-            Box(Modifier.width(maxWidth * player.sectionProgress.toFloat()).height(2.dp).background(tint.accent, androidx.compose.foundation.shape.CircleShape))
+        // How far into this chapter.
+        androidx.compose.foundation.layout.BoxWithConstraints(Modifier.align(Alignment.BottomStart).padding(horizontal = YY.s(12)).fillMaxWidth().height(2.dp)) {
+            Box(Modifier.fillMaxSize().clip(CircleShape).background(YY.c.line))
+            Box(Modifier.width(maxWidth * player.sectionProgress.toFloat()).fillMaxHeight().clip(CircleShape).background(tint.fill))
         }
     }
 }

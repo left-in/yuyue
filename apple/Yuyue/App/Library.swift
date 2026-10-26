@@ -233,8 +233,12 @@ final class Library {
         var undo: (() -> Void)?
     }
 
-    /// How long a note stays.
-    static let toastSeconds = 8.0
+    /// How long a plain note stays.
+    static let toastSeconds = 3.0
+    /// The seconds a deletion can be undone, counted down on its banner (Telegram's 5).
+    static let undoSeconds = 5.0
+    /// Until a note goes: a banner counts its seconds, shows the red tick a moment, then rises away.
+    static func lifetime(of toast: Toast) -> Double { toast.undo == nil ? toastSeconds : undoSeconds + 1.2 }
 
     /// A note without undo.
     func note(icon: String, _ title: String, _ detail: String) {
@@ -244,7 +248,7 @@ final class Library {
     private func show(_ toast: Toast) {
         self.toast = toast
         Task { [weak self] in
-            try? await Task.sleep(for: .seconds(Self.toastSeconds))
+            try? await Task.sleep(for: .seconds(Self.lifetime(of: toast)))
             if self?.toast?.id == toast.id { self?.toast = nil }
         }
     }

@@ -1,0 +1,287 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>语阅 · 删除后撤销 · 第三轮</title>
+<style>
+/* A review sheet: the same 书架 in every phone, only the undo differs. Colours are the prototype's (v0.29). */
+:root{--bg:#F6F5F3;--card:#FFFFFF;--inset:#EFEEEB;--line:#E7E5E1;--t1:#2A2B2E;--t2:#85827F;--t3:#A8A49F;
+  --accent:#2B4C7E;--on-accent:#fff;--danger:#C2473A;--glass:rgba(255,255,255,.86);--sheet:#EEEDEA;--ink:#141517;--on-ink:#F4F3F0;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB",sans-serif;--serif:"Songti SC","Noto Serif SC",serif;
+  --sh:0 8px 24px rgba(0,0,0,.09),0 0 0 .5px var(--line)}
+:root[data-theme="dark"]{--bg:#101112;--card:#1B1C1E;--inset:#26272A;--line:#2C2D30;--t1:#EDEDEE;--t2:#9A9895;--t3:#75726E;
+  --accent:#8FA8C8;--on-accent:#101214;--danger:#E0685A;--glass:rgba(36,37,40,.84);--sheet:#0A0A0B;--ink:#F1F0EC;--on-ink:#141517;
+  --sh:0 10px 30px rgba(0,0,0,.5),0 0 0 .5px rgba(255,255,255,.08);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sheet);color:var(--t1);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 20px 90px;display:flex;flex-direction:column;gap:30px}
+h1{margin:0;font-family:var(--serif);font-size:30px;letter-spacing:.02em}
+.lead{margin:8px 0 0;color:var(--t2);line-height:1.8;font-size:14.5px;max-width:64em}
+.bar{position:sticky;top:12px;z-index:50;align-self:flex-start;display:flex;gap:6px;padding:5px;border-radius:14px;background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:var(--sh)}
+.bar button{font:inherit;font-size:13px;border:0;border-radius:10px;padding:7px 13px;background:none;color:var(--t2);cursor:pointer}
+.bar button.on{background:var(--card);color:var(--t1);font-weight:600;box-shadow:0 0 0 .5px var(--line)}
+.bar .sep{width:1px;background:var(--line);margin:4px 2px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:44px 28px}
+@media (max-width:1060px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.grid{grid-template-columns:minmax(0,1fr)}}
+figure{margin:0;display:flex;flex-direction:column;gap:14px;align-items:center}
+figcaption{width:100%;max-width:330px;font-size:13px;line-height:1.75;color:var(--t2)}
+figcaption b{display:flex;align-items:center;gap:8px;color:var(--t1);font-size:15.5px;margin-bottom:4px}
+figcaption b i{font-style:normal;font-size:11px;font-weight:600;padding:1px 8px;border-radius:9px;background:var(--inset);color:var(--t2)}
+figcaption ul{margin:6px 0 0;padding-left:1.1em}
+figcaption li{margin:2px 0}
+/* ---- the phone, drawn at the prototype's own pixels (a real point is 1.2 of these) ---- */
+.phone{position:relative;width:330px;aspect-ratio:9/19.5;border-radius:40px;overflow:hidden;background:var(--bg);box-shadow:0 0 0 1px var(--line),0 24px 60px rgba(51,46,41,.1);font-size:11px;color:var(--t1);isolation:isolate}
+.st{display:flex;justify-content:space-between;padding:14px 26px 0;font-size:12px;font-weight:600;height:40px}
+.st i{width:22px;height:11px;border-radius:3px;border:1px solid currentColor;opacity:.8;position:relative}
+.st i::after{content:"";position:absolute;inset:1.5px;right:4px;background:currentColor;border-radius:1px}
+.ttl{text-align:center;font-size:13px;font-weight:600;padding:6px 0 10px}
+.chips{display:flex;gap:6px;padding:0 16px 12px;align-items:center}
+.chips span{height:26px;padding:0 11px;border-radius:13px;display:grid;place-items:center;font-size:11px;color:var(--t2);background:var(--card);box-shadow:0 0 0 .5px var(--line)}
+.chips span.on{background:var(--accent);color:var(--on-accent);box-shadow:none;font-weight:600}
+.chips em{margin-left:auto;font-style:normal;font-size:10.5px;color:var(--t2)}
+.books{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 14px;padding:0 16px}
+.bk{display:flex;flex-direction:column;gap:2px;min-width:0;position:relative}
+.cv{display:block;width:100%;aspect-ratio:2/3;border-radius:3px;overflow:hidden;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.12),0 4px 10px rgba(30,30,30,.13)}
+.cv svg{display:block;width:100%;height:100%}
+.bk b{font-size:11px;font-weight:600;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk small{font-size:10px;color:var(--t3)}
+/* the iPhone glass tab bar */
+.tabs{position:absolute;left:14px;right:14px;bottom:20px;height:60px;display:flex;gap:8px;z-index:5}
+.tabs .tb{flex:1;display:grid;grid-template-columns:repeat(3,1fr);padding:4px;border-radius:30px;background:var(--glass);-webkit-backdrop-filter:blur(20px) saturate(1.6);backdrop-filter:blur(20px) saturate(1.6);box-shadow:var(--sh)}
+.tabs .tb>span{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:26px;font-size:10px;font-weight:500}
+.tabs .tb>span.on{background:color-mix(in srgb,var(--t1) 7%,transparent);color:var(--accent);font-weight:600}
+.tabs .sq{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:var(--sh)}
+.tabs .tb>span>svg,.tabs .sq>svg:not(.rg){width:24px;height:24px}
+.ico{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.mini{width:22px;height:33px;border-radius:2.5px;overflow:hidden;flex:none;box-shadow:0 0 0 .5px rgba(0,0,0,.15),0 2px 5px rgba(0,0,0,.18)}
+.mini svg{display:block;width:100%;height:100%}
+/* countdown: every option that has one runs it for the app's 8 seconds */
+@keyframes drain{from{stroke-dashoffset:0}to{stroke-dashoffset:var(--len)}}
+@keyframes shrink{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+@keyframes up{from{transform:translateY(22px) scale(.96);opacity:0}}
+@keyframes down{from{transform:translateY(-18px) scale(.96);opacity:0}}
+@keyframes fade{from{opacity:0}}
+.go .anim-up{animation:up .42s cubic-bezier(.2,.9,.25,1.15) both}
+.go .anim-down{animation:down .42s cubic-bezier(.2,.9,.25,1.15) both}
+.go .ring circle.r{animation:drain 8s linear .4s both}
+.go .line i{animation:shrink 8s linear .4s both}
+.line{position:absolute;height:2px;border-radius:1px;overflow:hidden;background:color-mix(in srgb,currentColor 12%,transparent)}
+.line i{display:block;height:100%;background:currentColor;transform-origin:left}
+
+/* ---- round 3: storyboards ---- */
+.rows{display:flex;flex-direction:column;gap:30px}
+.row{background:var(--card);border-radius:26px;padding:26px 28px 30px;box-shadow:0 0 0 .5px var(--line);display:flex;flex-direction:column;gap:20px}
+.cap h2{display:flex;align-items:baseline;gap:10px;margin:0 0 8px;font-size:19px}
+.cap h2 span{font-size:13px;font-weight:500;color:var(--t3)}
+.cap p{margin:0;font-size:13.5px;line-height:1.85;color:var(--t2);max-width:62em}
+.cap p+p{margin-top:4px}
+.story{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:start}
+@media (max-width:1000px){.story{grid-template-columns:minmax(0,1fr);justify-items:center}}
+.frame{display:flex;flex-direction:column;align-items:center;gap:12px}
+.frame .n{font-size:12.5px;color:var(--t2);line-height:1.6;text-align:center;max-width:300px}
+.frame .n b{color:var(--t1);margin-right:6px}
+.frame .phone{width:330px}
+.dim{position:absolute;inset:0;z-index:6;background:rgba(20,18,16,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+:root[data-theme="dark"] .dim{background:rgba(0,0,0,.55)}
+/* the long-press card, as drawn in prototype v0.29 (.v-lib-menu) */
+.lm{position:absolute;left:50%;top:210px;width:236px;margin-left:-118px;z-index:8;border-radius:16px;background:var(--card);box-shadow:0 18px 44px -10px rgba(30,28,24,.35),0 0 0 .5px var(--line);overflow:hidden}
+.lm .h{display:flex;gap:10px;align-items:center;padding:10px 14px}
+.lm .h .mini{width:28px;height:42px;border-radius:3px}
+.lm .h .tx{flex:1;min-width:0;line-height:1.3}
+.lm .h .tx>b{display:block;font-size:12.5px;font-weight:700}
+.lm .h .tx>b small{margin-left:6px;font-size:10px;font-weight:400;color:var(--t3)}
+.lm .p{display:flex;align-items:center;gap:8px;margin-top:7px;font-size:10px;color:var(--t2);white-space:nowrap}
+.lm .p i{flex:1;height:3px;border-radius:2px;background:var(--line);position:relative;overflow:hidden}
+.lm .p i::after{content:"";position:absolute;inset:0;right:39%;background:var(--accent)}
+.lm .a{display:grid;grid-template-columns:repeat(3,1fr);padding:10px 4px 9px;border-top:.5px solid var(--line)}
+.lm .a>span{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px}
+.lm .a .ico{width:16px;height:16px}
+.lm .l{border-top:.5px solid var(--line)}
+.lm .l>span{position:relative;display:flex;align-items:center;justify-content:space-between;height:38px;padding:0 14px;font-size:12px;overflow:hidden}
+.lm .l>span+span{border-top:.5px solid var(--line)}
+.lm .l>span.r{color:var(--danger)}
+.lm .l .ico{width:15px;height:15px}
+.lifted{position:absolute;z-index:7;display:block;border-radius:4px;overflow:hidden;box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.lifted svg{display:block;width:100%;height:100%}
+.finger{position:absolute;z-index:12;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(255,255,255,.35);box-shadow:0 0 0 1.5px rgba(255,255,255,.9),0 4px 12px rgba(0,0,0,.25)}
+.finger.press{background:rgba(255,255,255,.55);transform:scale(.85)}
+
+/* P · the card keeps the undo */
+.lm.done .h{padding:12px 14px}
+.lm.done .h .tx>b{font-weight:600}
+.lm.done .h .tx small.s{display:block;margin-top:3px;font-size:10px;color:var(--t2);margin-left:0;font-weight:400}
+.lm.done .u{height:32px;padding:0 13px;border-radius:16px;background:var(--accent);color:var(--on-accent);font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:4px}
+.lm.done .u .ico{width:12px;height:12px;stroke-width:2.1}
+.lm.done .line{left:14px;right:14px;bottom:0;color:var(--accent)}
+.lm.done .mini{filter:grayscale(.2)}
+.gap{position:relative}
+.gap .cv{opacity:0}
+
+/* Q · hold to delete */
+.hold{position:absolute;inset:0;background:color-mix(in srgb,var(--danger) 16%,transparent);transform-origin:left;transform:scaleX(var(--f,0))}
+.lm .l>span.r b{position:relative;font-weight:600}
+.lm .l>span.r small{position:relative;font-size:10px;color:color-mix(in srgb,var(--danger) 70%,var(--t2));margin-left:auto;margin-right:8px}
+.lm .l>span.r .ico{position:relative}
+.go .hold.run{animation:holdf 1.1s cubic-bezier(.4,0,.6,1) .3s both}
+@keyframes holdf{from{transform:scaleX(0)}to{transform:scaleX(.62)}}
+.poof{position:absolute;z-index:9;display:flex;gap:7px;align-items:center;left:50%;transform:translateX(-50%);top:322px;height:34px;padding:0 14px 0 11px;border-radius:17px;background:var(--card);box-shadow:var(--sh);font-size:11.5px;white-space:nowrap}
+.poof .d{width:15px;height:15px;border-radius:50%;background:var(--danger);display:grid;place-items:center;color:#fff}
+.poof .d .ico{width:9px;height:9px;stroke-width:2.6}
+
+/* R · a spine at the screen edge */
+.spine{position:absolute;right:0;top:330px;z-index:9;width:22px;height:118px;border-radius:7px 0 0 7px;overflow:hidden;box-shadow:-6px 6px 16px rgba(0,0,0,.22),inset 1px 0 0 rgba(255,255,255,.12)}
+.spine svg{display:block;width:79px;height:118px;margin-left:-28px}
+.spine::after{content:"";position:absolute;inset:0;background:linear-gradient(to right,rgba(255,255,255,.14),transparent 40%,rgba(0,0,0,.25))}
+.spine-l{position:absolute;right:30px;top:372px;z-index:9;display:flex;flex-direction:column;align-items:flex-end;gap:1px;padding:6px 10px;border-radius:12px;background:var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:var(--sh);font-size:10px;color:var(--t2);line-height:1.4;white-space:nowrap}
+.spine-l b{color:var(--t1);font-size:11px;font-weight:600}
+.go .spine{animation:spinein .55s cubic-bezier(.2,.9,.3,1.1) both}
+@keyframes spinein{from{transform:translateX(30px)}}
+.go .spine-l{animation:fade .5s ease .35s both}
+.drag{position:absolute;z-index:9;top:300px;right:60px;width:70px;height:105px;border-radius:4px;overflow:hidden;transform:rotate(-6deg);box-shadow:0 18px 34px rgba(0,0,0,.35)}
+.drag svg{display:block;width:100%;height:100%}
+.slot{position:absolute;z-index:7;border:1.5px dashed var(--accent);border-radius:5px;background:color-mix(in srgb,var(--accent) 7%,transparent)}
+
+/* S · shake, the system's own undo */
+.shake{position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(0,0,0,.22)}
+.alert{width:250px;border-radius:24px;background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);box-shadow:0 20px 50px rgba(0,0,0,.25);text-align:center;overflow:hidden}
+.alert .t{padding:20px 18px 16px}
+.alert .t b{display:block;font-size:14px;font-weight:600}
+.alert .t small{display:block;margin-top:4px;font-size:11.5px;color:var(--t2);line-height:1.5}
+.alert .bs{display:flex;gap:8px;padding:0 14px 14px}
+.alert .bs span{flex:1;height:40px;border-radius:20px;display:grid;place-items:center;font-size:13px;font-weight:600;background:color-mix(in srgb,var(--t1) 7%,transparent)}
+.alert .bs span.k{background:var(--accent);color:var(--on-accent)}
+.wob{animation:wob .5s ease-in-out 2}
+@keyframes wob{25%{transform:rotate(-2.5deg)}75%{transform:rotate(2.5deg)}}
+.hint{position:absolute;left:50%;bottom:96px;z-index:9;transform:translateX(-50%);display:flex;align-items:center;gap:8px;white-space:nowrap;height:36px;padding:0 14px;border-radius:18px;background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:var(--sh);font-size:11.5px;color:var(--t2)}
+.hint b{color:var(--t1);font-weight:600}
+.hint .ph{width:13px;height:20px;border-radius:3px;border:1.5px solid currentColor;position:relative}
+
+/* T · into the bin on the 书架 tab */
+.tb-badge{position:absolute;top:8px;left:50%;margin-left:6px;min-width:15px;height:15px;border-radius:8px;padding:0 4px;background:var(--danger);color:#fff;font-size:9px;font-weight:700;display:grid;place-items:center;box-shadow:0 0 0 2px var(--glass)}
+.tabs .tb>span{position:relative}
+.flyer{position:absolute;z-index:9;width:20px;height:30px;border-radius:2px;overflow:hidden;left:64px;bottom:62px;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.flyer svg{display:block;width:100%;height:100%}
+.trail{position:absolute;z-index:8;left:60px;bottom:90px;width:200px;height:300px;pointer-events:none}
+.sheet{position:absolute;left:8px;right:8px;bottom:8px;z-index:9;border-radius:30px;background:var(--card);box-shadow:0 -10px 40px rgba(0,0,0,.18);padding:8px 14px 18px}
+.sheet .grab{width:36px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 10px}
+.sheet .sh{display:flex;align-items:baseline;justify-content:space-between;padding:0 4px 10px}
+.sheet .sh b{font-size:15px}
+.sheet .sh small{font-size:10.5px;color:var(--t3)}
+.sheet .it{display:flex;align-items:center;gap:11px;padding:9px 4px}
+.sheet .it+.it{box-shadow:inset 0 .5px 0 var(--line)}
+.sheet .it .mini{width:26px;height:39px}
+.sheet .it .tx{flex:1;line-height:1.35}
+.sheet .it .tx b{display:block;font-size:12.5px}
+.sheet .it .tx small{font-size:10px;color:var(--t3)}
+.sheet .it .u{height:30px;padding:0 13px;border-radius:15px;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-size:11.5px;font-weight:600;display:grid;place-items:center}
+.sheet .sm{margin-top:6px;text-align:center;font-size:10.5px;color:var(--t3)}
+.sheet .tab-hl{}
+
+.shakebox{position:absolute;inset:0;z-index:8;pointer-events:none}
+.shakebox i{position:absolute;top:50%;width:3px;border-radius:2px;background:var(--t2);opacity:.55}
+.shakebox i:nth-child(1){left:8px;height:54px;margin-top:-27px}
+.shakebox i:nth-child(2){left:16px;height:32px;margin-top:-16px;opacity:.35}
+.shakebox i:nth-child(3){right:8px;height:54px;margin-top:-27px}
+.shakebox i:nth-child(4){right:16px;height:32px;margin-top:-16px;opacity:.35}
+.tilt{position:absolute;inset:0;transform:rotate(-3deg) scale(.94);transform-origin:50% 60%}
+
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><symbol id="cvA" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#2F3A33"/>
+      <rect x="9" y="9" width="102" height="162" fill="none" stroke="#C8BFA6" stroke-width=".7" opacity=".7"/>
+      <text x="86" y="34" font-size="24" fill="#F1EADA" font-family="Noto Serif SC,Songti SC,serif" font-weight="600" writing-mode="tb" letter-spacing="8">背影</text>
+      <text x="62" y="36" font-size="8" fill="#C8BFA6" font-family="Noto Serif SC,Songti SC,serif" writing-mode="tb" letter-spacing="3">朱自清</text>
+      <rect x="20" y="146" width="12" height="12" fill="#B5473A"/>
+    </symbol>
+<symbol id="cvB" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#22324A"/>
+      <text x="14" y="46" font-size="25" fill="#F4F1EA" font-family="Noto Serif SC,Songti SC,serif" font-weight="700">MOBY</text>
+      <text x="14" y="72" font-size="25" fill="#F4F1EA" font-family="Noto Serif SC,Songti SC,serif" font-weight="700">DICK</text>
+      <text x="14" y="88" font-size="6.5" fill="#8FA8C8" font-family="PingFang SC,sans-serif" letter-spacing="1.5">HERMAN MELVILLE</text>
+      <g fill="none" stroke="#8FA8C8" stroke-width="1.2" opacity=".8"><path d="M0 140q15-8 30 0t30 0 30 0 30 0"/><path d="M0 152q15-8 30 0t30 0 30 0 30 0" opacity=".6"/><path d="M0 164q15-8 30 0t30 0 30 0 30 0" opacity=".35"/></g>
+    </symbol>
+<symbol id="cvD" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#8C2F26"/>
+      <path d="M22 48h76M22 92h76" stroke="#E2C68C" stroke-width=".8"/>
+      <text x="60" y="78" font-size="21" fill="#F3E3C3" font-family="Noto Serif SC,Songti SC,serif" font-weight="700" text-anchor="middle" letter-spacing="3">红楼梦</text>
+      <text x="60" y="110" font-size="7.5" fill="#E2C68C" font-family="Noto Serif SC,Songti SC,serif" text-anchor="middle" letter-spacing="2">曹雪芹</text>
+    </symbol>
+<symbol id="cvE" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#111418"/>
+      <circle cx="60" cy="66" r="34" fill="none" stroke="#5B6470" stroke-width=".8"/>
+      <circle cx="44" cy="46" r="5" fill="#F2F2F2"/><circle cx="88" cy="74" r="3.5" fill="#E8B04B"/><circle cx="52" cy="98" r="2.5" fill="#8FA8C8"/>
+      <text x="14" y="150" font-size="24" fill="#F2F2F2" font-family="Noto Serif SC,Songti SC,serif" font-weight="700">三体</text>
+      <text x="14" y="164" font-size="7" fill="#8C939C" font-family="Noto Serif SC,Songti SC,serif">刘慈欣</text>
+    </symbol>
+<symbol id="cvG" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#B33A2E"/>
+      <rect x="30" y="40" width="60" height="30" fill="#141414"/>
+      <text x="60" y="61" font-size="15" fill="#B33A2E" font-family="Noto Serif SC,Songti SC,serif" font-weight="700" text-anchor="middle" letter-spacing="6">呐喊</text>
+      <text x="60" y="84" font-size="7" fill="#141414" font-family="Noto Serif SC,Songti SC,serif" text-anchor="middle" letter-spacing="3">鲁迅</text>
+    </symbol>
+<symbol id="cvH" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#D9A55B"/>
+      <circle cx="60" cy="116" r="30" fill="none" stroke="#3A2A18" stroke-width="1.4"/>
+      <path d="M60 86v60M30 116h60M39 95l42 42M81 95l-42 42" stroke="#3A2A18" stroke-width=".7" opacity=".55"/>
+      <text x="60" y="46" font-size="19" fill="#2B1F12" font-family="Noto Serif SC,Songti SC,serif" font-weight="700" text-anchor="middle" letter-spacing="3">骆驼祥子</text>
+      <text x="60" y="62" font-size="7" fill="#5A4426" font-family="Noto Serif SC,serif" text-anchor="middle" letter-spacing="2">老舍</text>
+    </symbol>
+<symbol id="cvI" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#DCE3E1"/>
+      <path d="M0 132q22-14 44-4t40-2 36 4V180H0z" fill="#9FB3AE" opacity=".55"/>
+      <path d="M0 146q26-10 50-2t42-2 28 2V180H0z" fill="#6F8A84" opacity=".5"/>
+      <circle cx="88" cy="40" r="11" fill="#C9553F" opacity=".85"/>
+      <text x="36" y="30" font-size="17" fill="#22302C" font-family="Noto Serif SC,Songti SC,serif" font-weight="600" writing-mode="tb" letter-spacing="5">浮生六记</text>
+      <text x="18" y="32" font-size="7" fill="#4E5F5A" font-family="Noto Serif SC,serif" writing-mode="tb" letter-spacing="2">沈复</text>
+    </symbol>
+<symbol id="cvJ" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#141B2D"/>
+      <g stroke="#D4AF6A" stroke-width=".8" fill="none"><path d="M60 20v40M44 26l16 34 16-34M30 40l30 20 30-20"/><path d="M14 150h92M22 156h76" opacity=".7"/></g>
+      <text x="60" y="92" font-size="9" fill="#D4AF6A" font-family="Georgia,serif" text-anchor="middle" letter-spacing="3">THE GREAT</text>
+      <text x="60" y="114" font-size="20" fill="#F1E3C2" font-family="Georgia,serif" text-anchor="middle" letter-spacing="2">GATSBY</text>
+      <text x="60" y="132" font-size="6" fill="#B89A5E" font-family="Georgia,serif" text-anchor="middle" letter-spacing="1.5">F. SCOTT FITZGERALD</text>
+    </symbol>
+<symbol id="cvM" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#E3E6D6"/>
+      <path d="M96 150q-18-40-10-96" stroke="#5E6B4A" stroke-width="1.2" fill="none"/>
+      <g fill="#D97A6C"><circle cx="86" cy="62" r="5"/><circle cx="96" cy="82" r="4"/><circle cx="84" cy="100" r="4.5"/></g>
+      <g fill="#F2E3B3"><circle cx="86" cy="62" r="1.6"/><circle cx="96" cy="82" r="1.3"/><circle cx="84" cy="100" r="1.4"/></g>
+      <text x="36" y="30" font-size="16" fill="#2E3324" font-family="Noto Serif SC,Songti SC,serif" font-weight="600" writing-mode="tb" letter-spacing="4">朝花夕拾</text>
+      <text x="18" y="32" font-size="7" fill="#5E6B4A" font-family="Noto Serif SC,serif" writing-mode="tb" letter-spacing="2">鲁迅</text>
+    </symbol>
+<symbol id="cvC" viewBox="0 0 120 180" preserveAspectRatio="xMidYMid slice">
+      <rect width="120" height="180" fill="#E7DFCC"/>
+      <circle cx="60" cy="58" r="24" fill="none" stroke="#A8352B" stroke-width="1.2"/>
+      <text x="66" y="98" font-size="15" fill="#2A2721" font-family="Noto Serif SC,Songti SC,serif" font-weight="600" writing-mode="tb" letter-spacing="4">人间词话</text>
+      <text x="44" y="100" font-size="7" fill="#7A7466" font-family="Noto Serif SC,Songti SC,serif" writing-mode="tb" letter-spacing="2">王国维</text>
+    </symbol>
+<symbol id="i-trash" viewBox="0 0 16 16"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.2a1 1 0 0 0 1 .8h3.8a1 1 0 0 0 1-.8l.6-8.2"/></symbol>
+<symbol id="i-undo" viewBox="0 0 16 16"><path d="M5.5 3.5 2.5 6.5l3 3M2.5 6.5h7a3.5 3.5 0 0 1 0 7H7"/></symbol>
+<symbol id="i-check" viewBox="0 0 16 16"><path d="m3.5 8.5 3 3 6-6.5"/></symbol>
+<symbol id="i-x" viewBox="0 0 16 16"><path d="m4 4 8 8M12 4l-8 8"/></symbol>
+<symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+<symbol id="i-more" viewBox="0 0 16 16"><circle cx="3.5" cy="8" r=".6"/><circle cx="8" cy="8" r=".6"/><circle cx="12.5" cy="8" r=".6"/></symbol>
+<symbol id="i-down" viewBox="0 0 16 16"><path d="M3.5 6 8 10.5 12.5 6"/></symbol>
+<symbol id="i-updown" viewBox="0 0 16 16"><path d="M5 6l3-3 3 3M5 10l3 3 3-3"/></symbol>
+<symbol id="tab-shelf-f" viewBox="0 0 24 24"><g fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2.75" y="4.25" width="4.5" height="15.5" rx="1.2"/><rect x="8.75" y="6.75" width="4.5" height="13" rx="1.2"/><path d="M17.67 19.75 21.73 18.66 18.31 5.91 14.25 7Z"/></g></symbol>
+<symbol id="tab-notes" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4.75" y="3.75" width="14.5" height="16.5" rx="2.6"/><path d="M8.5 8.75h7M8.5 12.25h7M8.5 15.75h4.5"/></g></symbol>
+<symbol id="tab-me" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.25" r="3.75"/><path d="M4.75 20.25c.7-3.9 3.5-6.25 7.25-6.25s6.55 2.35 7.25 6.25"/></g></symbol>
+<symbol id="tab-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.75" cy="10.75" r="6.25"/><path d="M15.5 15.5 20.25 20.25"/></g></symbol>
+<symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.3"/></symbol>
+<symbol id="i-open" viewBox="0 0 16 16"><path d="M1.8 4.2c2.3-.9 4.4-.8 6.2.6 1.8-1.4 3.9-1.5 6.2-.6v8.4c-2.3-.9-4.4-.8-6.2.6-1.8-1.4-3.9-1.5-6.2-.6zM8 4.8v8.4"/></symbol>
+<symbol id="i-ear" viewBox="0 0 16 16"><path d="M3 10V8a5 5 0 0 1 10 0v2"/><rect x="2.5" y="9.5" width="3" height="4" rx="1"/><rect x="10.5" y="9.5" width="3" height="4" rx="1"/></symbol>
+<symbol id="i-pen" viewBox="0 0 16 16"><path d="M3 13.5 3.6 11 11 3.6a1.4 1.4 0 0 1 2 2L5.6 13z"/></symbol>
+<symbol id="i-shelf" viewBox="0 0 16 16"><rect x="2.5" y="6.5" width="11" height="7" rx="1.5"/><path d="M4.2 4.2h7.6M5.8 2h4.4"/></symbol></svg>
+<div class="wrap">
+<div><h1>删除后撤销 · 第三轮</h1>
+<p class="lead">前两轮都在改“那一条提示长什么样”。这一轮换成改“删和撤销这件事怎么做”：每种画三格，从长按《三体》、点删除开始，到撤销或者放下为止。长按卡片照原型 v0.29 的样子。有的保留撤销钮，有的根本不需要它。</p></div>
+<div class="bar"><button class="on" data-t="light">浅色</button><button data-t="dark">深色</button><span class="sep"></span><button id="replay">再放一遍</button></div>
+<div class="rows"><section class="row" id="P"><div class="cap"><h2>P · 卡片自己留下来<span>原地撤销</span></h2><p>点了“删除”，长按卡片不收起，就在原地缩成一行：小封面、“已删除《三体》”、撤销钮，底边细线 8 秒走完。后面那格空着，等卡片走了才合上。</p><p>眼睛和手指都不用离开刚才那块地方；点卡片外面也收起。</p></div><div class="story"><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvE"/></svg></span><b>三体</b><small>61%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="dim"></div><span class="lifted" style="left:224px;top:115px;width:90px;height:135px;transform:scale(1.06)"><svg class=""><use href="#cvE"/></svg></span><div class="lm"><div class="h"><span class="mini"><svg><use href="#cvE"/></svg></span><div class="tx"><b>三体<small>刘慈欣</small></b><div class="p"><i></i>还剩 4 小时 20 分</div></div></div><div class="a"><span><svg class="ico"><use href="#i-open"/></svg>接着读</span><span><svg class="ico"><use href="#i-ear"/></svg>从头听</span><span><svg class="ico"><use href="#i-check"/></svg>标为读完</span></div><div class="l"><span>编辑信息<svg class="ico"><use href="#i-pen"/></svg></span><span>加入合集<svg class="ico"><use href="#i-shelf"/></svg></span><span class="r">删除<svg class="ico"><use href="#i-trash"/></svg></span></div></div><span class="finger press" style="left:176px;top:418px"></span><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>1</b>长按《三体》，点“删除”</div></div><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk gap"><span class="cv"><svg class=""><use href="#cvE"/></svg></span><b>三体</b><small>61%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="dim" style="opacity:.55"></div><div class="lm done" style="top:300px"><div class="h"><span class="mini"><svg><use href="#cvE"/></svg></span><div class="tx"><b>已删除《三体》<small class="s">笔记和进度都留着</small></b></div><span class="u"><svg class="ico"><use href="#i-undo"/></svg>撤销</span></div><span class="line"><i></i></span></div><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>2</b>卡片缩成一行，留在原地</div></div><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>3</b>8 秒后卡片淡掉，空格合上</div></div></div></section><section class="row" id="Q"><div class="cap"><h2>Q · 按住才删<span>先防手滑</span></h2><p>卡片里的“删除”要按住约 1 秒，红色从左往右填满才删；轻轻一点只会写“按住删除”。手滑删不掉，删掉的都是想删的。</p><p>删完只在原地闪一下“已删除”，不用再给撤销钮；真要找回去“我的 › 最近删除”，30 天内都能放回。</p></div><div class="story"><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvE"/></svg></span><b>三体</b><small>61%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="dim"></div><span class="lifted" style="left:224px;top:115px;width:90px;height:135px;transform:scale(1.06)"><svg class=""><use href="#cvE"/></svg></span><div class="lm"><div class="h"><span class="mini"><svg><use href="#cvE"/></svg></span><div class="tx"><b>三体<small>刘慈欣</small></b><div class="p"><i></i>还剩 4 小时 20 分</div></div></div><div class="a"><span><svg class="ico"><use href="#i-open"/></svg>接着读</span><span><svg class="ico"><use href="#i-ear"/></svg>从头听</span><span><svg class="ico"><use href="#i-check"/></svg>标为读完</span></div><div class="l"><span>编辑信息<svg class="ico"><use href="#i-pen"/></svg></span><span>加入合集<svg class="ico"><use href="#i-shelf"/></svg></span><span class="r"><span class="hold" style="--f:0"></span><b>删除</b><small>按住删除</small><svg class="ico"><use href="#i-trash"/></svg></span></div></div><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>1</b>点“删除”只提示要按住</div></div><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvE"/></svg></span><b>三体</b><small>61%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="dim"></div><span class="lifted" style="left:224px;top:115px;width:90px;height:135px;transform:scale(1.06)"><svg class=""><use href="#cvE"/></svg></span><div class="lm"><div class="h"><span class="mini"><svg><use href="#cvE"/></svg></span><div class="tx"><b>三体<small>刘慈欣</small></b><div class="p"><i></i>还剩 4 小时 20 分</div></div></div><div class="a"><span><svg class="ico"><use href="#i-open"/></svg>接着读</span><span><svg class="ico"><use href="#i-ear"/></svg>从头听</span><span><svg class="ico"><use href="#i-check"/></svg>标为读完</span></div><div class="l"><span>编辑信息<svg class="ico"><use href="#i-pen"/></svg></span><span>加入合集<svg class="ico"><use href="#i-shelf"/></svg></span><span class="r"><span class="hold run" style="--f:.62"></span><b>删除</b><small>再按一会儿</small><svg class="ico"><use href="#i-trash"/></svg></span></div></div><span class="finger press" style="left:140px;top:418px"></span><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>2</b>按住，红色慢慢填满</div></div><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="poof"><span class="d"><svg class="ico"><use href="#i-check"/></svg></span>已删除《三体》 · 最近删除里能找回</div><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>3</b>删完原地一闪“已删除”</div></div></div></section><section class="row" id="R"><div class="cap"><h2>R · 书脊夹在屏幕边上<span>拖回去</span></h2><p>删掉的书不消失，变成一截书脊夹在屏幕右边，像从书架抽出来还没放下。旁边一行小字写书名。</p><p>想要回来，把书脊往左拖回书架，空位亮起来、松手就插回原处；不管它，过一会儿书脊自己滑出屏幕。也能直接点它放回。</p></div><div class="story"><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><span class="spine"><svg class=""><use href="#cvE"/></svg></span><span class="spine-l"><b>三体</b>拖回来放回</span><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>1</b>删完，书脊留在右边</div></div><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk gap"><span class="cv"><svg class=""><use href="#cvE"/></svg></span><b>三体</b><small>61%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><span class="slot" style="left:224px;top:115px;width:90px;height:135px"></span><span class="drag" style="top:150px;right:30px;width:80px;height:120px"><svg class=""><use href="#cvE"/></svg></span><span class="finger press" style="left:268px;top:230px"></span><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>2</b>往左拖，空位亮起来</div></div><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><span class="spine" style="transform:translateX(16px);opacity:.6"><svg class=""><use href="#cvE"/></svg></span><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>3</b>不管它，书脊滑出屏幕</div></div></div></section><section class="row" id="S"><div class="cap"><h2>S · 摇一摇撤销<span>系统自带</span></h2><p>不放撤销钮。删完书架上什么都不多，第一次删时底下提示一次“摇一摇可以撤销”，以后就不提。</p><p>摇手机弹出系统的“撤销删除”对话框，iPhone 的备忘录、邮件都是这样，用惯的人不用学。Android 用双指在书架上往左滑来撤销。</p></div><div class="story"><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="hint"><span class="ph"></span><b>摇一摇</b>可以撤销删除</div><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>1</b>删完，只提示一次</div></div><div class="frame"><div class="phone"><div class="tilt"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="shakebox"><i></i><i></i><i></i><i></i></div></div><div class="n"><b>2</b>左右摇一摇</div></div><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div><div class="shake"><div class="alert"><div class="t"><b>撤销删除</b><small>把《三体》放回书架，<br>笔记和进度原样。</small></div><div class="bs"><span>取消</span><span class="k">撤销</span></div></div></div></div><div class="n"><b>3</b>系统问你要不要撤销</div></div></div></section><section class="row" id="T"><div class="cap"><h2>T · 收进底栏<span>不打断</span></h2><p>删完书缩小飞进底栏的“书架”图标，图标上多一个红色小数字。屏幕上不弹任何东西，继续删、继续翻都不被打断。</p><p>长按“书架”图标，从下面升起“刚删的”一小块，一本本放回；数字 30 天后自己消掉。</p></div><div class="story"><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk gap"><span class="cv"><svg class=""><use href="#cvE"/></svg></span><b>三体</b><small>61%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><svg class="trail" viewBox="0 0 200 300"><path d="M170 10 Q 150 200 18 290" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 5" opacity=".5"/></svg><span class="flyer"><svg class=""><use href="#cvE"/></svg></span><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架</span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>1</b>书飞进底栏“书架”</div></div><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="tabs"><div class="tb"><span class="on"><svg class=""><use href="#tab-shelf-f"/></svg>书架<span class="tb-badge">1</span></span><span><svg class=""><use href="#tab-notes"/></svg>笔记</span><span><svg class=""><use href="#tab-me"/></svg>我的</span></div><span class="sq"><svg class=""><use href="#tab-search"/></svg></span></div></div><div class="n"><b>2</b>图标上多一个数字</div></div><div class="frame"><div class="phone"><div class="st"><span>9:41</span><i></i></div><div class="ttl">书架</div><div class="chips"><span class="on">全部</span><span>书</span><span>漫画</span><span>有声</span><em>最近读过 ⇅</em></div><div class="books "><div class="bk"><span class="cv"><svg class=""><use href="#cvA"/></svg></span><b>背影</b><small>42%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvD"/></svg></span><b>红楼梦</b><small>80%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvH"/></svg></span><b>骆驼祥子</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvI"/></svg></span><b>浮生六记</b><small>想读</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvJ"/></svg></span><b>The Great Gatsby</b><small>8%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvM"/></svg></span><b>朝花夕拾</b><small>读完</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvB"/></svg></span><b>Moby Dick</b><small>34%</small></div><div class="bk"><span class="cv"><svg class=""><use href="#cvG"/></svg></span><b>呐喊</b><small>读完</small></div></div><div class="dim" style="opacity:.6"></div><div class="sheet"><div class="grab"></div><div class="sh"><b>刚删的</b><small>30 天后真的删掉</small></div><div class="it"><span class="mini"><svg><use href="#cvE"/></svg></span><div class="tx"><b>三体</b><small>刚刚 · 笔记和进度都留着</small></div><span class="u">放回</span></div><div class="it"><span class="mini"><svg><use href="#cvC"/></svg></span><div class="tx"><b>人间词话</b><small>昨天</small></div><span class="u">放回</span></div><div class="sm">也能在 我的 › 最近删除 里找到</div></div></div><div class="n"><b>3</b>长按“书架”放回</div></div></div></section></div>
+<div class="note"><b>都一样的地方：</b>删的是书架上的这本书，文件、笔记、划线、进度都留着，放回后原样；Mac 上 ⌘Z 照样能撤销。前两轮在 <a href="删除后撤销.html">第一轮</a>、<a href="删除后撤销-第二轮.html">第二轮</a>。</div>
+</div>
+<script>
+const root=document.documentElement;if(location.search=='?dark'){root.dataset.theme='dark'}
+const sync=()=>document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x.dataset.t==(root.dataset.theme||'light')));sync();
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{root.dataset.theme=b.dataset.t;sync()});
+function play(){document.body.classList.remove('go');void document.body.offsetWidth;document.body.classList.add('go')}
+document.getElementById('replay').onclick=play;play();
+</script>
+</body></html>

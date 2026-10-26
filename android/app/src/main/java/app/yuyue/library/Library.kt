@@ -210,6 +210,9 @@ class Library(private val context: Context) {
         val undo: (() -> Unit)? = null,
     ) {
         enum class Icon { Delete, Highlight, Add, Folder, Download, Check, Share, Error }
+
+        /** Until it goes: a banner counts its seconds, shows the tick, then rises away. */
+        val lifetime: Long get() = if (undo != null) UNDO_MS + UNDO_SETTLE_MS + 400 else TOAST_MS
     }
 
     fun note(icon: Toast.Icon, title: String, detail: String) = show(Toast(icon, title, detail))
@@ -220,7 +223,7 @@ class Library(private val context: Context) {
         toast = t
         toastJob?.cancel()
         toastJob = scope.launch {
-            delay(TOAST_MS)
+            delay(t.lifetime)
             if (toast?.id == t.id) toast = null
         }
     }
@@ -325,7 +328,12 @@ class Library(private val context: Context) {
 
     companion object {
         /** How long a note stays. */
-        const val TOAST_MS = 8000L
+        /** How long a plain note stays. */
+        const val TOAST_MS = 3000L
+        /** The seconds a deletion can be undone, counted down on its banner (Telegram's 5). */
+        const val UNDO_MS = 5000L
+        /** How long the red tick shows after the count before the banner rises away. */
+        const val UNDO_SETTLE_MS = 900L
 
         fun message(e: Throwable): String = when (e) {
             is PdfInfoReader.Locked -> t("这个 PDF 设了密码，打不开")

@@ -624,7 +624,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         toast = t
         toastJob?.cancel()
         toastJob = library.scope.launch {
-            delay(Library.TOAST_MS)
+            delay(t.lifetime)
             if (toast?.id == t.id) toast = null
         }
     }
