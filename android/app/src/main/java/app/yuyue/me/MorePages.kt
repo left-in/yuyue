@@ -52,7 +52,6 @@ import app.yuyue.design.YYRow
 import app.yuyue.design.YYSegments
 import app.yuyue.design.rememberPref
 import app.yuyue.library.Library
-import app.yuyue.library.isComic
 import app.yuyue.reader.ForeignPrefs
 import app.yuyue.shelf.BookCover
 import app.yuyue.t
@@ -227,12 +226,10 @@ fun StoragePage(library: Library) {
     LaunchedEffect(version, library.books) { usage = withContext(Dispatchers.IO) { measure(library) } }
     fun size(b: Long) = Formatter.formatShortFileSize(context, b)
     val u = usage
-    val comics = library.books.filter { it.isComic }.map { it.id }.toSet()
-    val comicBytes = u?.books?.filter { it.first in comics }?.sumOf { it.second } ?: 0
-    val bookBytes = (u?.books?.sumOf { it.second } ?: 0) - comicBytes
-    val parts = listOf(t("书文件") to bookBytes, t("漫画") to comicBytes, t("已删除") to (u?.deletedBytes ?: 0),
-        t("其他") to maxOf(0, (u?.total ?: 0) - bookBytes - comicBytes - (u?.deletedBytes ?: 0)))
-    val shades = listOf(1f, 0.62f, 0.36f, 0.21f)
+    val bookBytes = u?.books?.sumOf { it.second } ?: 0
+    val parts = listOf(t("书文件") to bookBytes, t("已删除") to (u?.deletedBytes ?: 0),
+        t("其他") to maxOf(0, (u?.total ?: 0) - bookBytes - (u?.deletedBytes ?: 0)))
+    val shades = listOf(1f, 0.5f, 0.25f)
     YYPage {
         // `.v-sy-use`
         Column(Modifier.padding(top = YY.s(10), bottom = YY.s(14)).fillMaxWidth().background(YY.c.card, RoundedCornerShape(YY.s(16))).padding(horizontal = YY.s(14), vertical = YY.s(13))) {
@@ -282,7 +279,7 @@ fun StoragePage(library: Library) {
                     row {
                         Row(Modifier.fillMaxWidth().padding(vertical = YY.s(7)), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(YY.s(10))) {
                             BookCover(book, Modifier.width(YY.s(24)))
-                            TwoLines(book.title, when (book.format) { BookFormat.COMIC -> t("漫画"); BookFormat.PDF -> "PDF"; BookFormat.TXT -> "TXT"; BookFormat.MOBI -> "MOBI"; BookFormat.EPUB -> "EPUB" }, Modifier.weight(1f))
+                            TwoLines(book.title, when (book.format) { BookFormat.PDF -> "PDF"; BookFormat.TXT -> "TXT"; BookFormat.MOBI -> "MOBI"; BookFormat.EPUB -> "EPUB" }, Modifier.weight(1f))
                             Text(size(b), style = YY.font(11f, FontWeight.SemiBold), color = YY.c.t1)
                         }
                     }

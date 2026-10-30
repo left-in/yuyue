@@ -49,7 +49,6 @@ import app.yuyue.design.YYNote
 import app.yuyue.design.YYRow
 import app.yuyue.library.Library
 import app.yuyue.library.ShelfFilter
-import app.yuyue.library.isComic
 import app.yuyue.library.title
 import app.yuyue.t
 import uniffi.yuyue_core.ReadingStatus

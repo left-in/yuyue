@@ -28,7 +28,7 @@ import app.yuyue.design.Icons
 import app.yuyue.design.YY
 import app.yuyue.t
 
-/** 这本书打不开: in place of a book, comic or PDF that could not be opened at all — why, in a
+/** 这本书打不开: in place of a book or PDF that could not be opened at all — why, in a
  *  sentence, and the way back to the shelf (as `BookFailureView` on iPhone). */
 @Composable
 fun BookFailure(reason: String?, close: () -> Unit) {

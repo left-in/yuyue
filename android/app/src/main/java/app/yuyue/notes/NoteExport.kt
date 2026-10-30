@@ -326,7 +326,7 @@ fun NoteExportMenu(library: Library, open: Boolean, dismiss: () -> Unit, markdow
                 if (sender.sending == null) sender.send(books(), target)
             }
         }
-        if (book != null && book.format != BookFormat.COMIC && book.format != BookFormat.PDF) {
+        if (book != null && book.format != BookFormat.PDF) {
             HorizontalDivider(color = YY.c.line)
             Item(t("EPUB（书和笔记一起）") + if (sender.making) " …" else "", Icons.book) {
                 dismiss()

@@ -5,7 +5,6 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
 import app.yuyue.YuyueApp
 import app.yuyue.library.author
-import app.yuyue.library.isComic
 import app.yuyue.t
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -27,9 +26,9 @@ object CarListening {
     private var player: Player? = null
     private var saving: Job? = null
 
-    /** 在读 first, then the rest opened lately: books with words to read, not comics or PDFs. */
+    /** 在读 first, then the rest opened lately: books with words to read, not PDFs. */
     fun books(): List<BookSummary> = YuyueApp.instance.library.books
-        .filter { it.available && !it.isComic && it.format != BookFormat.PDF && it.status != ReadingStatus.FINISHED }
+        .filter { it.available && it.format != BookFormat.PDF && it.status != ReadingStatus.FINISHED }
         .sortedWith(compareBy<BookSummary> { it.status != ReadingStatus.READING }.thenByDescending { it.openedAt ?: it.addedAt })
         .take(20)
 

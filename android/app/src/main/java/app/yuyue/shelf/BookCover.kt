@@ -43,7 +43,6 @@ import app.yuyue.design.Icons
 import app.yuyue.design.YY
 import app.yuyue.design.YYPapers
 import app.yuyue.design.rememberPref
-import app.yuyue.library.isComic
 import app.yuyue.t
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -95,22 +94,6 @@ private fun Placeholder(book: BookSummary) {
                 Text(it, maxLines = 1, fontFamily = YY.serif, fontSize = (9.5 * unit).sp, color = YYPapers.Kami.ink2, modifier = Modifier.padding(top = (5 * unit).dp))
             }
         }
-    }
-}
-
-/** A comic of many 话 sits as a little stack: two page edges behind the cover, and how many 话 in the corner. */
-@Composable
-fun ComicStack(book: BookSummary, content: @Composable () -> Unit) {
-    val episodes = if (book.isComic) book.episodes.toInt() else 0
-    if (episodes <= 1) return content()
-    BoxWithConstraints(Modifier.fillMaxWidth()) {
-        Box(Modifier.align(Alignment.TopCenter).offset(y = (-7).dp).fillMaxWidth(0.72f).height(6.dp).clip(RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp)).background(YY.c.t3.copy(alpha = 0.35f)))
-        Box(Modifier.align(Alignment.TopCenter).offset(y = (-4).dp).fillMaxWidth(0.86f).height(6.dp).clip(RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp)).background(YY.c.t3.copy(alpha = 0.6f)))
-        content()
-        Text(
-            t("%lld 话", episodes), fontSize = 10.sp, color = Color.White,
-            modifier = Modifier.align(Alignment.BottomStart).padding(5.dp).clip(RoundedCornerShape(4.dp)).background(Color.Black.copy(alpha = 0.58f)).padding(horizontal = 5.dp, vertical = 3.dp),
-        )
     }
 }
 

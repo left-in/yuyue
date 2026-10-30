@@ -68,9 +68,6 @@ import app.yuyue.library.Library
 import app.yuyue.library.ShelfFilter
 import app.yuyue.library.ShelfSort
 import app.yuyue.library.author
-import app.yuyue.library.canListen
-import app.yuyue.library.comicPlace
-import app.yuyue.library.isComic
 import app.yuyue.library.percent
 import app.yuyue.library.remaining
 import app.yuyue.library.shelfNote
@@ -83,8 +80,8 @@ import uniffi.yuyue_core.ReadingStatus
 /** What 导入 can pick: anything; the core says what it can't read. */
 val importTypes = arrayOf("*/*")
 
-private enum class Kind { All, Books, Comics, Audio;
-    val title: String get() = when (this) { All -> t("全部"); Books -> t("书"); Comics -> t("漫画"); Audio -> t("有声") }
+private enum class Kind { All, Books, Audio;
+    val title: String get() = when (this) { All -> t("全部"); Books -> t("书"); Audio -> t("有声") }
 }
 
 /** 书架 on the phone, as on iPhone: the books being read across the top, to read or listen on
@@ -118,8 +115,7 @@ fun ShelfScreen(library: Library, openWifi: () -> Unit, openRemote: () -> Unit, 
     val all = library.books
     fun ofKind(b: BookSummary) = when (kind) {
         Kind.All -> true
-        Kind.Books -> !b.isComic
-        Kind.Comics -> b.isComic
+        Kind.Books -> true
         Kind.Audio -> false
     }
     val shown = sort.sorted(all.filter { b ->
@@ -161,7 +157,7 @@ fun ShelfScreen(library: Library, openWifi: () -> Unit, openRemote: () -> Unit, 
             }
             if (reading.isNotEmpty()) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
-                    ReadingRow(library, reading, comics = kind == Kind.Comics) { book, intent -> library.open(book, intent) }
+                    ReadingRow(library, reading) { book, intent -> library.open(book, intent) }
                 }
             }
             if (all.isEmpty() && filter == ShelfFilter.All) {
@@ -259,12 +255,12 @@ fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit, enabled: B
 }
 
 @Composable
-private fun ReadingRow(library: Library, reading: List<BookSummary>, comics: Boolean, open: (BookSummary, Library.OpenIntent?) -> Unit) {
+private fun ReadingRow(library: Library, reading: List<BookSummary>, open: (BookSummary, Library.OpenIntent?) -> Unit) {
     Column(Modifier.padding(top = 18.dp)) {
         Row(Modifier.fillMaxWidth()) {
             Text(t("在读"), fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = YY.c.t1)
             Spacer(Modifier.weight(1f))
-            Text(if (comics) t("%lld 部", reading.size) else t("%lld 本", reading.size), fontSize = 13.sp, color = YY.c.t3)
+            Text(t("%lld 本", reading.size), fontSize = 13.sp, color = YY.c.t3)
         }
         LazyRow(
             Modifier.padding(top = 10.dp),
@@ -294,16 +290,14 @@ fun ReadingCard(book: BookSummary, listening: Boolean, modifier: Modifier = Modi
         Column(Modifier.weight(1f)) {
             Text(book.title, fontSize = 12.5.sp, fontWeight = FontWeight.SemiBold, color = YY.c.t1, maxLines = 1, overflow = TextOverflow.Ellipsis)
             val meta = when {
-                book.isComic -> book.comicPlace
                 book.format == BookFormat.PDF && book.page > 0u -> listOfNotNull(book.author, t("第 %lld 页", book.page.toInt()), book.percent).joinToString(" · ")
                 else -> listOfNotNull(book.author, book.percent, if (listening) t("听中") else null).joinToString(" · ")
             }
             Text(meta, fontSize = 10.5.sp, color = YY.c.t3, maxLines = 1, modifier = Modifier.padding(top = 3.dp, bottom = 8.dp))
             ProgressLine(book.progress, modifier = Modifier.padding(bottom = 10.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Pill(if (book.isComic) t("续看") else t("接着读"), tint.black, tint.onBlack) { open(null) }
+                Pill(t("接着读"), tint.black, tint.onBlack) { open(null) }
                 when {
-                    !book.canListen -> {}
                     listening -> Pill(t("听中"), tint.accentSoft, tint.accent, Icons.waveform) { open(null) }
                     else -> Pill(t("听"), YY.c.inset, YY.c.t1) { open(Library.OpenIntent.Listen) }
                 }
@@ -393,7 +387,7 @@ private fun Way(icon: ImageVector, title: String, detail: String, modifier: Modi
 @Composable
 private fun Empty(library: Library, inCollection: Boolean, import: () -> Unit) {
     val (icon, text) = when {
-        library.books.isEmpty() -> Icons.books to t("书架是空的。点右上角的加号，导入 EPUB、PDF、MOBI、TXT 或漫画")
+        library.books.isEmpty() -> Icons.books to t("书架是空的。点右上角的加号，导入 EPUB、PDF、MOBI 或 TXT")
         inCollection -> Icons.inbox to t("这个合集里还没有书。长按一本书，点「加入合集」")
         else -> Icons.book to t("这里还没有书")
     }
@@ -421,9 +415,7 @@ private fun Cell(
             ),
         ) {
             Box(Modifier.padding(bottom = 8.dp)) {
-                ComicStack(book) {
-                    BookCover(book, Modifier.fillMaxWidth().then(if (book.available) Modifier else Modifier.background(Color.Transparent)))
-                }
+                BookCover(book, Modifier.fillMaxWidth().then(if (book.available) Modifier else Modifier.background(Color.Transparent)))
                 when {
                     selecting -> Box(Modifier.align(Alignment.BottomEnd).padding(6.dp)) {
                         Icon(
@@ -445,7 +437,7 @@ private fun Cell(
                         Text(t("听中 · %@", book.percent), fontSize = 11.sp, color = tint.accent)
                     }
                 } else {
-                    Text(if (book.isComic && book.episode > 0u) book.comicPlace else book.shelfNote, fontSize = 11.sp, color = YY.c.t3, maxLines = 1)
+                    Text(book.shelfNote, fontSize = 11.sp, color = YY.c.t3, maxLines = 1)
                 }
             }
         }
@@ -461,18 +453,14 @@ private fun BookMenu(library: Library, book: BookSummary, shown: Boolean, dismis
         BookPreview(book)
         HorizontalDivider(color = YY.c.line)
         val resume = when {
-            book.status == ReadingStatus.FINISHED -> if (book.isComic) t("重看") else t("重读")
-            book.isComic -> if (book.episode > 0u) t("续看") else t("开始看")
+            book.status == ReadingStatus.FINISHED -> t("重读")
             else -> if (book.progress > 0) t("接着读") else t("开始读")
         }
         Item(resume, Icons.book) { dismiss(); library.open(book) }
-        if (book.canListen) Item(t("从头听"), Icons.headphones) { dismiss(); library.open(book, Library.OpenIntent.ListenFromStart) }
+        Item(t("从头听"), Icons.headphones) { dismiss(); library.open(book, Library.OpenIntent.ListenFromStart) }
         val finished = book.status == ReadingStatus.FINISHED
         Item(
-            when {
-                book.isComic -> if (finished) t("标为没看完") else t("标为看完")
-                else -> if (finished) t("标为没读完") else t("标为读完")
-            },
+            if (finished) t("标为没读完") else t("标为读完"),
             if (finished) Icons.undo else Icons.check,
         ) { dismiss(); library.setFinished(book, !finished) }
         HorizontalDivider(color = YY.c.line)

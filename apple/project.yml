@@ -99,10 +99,6 @@ targets:
             CFBundleTypeRole: Viewer
             LSHandlerRank: Alternate
             LSItemContentTypes: [app.yuyue.mobi, app.yuyue.azw3]
-          - CFBundleTypeName: 漫画
-            CFBundleTypeRole: Viewer
-            LSHandlerRank: Alternate
-            LSItemContentTypes: [app.yuyue.cbz, app.yuyue.cbr]
           - CFBundleTypeName: 有声书
             CFBundleTypeRole: Viewer
             LSHandlerRank: Alternate
@@ -117,18 +113,7 @@ targets:
             UTTypeConformsTo: [public.data, public.archive]
             UTTypeTagSpecification:
               public.filename-extension: [yuyue]
-        # Comic book archives: a ZIP of pictures named .cbz, a RAR named .cbr.
         UTImportedTypeDeclarations:
-          - UTTypeIdentifier: app.yuyue.cbz
-            UTTypeDescription: 漫画压缩包
-            UTTypeConformsTo: [public.zip-archive, public.data]
-            UTTypeTagSpecification:
-              public.filename-extension: [cbz]
-          - UTTypeIdentifier: app.yuyue.cbr
-            UTTypeDescription: 漫画压缩包
-            UTTypeConformsTo: [public.archive, public.data]
-            UTTypeTagSpecification:
-              public.filename-extension: [cbr]
           # Kindle books: an old MOBI (also .azw, .prc), or KF8 (.azw3).
           - UTTypeIdentifier: app.yuyue.mobi
             UTTypeDescription: Kindle 电子书

@@ -116,7 +116,6 @@ private fun Item(item: WifiTransfer.Item) {
             val icon = when {
                 item.state == WifiTransfer.Item.State.Done -> Icons.check
                 failed -> Icons.error
-                item.name.substringAfterLast('.').lowercase() in setOf("cbz", "cbr", "zip", "rar") -> Icons.grid
                 else -> Icons.book
             }
             Icon(icon, null, tint = YY.c.t1, modifier = Modifier.size(YY.s(14)))

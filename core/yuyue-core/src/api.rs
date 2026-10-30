@@ -68,7 +68,6 @@ fn without(batch: &mut Batch, parts: &[SyncPart]) {
 pub enum BookFormat {
     Epub,
     Txt,
-    Comic,
     Pdf,
     /// A Kindle book (MOBI, AZW3), read like an EPUB.
     Mobi,
@@ -118,10 +117,7 @@ pub struct BookSummary {
     pub listen_minutes: u32,
     /// The book's files are on this device (the library syncs; files don't, yet).
     pub available: bool,
-    /// A comic's 话: how many, and which one the reader is on (1-based, 0 before opening).
-    pub episodes: u32,
-    pub episode: u32,
-    /// The page within that 话, 1-based.
+    /// A PDF's current page, 1-based (0 before opening).
     pub page: u32,
 }
 
@@ -135,7 +131,7 @@ pub struct SectionSummary {
     pub lang: String,
     pub sentences: u32,
     pub units: u32,
-    /// A comic's pictures; its positions count pages instead of sentences.
+    /// A PDF's pages; its positions count pages instead of sentences.
     pub pages: u32,
 }
 
@@ -479,14 +475,6 @@ impl YuyueCore {
         self.fonts_path().to_string_lossy().into_owned()
     }
 
-    /// A comic section's pictures, as absolute paths, in reading order.
-    pub fn comic_pages(&self, book_id: String, section: u32) -> Result<Vec<String>> {
-        Ok(crate::comic::pages(&self.book_dir(&book_id)?, section)?
-            .into_iter()
-            .map(|p| p.to_string_lossy().into_owned())
-            .collect())
-    }
-
     /// The text of each sentence in a section, indexed like `data-s`, as the page shows it:
     /// after the replace rules, not the 只改朗读 ones.
     pub fn sentences(&self, book_id: String, section: u32) -> Result<Vec<String>> {
@@ -744,16 +732,14 @@ impl YuyueCore {
         let text = |k: &str| fields.get(k).and_then(Value::as_str).map(str::to_string);
         let latest = self.all_progress(id)?.into_iter().next();
         let progress = latest.as_ref().map(|p| p.fraction).unwrap_or(0.0);
-        // A comic's sections with pages are its 话, in order.
-        let episodes: Vec<usize> = manifest.iter().flat_map(|m| m.sections.iter().enumerate()).filter(|(_, s)| s.pages > 0).map(|(i, _)| i).collect();
-        let (episode, page) = latest
+        let page = latest
             .as_ref()
-            .and_then(|p| episodes.iter().position(|&i| i == p.position.section as usize).map(|e| (e as u32 + 1, p.position.sentence + 1)))
-            .unwrap_or((0, 0));
+            .filter(|p| manifest.as_ref().and_then(|m| m.sections.get(p.position.section as usize)).is_some_and(|s| s.pages > 0))
+            .map(|p| p.position.sentence + 1)
+            .unwrap_or(0);
         let format = match (&manifest, fields.get("format").and_then(Value::as_str)) {
             (Some(m), _) => m.format.into(),
             (None, Some("txt")) => BookFormat::Txt,
-            (None, Some("comic")) => BookFormat::Comic,
             (None, Some("pdf")) => BookFormat::Pdf,
             (None, Some("mobi")) => BookFormat::Mobi,
             (None, _) => BookFormat::Epub,
@@ -786,8 +772,6 @@ impl YuyueCore {
             read_minutes: manifest.as_ref().map(|m| m.read_minutes).unwrap_or(0),
             listen_minutes: manifest.as_ref().map(|m| m.listen_minutes).unwrap_or(0),
             available: manifest.is_some(),
-            episodes: episodes.len() as u32,
-            episode,
             page,
         })
     }
@@ -919,7 +903,7 @@ pub(crate) fn fraction(m: &Manifest, p: Position) -> f64 {
     if m.units == 0 {
         return 0.0;
     }
-    // A comic's pages count as its text; its positions are pages.
+    // A PDF's pages count as its text; its positions are pages.
     let counts = |s: &book::SectionInfo| s.linear && (s.kind == Kind::Text || s.pages > 0);
     let before: u32 = m.sections.iter().take(p.section as usize).filter(|s| counts(s)).map(|s| s.units).sum();
     let within = m
@@ -960,7 +944,6 @@ impl From<Format> for BookFormat {
         match f {
             Format::Epub => BookFormat::Epub,
             Format::Txt => BookFormat::Txt,
-            Format::Comic => BookFormat::Comic,
             Format::Pdf => BookFormat::Pdf,
             Format::Mobi => BookFormat::Mobi,
         }

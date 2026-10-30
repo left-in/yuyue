@@ -1,6 +1,6 @@
 # 语阅 Yuyue
 
-读书、听书、看漫画的 App。没有服务器，免费。
+读书、听书的 App（播客以后加）。没有服务器，免费。
 
 - 要做什么：[FEATURES.md](FEATURES.md)
 - 怎么做：[TECH.md](TECH.md)

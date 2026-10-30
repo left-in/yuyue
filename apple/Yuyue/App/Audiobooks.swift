@@ -294,7 +294,7 @@ final class Audiobooks {
            let book = books.first(where: { $0.id == id && $0.available }) {
             return book
         }
-        let candidates = books.filter { !$0.isComic && $0.available && $0.format != .pdf }
+        let candidates = books.filter { $0.available && $0.format != .pdf }
         let same = candidates.filter { Self.plain($0.title) == want }
         let near = same.isEmpty ? candidates.filter { want.count >= 2 && (Self.plain($0.title).contains(want) || want.contains(Self.plain($0.title))) && Self.plain($0.title).count >= 2 } : same
         guard !near.isEmpty else { return nil }

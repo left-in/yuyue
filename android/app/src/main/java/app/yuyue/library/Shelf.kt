@@ -1,6 +1,5 @@
 package app.yuyue.library
 
-import app.yuyue.design.Prefs
 import app.yuyue.t
 import uniffi.yuyue_core.BookFormat
 import uniffi.yuyue_core.BookSummary
@@ -26,29 +25,10 @@ val BookSummary.author: String? get() = authors.firstOrNull()
 /** "42%", just started still reads as started. */
 val BookSummary.percent: String get() = "${maxOf(1, (progress * 100).roundToInt())}%"
 
-val BookSummary.isComic: Boolean get() = format == BookFormat.COMIC
-
-/** A comic has nothing to listen to; a PDF is read from the words on its pages. */
-val BookSummary.canListen: Boolean get() = format != BookFormat.COMIC
-
-/** 第 15 话 · 第 6 页: where a comic is up to. */
-val BookSummary.comicPlace: String
-    get() {
-        if (episode == 0u) return t("还没看")
-        return if (episodes > 1u) t("第 %u 话 · 第 %u 页", episode.toInt(), page.toInt()) else t("第 %u 页", page.toInt())
-    }
-
 /** The line under a cover: how far, or where it stands. */
 val BookSummary.shelfNote: String
     get() {
         if (!available) return t("在别的设备上")
-        if (isComic) {
-            if (status == ReadingStatus.FINISHED) return t("看完")
-            if (episode == 0u) return t("漫画 · 没看过")
-            val strip = Prefs.string("comic.layout.$id") == "strip"
-            if (episodes <= 1u) return if (strip) t("条漫 · %@", percent) else percent
-            return if (strip) t("条漫 · 第 %u 话", episode.toInt()) else t("读到第 %u 话", episode.toInt())
-        }
         return when (status) {
             ReadingStatus.FINISHED -> t("读完")
             ReadingStatus.WANT -> t("想读")
@@ -59,11 +39,6 @@ val BookSummary.shelfNote: String
 /** 还剩 4 小时 20 分 · 还没读 · 读完了 */
 val BookSummary.remaining: String
     get() {
-        if (isComic) {
-            if (status == ReadingStatus.FINISHED) return t("看完了")
-            if (episode == 0u) return t("还没看")
-            if (episodes > 1u) return if (episode >= episodes) t("最后一话") else t("还剩 %u 话", (episodes - episode).toInt())
-        }
         return when {
             status == ReadingStatus.FINISHED -> t("读完了")
             status == ReadingStatus.WANT && progress == 0.0 -> t("还没读")

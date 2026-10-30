@@ -719,7 +719,7 @@ struct PhoneAppearance: View {
             .padding(.horizontal, YYUI.s(12))
             Rectangle().fill(YYColor.line).frame(height: 0.5)
             HStack(spacing: YYUI.s(6)) {
-                ForEach([String(localized: "全部"), String(localized: "书"), String(localized: "漫画")], id: \.self) { c in
+                ForEach([String(localized: "全部"), String(localized: "书")], id: \.self) { c in
                     let on = c == String(localized: "全部")
                     Text(c).font(YYUI.font(10.5, on ? .semibold : .regular))
                         .foregroundStyle(on ? tint.onBlack : YYColor.t2)
@@ -1672,13 +1672,10 @@ struct PhoneStorage: View {
         .yyCard()
     }
 
-    /// 书文件, 漫画, the books deleted, and everything else (the library, notes, covers).
+    /// 书文件, the books deleted, and everything else (the library, notes, covers).
     private var parts: [(String, Int64)] {
-        guard let u = usage else { return [(String(localized: "书文件"), 0), (String(localized: "漫画"), 0), (String(localized: "已删除"), 0), (String(localized: "其他"), 0)] }
-        let comics = Set(library.books.filter(\.isComic).map(\.id))
-        let comicBytes = u.books.filter { comics.contains($0.id) }.reduce(0) { $0 + $1.bytes }
-        let bookBytes = u.bookBytes - comicBytes
-        return [(String(localized: "书文件"), bookBytes), (String(localized: "漫画"), comicBytes), (String(localized: "已删除"), u.deletedBytes),
+        guard let u = usage else { return [(String(localized: "书文件"), 0), (String(localized: "已删除"), 0), (String(localized: "其他"), 0)] }
+        return [(String(localized: "书文件"), u.bookBytes), (String(localized: "已删除"), u.deletedBytes),
                 (String(localized: "其他"), max(0, u.total - u.bookBytes - u.deletedBytes))]
     }
 
@@ -1708,7 +1705,6 @@ struct PhoneStorage: View {
 
     private static func kind(_ b: BookSummary) -> String {
         switch b.format {
-        case .comic: String(localized: "漫画")
         case .pdf: "PDF"
         case .txt: "TXT"
         case .mobi: "MOBI"
@@ -1799,8 +1795,7 @@ struct PhoneAbout: View {
 
     static var licences: String {
         String(localized: "语阅用到了这些开源项目，感谢它们的作者：") + "\n\n"
-            + "UniFFI (MPL-2.0) · rusqlite / SQLite (MIT / Public Domain) · serde, serde_json, regex, encoding_rs, chardetng, zip, html5ever, roxmltree, ICU4X, blake3, percent-encoding, thiserror (MIT / Apache-2.0) · rars (MIT)"
-            + "\n\n" + String(localized: "漫画图标：Lucide 的 “palette”（ISC）")
+            + "UniFFI (MPL-2.0) · rusqlite / SQLite (MIT / Public Domain) · serde, serde_json, regex, encoding_rs, chardetng, zip, html5ever, roxmltree, ICU4X, blake3, percent-encoding, thiserror (MIT / Apache-2.0) · Lucide “radio” icon (ISC) · LobeHub Icons (MIT) · magpie icon (MIT)"
             + "\n\n" + String(localized: "完整的许可文本随源代码一起发布。")
     }
 

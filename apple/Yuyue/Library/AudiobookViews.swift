@@ -241,7 +241,6 @@ private struct AudiobookPair: View {
         case .txt: "TXT"
         case .mobi: "Kindle"
         case .pdf: "PDF"
-        case .comic: String(localized: "漫画")
         }
     }
 
@@ -330,7 +329,7 @@ private struct AudiobookBookPicker: View {
     @Environment(\.dismiss) private var dismiss
 
     private var books: [BookSummary] {
-        let all = library.books.filter { !$0.isComic && $0.available && $0.format != .pdf }
+        let all = library.books.filter { $0.available && $0.format != .pdf }
         let q = query.trimmingCharacters(in: .whitespaces)
         return q.isEmpty ? all : all.filter { $0.title.localizedCaseInsensitiveContains(q) || $0.authors.contains { $0.localizedCaseInsensitiveContains(q) } }
     }

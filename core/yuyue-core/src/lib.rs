@@ -7,7 +7,6 @@
 pub mod align;
 pub mod api;
 pub mod book;
-pub mod comic;
 pub mod conflicts;
 pub mod document;
 pub mod dom;

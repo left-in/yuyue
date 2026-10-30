@@ -302,7 +302,7 @@ nonisolated private final class RemoteDelegate: NSObject, URLSessionTaskDelegate
 
 /// The kinds of file the shelf takes, and what servers call them.
 nonisolated enum RemoteFormats {
-    static let extensions = ["epub", "azw3", "mobi", "azw", "pdf", "txt", "cbz", "cbr", "zip"]
+    static let extensions = ["epub", "azw3", "mobi", "azw", "pdf", "txt"]
     /// Best first, when a book comes in more than one.
     private static let types: [(String, String)] = [
         ("application/epub+zip", "epub"),
@@ -310,11 +310,6 @@ nonisolated enum RemoteFormats {
         ("application/vnd.amazon.mobi8-ebook", "azw3"),
         ("application/x-mobipocket-ebook", "mobi"),
         ("application/pdf", "pdf"),
-        ("application/vnd.comicbook+zip", "cbz"),
-        ("application/x-cbz", "cbz"),
-        ("application/vnd.comicbook-rar", "cbr"),
-        ("application/x-cbr", "cbr"),
-        ("application/zip", "zip"),
         ("text/plain", "txt"),
     ]
 

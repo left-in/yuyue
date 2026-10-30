@@ -12,28 +12,6 @@
         }
       }
     },
-    " · 共 %lld 话" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : " · %lld episode"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : " · %lld episodes"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     " · 想法 %lld" : {
       "localizations" : {
         "en" : {
@@ -461,16 +439,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ · end"
-          }
-        }
-      }
-    },
-    "%@ · 完 · 已经是最后一话" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · end · this is the last episode"
           }
         }
       }
@@ -1646,50 +1614,6 @@
         }
       }
     },
-    "%lld 话" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld episode"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld episodes"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "%lld 部" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld series"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld series"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "%lld 章" : {
       "localizations" : {
         "en" : {
@@ -2047,28 +1971,6 @@
         }
       }
     },
-    "%u 话" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%u episode"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%u episodes"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "↩" : {},
     "↩ 打开" : {
       "localizations" : {
@@ -2334,36 +2236,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "elevenlabs.io › Profile › API Keys. Usage is counted by characters."
-          }
-        }
-      }
-    },
-    "EPUB、PDF、MOBI、AZW3、TXT，漫画的 CBZ、CBR、ZIP 或一文件夹图片；会拷一份进语阅，原文件挪走、删掉都不影响" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EPUB, PDF, MOBI, AZW3, TXT, and comics as CBZ, CBR, ZIP or a folder of images. Yuyue keeps its own copy, so moving or deleting the original is fine"
-          }
-        }
-      }
-    },
-    "EPUB、PDF、TXT、MOBI、AZW3，漫画 CBZ、CBR、ZIP。传完直接放进书架。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EPUB, PDF, TXT, MOBI, AZW3, and comics as CBZ, CBR or ZIP. They go straight onto the shelf."
-          }
-        }
-      }
-    },
-    "EPUB、PDF、TXT、MOBI；漫画 CBZ、ZIP、CBR" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EPUB, PDF, TXT, MOBI; comics as CBZ, ZIP, CBR"
           }
         }
       }
@@ -2733,16 +2605,6 @@
         }
       }
     },
-    "上一话" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Previous episode"
-          }
-        }
-      }
-    },
     "上一章" : {
       "localizations" : {
         "en" : {
@@ -2829,26 +2691,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Next Match"
-          }
-        }
-      }
-    },
-    "下一话" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next episode"
-          }
-        }
-      }
-    },
-    "下一话 · %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next episode · %@"
           }
         }
       }
@@ -2989,16 +2831,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Without this sentence"
-          }
-        }
-      }
-    },
-    "不支持这种文件，目前能打开 EPUB、PDF、MOBI、AZW3、TXT 和漫画（CBZ、CBR、ZIP、RAR、一文件夹图片）" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This file type isn't supported. Yuyue opens EPUB, PDF, MOBI, AZW3, TXT and comics (CBZ, CBR, ZIP, RAR, a folder of images)"
           }
         }
       }
@@ -3555,26 +3387,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The library is empty"
-          }
-        }
-      }
-    },
-    "书架是空的，把 EPUB、PDF、MOBI、TXT 或漫画拖进窗口就能开始读" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The library is empty. Drag EPUB, PDF, MOBI, TXT or comics into the window to start reading"
-          }
-        }
-      }
-    },
-    "书架是空的。点右上角的加号，导入 EPUB、PDF、MOBI、TXT 或漫画" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The library is empty. Tap + at the top right to import EPUB, PDF, MOBI, TXT or comics"
           }
         }
       }
@@ -4633,16 +4445,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last step"
-          }
-        }
-      }
-    },
-    "最后一话" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Last episode"
           }
         }
       }
@@ -6185,16 +5987,6 @@
         }
       }
     },
-    "图片文件夹" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Image folder"
-          }
-        }
-      }
-    },
     "在 %@ 本书和 %@ 条笔记里搜" : {
       "localizations" : {
         "en" : {
@@ -7033,16 +6825,6 @@
         }
       }
     },
-    "导入 EPUB、PDF、MOBI、TXT 或漫画就能开始读" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import EPUB, PDF, MOBI, TXT or comics to start reading"
-          }
-        }
-      }
-    },
     "导入…" : {
       "localizations" : {
         "en" : {
@@ -7059,16 +6841,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Books"
-          }
-        }
-      }
-    },
-    "导入书或漫画（⌘O）：EPUB、PDF、MOBI、AZW3、TXT，漫画的 CBZ、CBR、ZIP，或一文件夹图片；也可以直接拖进窗口" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import books or comics (⌘O): EPUB, PDF, MOBI, AZW3, TXT, comics as CBZ, CBR, ZIP, or a folder of images. You can also drag them into the window"
           }
         }
       }
@@ -8009,16 +7781,6 @@
         }
       }
     },
-    "所有漫画" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All comics"
-          }
-        }
-      }
-    },
     "手机存不下了" : {
       "localizations" : {
         "en" : {
@@ -8045,16 +7807,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn't open this PDF"
-          }
-        }
-      }
-    },
-    "打不开这部漫画" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Couldn't open this comic"
           }
         }
       }
@@ -9587,16 +9339,6 @@
         }
       }
     },
-    "条漫 · 第 %u 话" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Webtoon · episode %u"
-          }
-        }
-      }
-    },
     "来填，不能用登录密码。" : {
       "localizations" : {
         "en" : {
@@ -9747,32 +9489,12 @@
         }
       }
     },
-    "标为没看完" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mark as Unfinished"
-          }
-        }
-      }
-    },
     "标为没读完" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mark as Unfinished"
-          }
-        }
-      }
-    },
-    "标为看完" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mark as Finished"
           }
         }
       }
@@ -10165,26 +9887,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A translation follows each paragraph. Turn off for the original only; double-click a sentence to translate just that one"
-          }
-        }
-      }
-    },
-    "每部漫画分别记住" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remembered for each comic"
-          }
-        }
-      }
-    },
-    "每部漫画分别记住，在漫画窗口右上角换" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remembered for each comic; change it at the top right of the comic window"
           }
         }
       }
@@ -10707,36 +10409,6 @@
         }
       }
     },
-    "漫画" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comics"
-          }
-        }
-      }
-    },
-    "漫画 · 没看过" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comic · not started"
-          }
-        }
-      }
-    },
-    "漫画阅读设置" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comic Settings"
-          }
-        }
-      }
-    },
     "点「编辑」后按住右边的把手拖动排序。一本书可以同时放进几个合集。" : {
       "localizations" : {
         "en" : {
@@ -11113,16 +10785,6 @@
         }
       }
     },
-    "用底下的滑杆翻到想看的页" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use the slider below to go to a page"
-          }
-        }
-      }
-    },
     "用户名" : {
       "localizations" : {
         "en" : {
@@ -11363,28 +11025,6 @@
         }
       }
     },
-    "目录 · 共 %lld 话" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Contents · %lld episode"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Contents · %lld episodes"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "目录 · 共 %lld 页" : {
       "localizations" : {
         "en" : {
@@ -11463,26 +11103,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show which books"
-          }
-        }
-      }
-    },
-    "看完" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Finished"
-          }
-        }
-      }
-    },
-    "看完了" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Finished"
           }
         }
       }
@@ -11975,16 +11595,6 @@
         }
       }
     },
-    "第 %lld 话" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Episode %lld"
-          }
-        }
-      }
-    },
     "第 %lld 章" : {
       "localizations" : {
         "en" : {
@@ -12165,22 +11775,6 @@
         }
       }
     },
-    "第 %u 话 · 第 %u 页" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Episode %1$u · page %2$u"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "第 %1$u 话 · 第 %2$u 页"
-          }
-        }
-      }
-    },
     "第 %u 页" : {
       "localizations" : {
         "en" : {
@@ -12233,16 +11827,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sentence 2 of 24"
-          }
-        }
-      }
-    },
-    "第%lld话" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Episode %lld"
           }
         }
       }
@@ -12533,16 +12117,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ask more…"
-          }
-        }
-      }
-    },
-    "续看" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue"
           }
         }
       }
@@ -13637,16 +13211,6 @@
         }
       }
     },
-    "读到第 %u 话" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "At episode %u"
-          }
-        }
-      }
-    },
     "读到这里" : {
       "localizations" : {
         "en" : {
@@ -14003,28 +13567,6 @@
         }
       }
     },
-    "还剩 %u 话" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%u episode left"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%u episodes left"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "还没到" : {
       "localizations" : {
         "en" : {
@@ -14181,16 +13723,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not yet valid"
-          }
-        }
-      }
-    },
-    "还没看" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not started"
           }
         }
       }
@@ -14371,16 +13903,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This passage wasn't heard clearly and may be off"
-          }
-        }
-      }
-    },
-    "这一话看完了" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Finished this episode"
           }
         }
       }
@@ -14849,16 +14371,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This encoding doesn't produce readable text"
-          }
-        }
-      }
-    },
-    "这部漫画 · %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This comic · %@"
           }
         }
       }
@@ -15344,16 +14856,6 @@
         }
       }
     },
-    "里面没有图片，不是漫画" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "There are no images inside, so it's not a comic"
-          }
-        }
-      }
-    },
     "里面的书都还在" : {
       "localizations" : {
         "en" : {
@@ -15400,16 +14902,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reconnect"
-          }
-        }
-      }
-    },
-    "重看" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Read Again"
           }
         }
       }
@@ -16204,32 +15696,12 @@
         }
       }
     },
-    "在看" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reading"
-          }
-        }
-      }
-    },
     "想听" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Want to Listen"
-          }
-        }
-      }
-    },
-    "想看" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Want to Read"
           }
         }
       }
@@ -16525,16 +15997,6 @@
       }
     },
     "其余 %lld 本" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld more"
-          }
-        }
-      }
-    },
-    "其余 %lld 部" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -17314,16 +16776,6 @@
         }
       }
     },
-    "漫画图标：Lucide 的 “palette”（ISC）" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comic icon: “palette” from Lucide (ISC)"
-          }
-        }
-      }
-    },
     "我的纸" : {
       "localizations" : {
         "en" : {
@@ -17740,6 +17192,598 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Adjust “%@”"
+          }
+        }
+      }
+    },
+    "播客" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podcasts"
+          }
+        }
+      }
+    },
+    "即将推出" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coming soon"
+          }
+        }
+      }
+    },
+    "本机和局域网" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On this computer or network"
+          }
+        }
+      }
+    },
+    "阿里云百炼" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alibaba Cloud Model Studio"
+          }
+        }
+      }
+    },
+    "月之暗面" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moonshot AI"
+          }
+        }
+      }
+    },
+    "智谱" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zhipu"
+          }
+        }
+      }
+    },
+    "豆包" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doubao"
+          }
+        }
+      }
+    },
+    "火山引擎" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volcengine"
+          }
+        }
+      }
+    },
+    "不用填" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not needed"
+          }
+        }
+      }
+    },
+    "书伴还没接上：在设置 · 书伴里添加一个服务商" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Companion isn't connected yet: add a provider in Settings · Companion"
+          }
+        }
+      }
+    },
+    "添加服务商" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Provider"
+          }
+        }
+      }
+    },
+    "搜索服务商，比如 千问、Kimi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search providers, e.g. Qwen, Kimi"
+          }
+        }
+      }
+    },
+    "没找到。在下面自己添加，填上接口地址就行" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not found. Add your own below with its API address."
+          }
+        }
+      }
+    },
+    "自己添加" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Your Own"
+          }
+        }
+      }
+    },
+    "任何 OpenAI 兼容接口，比如公司里部署的模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Any OpenAI-compatible API, such as a model your company runs"
+          }
+        }
+      }
+    },
+    "返回" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
+          }
+        }
+      }
+    },
+    "比如 公司的模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. Work model"
+          }
+        }
+      }
+    },
+    "移除 %@？" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove %@?"
+          }
+        }
+      }
+    },
+    "它的 Key 也会从钥匙串里删掉。正在用它的话，书伴换回设备自带的。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Its key is deleted from the keychain too. If Companion was using it, it goes back to this device's own model."
+          }
+        }
+      }
+    },
+    "更换" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change"
+          }
+        }
+      }
+    },
+    "藏起 Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Key"
+          }
+        }
+      }
+    },
+    "显示 Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Key"
+          }
+        }
+      }
+    },
+    "本机或局域网里跑的模型不用 Key，填上地址和模型名就行。提问和书里相关的几段原文只发到这个地址。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Models running on this computer or your network don't need a key; just fill in the address and model name. Questions and the related passages from the book go only to this address."
+          }
+        }
+      }
+    },
+    "Key 只存在这台设备的钥匙串里。提问和书里相关的几段原文直接发到这个地址，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The key stays in this device's keychain. Questions and the related passages from the book go straight to this address; Yuyue never handles them."
+          }
+        }
+      }
+    },
+    "书伴默认用这台 Mac 自带的，不花钱，不联网也能用。想换更强的，就添加一个服务商，填你自己的 Key，费用直接走你的账号，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Companion uses this Mac's own model by default: free, and it works offline. For a stronger one, add a provider with your own key; charges go straight to your account, and Yuyue never handles them."
+          }
+        }
+      }
+    },
+    "这台 Mac 用不了 Apple 智能，书伴要接一个：添加一个服务商填你自己的 Key，或接本机的 Ollama。费用直接走你的账号，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac can't use Apple Intelligence, so Companion needs one: add a provider with your own key, or connect Ollama on this Mac. Charges go straight to your account; Yuyue never handles them."
+          }
+        }
+      }
+    },
+    "还没添加服务商" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No providers added yet"
+          }
+        }
+      }
+    },
+    "Claude、DeepSeek、通义千问、Ollama…都可以" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude, DeepSeek, Qwen, Ollama… any of them"
+          }
+        }
+      }
+    },
+    "还没填好，点设置补上" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not finished — click Settings to complete it"
+          }
+        }
+      }
+    },
+    "还没填好" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not finished"
+          }
+        }
+      }
+    },
+    "设置 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings for %@"
+          }
+        }
+      }
+    },
+    "用哪个" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which One"
+          }
+        }
+      }
+    },
+    "Key 只存在这台设备上，加密保存。提问和书里相关的几段原文直接发到这个地址，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The key stays on this device, encrypted. Questions and the related passages from the book go straight to this address; Yuyue never handles them."
+          }
+        }
+      }
+    },
+    "Key 只存在这台设备上，加密保存。费用走你自己的 %@ 账号，语阅不经手，也看不到。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The key stays on this device, encrypted. Charges go to your own %@ account; Yuyue never handles or sees them."
+          }
+        }
+      }
+    },
+    "它的 Key 也会从这台设备上删掉。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Its key is deleted from this device too."
+          }
+        }
+      }
+    },
+    "登录账号" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign In"
+          }
+        }
+      }
+    },
+    "登录就能用，几百个模型一个账号" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Just sign in: hundreds of models, one account"
+          }
+        }
+      }
+    },
+    "局域网里用才要填网关 Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only needed on the network: a gateway key"
+          }
+        }
+      }
+    },
+    "转接你在 magpie 里登录的 Claude、ChatGPT 账号" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses the Claude or ChatGPT accounts you signed in to in magpie"
+          }
+        }
+      }
+    },
+    "比如 http://192.168.1.5:3425/v1" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. http://192.168.1.5:3425/v1"
+          }
+        }
+      }
+    },
+    "OpenRouter 没给 Key，再登录一次" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenRouter didn't give a key. Sign in again."
+          }
+        }
+      }
+    },
+    "已经登录 OpenRouter，可以回到语阅了。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed in to OpenRouter. You can go back to Yuyue."
+          }
+        }
+      }
+    },
+    "没有登录成功，回到语阅再试一次。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign-in didn't work. Go back to Yuyue and try again."
+          }
+        }
+      }
+    },
+    "语阅 · 书伴" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yuyue · Companion"
+          }
+        }
+      }
+    },
+    "回到语阅" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back to Yuyue"
+          }
+        }
+      }
+    },
+    "搜索服务商，比如 千问、Kimi、magpie" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search providers, e.g. Qwen, Kimi, magpie"
+          }
+        }
+      }
+    },
+    "管理服务商" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Providers"
+          }
+        }
+      }
+    },
+    "配置" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure"
+          }
+        }
+      }
+    },
+    "用 %@ 登录" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign In with %@"
+          }
+        }
+      }
+    },
+    "或者粘贴一个已有的 Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or paste a key you already have"
+          }
+        }
+      }
+    },
+    "本机或局域网里跑的，提问和书里相关的几段原文只发到这个地址。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It runs on this computer or your network; questions and the related passages go only to this address."
+          }
+        }
+      }
+    },
+    "提问和书里相关的几段原文直接发到这个地址，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questions and the related passages go straight to this address; Yuyue never handles them."
+          }
+        }
+      }
+    },
+    "这台 Mac 用不了 Apple 智能，书伴要接一个：添加一个服务商填你自己的 Key，或接本机的 Ollama、magpie。费用直接走你的账号，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac can't use Apple Intelligence, so Companion needs one: add a provider with your own key, or connect Ollama or magpie on this Mac. Charges go straight to your account; Yuyue never handles them."
+          }
+        }
+      }
+    },
+    "测试" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test"
+          }
+        }
+      }
+    },
+    "配置 %@…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure %@…"
+          }
+        }
+      }
+    },
+    "添加服务商…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Provider…"
+          }
+        }
+      }
+    },
+    "它列出的模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Models it lists"
+          }
+        }
+      }
+    },
+    "还没选好模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No model chosen yet"
+          }
+        }
+      }
+    },
+    "选" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose"
           }
         }
       }

@@ -22,7 +22,7 @@ struct LibraryView: View {
                     ContentUnavailableView {
                         Label("书架是空的", systemImage: "books.vertical")
                     } description: {
-                        Text("导入 EPUB、PDF、MOBI、TXT 或漫画就能开始读")
+                        Text("导入 EPUB、PDF、MOBI、TXT 就能开始读")
                     } actions: {
                         Button("导入书") { importerShown = true }
                             .buttonStyle(.borderedProminent)
@@ -171,51 +171,6 @@ struct BookCover: View {
         }
         // The title and author are read out below the cover already.
         .accessibilityHidden(true)
-    }
-}
-
-extension View {
-    /// A comic of many 话 sits as a little stack: two page edges behind the cover, and how many
-    /// 话 in the corner.
-    func comicStack(_ book: BookSummary) -> some View {
-        modifier(ComicStack(episodes: book.isComic ? Int(book.episodes) : 0))
-    }
-}
-
-private struct ComicStack: ViewModifier {
-    let episodes: Int
-
-    func body(content: Content) -> some View {
-        if episodes > 1 {
-            content
-                .background(alignment: .top) {
-                    GeometryReader { g in
-                        let w = g.size.width
-                        ZStack(alignment: .top) {
-                            UnevenRoundedRectangle(topLeadingRadius: 3, topTrailingRadius: 3)
-                                .fill(YYColor.t3.opacity(0.35))
-                                .frame(width: w * 0.72, height: 6)
-                                .offset(y: -7)
-                            UnevenRoundedRectangle(topLeadingRadius: 3, topTrailingRadius: 3)
-                                .fill(YYColor.t3.opacity(0.6))
-                                .frame(width: w * 0.86, height: 6)
-                                .offset(y: -4)
-                        }
-                        .frame(width: w)
-                    }
-                }
-                .overlay(alignment: .bottomLeading) {
-                    Text("\(episodes) 话")
-                        .font(.yy(size: 10)).monospacedDigit()
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 5).padding(.vertical, 3)
-                        .background(.black.opacity(0.58), in: .rect(cornerRadius: 4))
-                        .padding(5)
-                        .accessibilityHidden(true)
-                }
-        } else {
-            content
-        }
     }
 }
 

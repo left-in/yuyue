@@ -119,10 +119,10 @@ struct PhoneShelf: View {
         }
     }
 
-    /// 全部 · 书 · 漫画 · 有声, within what the title picked.
+    /// 全部 · 书 · 有声, within what the title picked.
     @State private var kind = Kind.all
-    private enum Kind: CaseIterable { case all, books, comics, audio
-        var name: String { switch self { case .all: String(localized: "全部"); case .books: String(localized: "书"); case .comics: String(localized: "漫画"); case .audio: String(localized: "有声") } }
+    private enum Kind: CaseIterable { case all, books, audio
+        var name: String { switch self { case .all: String(localized: "全部"); case .books: String(localized: "书"); case .audio: String(localized: "有声") } }
     }
 
     private var shown: [BookSummary] {
@@ -134,8 +134,7 @@ struct PhoneShelf: View {
         }
         switch kind {
         case .all: break
-        case .books: books = books.filter { !$0.isComic }
-        case .comics: books = books.filter(\.isComic)
+        case .books: break
         case .audio: books = books.filter(library.hasAudio)
         }
         return sort.sorted(books)
@@ -147,8 +146,7 @@ struct PhoneShelf: View {
             guard b.status == .reading else { return false }
             return switch kind {
             case .all: true
-            case .books: !b.isComic
-            case .comics: b.isComic
+            case .books: true
             case .audio: library.hasAudio(b)
             }
         }
@@ -206,7 +204,7 @@ struct PhoneShelf: View {
             HStack {
                 Text("在读").font(.subheadline.weight(.semibold)).foregroundStyle(YYColor.t1)
                 Spacer()
-                Text(kind == .comics ? String(localized: "\(reading.count) 部") : String(localized: "\(reading.count) 本")).font(.footnote).foregroundStyle(YYColor.t3)
+                Text(String(localized: "\(reading.count) 本")).font(.footnote).foregroundStyle(YYColor.t3)
             }
             .padding(.horizontal, 20)
             ScrollView(.horizontal) {
@@ -309,7 +307,7 @@ struct PhoneShelf: View {
 
     @ViewBuilder private var empty: some View {
         let (symbol, text): (String, String) = if library.books.isEmpty {
-            ("books.vertical", String(localized: "书架是空的。点右上角的加号，导入 EPUB、PDF、MOBI、TXT 或漫画"))
+            ("books.vertical", String(localized: "书架是空的。点右上角的加号，导入 EPUB、PDF、MOBI、TXT"))
         } else if currentCollection != nil {
             ("tray", String(localized: "这个合集里还没有书。长按一本书，点「加入合集」"))
         } else {
@@ -340,7 +338,6 @@ struct PhoneShelf: View {
         } label: {
             VStack(alignment: .leading, spacing: 0) {
                 BookCover(book: book)
-                    .comicStack(book)
                     .opacity(book.available ? 1 : 0.45)
                     .overlay(alignment: .bottomTrailing) {
                         if selecting {
@@ -386,7 +383,7 @@ struct PhoneShelf: View {
                 .font(.caption2)
                 .foregroundStyle(tint.accent)
         } else {
-            Text(book.isComic && book.episode > 0 ? book.comicPlace : library.shelfNote(book))
+            Text(library.shelfNote(book))
                 .font(.caption2)
                 .foregroundStyle(YYColor.t3)
                 .lineLimit(1)
@@ -398,9 +395,7 @@ struct PhoneShelf: View {
     @ViewBuilder private func actions(for book: BookSummary) -> some View {
         ControlGroup {
             Button(resumeTitle(book), systemImage: "book") { open(book, nil) }
-            if book.canListen {
-                Button("从头听", systemImage: "headphones") { open(book, .listenFromStart) }
-            }
+            Button("从头听", systemImage: "headphones") { open(book, .listenFromStart) }
             Button(BookAction.toggleFinished.title(for: book), systemImage: BookAction.toggleFinished.symbol(for: book)) {
                 library.setFinished(book, book.status != .finished)
             }
@@ -418,7 +413,7 @@ struct PhoneShelf: View {
 
     /// 没读过的写"开始读"，读完的写"重读".
     private func resumeTitle(_ book: BookSummary) -> String {
-        if book.status == .finished { return book.isComic ? String(localized: "重看") : String(localized: "重读") }
+        if book.status == .finished { return String(localized: "重读") }
         return BookAction.resume.title(for: book)
     }
 

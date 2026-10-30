@@ -95,28 +95,6 @@
         }
       }
     },
-    "漫画" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comic"
-          }
-        }
-      }
-    },
-    "漫画压缩包" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comic Archive"
-          }
-        }
-      }
-    },
     "语阅快照" : {
       "extractionState" : "manual",
       "localizations" : {

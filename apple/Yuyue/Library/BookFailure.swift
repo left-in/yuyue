@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 这本书打不开: in place of a book, comic or PDF that could not be opened at all — why, in a
+/// 这本书打不开: in place of a book or PDF that could not be opened at all — why, in a
 /// sentence, and the way back to the shelf. A failure after the book is open (a mark not saved…)
 /// is still the passing 出错了 alert.
 struct BookFailureView: View {

@@ -212,7 +212,7 @@ class WifiTransfer(private val context: Context, private val library: Library) {
             "lang" to if (L10n.chinese) "zh-Hans" else "en",
             "title" to t("语阅 · Wi‑Fi 传书"),
             "heading" to html(t("传书到「%@」", Library.deviceName(context))),
-            "formats" to t("EPUB、PDF、TXT、MOBI、AZW3，漫画 CBZ、CBR、ZIP。传完直接放进书架。"),
+            "formats" to t("EPUB、PDF、TXT、MOBI、AZW3。传完直接放进书架。"),
             "drop" to t("把书拖到这里，或者点这里选文件"),
             "many" to t("一次可以放很多本"),
             "sending" to t("正在传"),

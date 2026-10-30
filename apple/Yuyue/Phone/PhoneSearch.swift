@@ -172,9 +172,9 @@ struct PhoneSearch: View {
             .max { ($0.openedAt ?? 0) < ($1.openedAt ?? 0) }
     }
 
-    /// 书伴 reads books set as text: not comics, not PDFs.
+    /// 书伴 reads books set as text: not PDFs.
     private static func canAsk(_ book: BookSummary) -> Bool {
-        !book.isComic && book.format != .pdf
+        book.format != .pdf
     }
 
     /// `.v-lb`, a little closer to its card than elsewhere.

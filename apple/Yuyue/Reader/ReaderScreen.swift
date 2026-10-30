@@ -7,7 +7,6 @@ struct ReaderScreen: View {
     let library: Library
     let bookID: String
     @State private var model: ReaderModel?
-    @State private var comic: ComicModel?
     @State private var pdf: PdfModel?
 
     var body: some View {
@@ -19,13 +18,6 @@ struct ReaderScreen: View {
                     #if os(macOS)
                     .background(ReaderWindowShape(kind: .book))
                     #endif
-            } else if let comic {
-                #if os(macOS)
-                MacComicView(model: comic)
-                    .background(ReaderWindowShape(kind: .comic))
-                #else
-                PhoneComicView(model: comic)
-                #endif
             } else if let pdf {
                 #if os(macOS)
                 MacPdfView(model: pdf)
@@ -41,7 +33,7 @@ struct ReaderScreen: View {
         .background(OneWindowPerBook(bookID: bookID))
         #endif
         .onAppear {
-            guard model == nil, comic == nil, pdf == nil else { return }
+            guard model == nil, pdf == nil else { return }
             #if os(iOS)
             // Still being read aloud from the shelf: pick it up as it is.
             if let held = library.nowPlaying, held.bookID == bookID {
@@ -55,15 +47,7 @@ struct ReaderScreen: View {
             }
             #endif
             let format = library.books.first(where: { $0.id == bookID })?.format
-            if format == .comic {
-                #if os(macOS)
-                comic = ComicModel(library: library, bookID: bookID, wide: true)
-                #else
-                // An iPad held sideways shows two pages; a phone one.
-                let screen = UIScreen.main.bounds.size
-                comic = ComicModel(library: library, bookID: bookID, wide: screen.width > screen.height)
-                #endif
-            } else if format == .pdf {
+            if format == .pdf {
                 pdf = PdfModel(library: library, bookID: bookID)
             } else {
                 model = ReaderModel(library: library, bookID: bookID)
@@ -87,10 +71,8 @@ struct ReaderScreen: View {
                 model?.close()
                 pdf?.close()
             }
-            comic?.close()
             #else
             model?.close()
-            comic?.close()
             pdf?.close()
             #endif
             // The shelf shows how far each book has been read; this one has just moved on.
@@ -127,15 +109,13 @@ private struct OneWindowPerBook: NSViewRepresentable {
     func updateNSView(_ view: NSView, context: Context) {}
 }
 
-/// Books and comics keep their own window size: a book opens as the shelf does (`.v-mac`, with
-/// room for the notes beside the column), a comic wider for two pages side by side and dark
-/// behind the glass. Each remembers how it was last sized, so
-/// reading a comic doesn't leave the next book in a wide window.
+/// A book keeps its own window size: it opens as the shelf does (`.v-mac`, with room for the
+/// notes beside the column), and remembers how it was last sized.
 private struct ReaderWindowShape: NSViewRepresentable {
     enum Kind: String {
-        case book, comic
+        case book
 
-        var standard: CGSize { self == .book ? CGSize(width: 1040, height: 720) : CGSize(width: 1180, height: 820) }
+        var standard: CGSize { CGSize(width: 1040, height: 720) }
     }
 
     let kind: Kind
@@ -162,10 +142,6 @@ private struct ReaderWindowShape: NSViewRepresentable {
         let view = Host()
         let key = "window.size.\(kind.rawValue)", kind = kind
         view.placed = { window in
-            if kind == .comic {
-                window.backgroundColor = .black
-                window.titlebarAppearsTransparent = true
-            }
             let saved = UserDefaults.standard.string(forKey: key).map(NSSizeFromString) ?? kind.standard
             let frame = window.frame
             if !window.styleMask.contains(.fullScreen), let screen = window.screen?.visibleFrame,

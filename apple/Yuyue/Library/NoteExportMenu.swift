@@ -83,7 +83,7 @@ struct NoteSendItems: View {
             }
             .disabled(sender.sending != nil)
         }
-        if let book, book.format != .comic, book.format != .pdf {
+        if let book, book.format != .pdf {
             Divider()
             Button {
                 sender.makeEpub(book)

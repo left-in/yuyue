@@ -1,6 +1,6 @@
 //! 导出阅读记录: the shelf as a CSV that Goodreads or StoryGraph takes in through its own
 //! "import" page — 想读, 在读, 读完 and when. Neither offers an interface to write to directly, so
-//! a file is the whole of it. Comics stay out: neither site lists them.
+//! a file is the whole of it.
 
 use crate::api::{YuyueCore, lock};
 use crate::error::Result;
@@ -53,7 +53,7 @@ impl YuyueCore {
             ReadingSite::StoryGraph => "Title,Authors,ISBN/UID,Read Status,Last Date Read,Date Added\n",
         }
         .to_string();
-        for b in books.iter().filter(|b| b.format != crate::api::BookFormat::Comic) {
+        for b in &books {
             let isbn = if b.available { self.manifest(&b.id).ok().and_then(|m| m.isbn.clone()) } else { None };
             let isbn = isbn.or_else(|| self.stored_isbn(&b.id));
             let shelf = match b.status {

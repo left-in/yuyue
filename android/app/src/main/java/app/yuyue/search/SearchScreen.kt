@@ -48,7 +48,6 @@ import app.yuyue.design.YY
 import app.yuyue.design.YYGroup
 import app.yuyue.design.YYLabel
 import app.yuyue.library.Library
-import app.yuyue.library.isComic
 import app.yuyue.reader.ReaderModel
 import app.yuyue.shelf.BookCover
 import app.yuyue.t
@@ -202,7 +201,7 @@ private fun open(library: Library, h: TitleHit) {
 
 /** The book 书伴 answers from: one whose name was typed, else the one read last. */
 private fun askBook(library: Library, titles: List<TitleHit>): BookSummary? {
-    fun can(b: BookSummary) = !b.isComic && b.format != BookFormat.PDF
+    fun can(b: BookSummary) = b.format != BookFormat.PDF
     titles.firstOrNull { it.chapter == null && can(it.book) }?.let { return it.book }
     return library.books.filter { it.available && can(it) && it.openedAt != null }.maxByOrNull { it.openedAt ?: 0 }
 }

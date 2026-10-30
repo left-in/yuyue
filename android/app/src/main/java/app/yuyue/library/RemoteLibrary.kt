@@ -130,9 +130,8 @@ object RemoteFormats {
     /** Best first, when a book comes in more than one. */
     private val types = listOf(
         "application/epub+zip" to "epub", "application/x-mobi8-ebook" to "azw3", "application/vnd.amazon.mobi8-ebook" to "azw3",
-        "application/x-mobipocket-ebook" to "mobi", "application/pdf" to "pdf", "application/vnd.comicbook+zip" to "cbz",
-        "application/x-cbz" to "cbz", "application/vnd.comicbook-rar" to "cbr", "application/x-cbr" to "cbr",
-        "application/zip" to "zip", "text/plain" to "txt",
+        "application/x-mobipocket-ebook" to "mobi", "application/pdf" to "pdf",
+        "text/plain" to "txt",
     )
 
     private fun plain(t: String) = t.substringBefore(';').trim().lowercase()

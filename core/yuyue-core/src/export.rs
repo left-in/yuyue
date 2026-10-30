@@ -24,8 +24,8 @@ impl YuyueCore {
     /// Writes the book to `path` as an EPUB; with `notes`, its highlights and thoughts in it.
     pub fn export_epub(&self, book_id: String, notes: bool, path: String) -> Result<()> {
         let m = self.manifest(&book_id)?;
-        if matches!(m.format, Format::Comic | Format::Pdf) {
-            return Err(CoreError::Invalid { detail: tr("漫画和 PDF 不能导出成 EPUB", "Comics and PDFs can't be exported as EPUB") });
+        if m.format == Format::Pdf {
+            return Err(CoreError::Invalid { detail: tr("PDF 不能导出成 EPUB", "PDFs can't be exported as EPUB") });
         }
         let dir = self.book_dir(&book_id)?;
         let rules = self.rules_for(&book_id, false)?;

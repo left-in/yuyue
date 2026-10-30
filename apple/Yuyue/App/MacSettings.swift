@@ -50,7 +50,7 @@ struct MacSettings: View {
             case .general: GeneralSettings()
             case .appearance: AppearanceSettings()
             case .reading: ReadingSettings(library: library)
-            case .comics: ComicSettings()
+            case .podcasts: MacPodcastView().frame(minHeight: 200)
             case .listening: ListeningSettings()
             case .foreign: ForeignSettings(library: library)
             case .companion: CompanionSettings(library: library)
@@ -67,7 +67,7 @@ struct MacSettings: View {
 }
 
 enum SettingsPage: String, CaseIterable, Identifiable {
-    case general, appearance, reading, comics, listening, foreign, companion, sync, storage, data
+    case general, appearance, reading, podcasts, listening, foreign, companion, sync, storage, data
 
     var id: String { rawValue }
 
@@ -76,7 +76,7 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         case .general: String(localized: "通用")
         case .appearance: String(localized: "外观")
         case .reading: String(localized: "阅读")
-        case .comics: String(localized: "漫画")
+        case .podcasts: String(localized: "播客")
         case .listening: String(localized: "朗读")
         case .foreign: String(localized: "外文")
         case .companion: String(localized: "书伴")
@@ -90,9 +90,9 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         switch self {
         case .general: "slider.horizontal.3"
         case .appearance: "sun.max"
-        // 阅读 and 漫画 as in the shelf's sidebar.
+        // 阅读 as in the shelf's sidebar.
         case .reading: ProtoIcon.book.rawValue
-        case .comics: "asset." + PhoneTabIcon.comic
+        case .podcasts: "asset.radio"
         case .listening: "headphones"
         case .foreign: "character.book.closed"
         case .companion: "sparkle"
@@ -509,7 +509,7 @@ private struct GeneralSettings: View {
             }
             SettingsHeading(String(localized: "导入"))
             SettingsCard {
-                SettingsRow(String(localized: "把书拖进书架窗口就导入"), detail: String(localized: "EPUB、PDF、MOBI、AZW3、TXT，漫画的 CBZ、CBR、ZIP 或一文件夹图片；会拷一份进语阅，原文件挪走、删掉都不影响"))
+                SettingsRow(String(localized: "把书拖进书架窗口就导入"), detail: String(localized: "EPUB、PDF、MOBI、AZW3、TXT；会拷一份进语阅，原文件挪走、删掉都不影响"))
             }
             Spacer(minLength: 0)
         }
@@ -813,49 +813,19 @@ private struct ReadingSettings: View {
     }
 }
 
-// MARK: - 漫画
-
-/// 漫画 (prototype C4): what holds for every comic. 单页、双页还是条漫，从右往左还是从左往右，
-/// each comic keeps for itself, chosen in its own window.
-private struct ComicSettings: View {
-    @AppStorage("comic.crop") private var crop = true
-    @AppStorage("comic.preload") private var preload = 5
-    @AppStorage("comic.splitSpreads") private var split = true
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SettingsCard {
-                SettingsRow(String(localized: "阅读方式和方向"), detail: String(localized: "每部漫画分别记住，在漫画窗口右上角换")) {
-                    Text("单页 · 双页 · 条漫").font(.yy(size: 12)).foregroundStyle(YYColor.t2)
-                }
-                SettingsRow(String(localized: "翻页"), detail: String(localized: "点窗口左右两边，或按 ← →、空格；点中间呼出菜单")) {
-                    Text("左右跟着方向对调").font(.yy(size: 12)).foregroundStyle(YYColor.t2)
-                }
-            }
-            SettingsHeading(String(localized: "所有漫画"))
-            SettingsCard {
-                SettingsRow(String(localized: "自动裁白边"), detail: String(localized: "扫描版四周的白边裁掉，画大一些")) { SettingsSwitch(isOn: $crop) }
-                SettingsRow(String(localized: "预加载"), detail: String(localized: "翻到之前先备好，翻页不等")) {
-                    Picker("", selection: $preload) {
-                        ForEach([3, 5, 8], id: \.self) { Text("后面 \($0) 页").tag($0) }
-                    }
-                    .labelsHidden()
-                    .fixedSize()
-                }
-                SettingsRow(String(localized: "窗口竖着时拆开跨页"), detail: String(localized: "扫描版的双页图，单页看时拆成两半")) { SettingsSwitch(isOn: $split) }
-            }
-            Spacer(minLength: 0)
-        }
-    }
-}
-
 // MARK: - 朗读
 
+/// 设置 · 朗读 (docs/design/朗读声音.html · B): 声音 is one row per book language — 试听 and the
+/// voice's name, which opens a picker; 云端声音 rows say only 填 Key › or the key, and open the
+/// 填 Key sheet (prototype M4).
 private struct ListeningSettings: View {
     @AppStorage("player.rate") private var rate = 1.0
+    @State private var editing: CloudVoice.Provider?
+    /// Bumped when a key is saved or taken away, so the rows and the voices read it again.
+    @State private var revision = 0
 
-    private static let languages = [("zh", String(localized: "中文"), String(localized: "从前有一座山，山里有一座庙。")),
-                                    ("en", String(localized: "英文"), "It was the best of times, it was the worst of times.")]
+    private static let languages = [("zh", String(localized: "中文书"), String(localized: "从前有一座山，山里有一座庙。")),
+                                    ("en", String(localized: "英文书"), "It was the best of times, it was the worst of times.")]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {

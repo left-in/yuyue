@@ -15,21 +15,13 @@ enum BookAction: CaseIterable {
         [.editInfo, .addToCollection, .revealInFinder, .delete],
     ]
 
-    /// A comic has nothing to listen to.
     /// 有声书… only with a recording laid against it.
     static func groups(for book: BookSummary) -> [[BookAction]] {
         let recorded = Audiobooks.shared?.audiobook(for: book.id) != nil
-        return groups.map { $0.filter { ($0 != .listenFromStart || book.canListen) && ($0 != .audiobook || recorded) } }
+        return groups.map { $0.filter { $0 != .audiobook || recorded } }
     }
 
     func title(for book: BookSummary) -> String {
-        if book.isComic {
-            switch self {
-            case .resume: return book.episode > 0 ? String(localized: "续看") : String(localized: "开始看")
-            case .toggleFinished: return book.status == .finished ? String(localized: "标为没看完") : String(localized: "标为看完")
-            default: break
-            }
-        }
         return switch self {
         case .resume: book.progress > 0 ? String(localized: "接着读") : String(localized: "开始读")
         case .listenFromStart: String(localized: "从头听")

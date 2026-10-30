@@ -454,10 +454,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "300e883d756b2e4ec94e02791f39b04b522276138852cfc41d9fb7e904106099"
 dependencies = [
  "cfg-if",
- "js-sys",
  "libc",
  "r-efi",
- "wasm-bindgen",
 ]
 
 [[package]]
@@ -937,16 +935,6 @@ name = "r-efi"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
-
-[[package]]
-name = "rars"
-version = "0.10.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0665518097392be04a322dec9eba41e88028f6aca85f5d61f8abb068691f2266"
-dependencies = [
- "aho-corasick",
- "getrandom",
-]
 
 [[package]]
 name = "redox_syscall"
@@ -1784,7 +1772,6 @@ dependencies = [
  "icu_segmenter",
  "markup5ever_rcdom",
  "percent-encoding",
- "rars",
  "regex",
  "ripemd",
  "roxmltree",

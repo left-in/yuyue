@@ -37,7 +37,6 @@ pub const FORMAT_VERSION: u32 = 1;
 pub enum Format {
     Epub,
     Txt,
-    Comic,
     /// Shown as it is printed (PDFKit, PdfRenderer); its pages are the one section's positions.
     Pdf,
     /// MOBI and AZW3, turned into an EPUB to read.
@@ -49,7 +48,6 @@ impl Format {
         match self {
             Format::Epub => "epub",
             Format::Txt => "txt",
-            Format::Comic => "cbz",
             Format::Pdf => "pdf",
             Format::Mobi => "mobi",
         }
@@ -118,7 +116,7 @@ pub struct SectionInfo {
     pub continued: bool,
     pub sentences: u32,
     pub units: u32,
-    /// A comic's pictures (`p/<section>.json`).
+    /// A PDF's pages; its positions count pages instead of sentences.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub pages: u32,
 }
@@ -140,9 +138,7 @@ pub fn book_id(bytes: &[u8]) -> String {
 /// Imports a book file into `books_dir`. Importing a file that is already there returns the
 /// existing book.
 pub fn import(books_dir: &Path, source: &Path) -> Result<Manifest> {
-    // A folder of pictures is a comic, packed into an archive first; so is a RAR (`.cbr`).
-    let bytes = if source.is_dir() { crate::comic::pack_folder(source)? } else { fs::read(source)? };
-    let bytes = if crate::comic::is_rar(&bytes) { crate::comic::pack_rar(&bytes)? } else { bytes };
+    let bytes = fs::read(source)?;
     let id = book_id(&bytes);
     let dir = books_dir.join(&id);
     if let Ok(existing) = load(&dir) {
@@ -151,8 +147,7 @@ pub fn import(books_dir: &Path, source: &Path) -> Result<Manifest> {
         }
     }
     let format = detect(&bytes)?;
-    let name = if source.is_dir() { source.file_name() } else { source.file_stem() };
-    let fallback_title = name.and_then(|s| s.to_str()).unwrap_or("").trim().to_string();
+    let fallback_title = source.file_stem().and_then(|s| s.to_str()).unwrap_or("").trim().to_string();
     build_into(books_dir, &id, |tmp| {
         let original = tmp.join(format!("original.{}", format.extension()));
         fs::write(&original, &bytes)?;
@@ -160,7 +155,6 @@ pub fn import(books_dir: &Path, source: &Path) -> Result<Manifest> {
             Format::Epub => build_epub(tmp, &id, &original, &fallback_title, Format::Epub),
             Format::Mobi => build_mobi(tmp, &id, &bytes, &fallback_title),
             Format::Txt => build_txt(tmp, &id, &bytes, &fallback_title, &TxtOptions::default()),
-            Format::Comic => crate::comic::build(tmp, &id, &original, &fallback_title),
             Format::Pdf => build_pdf(tmp, &id, &fallback_title),
         }
     })
@@ -182,7 +176,6 @@ pub fn reimport(books_dir: &Path, id: &str, txt: Option<&TxtOptions>) -> Result<
             Format::Epub => build_epub(tmp, id, &copy, &title, Format::Epub),
             Format::Mobi => build_mobi(tmp, id, &bytes, &title),
             Format::Txt => build_txt(tmp, id, &bytes, &title, &options),
-            Format::Comic => crate::comic::build(tmp, id, &copy, &title),
             // What the app read from the PDF is kept; there is nothing of ours to rebuild.
             Format::Pdf => {
                 if let Some(cover) = &manifest.cover {
@@ -239,7 +232,7 @@ pub fn resource_path(dir: &Path, path: &str) -> Option<PathBuf> {
 
 fn detect(bytes: &[u8]) -> Result<Format> {
     if bytes.starts_with(b"PK\x03\x04") {
-        return Ok(if crate::comic::is_comic(bytes) { Format::Comic } else { Format::Epub });
+        return Ok(Format::Epub);
     }
     if encoding_rs::Encoding::for_bom(bytes).is_some() {
         return Ok(Format::Txt);

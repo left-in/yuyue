@@ -187,7 +187,6 @@ struct PhoneWifi: View {
         if item.state == .done { return "checkmark" }
         if failed(item) { return "exclamationmark" }
         switch (item.name as NSString).pathExtension.lowercased() {
-        case "cbz", "cbr", "zip", "rar": return "square.grid.2x2"
         case "m4b", "mp3", "m4a", "aac": return "music.note"
         default: return "book.closed"
         }
@@ -223,7 +222,7 @@ struct PhoneImportSheet: View {
             YYSheetHeader(title: String(localized: "导入")) { dismiss() }
                 .padding(.bottom, YYUI.s(12))
             YYGroup {
-                way("folder", String(localized: "从文件导入"), String(localized: "EPUB、PDF、TXT、MOBI；漫画 CBZ、ZIP、CBR"), fromFiles)
+                way("folder", String(localized: "从文件导入"), String(localized: "EPUB、PDF、TXT、MOBI"), fromFiles)
                 way("wifi", String(localized: "Wi‑Fi 传书"), String(localized: "电脑和手机连同一个 Wi‑Fi，用浏览器传"), overWifi)
                 way("server.rack", String(localized: "远程书库"), String(localized: "OPDS、WebDAV：Calibre、Kavita、Komga、坚果云"), remote)
                 way("folder.badge.gearshape", String(localized: "监听一个文件夹"), watching.map { String(localized: "正在监听“\($0)”") } ?? String(localized: "放进这个文件夹的书，下次打开语阅时自动导入"), watch)

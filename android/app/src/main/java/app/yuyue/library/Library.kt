@@ -338,11 +338,10 @@ class Library(private val context: Context) {
         fun message(e: Throwable): String = when (e) {
             is PdfInfoReader.Locked -> t("这个 PDF 设了密码，打不开")
             is PdfInfoReader.Unreadable -> t("这个 PDF 读不出来")
-            is CoreException.Unsupported -> t("不支持这种文件，目前能打开 EPUB、PDF、MOBI、AZW3、TXT 和漫画（CBZ、CBR、ZIP、RAR、一文件夹图片）")
+            is CoreException.Unsupported -> t("不支持这种文件，目前能打开 EPUB、PDF、MOBI、AZW3 和 TXT")
             is CoreException.Protected -> t("这本书有版权保护（DRM），打不开")
             is CoreException.BadBook -> when {
                 e.detail.contains("password", ignoreCase = true) -> t("这个压缩包设了密码，打不开")
-                e.detail.contains("no pictures") -> t("里面没有图片，不是漫画")
                 e.detail.contains("too large") -> t("这本书太大了，读不进来")
                 else -> t("这本书读不出来，文件可能坏了，或者不是它看起来的格式")
             }

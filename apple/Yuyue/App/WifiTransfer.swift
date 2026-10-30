@@ -343,7 +343,7 @@ extension WifiTransfer {
             "lang": Bundle.main.preferredLocalizations.first ?? "zh-Hans",
             "title": String(localized: "语阅 · Wi‑Fi 传书"),
             "heading": html(String(localized: "传书到「\(device)」")),
-            "formats": String(localized: "EPUB、PDF、TXT、MOBI、AZW3，漫画 CBZ、CBR、ZIP。传完直接放进书架。"),
+            "formats": String(localized: "EPUB、PDF、TXT、MOBI、AZW3。传完直接放进书架。"),
             "drop": String(localized: "把书拖到这里，或者点这里选文件"),
             "many": String(localized: "一次可以放很多本"),
             "sending": String(localized: "正在传"),

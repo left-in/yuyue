@@ -6,7 +6,6 @@ import YuyueCore
 enum ShelfFilter: Hashable {
     case all
     case books
-    case comics
     /// 有声: books with a narrator's recording laid against them.
     case audio
     case status(ReadingStatus)
@@ -16,6 +15,8 @@ enum ShelfFilter: Hashable {
     /// 笔记 and 生词本.
     case notes
     case words
+    /// 播客: a place held for it; nothing behind it yet.
+    case podcasts
 }
 
 extension ReadingStatus {
@@ -42,27 +43,10 @@ extension BookSummary {
     /// "42%", just started still reads as started.
     var percent: String { "\(max(1, Int((progress * 100).rounded())))%" }
 
-    var isComic: Bool { format == .comic }
-
-    /// A comic has nothing to listen to; a PDF is read from the words on its pages.
-    var canListen: Bool { format != .comic }
-
-    /// 第 15 话 · 第 6 页: where a comic is up to.
-    var comicPlace: String {
-        guard episode > 0 else { return String(localized: "还没看") }
-        return episodes > 1 ? String(localized: "第 \(episode) 话 · 第 \(page) 页") : String(localized: "第 \(page) 页")
-    }
-
     /// The line under a cover: how far, or where it stands.
     var shelfNote: String {
         // Synced from another device without its file.
         if !available { return String(localized: "在别的设备上") }
-        if isComic {
-            if status == .finished { return String(localized: "看完") }
-            guard episode > 0 else { return String(localized: "漫画 · 没看过") }
-            // The same words as the 在读 card: which 话, which page.
-            return comicPlace
-        }
         return switch status {
         case .finished: String(localized: "读完")
         case .want: String(localized: "想读")
@@ -72,11 +56,6 @@ extension BookSummary {
 
     /// 还剩 4 小时 20 分 · 还没读 · 读完了
     var remaining: String {
-        if isComic {
-            if status == .finished { return String(localized: "看完了") }
-            guard episode > 0 else { return String(localized: "还没看") }
-            if episodes > 1 { return episode >= episodes ? String(localized: "最后一话") : String(localized: "还剩 \(episodes - episode) 话") }
-        }
         switch status {
         case .finished: return String(localized: "读完了")
         case .want where progress == 0: return String(localized: "还没读")

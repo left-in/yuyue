@@ -44,7 +44,7 @@ struct PhoneBookInfo: View {
                 YYGroup {
                     Menu {
                         Toggle("在读", isOn: Binding(get: { current.status == .reading }, set: { if $0 { library.setFinished(current, false) } }))
-                        Toggle(current.isComic ? String(localized: "看完了") : String(localized: "读完了"), isOn: Binding(get: { current.status == .finished }, set: { if $0 { library.setFinished(current, true) } }))
+                        Toggle(String(localized: "读完了"), isOn: Binding(get: { current.status == .finished }, set: { if $0 { library.setFinished(current, true) } }))
                     } label: {
                         YYRow(String(localized: "状态"), value: current.status.name, chevron: true)
                     }
@@ -53,7 +53,7 @@ struct PhoneBookInfo: View {
                         YYRow(String(localized: "合集"), value: collections.isEmpty ? String(localized: "没有") : collections, chevron: true)
                     }
                     .buttonStyle(.plain)
-                    if !current.isComic, current.format != .pdf {
+                    if current.format != .pdf {
                         NavigationLink {
                             ReplaceRulesView(core: library.core, bookID: book.id, bookTitle: current.title)
                         } label: {
@@ -168,7 +168,6 @@ struct PhoneBookInfo: View {
         case .txt: "TXT"
         case .pdf: "PDF"
         case .mobi: "MOBI"
-        case .comic: String(localized: "漫画")
         }
     }
 }

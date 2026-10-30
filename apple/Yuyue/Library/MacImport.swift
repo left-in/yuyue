@@ -200,7 +200,6 @@ struct MacDropHint: View {
                     .padding(.bottom, 20)
                 VStack(alignment: .leading, spacing: 9) {
                     formats(String(localized: "书"), ["EPUB", "TXT", "PDF", "MOBI", "AZW3"])
-                    formats(String(localized: "漫画"), ["CBZ", "ZIP", "CBR", String(localized: "图片文件夹")])
                     formats(String(localized: "有声书"), ["M4B", "MP3"])
                 }
                 .padding(.leading, 16).padding(.trailing, 20).padding(.vertical, 14)

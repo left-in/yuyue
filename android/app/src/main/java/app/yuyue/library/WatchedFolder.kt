@@ -70,7 +70,7 @@ class WatchedFolder(private val context: Context) {
     }
 
     companion object {
-        val EXTENSIONS = setOf("epub", "azw3", "mobi", "azw", "pdf", "txt", "cbz", "cbr", "zip")
+        val EXTENSIONS = setOf("epub", "azw3", "mobi", "azw", "pdf", "txt")
         private const val TREE = "watch.tree"
         private const val NAME = "watch.name"
         private const val SEEN = "watch.seen"

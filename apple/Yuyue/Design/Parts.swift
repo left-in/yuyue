@@ -357,6 +357,4 @@ struct YYSheetHeader: View {
 enum PhoneTabIcon {
     /// An asset in the catalogue, drawn as a template.
     static let shelf = "tab-shelf"
-    /// 漫画: the owner's comic-face.svg, as given.
-    static let comic = "comic-face"
 }

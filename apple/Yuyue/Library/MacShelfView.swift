@@ -50,6 +50,7 @@ struct MacShelfView: View {
                 switch filter {
                 case .notes: MacNotesView(library: library)
                 case .words: MacWordsView(library: library)
+                case .podcasts: MacPodcastView()
                 case .collections:
                     CollectionWall(library: library, pinnedRaw: $pinnedRaw, leading: headerInset) { filter = .collection($0) }
                 default: main
@@ -154,7 +155,7 @@ struct MacShelfView: View {
             switch UserDefaults.standard.string(forKey: "debugFilter") {
             case "notes": filter = .notes
             case "words": filter = .words
-            case "comics": filter = .comics
+            case "podcasts": filter = .podcasts
             case "audio": filter = .audio
             default: break
             }
@@ -257,8 +258,13 @@ struct MacShelfView: View {
             sidebarGroup(String(localized: "资料库"), key: "library")
             if !closedGroups.contains("library") {
                 sidebarRow(.all, String(localized: "全部"), "asset." + PhoneTabIcon.shelf, library.books.count)
-                sidebarRow(.books, String(localized: "书"), ProtoIcon.book.rawValue, library.books.count { !$0.isComic })
-                sidebarRow(.comics, String(localized: "漫画"), "asset." + PhoneTabIcon.comic, library.books.count(where: \.isComic))
+                sidebarRow(.books, String(localized: "书"), ProtoIcon.book.rawValue, library.books.count)
+                // 播客 is only a place held: no count, “即将推出” in its place.
+                Button { filter = .podcasts } label: {
+                    SidebarRow(symbol: "asset.radio", trailing: String(localized: "即将推出"), on: filter == .podcasts) { Text("播客") }
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(filter == .podcasts ? .isSelected : [])
                 sidebarRow(.audio, String(localized: "有声"), ProtoIcon.wave.rawValue, library.books.count(where: library.hasAudio))
             }
             sidebarGroup(String(localized: "状态"), key: "status")
@@ -325,7 +331,7 @@ struct MacShelfView: View {
 
     /// The rows in order, for ↑ ↓ on the sidebar.
     private var filterOrder: [ShelfFilter] {
-        [.all, .books, .comics, .audio, .status(.reading), .status(.want), .status(.finished), .notes, .words, .collections]
+        [.all, .books, .podcasts, .audio, .status(.reading), .status(.want), .status(.finished), .notes, .words, .collections]
             + pinnedCollections.map { .collection($0.id) }
     }
 
@@ -545,7 +551,7 @@ struct MacShelfView: View {
         switch filter ?? .all {
         case .all: return String(localized: "全部")
         case .books: return String(localized: "书")
-        case .comics: return String(localized: "漫画")
+        case .podcasts: return String(localized: "播客")
         case .audio: return String(localized: "有声")
         case .status(let s): return s.name
         case .collection(let id): return library.collections.first { $0.id == id }?.name ?? String(localized: "合集")
@@ -559,21 +565,20 @@ struct MacShelfView: View {
         var books = library.books
         switch filter ?? .all {
         case .all: break
-        case .books: books = books.filter { !$0.isComic }
-        case .comics: books = books.filter(\.isComic)
+        case .books: break
         case .audio: books = books.filter(library.hasAudio)
         case .status(let s): books = books.filter { $0.status == s }
         case .collection(let id): books = books.filter { $0.collections.contains(id) }
-        case .notes, .words, .collections: break
+        case .notes, .words, .collections, .podcasts: break
         }
         return sort.sorted(books)
     }
 
     private var reading: [BookSummary] {
-        guard filter == .all || filter == .books || filter == .comics || filter == .audio else { return [] }
-        let comics = filter == .comics, all = filter == .all, audio = filter == .audio
+        guard filter == .all || filter == .books || filter == .audio else { return [] }
+        let all = filter == .all, audio = filter == .audio
         return Array(library.books.filter { b in
-            b.status == .reading && (all || (audio ? library.hasAudio(b) : b.isComic == comics))
+            b.status == .reading && (all || !audio || library.hasAudio(b))
         }.prefix(3))
     }
 
@@ -623,9 +628,7 @@ struct MacShelfView: View {
                 }
 
                 if !reading.isEmpty {
-                    sectionHeader(String(localized: "在读"), trailing: filter == .comics
-                        ? String(localized: "\(library.books.count { $0.status == .reading && $0.isComic }) 部")
-                        : String(localized: "\(library.books.count { $0.status == .reading && (filter == .all || !$0.isComic) }) 本"))
+                    sectionHeader(String(localized: "在读"), trailing: String(localized: "\(library.books.count { $0.status == .reading }) 本"))
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 210), spacing: 12)], spacing: 12) {
                         ForEach(reading) { book in
                             ReadingCard(book: book, listening: library.listening == book.id) { intent in
@@ -643,8 +646,8 @@ struct MacShelfView: View {
                 if !books.isEmpty || carded.isEmpty {
                 HStack {
                     Text(carded.isEmpty
-                         ? (filter == .comics ? String(localized: "\(books.count) 部") : String(localized: "\(books.count) 本"))
-                         : (filter == .comics ? String(localized: "其余 \(books.count) 部") : String(localized: "其余 \(books.count) 本")))
+                         ? String(localized: "\(books.count) 本")
+                         : String(localized: "其余 \(books.count) 本"))
                         .font(.yy(size: 12.5, weight: .semibold))
                         .foregroundStyle(YYColor.t1)
                     Spacer()
@@ -710,10 +713,10 @@ struct MacShelfView: View {
         }
         .buttonStyle(.plain)
         .keyboardShortcut("o")
-        .help("导入书或漫画（⌘O）：EPUB、PDF、MOBI、AZW3、TXT，漫画的 CBZ、CBR、ZIP，或一文件夹图片；也可以直接拖进窗口")
+        .help("导入书（⌘O）：EPUB、PDF、MOBI、AZW3、TXT；也可以直接拖进窗口")
     }
 
-    /// A status page cut into 书, 漫画, 有声书: each shelf with books in it, the empty ones left out.
+    /// A status page cut into 书, 有声书: each shelf with books in it, the empty ones left out.
     private func statusShelves(_ s: ReadingStatus, _ books: [BookSummary]) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             ForEach(StatusShelf.allCases, id: \.self) { shelf in
@@ -770,7 +773,7 @@ struct MacShelfView: View {
 
     @ViewBuilder private var empty: some View {
         let (symbol, text): (String, String) = if library.books.isEmpty {
-            ("books.vertical", String(localized: "书架是空的，把 EPUB、PDF、MOBI、TXT 或漫画拖进窗口就能开始读"))
+            ("books.vertical", String(localized: "书架是空的，把 EPUB、PDF、MOBI、TXT 拖进窗口就能开始读"))
         } else if currentCollection != nil {
             ("tray", String(localized: "还没有书。把书拖到左边这个合集上，或者把文件拖进来"))
         } else {
@@ -787,7 +790,6 @@ struct MacShelfView: View {
         Button { open(book, nil) } label: {
             VStack(alignment: .leading, spacing: 0) {
                 BookCover(book: book)
-                    .comicStack(book)
                     .opacity(book.available ? 1 : 0.45)
                     .overlay {
                         if revealed == book.id {
@@ -945,38 +947,32 @@ struct MacShelfView: View {
     }
 }
 
-/// The three shelves a status page is cut into. A book is on one of them: a comic on 漫画, a book
-/// with an audiobook on 有声书, the rest on 书. The words for a shelf follow its kind: 在看 and 看完
-/// for comics, 在听 and 听完 for audiobooks.
+/// The two shelves a status page is cut into. A book is on one of them: a book with an audiobook
+/// on 有声书, the rest on 书. The words for a shelf follow its kind: 在听 and 听完 for audiobooks.
 private enum StatusShelf: CaseIterable {
-    case books, comics, audio
+    case books, audio
 
     var name: String {
         switch self {
         case .books: String(localized: "书")
-        case .comics: String(localized: "漫画")
         case .audio: String(localized: "有声书")
         }
     }
 
     func holds(_ book: BookSummary, in library: Library) -> Bool {
         switch self {
-        case .books: !book.isComic && !library.hasAudio(book)
-        case .comics: book.isComic
-        case .audio: !book.isComic && library.hasAudio(book)
+        case .books: !library.hasAudio(book)
+        case .audio: library.hasAudio(book)
         }
     }
 
     /// The status in this shelf's words, as its header says it on the right.
     func verb(_ status: ReadingStatus) -> String {
         switch (status, self) {
-        case (.reading, .comics): String(localized: "在看")
         case (.reading, .audio): String(localized: "在听")
         case (.reading, _): String(localized: "在读")
-        case (.want, .comics): String(localized: "想看")
         case (.want, .audio): String(localized: "想听")
         case (.want, _): String(localized: "想读")
-        case (.finished, .comics): String(localized: "看完")
         case (.finished, .audio): String(localized: "听完")
         case (.finished, _): String(localized: "读完")
         }
@@ -1068,7 +1064,7 @@ private struct SidebarRow<Title: View>: View {
                 if let drawn = ProtoIcon(rawValue: symbol) {
                     drawn.shape.stroke(style: StrokeStyle(lineWidth: drawn.line, lineCap: .round, lineJoin: .round))
                 } else if symbol.hasPrefix("asset.") {
-                    // 全部 (the phone's 书架 tab icon) and 漫画: SVGs in the asset catalogue.
+                    // 全部 (the phone's 书架 tab icon): an SVG in the asset catalogue.
                     Image(String(symbol.dropFirst(6))).resizable().renderingMode(.template).scaledToFit()
                 } else {
                     Image(systemName: symbol).resizable().scaledToFit()
@@ -1222,9 +1218,8 @@ struct ReadingCard: View {
                 ProgressLine(value: book.progress)
                     .padding(.bottom, 10)
                 HStack(spacing: 6) {
-                    pill(book.isComic ? String(localized: "续看") : String(localized: "接着读"), fill: tint.black, text: tint.onBlack) { open(nil) }
-                    if !book.canListen {
-                    } else if listening {
+                    pill(String(localized: "接着读"), fill: tint.black, text: tint.onBlack) { open(nil) }
+                    if listening {
                         pill(String(localized: "听中"), symbol: "waveform", fill: tint.accentSoft, text: tint.accent) { open(nil) }
                     } else {
                         pill(String(localized: "听"), fill: YYColor.inset, text: YYColor.t1) { open(.listen) }
@@ -1239,7 +1234,6 @@ struct ReadingCard: View {
     }
 
     private var meta: String {
-        if book.isComic { return book.comicPlace }
         if book.format == .pdf, book.page > 0 { return [book.author, String(localized: "第 \(book.page) 页"), book.percent].compactMap { $0 }.joined(separator: " · ") }
         return [book.author, book.percent, listening ? String(localized: "听中") : nil].compactMap { $0 }.joined(separator: " · ")
     }

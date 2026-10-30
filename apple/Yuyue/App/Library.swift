@@ -312,15 +312,15 @@ final class Library {
         toast.undo?()
     }
 
-    /// What 导入 can pick: books, comics as an archive or a folder of pictures.
-    static let importTypes: [UTType] = [.epub, .yuyueSnapshot, .pdf, .plainText, .zip, .folder, .audio] + ["cbz", "cbr", "rar", "mobi", "azw3", "azw", "prc"].compactMap { UTType(filenameExtension: $0) }
+    /// What 导入 can pick: books, or a folder of them.
+    static let importTypes: [UTType] = [.epub, .yuyueSnapshot, .pdf, .plainText, .folder, .audio] + ["mobi", "azw3", "azw", "prc"].compactMap { UTType(filenameExtension: $0) }
 
     /// Imports the files, into the collection when given; `folder` names the watched folder
     /// they came from.
     func importFiles(_ urls: [URL], into collection: String? = nil, from folder: String? = nil) async {
         importing += 1
         defer { importing -= 1 }
-        // A folder of books brings in each of them; a folder of pictures is one comic.
+        // A folder of books brings in each of them.
         let folders = urls.filter { $0.hasDirectoryPath && $0.startAccessingSecurityScopedResource() }
         defer { folders.forEach { $0.stopAccessingSecurityScopedResource() } }
         // 有声书 go to be paired with their e-book instead.
@@ -405,7 +405,7 @@ final class Library {
                 let all = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants])?
                     .compactMap { $0 as? URL } ?? []
                 let audio = all.filter(isAudio)
-                if !audio.isEmpty, !all.contains(where: { ["epub", "azw3", "mobi", "pdf", "txt", "cbz", "zip"].contains($0.pathExtension.lowercased()) }) {
+                if !audio.isEmpty, !all.contains(where: { ["epub", "azw3", "mobi", "pdf", "txt"].contains($0.pathExtension.lowercased()) }) {
                     books.append(audio)
                 } else {
                     rest.append(url)
@@ -439,14 +439,13 @@ final class Library {
         }
     }
 
-    /// The books in a folder, all the way down, unless it's the pictures of a comic.
+    /// The books in a folder, all the way down.
     nonisolated private static func booksInside(_ url: URL) -> [URL] {
         let fm = FileManager.default
-        let pictures: Set<String> = ["jpg", "jpeg", "png", "webp", "gif", "avif", "heic"]
-        let books: Set<String> = ["epub", "azw3", "mobi", "azw", "prc", "pdf", "txt", "cbz", "cbr", "rar", "zip"]
+        let books: Set<String> = ["epub", "azw3", "mobi", "azw", "prc", "pdf", "txt"]
         guard url.hasDirectoryPath,
               let top = try? fm.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles),
-              !top.contains(where: { pictures.contains($0.pathExtension.lowercased()) }),
+              !top.isEmpty,
               let all = fm.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants])
         else { return [url] }
         let found = all.compactMap { $0 as? URL }.filter { books.contains($0.pathExtension.lowercased()) }
@@ -464,7 +463,6 @@ final class Library {
     private static func importedLine(_ book: BookSummary, place: String) -> String {
         var parts: [String] = []
         if !book.authors.isEmpty { parts.append(book.authors.joined(separator: "、")) }
-        if book.isComic, book.episodes > 1 { parts.append(String(localized: "\(book.episodes) 话")) }
         parts.append(String(localized: "已放进“\(place)”"))
         return parts.joined(separator: " · ")
     }
@@ -523,10 +521,9 @@ final class Library {
         if let lost = offline(error) { return lost }
         guard let error = error as? CoreError else { return error.localizedDescription }
         switch error {
-        case .Unsupported: return String(localized: "不支持这种文件，目前能打开 EPUB、PDF、MOBI、AZW3、TXT 和漫画（CBZ、CBR、ZIP、RAR、一文件夹图片）")
+        case .Unsupported: return String(localized: "不支持这种文件，目前能打开 EPUB、PDF、MOBI、AZW3、TXT")
         case .Protected: return String(localized: "这本书有版权保护（DRM），打不开")
         case .BadBook(let message) where message.lowercased().contains("password"): return String(localized: "这个压缩包设了密码，打不开")
-        case .BadBook(let message) where message.contains("no pictures"): return String(localized: "里面没有图片，不是漫画")
         case .BadBook(let message) where message.contains("too large"): return String(localized: "这本书太大了，读不进来")
         case .BadBook: return String(localized: "这本书读不出来，文件可能坏了，或者不是它看起来的格式")
         case .NotFound: return String(localized: "找不到这本书的文件，可能被移走或删掉了。从书架上删掉，再导入一次就好")
