@@ -391,19 +391,103 @@ struct SettingsSwitch: View {
     }
 }
 
+/// What a settings row does (docs/design/设置按钮与快捷键.html · M): a small grey glyph saying what
+/// it does, the words with a fine underline, ↗ when it leaves 语阅. No box; it answers the pointer
+/// with a faint grey and turns the glyph and the line to the theme colour. `danger` is red.
+struct SettingsActionStyle: ButtonStyle {
+    let icon: String
+    var leaves = false
+    var danger = false
+
+    func makeBody(configuration: Configuration) -> some View {
+        ActionLabel(configuration: configuration, icon: icon, leaves: leaves, danger: danger)
+    }
+
+    private struct ActionLabel: View {
+        let configuration: Configuration
+        let icon: String
+        let leaves: Bool
+        let danger: Bool
+        @State private var hover = false
+        @Environment(\.isEnabled) private var enabled
+
+        var body: some View {
+            let lit = hover && enabled
+            let ink = danger ? YYColor.danger : YYColor.t1
+            let mark = danger ? YYColor.danger : lit ? YYTint.standard.accent : YYColor.t2
+            HStack(spacing: 5) {
+                Image(systemName: icon).font(.yy(size: 11.5, weight: .medium)).foregroundStyle(mark)
+                configuration.label
+                    .font(.yy(size: 12, weight: .medium))
+                    .foregroundStyle(ink)
+                    .overlay(alignment: .bottom) {
+                        Rectangle()
+                            .fill(danger ? YYColor.danger.opacity(lit ? 1 : 0.4) : lit ? YYTint.standard.accent : YYColor.t3)
+                            .frame(height: lit ? 1 : 0.5)
+                            .offset(y: 3)
+                    }
+                if leaves {
+                    Image(systemName: "arrow.up.right").font(.yy(size: 8.5, weight: .semibold)).foregroundStyle(mark)
+                }
+            }
+            .lineLimit(1)
+            .fixedSize()
+            .padding(.horizontal, 8)
+            .frame(height: 28)
+            .background(lit ? YYColor.inset.opacity(0.7) : .clear, in: .rect(cornerRadius: 7))
+            .padding(.trailing, -8)
+            .contentShape(.rect)
+            .opacity(enabled ? (configuration.isPressed ? 0.55 : 1) : 0.4)
+            .onHover { hover = $0 }
+            .animation(.easeOut(duration: 0.12), value: hover)
+        }
+    }
+}
+
+extension ButtonStyle where Self == SettingsActionStyle {
+    static func action(_ icon: String, leaves: Bool = false, danger: Bool = false) -> SettingsActionStyle {
+        .init(icon: icon, leaves: leaves, danger: danger)
+    }
+}
+
+/// A shortcut: each key combination in one grey tag, 或 between them.
+struct SettingsKeys: View {
+    let combos: [String]
+    init(_ combos: String...) { self.combos = combos }
+
+    var body: some View {
+        HStack(spacing: 6) {
+            ForEach(Array(combos.enumerated()), id: \.offset) { i, c in
+                if i > 0 { Text("或").font(.yy(size: 11)).foregroundStyle(YYColor.t3) }
+                Text(verbatim: c)
+                    .font(.yy(size: 11.5, weight: .medium))
+                    .tracking(0.7)
+                    .foregroundStyle(YYColor.t1)
+                    .padding(.horizontal, 8)
+                    .frame(height: 22)
+                    .background(YYColor.inset, in: .rect(cornerRadius: 6))
+            }
+        }
+        .fixedSize()
+    }
+}
+
 /// The small grey heading over a card.
 struct SettingsHeading: View {
     let text: String
-    init(_ text: String) { self.text = text }
+    /// A word after it in lighter grey, such as 用你自己的 Key.
+    var note: String?
+    init(_ text: String, note: String? = nil) { self.text = text; self.note = note }
 
     var body: some View {
         // `.v-ms-gl`
-        Text(text)
-            .font(.yy(size: 11.5, weight: .semibold))
-            .foregroundStyle(YYColor.t2)
-            .padding(.leading, 4)
-            .padding(.top, 2)
-            .padding(.bottom, -5)
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Text(text).font(.yy(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t2)
+            if let note { Text(note).font(.yy(size: 10.5)).foregroundStyle(YYColor.t3) }
+        }
+        .padding(.leading, 4)
+        .padding(.top, 2)
+        .padding(.bottom, -5)
     }
 }
 
@@ -696,9 +780,10 @@ private struct ReadingSettings: View {
                 SettingsRow(String(localized: "关掉书伴提示和难词注释"), detail: String(localized: "页面上只剩书里的字")) { SettingsSwitch(isOn: $immersiveHints) }
                 SettingsRow(String(localized: "关掉翻页动画"), detail: String(localized: "整页直接换，不滑动")) { SettingsSwitch(isOn: $immersiveStill) }
                 SettingsRow(String(localized: "通知不打扰"), detail: String(localized: "给“阅读”专注模式加上语阅")) {
-                    Button("打开专注模式设置") {
+                    Button("专注模式设置") {
                         if let url = URL(string: "x-apple.systempreferences:com.apple.Focus-Settings.extension") { NSWorkspace.shared.open(url) }
                     }
+                    .buttonStyle(.action("moon", leaves: true))
                 }
             }
             Spacer(minLength: 0)
@@ -931,6 +1016,7 @@ private struct NoteExportSettings: View {
                         Text(folder.lastPathComponent).font(.yy(size: 12)).foregroundStyle(YYColor.t2).lineLimit(1)
                     }
                     Button(folder == nil ? String(localized: "选文件夹…") : String(localized: "换一个…")) { pick() }
+                        .buttonStyle(.action("folder"))
                 }
             }
             SettingsRow("Notion", detail: String(localized: "在 notion.so/my-integrations 建一个集成，把令牌填在这里；再把要放书的页面共享给它，页面链接填在下面")) {
@@ -1008,6 +1094,7 @@ private struct DataSettings: View {
                     }
                     Spacer()
                     Button("导入快照…") { pick() }
+                        .buttonStyle(.action("square.and.arrow.down"))
                     Button {
                         Task { await snapshots.make() }
                     } label: {
@@ -1022,6 +1109,7 @@ private struct DataSettings: View {
             SettingsCard {
                 SettingsRow(String(localized: "导出阅读记录"), detail: String(localized: "想读、在读、读完和读完的日期，给 Goodreads 或 StoryGraph 导入")) {
                     Button("导出…") { exporting = true }
+                        .buttonStyle(.action("square.and.arrow.up"))
                 }
             }
             NoteExportSettings()
@@ -1031,10 +1119,11 @@ private struct DataSettings: View {
                     ForEach(snapshots.saved) { s in
                         SettingsRow(Snapshots.when(s.about.madeAt),
                                     detail: ([Snapshots.from(s.about)] + (s.about.parts.files ? [String(localized: "含书文件")] : []) + [Snapshots.size(s.about.bytes)]).joined(separator: " · ")) {
-                            HStack(spacing: 8) {
+                            HStack(spacing: 14) {
                                 Button("导入…") { open(s.url) }
-                                ShareLink(item: s.url) { Image(systemName: "square.and.arrow.up") }
-                                    .help("分享")
+                                    .buttonStyle(.action("square.and.arrow.down"))
+                                ShareLink(item: s.url) { Text("分享") }
+                                    .buttonStyle(.action("square.and.arrow.up"))
                             }
                         }
                         .contextMenu {
@@ -1052,7 +1141,7 @@ private struct DataSettings: View {
                     try? FileManager.default.createDirectory(at: snapshots.folder, withIntermediateDirectories: true)
                     NSWorkspace.shared.activateFileViewerSelecting([snapshots.folder])
                 }
-                .buttonStyle(.link)
+                .buttonStyle(.action("folder", leaves: true))
             }
             .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
             .padding(.leading, 8)
@@ -1116,7 +1205,7 @@ private struct StorageSettings: View {
                 SettingsRow(String(localized: "已删除的书 · \(usage?.deleted.count ?? 0) 本 · \(Self.size(usage?.deletedBytes ?? 0))"),
                             detail: String(localized: "删掉的书留 30 天，可以撤销；过了就自动清掉")) {
                     Button("现在清掉") { purge() }
-                        .foregroundStyle(YYColor.danger)
+                        .buttonStyle(.action("trash", danger: true))
                         .disabled((usage?.deleted.isEmpty ?? true) || cleaning)
                 }
                 SettingsRow(String(localized: "书伴存下的回答"), detail: String(localized: "同一本书、读到同一章问同样的问题，直接用存下的，不再花钱")) {
@@ -1127,11 +1216,13 @@ private struct StorageSettings: View {
                             try? FileManager.default.removeItem(at: companionDir)
                             companionBytes = Self.bytes(in: companionDir)
                         }
+                        .buttonStyle(.action("trash", danger: true))
                         .disabled(companionBytes == 0)
                     }
                 }
                 SettingsRow(String(localized: "书库放在"), detail: library.dataDir.path(percentEncoded: false)) {
                     Button("在访达中显示") { NSWorkspace.shared.activateFileViewerSelecting([library.dataDir]) }
+                        .buttonStyle(.action("folder", leaves: true))
                 }
             }
             if let usage, !usage.books.isEmpty {

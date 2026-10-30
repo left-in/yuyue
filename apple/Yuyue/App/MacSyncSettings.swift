@@ -39,12 +39,14 @@ struct SyncSettings: View {
                 SettingsCard {
                     SettingsRow(String(localized: "WebDAV 服务器"), detail: [account.url.host() ?? account.url.absoluteString, account.user].filter { !$0.isEmpty }.joined(separator: " · ")) {
                         Button("修改") { editingWebDAV = true }
+                            .buttonStyle(.action("pencil"))
                     }
                 }
             } else if sync.method == .googleDrive {
                 SettingsCard {
                     SettingsRow(String(localized: "Google 账号"), detail: [sync.googleEmail, String(localized: "放在 Drive 里只有语阅看得到的文件夹")].compactMap { $0 }.joined(separator: " · ")) {
                         Button("退出") { sync.stop() }
+                            .buttonStyle(.action("rectangle.portrait.and.arrow.right"))
                     }
                 }
             } else if signingIn || googleProblem != nil {
