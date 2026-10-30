@@ -25,7 +25,6 @@ struct ForeignSettings: View {
             SettingsCard {
                 SettingsRow(String(localized: "系统词典"), detail: String(localized: "导入的词典里查不到时用 Mac 自带的。哪几本打开、谁在前面，在“词典”App 的设置里选")) {
                     Button("打开词典") { openDictionary() }
-                        .buttonStyle(.action("character.book.closed", leaves: true))
                 }
                 SettingsRow(String(localized: "点词时读出来")) { SettingsSwitch(isOn: $speak) }
                 SettingsRow(String(localized: "英文发音")) {
@@ -114,7 +113,6 @@ struct ForeignSettings: View {
             Button("下载英文 → 中文") {
                 download = .init(source: Locale.Language(identifier: "en"), target: Translator.target)
             }
-            .buttonStyle(.action("arrow.down.circle"))
             .disabled(download != nil)
         case .unsupported?:
             Text("这台 Mac 不支持").font(.yy(size: 12)).foregroundStyle(YYColor.t3)
@@ -164,7 +162,6 @@ private struct MDictList: View {
                     ProgressView().controlSize(.small)
                 } else {
                     Button("选文件…") { picking = true }
-                        .buttonStyle(.action("doc.badge.plus"))
                 }
             }
         }
