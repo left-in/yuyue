@@ -115,7 +115,7 @@
 - **选中即问**：解释、翻译、查背景
 - **前情提要**：隔几天再打开书时，先给三句回顾
 - **与书对话**：回答带原文出处，点一下就跳过去；默认只用读过的部分回答，可以切到"问全书"【已确认】
-- **模型**：先用端侧模型（Apple 用 Foundation Models；Android 用 Gemini Nano，只有部分机型支持），也可以填自己的 Key（OpenAI 兼容接口、Claude、Gemini、DeepSeek、Ollama），不做托管服务。结果按"书 + 章节"缓存
+- **模型**：先用端侧模型（Apple 用 Foundation Models；Android 用 Gemini Nano，只有部分机型支持），也可以"添加服务商"：一张能搜、带标识的服务商表，按怎么接分组——登录账号（OpenRouter，用它给 App 的登录拿 Key）、API Key（Claude、OpenAI、Gemini、DeepSeek、通义千问、Kimi、智谱、豆包、硅基流动…）、本机和局域网（magpie、Ollama、LM Studio），搜不到的在底下"自己添加"任何 OpenAI 兼容接口；设置里"服务商"是一个下拉、"模型"单独一行（列出服务商有的模型），"管理服务商"里改和删，不做托管服务。结果按"书 + 章节"缓存
 - AI 引擎、朗读引擎、翻译引擎放在同一个地方配置，全部免费，没有会员门槛【听阅，反着学】
 
 ### 3.9 搜索 · 问【已确认】

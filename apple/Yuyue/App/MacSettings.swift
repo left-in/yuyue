@@ -772,7 +772,7 @@ private struct ReadingSettings: View {
             SettingsHeading(String(localized: "沉浸阅读"))
             SettingsCard {
                 SettingsRow(String(localized: "进出沉浸"), detail: String(localized: "全屏只留下字；指针移到最底下，胶囊就出来")) {
-                    Text("⌃⌘F 或 Esc").font(.yy(size: 12)).foregroundStyle(YYColor.t2)
+                    SettingsKeys("⌃⌘F", "esc")
                 }
                 SettingsRow(String(localized: "打开书就进沉浸"), detail: String(localized: "每本书一打开就只留下字")) { SettingsSwitch(isOn: $immersiveAlways) }
                 SettingsRow(String(localized: "留一条进度细线"), detail: String(localized: "屏幕最底下一条几乎看不见的线")) { SettingsSwitch(isOn: $immersiveLine) }
@@ -870,128 +870,498 @@ private struct ListeningSettings: View {
                     }
                 }
             }
-            SettingsHeading(String(localized: "声音"))
+            SettingsHeading(String(localized: "声音"), note: String(localized: "按书的语言自动换"))
             SettingsCard {
                 ForEach(Self.languages, id: \.0) { tag, name, sample in
                     VoiceRow(tag: tag, name: name, sample: sample)
                 }
             }
-            Text("系统声音在这台 Mac 上合成，不联网。想要更自然的声音：系统设置 › 辅助功能 › 朗读内容 › 系统声音 › 管理声音，下载“高级”的那几个")
-                .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
-                .padding(.horizontal, 8)
-            SettingsHeading(String(localized: "云端声音"))
+            .id(revision)
+            SettingsHeading(String(localized: "云端声音"), note: String(localized: "用你自己的 Key"))
             SettingsCard {
-                ForEach(CloudVoice.Provider.allCases) { CloudVoiceRow(provider: $0) }
+                ForEach(CloudVoice.Provider.allCases) { p in
+                    CloudVoiceRow(provider: p) { editing = p }
+                }
             }
-            Text("填你自己的 Key，费用直接走你的账号，语阅不经手。读过的句子存在这台 Mac 上，再听不花钱，断网也能听；听书时会把这一章提前合成好。")
-                .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
+            .id(revision)
+            Text("云端声音整章提前合成，读过的句子存在本机，再听不花钱、断网也能听；费用走你自己的账号，语阅不经手。")
+                .font(.yy(size: 11)).foregroundStyle(YYColor.t3).lineSpacing(2)
                 .padding(.horizontal, 8)
             Spacer(minLength: 0)
         }
+        .sheet(item: $editing, onDismiss: { revision += 1 }) { CloudKeySheet(provider: $0) }
     }
 }
 
-/// 云端声音: one provider's key (and Azure's region); 连接 checks it and fetches the voices.
-private struct CloudVoiceRow: View {
-    let provider: CloudVoice.Provider
-    @State private var key = ""
-    @AppStorage(CloudVoice.Provider.regionName) private var region = ""
-    @State private var checking = false
-    @State private var outcome: String?
-    @State private var failed = false
-    /// A key is kept: an empty field then offers to take it away.
-    @State private var saved = false
-
-    var body: some View {
-        SettingsRow(provider.title, detail: outcome ?? provider.help) {
-            HStack(spacing: 8) {
-                if provider == .azure {
-                    TextField("", text: $region, prompt: Text(verbatim: "eastasia"))
-                        .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
-                        .frame(width: 90)
-                }
-                SecureField("", text: $key, prompt: Text(provider.keyHint))
-                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
-                    .frame(width: provider == .azure ? 130 : 200)
-                Button {
-                    connect()
-                } label: {
-                    if checking { ProgressView().controlSize(.small) } else { Text(key.isEmpty && saved ? String(localized: "清掉") : String(localized: "连接")) }
-                }
-                .disabled(checking || (key.isEmpty && !saved))
-                // Squeezed by a long detail on the left, it was cut to a sliver.
-                .fixedSize()
-            }
-            .fixedSize()
-        }
-        .foregroundStyle(failed ? YYColor.danger : YYColor.t1)
-        .onAppear {
-            key = Keychain.read(provider.keyName) ?? ""
-            saved = !key.isEmpty
+/// What tells two voices apart: 普通话 / 台湾 / 粤语 for Chinese, the country for English, the
+/// service for a cloud one.
+private enum VoiceText {
+    static func place(_ v: any Voice) -> String {
+        guard let s = v as? SystemVoice else { return v.qualityName ?? "" }
+        switch s.language.lowercased() {
+        case "zh-cn": return String(localized: "普通话")
+        case "zh-tw": return String(localized: "台湾")
+        case "zh-hk": return String(localized: "粤语")
+        default:
+            let region = Locale.Language(identifier: s.language).region?.identifier
+            return region.flatMap { Locale.current.localizedString(forRegionCode: $0) } ?? s.language
         }
     }
 
-    private func connect() {
-        let k = key.trimmingCharacters(in: .whitespacesAndNewlines)
-        region = region.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard !k.isEmpty else {
-            Keychain.delete(provider.keyName)
-            saved = false
-            outcome = nil
-            return
+    /// The line under the book's language: "高级 · 普通话 · 这台 Mac", "OpenAI · 云端".
+    static func meta(_ v: any Voice) -> String {
+        if let s = v as? SystemVoice {
+            return [s.qualityName, place(v), String(localized: "这台 Mac")].compactMap { $0 }.joined(separator: " · ")
         }
-        Keychain.write(provider.keyName, k)
-        saved = true
-        checking = true
-        Task {
-            defer { checking = false }
-            do {
-                let n = try await CloudVoice.refresh(provider)
-                failed = false
-                outcome = String(localized: "已连上 · \(n) 个声音")
-            } catch {
-                failed = true
-                outcome = error.localizedDescription
-            }
-        }
+        return [v.qualityName, String(localized: "云端")].compactMap { $0 }.joined(separator: " · ")
     }
 }
 
+/// One book language: its voice under it, 试听, and the name, which opens the picker.
 private struct VoiceRow: View {
     let tag: String
     let name: String
     let sample: String
     @State private var chosen: String?
+    @State private var playing: String?
+    @State private var picking = false
+    @State private var hover = false
+    @State private var failed: String?
 
     private var key: String { "player.voice." + tag }
 
     var body: some View {
         let voices = Voices.all(for: tag)
         let current = voices.first { $0.id == chosen } ?? SystemVoice.best(for: tag) ?? voices.first
-        SettingsRow(name, detail: current.map(Voices.title) ?? String(localized: "这台 Mac 上没有这种语言的声音")) {
-            HStack(spacing: 8) {
-                if let current {
-                    Button("试听") { Voices.preview(current, text: sample) }
+        HStack(spacing: 12) {
+            Label2(title: name, detail: failed ?? current.map(VoiceText.meta) ?? String(localized: "这台 Mac 上没有这种语言的声音"))
+            Spacer(minLength: 12)
+            if let current {
+                TryButton(on: playing == current.id) { play(current) }
+            }
+            Button { picking = true } label: {
+                HStack(spacing: 6) {
+                    Text(current?.name ?? String(localized: "没有声音")).foregroundStyle(current == nil ? YYColor.t3 : YYColor.t1)
+                    Image(systemName: "chevron.up.chevron.down").font(.yy(size: 9, weight: .semibold)).foregroundStyle(YYColor.t3)
                 }
-                Menu("换声音") {
-                    ForEach(voices, id: \.id) { v in
-                        Button {
-                            chosen = v.id
-                            UserDefaults.standard.set(v.id, forKey: key)
-                        } label: {
-                            if v.id == current?.id {
-                                Label(Voices.title(v), systemImage: "checkmark")
-                            } else {
-                                Text(Voices.title(v))
-                            }
-                        }
-                    }
+                .font(.yy(size: 12.5))
+                .lineLimit(1)
+                .padding(.leading, 10)
+                .padding(.trailing, 8)
+                .frame(height: 28)
+                .background(hover || picking ? YYColor.inset : .clear, in: .rect(cornerRadius: 8))
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .onHover { hover = $0 }
+            .disabled(voices.isEmpty)
+            .popover(isPresented: $picking, arrowEdge: .bottom) {
+                VoicePicker(voices: voices, current: current?.id, playing: playing, play: play) { v in
+                    chosen = v.id
+                    UserDefaults.standard.set(v.id, forKey: key)
+                    picking = false
                 }
-                .fixedSize()
-                .disabled(voices.isEmpty)
             }
         }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .frame(minHeight: 46)
         .onAppear { chosen = UserDefaults.standard.string(forKey: key) }
+    }
+
+    /// 试听: three bars for as long as a sentence takes.
+    private func play(_ v: any Voice) {
+        failed = nil
+        playing = v.id
+        Voices.preview(v, text: sample) { failed = $0; playing = nil }
+        let id = v.id
+        Task {
+            try? await Task.sleep(for: .seconds(3))
+            if playing == id { playing = nil }
+        }
+    }
+}
+
+/// The voices for one language, in a popover: a search, 这台 Mac then each cloud service, 试听 in
+/// front of every one, a tick on the one in use, and 下载更自然的声音… at the end.
+private struct VoicePicker: View {
+    let voices: [any Voice]
+    let current: String?
+    let playing: String?
+    let play: (any Voice) -> Void
+    let choose: (any Voice) -> Void
+    @State private var query = ""
+
+    private var groups: [(String, [any Voice])] {
+        let q = query.trimmingCharacters(in: .whitespaces).lowercased()
+        let found = q.isEmpty ? voices : voices.filter { ($0.name + VoiceText.place($0)).lowercased().contains(q) }
+        var out: [(String, [any Voice])] = []
+        let system = found.filter { $0 is SystemVoice }
+        if !system.isEmpty { out.append((String(localized: "这台 Mac · 不联网"), system)) }
+        for p in CloudVoice.Provider.allCases {
+            let cloud = found.filter { ($0 as? CloudVoice)?.provider == p }
+            if !cloud.isEmpty { out.append((String(localized: "云端 · \(p.title)"), cloud)) }
+        }
+        return out
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 6) {
+                Image(systemName: "magnifyingglass").font(.yy(size: 11)).foregroundStyle(YYColor.t3)
+                TextField("", text: $query, prompt: Text("找声音")).textFieldStyle(.plain).font(.yy(size: 12))
+            }
+            .padding(.horizontal, 9)
+            .frame(height: 28)
+            .background(YYColor.inset, in: .rect(cornerRadius: 8))
+            .padding(8)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(groups, id: \.0) { title, list in
+                        Text(title).font(.yy(size: 10, weight: .semibold)).foregroundStyle(YYColor.t3)
+                            .padding(.horizontal, 10).padding(.top, 8).padding(.bottom, 4)
+                        ForEach(list, id: \.id) { v in PickerRow(voice: v, on: v.id == current, playing: playing == v.id, play: play, choose: choose) }
+                    }
+                    if groups.isEmpty {
+                        Text("没有这个声音").font(.yy(size: 11.5)).foregroundStyle(YYColor.t3).padding(12)
+                    }
+                }
+                .padding(.horizontal, 6)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            // A fixed height: a popover that shrinks as the search narrows leaves smears behind.
+            .frame(height: min(340, CGFloat(voices.count) * 40 + 60))
+            Rectangle().fill(YYColor.line).frame(height: 0.5).padding(.horizontal, 8)
+            Button {
+                if let url = URL(string: "x-apple.systempreferences:com.apple.Accessibility-Settings.extension?SpokenContent") { NSWorkspace.shared.open(url) }
+            } label: {
+                Label("下载更自然的声音…", systemImage: "arrow.down.to.line")
+                    .font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 14).frame(height: 34)
+                    .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(width: 300)
+    }
+}
+
+/// One voice in the picker: 试听, its name and where it's from, ✓ when in use; click to choose.
+private struct PickerRow: View {
+    let voice: any Voice
+    let on: Bool
+    let playing: Bool
+    let play: (any Voice) -> Void
+    let choose: (any Voice) -> Void
+    @State private var hover = false
+
+    var body: some View {
+        HStack(spacing: 10) {
+            TryButton(on: playing, size: 26) { play(voice) }
+            VStack(alignment: .leading, spacing: 1) {
+                Text(voice.name).font(.yy(size: 12, weight: on ? .semibold : .regular)).foregroundStyle(YYColor.t1)
+                Text([(voice as? SystemVoice)?.qualityName, VoiceText.place(voice)].compactMap { $0 }.joined(separator: " · "))
+                    .font(.yy(size: 10)).foregroundStyle(YYColor.t3)
+            }
+            Spacer(minLength: 8)
+            Image(systemName: "checkmark").font(.yy(size: 11, weight: .bold)).foregroundStyle(YYTint.standard.accent).opacity(on ? 1 : 0)
+        }
+        .padding(.leading, 6).padding(.trailing, 10)
+        .frame(height: 40)
+        .background(hover ? YYColor.inset : .clear, in: .rect(cornerRadius: 8))
+        .contentShape(.rect)
+        .onHover { hover = $0 }
+        .onTapGesture { choose(voice) }
+        .accessibilityAddTraits(on ? [.isSelected, .isButton] : .isButton)
+    }
+}
+
+/// 试听: the grey disc (`.v-ls-try`), three bars while it reads.
+private struct TryButton: View {
+    let on: Bool
+    var size: CGFloat = 28
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Disc(on: on, size: size) {
+                if on { Bars() } else { Image(systemName: "play.fill").font(.yy(size: size > 27 ? 10 : 9)).padding(.leading, 1) }
+            }
+        }
+        .buttonStyle(.plain)
+        .help(Text("试听"))
+        .accessibilityLabel(Text("试听"))
+    }
+}
+
+/// `.v-ls-try`: the grey disc in front of a voice; the theme's soft colour while it reads.
+private struct Disc<Content: View>: View {
+    var on = false
+    var size: CGFloat = 28
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        content
+            .foregroundStyle(on ? YYTint.standard.accent : YYColor.t1)
+            .frame(width: size, height: size)
+            .background(on ? YYTint.standard.accentSoft : YYColor.inset, in: .circle)
+    }
+}
+
+/// `.eq`: three bars going up and down, for the voice that is reading.
+private struct Bars: View {
+    var body: some View {
+        TimelineView(.animation) { context in
+            let t = context.date.timeIntervalSinceReferenceDate
+            HStack(spacing: 2) {
+                ForEach(0 ..< 3) { i in
+                    Capsule().frame(width: 2, height: 4 + 8 * abs(sin(t * 3 + Double(i) * 1.1)))
+                }
+            }
+            .frame(height: 12)
+        }
+    }
+}
+
+/// A row's two lines, as `SettingsRow` sets them; the chosen voice in semibold.
+private struct Label2: View {
+    let title: String
+    var detail: String?
+    var strong = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title).font(.yy(size: 12.5, weight: strong ? .semibold : .medium)).foregroundStyle(YYColor.t1)
+            if let detail {
+                Text(detail).font(.yy(size: 10.5)).lineSpacing(2).foregroundStyle(YYColor.t3)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+}
+
+/// `.v-v`: a grey value and › at the end of a row that opens something.
+private struct Value: View {
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 3) {
+            Text(text)
+            Image(systemName: "chevron.right").font(.yy(size: 10, weight: .semibold))
+        }
+        .font(.yy(size: 11.5))
+        .foregroundStyle(YYColor.t3)
+        .lineLimit(1)
+        .fixedSize()
+    }
+}
+
+extension CloudVoice.Provider {
+    /// What it's good for, under its name before it's connected.
+    var blurb: String {
+        switch self {
+        case .openai: String(localized: "声音自然，中文英文都能读")
+        case .azure: String(localized: "中文声音最多，有免费额度")
+        case .elevenlabs: String(localized: "英文声音多")
+        }
+    }
+
+    /// The saved key as "sk-…3f9a".
+    var maskedKey: String? {
+        guard let k = key else { return nil }
+        return k.count > 8 ? "\(k.prefix(3))…\(k.suffix(4))" : "••••"
+    }
+
+    var voiceCount: Int { CloudVoice.all().filter { $0.provider == self }.count }
+}
+
+/// 云端声音: the whole row opens 填 Key; on the right only 填 Key › or the key it has.
+private struct CloudVoiceRow: View {
+    let provider: CloudVoice.Provider
+    let open: () -> Void
+
+    var body: some View {
+        Button(action: open) {
+            HStack(spacing: 12) {
+                // Connected: a green dot; not yet: an empty ring.
+                Circle()
+                    .fill(provider.isSetUp ? YYColor.ok : .clear)
+                    .overlay(Circle().strokeBorder(provider.isSetUp ? .clear : YYColor.t3, lineWidth: 0.75))
+                    .frame(width: 7, height: 7)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(provider.title).font(.yy(size: 12.5, weight: .medium)).foregroundStyle(YYColor.t1)
+                    if provider.isSetUp {
+                        Text("已连上 · \(provider.voiceCount) 个声音").font(.yy(size: 10.5)).foregroundStyle(YYTint.standard.accent)
+                    } else {
+                        Text(provider.blurb).font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
+                    }
+                }
+                Spacer(minLength: 12)
+                Value(text: provider.isSetUp ? provider.maskedKey ?? "" : String(localized: "填 Key"))
+                    .font(.yy(size: 11.5, design: provider.isSetUp ? .monospaced : .default))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .frame(minHeight: 46)
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+/// 填 Key (prototype M4 on the Mac, as 书伴's form): 区域 and Key, 粘贴, 试听一句 (it fetches the
+/// voices and reads a sentence, so you hear the key works), 保存; 移除这个 Key when one is kept.
+/// Closing without 保存 puts back the key there was.
+private struct CloudKeySheet: View {
+    let provider: CloudVoice.Provider
+    @Environment(\.dismiss) private var dismiss
+    @State private var key: String
+    @AppStorage(CloudVoice.Provider.regionName) private var region = ""
+    @State private var checking = false
+    @State private var passed: Int?
+    @State private var failed: String?
+    @State private var saved = false
+    private let before: String?
+    private let regionBefore: String
+    private let voicesBefore: Any?
+
+    init(provider: CloudVoice.Provider) {
+        self.provider = provider
+        let k = Keychain.read(provider.keyName)
+        before = k.flatMap { $0.isEmpty ? nil : $0 }
+        regionBefore = UserDefaults.standard.string(forKey: CloudVoice.Provider.regionName) ?? ""
+        voicesBefore = UserDefaults.standard.object(forKey: provider.voicesName)
+        _key = State(initialValue: k ?? "")
+    }
+
+    private var ready: Bool {
+        !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            && (provider != .azure || !region.trimmingCharacters(in: .whitespaces).isEmpty)
+    }
+
+    private var help: String {
+        let where_ = switch provider {
+        case .openai: String(localized: "platform.openai.com › API keys 里建一个。")
+        case .azure: String(localized: "Azure 门户里建一个“语音”资源，拷它的密钥 1 和区域。")
+        case .elevenlabs: String(localized: "elevenlabs.io › 个人资料 › API Keys 里拷一个。")
+        }
+        return where_ + String(localized: "Key 只存在这台 Mac 的钥匙串里，费用走你自己的账号，语阅不经手。")
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            YYSheetHeader(title: String(localized: "填 Key"), subtitle: String(localized: "云端声音 · \(provider.title)")) { dismiss() }
+            YYGroup {
+                if provider == .azure {
+                    YYField(label: String(localized: "区域"), labelWidth: 52) {
+                        TextField("", text: $region, prompt: Text("比如 eastasia"))
+                            .font(YYUI.font(10.5, design: .monospaced))
+                            .autocorrectionDisabled()
+                    }
+                }
+                YYField(label: "Key", labelWidth: 52) {
+                    HStack(spacing: 6) {
+                        SecureField("", text: $key, prompt: Text(provider.keyHint))
+                            .font(YYUI.font(10.5, design: .monospaced))
+                            .autocorrectionDisabled()
+                            .onSubmit { if ready { save() } }
+                        Button("粘贴") {
+                            if let s = NSPasteboard.general.string(forType: .string) { key = s.trimmingCharacters(in: .whitespacesAndNewlines) }
+                        }
+                        .buttonStyle(YYButtonStyle(kind: .plain, size: .small))
+                    }
+                }
+            }
+            .textFieldStyle(.plain)
+            .foregroundStyle(YYColor.t1)
+            HStack(spacing: 10) {
+                Button {
+                    Task { await check(speak: true) }
+                } label: {
+                    HStack(spacing: 5) {
+                        if checking { ProgressView().controlSize(.mini) }
+                        Text("试听一句")
+                    }
+                }
+                .buttonStyle(YYButtonStyle(kind: .raised))
+                .disabled(!ready || checking)
+                if let passed {
+                    Label("能用 · 拿到 \(passed) 个声音", systemImage: "checkmark.circle")
+                        .font(YYUI.font(10)).foregroundStyle(YYColor.ok)
+                } else if let failed {
+                    Label(failed, systemImage: "exclamationmark.circle")
+                        .font(YYUI.font(10)).foregroundStyle(YYColor.danger).lineLimit(2)
+                }
+            }
+            Text(help)
+                .font(YYUI.font(10)).lineSpacing(YYUI.s(10) * 0.6).foregroundStyle(YYColor.t3)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 4)
+            Button(action: save) {
+                Text("保存")
+            }
+            .buttonStyle(YYButtonStyle(kind: .main, wide: true))
+            .keyboardShortcut(.defaultAction)
+            .disabled(!ready || checking)
+            if before != nil {
+                Button("移除这个 Key") {
+                    Keychain.delete(provider.keyName)
+                    saved = true
+                    dismiss()
+                }
+                .buttonStyle(.plain)
+                .font(YYUI.font(10.5)).foregroundStyle(YYColor.danger)
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(16)
+        .frame(width: 420)
+        .background(YYColor.bg)
+        .onChange(of: key) { passed = nil; failed = nil }
+        .onDisappear { if !saved { restore() } }
+    }
+
+    /// Keeps the key, fetches the voices; with `speak`, reads a sentence in the first of them.
+    @discardableResult private func check(speak: Bool) async -> Bool {
+        region = region.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        Keychain.write(provider.keyName, key.trimmingCharacters(in: .whitespacesAndNewlines))
+        checking = true
+        failed = nil
+        defer { checking = false }
+        do {
+            let n = try await CloudVoice.refresh(provider)
+            passed = n
+            if speak {
+                let voices = CloudVoice.all().filter { $0.provider == provider }
+                if let v = voices.first(where: { $0.speaks("zh") && $0.language != nil }) ?? voices.first {
+                    Voices.preview(v, text: String(localized: "你好，我是语阅的朗读声音。")) { failed = $0 }
+                }
+            }
+            return true
+        } catch {
+            passed = nil
+            failed = error.localizedDescription
+            return false
+        }
+    }
+
+    private func save() {
+        Task {
+            var ok = passed != nil
+            if !ok { ok = await check(speak: false) }
+            if ok {
+                saved = true
+                dismiss()
+            }
+        }
+    }
+
+    /// Closed without 保存: the key, region and voices go back to what they were.
+    private func restore() {
+        if let before { Keychain.write(provider.keyName, before) } else { Keychain.delete(provider.keyName) }
+        UserDefaults.standard.set(regionBefore, forKey: CloudVoice.Provider.regionName)
+        UserDefaults.standard.set(voicesBefore, forKey: provider.voicesName)
     }
 }
 

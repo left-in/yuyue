@@ -6656,7 +6656,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Key"
+            "value" : "API Key"
           }
         }
       }

@@ -172,14 +172,14 @@ fun EnginesPage(open: (MePage) -> Unit) {
         )
         YYLabel(t("书伴"))
         YYGroup {
-            for (p in CompanionProvider.entries) row {
+            for (p in CompanionProvider.added) row {
                 val saved = CompanionConfig.saved(p)
-                val on = current.provider == p && current.isReady
-                YYRow(p.title, value = if (saved.isReady) t("已填 Key") else t("填 Key"), chevron = !on, onClick = { open(MePage.Companion) }, trailing = {
-                    if (saved.isReady) Box(Modifier.size(YY.s(6)).background(YY.c.ok, CircleShape))
+                val on = current?.provider == p && current.isReady
+                YYRow(p.title, value = if (saved.isReady) saved.model else t("还没填好"), chevron = !on, onClick = { open(MePage.Companion) }, trailing = {
                     if (on) Icon(Icons.check, null, tint = YY.tint.accent, modifier = Modifier.size(YY.s(13)))
                 })
             }
+            row { YYRow(t("添加服务商"), icon = Icons.add, titleColor = YY.tint.accent, chevron = true, onClick = { open(MePage.Companion) }) }
         }
         YYLabel(t("朗读"))
         YYGroup {

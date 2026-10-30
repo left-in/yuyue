@@ -13,5 +13,8 @@
 	     the reader's pages forbid it in their CSP. -->
 	<key>com.apple.security.network.client</key>
 	<true/>
+	<!-- 用 OpenRouter 登录: its page sends the browser back to localhost (OpenRouterSignIn). -->
+	<key>com.apple.security.network.server</key>
+	<true/>
 </dict>
 </plist>

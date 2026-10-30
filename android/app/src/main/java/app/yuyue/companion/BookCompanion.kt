@@ -55,8 +55,8 @@ class BookCompanion(private val model: ReaderModel) {
         val config = CompanionConfig.current
         turns += Turn(q, quote, scope)
         val index = turns.lastIndex
-        if (!config.isReady) {
-            turns[index] = turns[index].copy(failed = app.yuyue.t("书伴还没接上：在设置 · 书伴里选一个"))
+        if (config == null || !config.isReady) {
+            turns[index] = turns[index].copy(failed = app.yuyue.t("书伴还没接上：在设置 · 书伴里添加一个服务商"))
             return
         }
         val core = model.core

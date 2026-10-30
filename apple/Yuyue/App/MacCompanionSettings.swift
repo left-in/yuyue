@@ -1,155 +1,117 @@
 #if os(macOS)
-import AppKit
 import SwiftUI
 
-/// 设置 · 书伴 (prototype 引擎 / 填 Key): which engine answers. The one on this Mac by default;
-/// or the user's own key, kept in the keychain. 测试一下 really asks, and says how long it took
-/// or what went wrong.
+/// 设置 · 书伴, after nanobot's webui: the service is a menu (this Mac's own, those added, then
+/// 配置… and 添加服务商…), the model its own row with the ones the service lists, then 测试一下.
+/// 管理服务商 lists what was added. Keys stay in the keychain.
 struct CompanionSettings: View {
     let library: Library
-    @State private var current = CompanionConfig.current
-    @State private var editing: CompanionConfig?
-    private let tint = YYTint.standard
+    @State private var choice = CompanionChoice()
+    @State private var sheet: CompanionProviderSheet.Start?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(Companion.appleAvailability == nil
-                 ? String(localized: "书伴默认用这台 Mac 自带的，不花钱，不联网也能用。想换更强的，就填你自己的 Key，费用直接走你的账号，语阅不经手。")
-                 : String(localized: "这台 Mac 用不了 Apple 智能，书伴要接一个：填你自己的 Key，或接本机的 Ollama。费用直接走你的账号，语阅不经手。"))
+                 ? String(localized: "书伴默认用这台 Mac 自带的，不花钱，不联网也能用。想换更强的，就添加一个服务商，填你自己的 Key，费用直接走你的账号，语阅不经手。")
+                 : String(localized: "这台 Mac 用不了 Apple 智能，书伴要接一个：添加一个服务商填你自己的 Key，或接本机的 Ollama、magpie。费用直接走你的账号，语阅不经手。"))
                 .font(.yy(size: 12)).foregroundStyle(YYColor.t2).lineSpacing(3)
                 .padding(.horizontal, 8)
-            SettingsHeading(String(localized: "书伴用哪个"))
+            SettingsHeading(String(localized: "书伴"))
             SettingsCard {
-                // Apple 智能 only where this Mac can use it; elsewhere it's left out, not greyed.
-                ForEach(CompanionProvider.allCases.filter { $0 != .apple || Companion.appleAvailability == nil }) { p in row(p) }
-            }
-            if let editing {
-                KeyForm(config: editing, done: { saved in
-                    if let saved {
-                        CompanionConfig.current = saved
-                        current = saved
+                SettingsRow(String(localized: "服务商"), detail: choice.current.provider.kind == .apple ? choice.current.provider.detail : nil) {
+                    providerMenu
+                }
+                if choice.current.provider.kind != .apple {
+                    SettingsRow(String(localized: "模型"), detail: choice.listing ? String(localized: "正在问它有哪些模型…") : nil) {
+                        modelField
                     }
-                    self.editing = nil
-                })
-                .id(editing.provider)
+                }
+                SettingsRow(String(localized: "测试一下"), detail: testDetail) {
+                    HStack(spacing: 8) {
+                        if choice.testing { ProgressView().controlSize(.small) }
+                        Button("测试") { choice.test() }
+                            .buttonStyle(YYButtonStyle(kind: .raised, size: .small))
+                            .disabled(!choice.current.isReady || choice.testing)
+                    }
+                }
             }
-            Label("Key 只存在这台设备的钥匙串里，不同步、不上传", systemImage: "lock")
-                .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
-                .padding(.leading, 8)
+            HStack {
+                Label("Key 只存在这台设备的钥匙串里，不同步、不上传", systemImage: "lock")
+                    .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
+                Spacer()
+                Button("管理服务商") { sheet = .manage }
+                    .buttonStyle(.plain)
+                    .font(.yy(size: 12)).foregroundStyle(YYColor.t2)
+            }
+            .padding(.horizontal, 8)
             Spacer(minLength: 0)
         }
+        .sheet(item: $sheet, onDismiss: choice.reload) { CompanionProviderSheet(start: $0) }
+        .task { await choice.list() }
     }
 
-    private func row(_ p: CompanionProvider) -> some View {
-        let saved = CompanionConfig.saved(p)
-        let on = current.provider == p
-        let detail: String? = p == .apple ? (Companion.appleAvailability ?? p.detail) : p.detail
-        return Button {
-            if p == .apple {
-                guard Companion.appleAvailability == nil else { return }
-                CompanionConfig.current = saved
-                current = saved
-                editing = nil
-            } else {
-                editing = saved
-            }
-        } label: {
-            SettingsRow(p.title, detail: detail) {
-                HStack(spacing: 8) {
-                    if p != .apple {
-                        Text(saved.isReady ? String(localized: "已填 Key") : String(localized: "填 Key"))
-                            .font(.yy(size: 12)).foregroundStyle(editing?.provider == p ? tint.accent : YYColor.t2)
-                    }
-                    Image(systemName: "checkmark")
-                        .font(.yy(size: 12, weight: .semibold))
-                        .foregroundStyle(tint.accent)
-                        .opacity(on && current.isReady ? 1 : 0)
+    /// nanobot's ProviderPicker: those to choose from, a line, 配置 the one in use, 添加服务商.
+    private var providerMenu: some View {
+        Menu {
+            ForEach(choice.options) { p in
+                Button { choice.choose(p) } label: {
+                    if choice.current.provider == p { Label(p.title, systemImage: "checkmark") } else { Text(p.title) }
                 }
             }
+            if !choice.options.isEmpty { Divider() }
+            if choice.current.provider.kind != .apple {
+                Button("配置 \(choice.current.provider.title)…", systemImage: "pencil") { sheet = .edit(choice.current.provider) }
+            }
+            Button("添加服务商…", systemImage: "plus") { sheet = .add }
+        } label: {
+            HStack(spacing: 7) {
+                if choice.options.isEmpty {
+                    Text("添加服务商…").foregroundStyle(YYColor.t2)
+                } else {
+                    ProviderLogo(provider: choice.current.provider, size: 18)
+                    Text(choice.current.provider.title).foregroundStyle(YYColor.t1)
+                }
+                Spacer(minLength: 4)
+                Image(systemName: "chevron.up.chevron.down").font(.yy(size: 9, weight: .semibold)).foregroundStyle(YYColor.t3)
+            }
+            .font(.yy(size: 12.5))
+            .padding(.horizontal, 8)
+            .frame(width: 220, height: 28)
+            .background(YYColor.card, in: .rect(cornerRadius: 7))
+            .overlay(RoundedRectangle(cornerRadius: 7).strokeBorder(YYColor.line, lineWidth: 0.5))
             .contentShape(.rect)
         }
+        .menuStyle(.button)
         .buttonStyle(.plain)
-        .opacity(p == .apple && Companion.appleAvailability != nil ? 0.6 : 1)
+        .menuIndicator(.hidden)
+        .fixedSize()
     }
-}
 
-/// 填 Key: 服务商, API Key, 模型, 接口地址; 测试一下, 保存.
-private struct KeyForm: View {
-    @State var config: CompanionConfig
-    let done: (CompanionConfig?) -> Void
-    @State private var testing = false
-    @State private var result: Result<TimeInterval, Error>?
-    private let tint = YYTint.standard
-
-    var body: some View {
-        SettingsCard {
-            SettingsRow(String(localized: "服务商")) {
-                Text(config.provider.title).font(.yy(size: 12.5)).foregroundStyle(YYColor.t1)
+    /// Typed, or one of those the service lists.
+    private var modelField: some View {
+        HStack(spacing: 4) {
+            TextField("", text: Bindable(choice).model, prompt: Text(choice.current.provider.modelHint))
+                .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
+                .autocorrectionDisabled()
+            Menu {
+                ForEach(choice.models, id: \.self) { m in Button(m) { choice.model = m } }
+            } label: {
+                Image(systemName: "chevron.down").font(.yy(size: 10, weight: .semibold))
             }
-            SettingsRow(config.provider == .openai ? String(localized: "API Key（可不填）") : "API Key") {
-                HStack(spacing: 6) {
-                    SecureField("", text: $config.key, prompt: Text(config.provider.keyHint))
-                        .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
-                    Button("粘贴") {
-                        if let s = NSPasteboard.general.string(forType: .string) { config.key = s.trimmingCharacters(in: .whitespacesAndNewlines) }
-                    }
-                }
-                .frame(width: 300)
-            }
-            SettingsRow(String(localized: "模型")) {
-                TextField("", text: $config.model, prompt: Text(config.provider == .openai ? String(localized: "比如 qwen3:8b") : config.provider.defaultModel))
-                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
-                    .frame(width: 300)
-            }
-            SettingsRow(String(localized: "接口地址")) {
-                TextField("", text: $config.url, prompt: Text(config.provider == .openai ? String(localized: "比如 http://localhost:11434/v1") : String(localized: "空着就用官方的")))
-                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
-                    .frame(width: 300)
-            }
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 10) {
-                    Button("测试一下", action: test)
-                        .disabled(!config.isReady || testing)
-                    if testing { ProgressView().controlSize(.small) }
-                    switch result {
-                    case .success(let t):
-                        Label("能用 · 回答用了 \(t.formatted(.number.precision(.fractionLength(1)))) 秒", systemImage: "checkmark.circle")
-                            .font(.yy(size: 11.5)).foregroundStyle(YYColor.ok)
-                    case .failure(let e):
-                        Label(Companion.message(for: e), systemImage: "exclamationmark.circle")
-                            .font(.yy(size: 11.5)).foregroundStyle(YYColor.danger).lineLimit(2)
-                    case nil:
-                        EmptyView()
-                    }
-                    Spacer()
-                    Button("取消") { done(nil) }
-                        .buttonStyle(YYButtonStyle(kind: .plain))
-                    Button("保存") { done(config) }
-                        .buttonStyle(YYButtonStyle(kind: .main))
-                        .disabled(!config.isReady)
-                }
-                Text(config.provider == .openai
-                     ? String(localized: "Key 只存在这台设备的钥匙串里。Ollama 这类本机模型不用 Key，填上地址和模型名就行。")
-                     : String(localized: "Key 只存在这台设备的钥匙串里。费用走你自己的 \(config.provider.account) 账号，语阅不经手，也看不到。"))
-                    .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
-            }
-            .padding(.horizontal, 16).padding(.vertical, 12)
+            .menuStyle(.button)
+            .menuIndicator(.hidden)
+            .fixedSize()
+            .disabled(choice.models.isEmpty)
+            .help(Text("它列出的模型"))
         }
+        .frame(width: 220)
     }
 
-    private func test() {
-        testing = true
-        result = nil
-        let config = config
-        Task {
-            let start = Date()
-            do {
-                _ = try await Companion.answer(config, system: String(localized: "你是一个简短的助手。"), prompt: String(localized: "用一个词回答：天空通常是什么颜色？"))
-                result = .success(Date().timeIntervalSince(start))
-            } catch {
-                result = .failure(error)
-            }
-            testing = false
+    private var testDetail: String? {
+        switch choice.result {
+        case .success(let t): String(localized: "能用 · 回答用了 \(t.formatted(.number.precision(.fractionLength(1)))) 秒")
+        case .failure(let e): Companion.message(for: e)
+        case nil: choice.current.isReady ? nil : choice.current.provider.kind == .apple ? Companion.appleAvailability : String(localized: "还没选好模型")
         }
     }
 }
