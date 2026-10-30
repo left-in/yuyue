@@ -1198,8 +1198,97 @@ struct ReadingCard: View {
     let open: (Library.OpenIntent?) -> Void
     @Environment(\.colorScheme) private var scheme
     private let tint = YYTint.standard
+    #if os(macOS)
+    /// The cover's own colour, which the card is dyed in.
+    @State private var hue: CoverHue?
+    @AppStorage(EInk.key) private var eink = false
+    #endif
 
     var body: some View {
+        #if os(macOS)
+        macBody
+        #else
+        phoneBody
+        #endif
+    }
+
+    #if os(macOS)
+    /// 封面色 + 进度按钮 · 底线 (docs/design/在读卡片按钮.html · F): the card in its cover's colour,
+    /// the progress line grown into the 接着读 bar, drawn along its bottom edge; 听 a square beside it.
+    private var macBody: some View {
+        let colors = (hue ?? .paper).card(dark: scheme == .dark, grey: eink)
+        return VStack(alignment: .leading, spacing: 11) {
+            HStack(spacing: 12) {
+                BookCover(book: book)
+                    .frame(width: 36)
+                    .onTapGesture { open(nil) }
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(book.title)
+                        .font(.yy(size: 12.5, weight: .semibold))
+                        .lineLimit(1)
+                    Text(meta)
+                        .font(.yy(size: 10.5))
+                        .opacity(0.62)
+                        .lineLimit(1)
+                }
+            }
+            HStack(spacing: 6) {
+                Button { open(nil) } label: {
+                    HStack {
+                        Text("接着读").font(.yy(size: 11.5, weight: .semibold))
+                        Spacer(minLength: 8)
+                        Text(book.percent).font(.yy(size: 11.5, weight: .medium)).monospacedDigit().opacity(0.7)
+                    }
+                    .padding(.horizontal, 11)
+                    .frame(height: 32)
+                    .background(colors.fg.opacity(0.13))
+                    .overlay(alignment: .bottomLeading) {
+                        GeometryReader { g in
+                            UnevenRoundedRectangle(bottomTrailingRadius: 1.5, topTrailingRadius: 1.5)
+                                .fill(colors.fg)
+                                .frame(width: g.size.width * min(1, max(0.03, book.progress)), height: 3)
+                                .frame(maxHeight: .infinity, alignment: .bottom)
+                        }
+                    }
+                    .clipShape(.rect(cornerRadius: 9))
+                    .contentShape(.rect(cornerRadius: 9))
+                }
+                .buttonStyle(CardPress())
+                Button { open(listening ? nil : .listen) } label: {
+                    Group {
+                        if listening {
+                            Image(systemName: "waveform").symbolEffect(.variableColor.iterative, options: .repeating)
+                        } else {
+                            Image(systemName: "headphones")
+                        }
+                    }
+                    .font(.yy(size: 13, weight: .medium))
+                    .foregroundStyle(listening ? colors.bg : colors.fg)
+                    .frame(width: 32, height: 32)
+                    .background(listening ? colors.fg : colors.fg.opacity(0.13), in: .rect(cornerRadius: 9))
+                    .contentShape(.rect(cornerRadius: 9))
+                }
+                .buttonStyle(CardPress())
+                .help(listening ? String(localized: "听中") : String(localized: "听"))
+                .accessibilityLabel(listening ? String(localized: "听中") : String(localized: "听"))
+            }
+        }
+        .foregroundStyle(colors.fg)
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            RoundedRectangle(cornerRadius: YYRadius.block)
+                .fill(colors.bg)
+                .overlay(LinearGradient(colors: [.white.opacity(0.12), .clear], startPoint: .topLeading, endPoint: .center).clipShape(.rect(cornerRadius: YYRadius.block)))
+        }
+        .animation(.easeOut(duration: 0.25), value: hue)
+        .task(id: book.coverPath) {
+            hue = await CoverHue.load(book.coverPath)
+        }
+    }
+    #endif
+
+    private var phoneBody: some View {
         HStack(alignment: .top, spacing: 12) {
             BookCover(book: book)
                 .frame(width: 44)
@@ -1256,6 +1345,60 @@ struct ReadingCard: View {
         .buttonStyle(.plain)
     }
 }
+
+#if os(macOS)
+/// A 在读 card's buttons: a little lighter on hover, a little smaller while pressed.
+private struct CardPress: ButtonStyle {
+    @State private var hover = false
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .brightness(hover ? 0.03 : 0)
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+            .onHover { hover = $0 }
+    }
+}
+
+/// The colour of a cover, averaged, and the card and ink a 在读 card takes from it.
+struct CoverHue: Equatable {
+    var hue: Double
+    var saturation: Double
+    var brightness: Double
+
+    /// No cover: the 纸本 paper the placeholder is drawn on.
+    static let paper = CoverHue(hue: 0.11, saturation: 0.1, brightness: 0.93)
+
+    /// A light cover gives a pale card with dark ink in its hue; a dark one stays dark with pale ink.
+    /// In dark mode every card is dark. Greys get a touch of warmth so they don't read as blank.
+    func card(dark: Bool, grey: Bool) -> (bg: Color, fg: Color) {
+        let s = grey ? 0 : max(saturation, 0.06)
+        if dark {
+            return (Color(hue: hue, saturation: min(s, 0.4), brightness: 0.22),
+                    Color(hue: hue, saturation: min(s, 0.12), brightness: 0.94))
+        }
+        if brightness > 0.55 {
+            return (Color(hue: hue, saturation: min(s, 0.22), brightness: 0.91),
+                    Color(hue: hue, saturation: min(max(s, 0.2), 0.45), brightness: 0.24))
+        }
+        return (Color(hue: hue, saturation: min(s, 0.55), brightness: min(max(brightness, 0.22), 0.36)),
+                Color(hue: hue, saturation: min(s, 0.15), brightness: 0.96))
+    }
+
+    /// The cover drawn down to one pixel, off the main thread.
+    @concurrent nonisolated static func load(_ path: String?) async -> CoverHue? {
+        guard let image = await Thumbnail.load(path, maxPixels: 48) else { return nil }
+        var pixel = [UInt8](repeating: 0, count: 4)
+        guard let context = CGContext(data: &pixel, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+                                      space: CGColorSpaceCreateDeviceRGB(),
+                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return nil }
+        context.interpolationQuality = .medium
+        context.draw(image, in: CGRect(x: 0, y: 0, width: 1, height: 1))
+        let color = NSColor(srgbRed: CGFloat(pixel[0]) / 255, green: CGFloat(pixel[1]) / 255, blue: CGFloat(pixel[2]) / 255, alpha: 1)
+        return CoverHue(hue: color.hueComponent, saturation: color.saturationComponent, brightness: color.brightnessComponent)
+    }
+}
+#endif
 
 extension Notification.Name {
     /// 显示或收起侧栏 from the menu bar (⌘⌥N) while the shelf window is in front.
