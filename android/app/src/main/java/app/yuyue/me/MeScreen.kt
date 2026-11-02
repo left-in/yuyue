@@ -32,8 +32,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -156,7 +159,7 @@ private fun Main(library: Library, push: (MePage) -> Unit) {
                 row { YYRow(t("Wi‑Fi 传书"), Icons.wifi, null, chevron = true) { push(MePage.Wifi) } }
             }
             Group {
-                row { YYRow(t("外观"), Icons.settings, "${modeTitle(mode)} · ${YYTints.All.firstOrNull { it.id == tintID }?.name?.let { t(it) } ?: ""}", chevron = true) { push(MePage.Appearance) } }
+                row { YYRow(t("外观"), Icons.appearance, "${modeTitle(mode)} · ${YYTints.All.firstOrNull { it.id == tintID }?.name?.let { t(it) } ?: ""}", chevron = true) { push(MePage.Appearance) } }
                 row {
                     val on by rememberPref(app.yuyue.reader.ImmersivePrefs.ALWAYS, false)
                     YYRow(t("沉浸阅读"), Icons.read, if (on) t("开") else t("关"), chevron = true) { push(MePage.Immersive) }
@@ -313,8 +316,21 @@ private fun AppearancePage() {
             for (m in listOf(Appearance.LIGHT, Appearance.DARK, Appearance.SYSTEM)) {
                 val on = m == mode
                 Column(Modifier.weight(1f).clickable { mode = m }, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(YY.s(7))) {
-                    val bg = when (m) { Appearance.LIGHT -> Color(0xFFF6F5F3); Appearance.DARK -> Color(0xFF101112); else -> Color(0xFF85827F) }
-                    Box(Modifier.fillMaxWidth().height(YY.s(72)).background(bg, RoundedCornerShape(YY.s(12))).border(if (on) 2.dp else 0.5.dp, if (on) YY.tint.accent else YY.c.line, RoundedCornerShape(YY.s(12))))
+                    // A page in small: white paper, dark paper, and for 跟随系统 half of each.
+                    val light = Color(0xFFFFFFFF); val dark = Color(0xFF18191B)
+                    val paper = when (m) {
+                        Appearance.LIGHT -> SolidColor(light)
+                        Appearance.DARK -> SolidColor(dark)
+                        else -> Brush.linearGradient(0.5f to light, 0.5f to dark)
+                    }
+                    val shape = RoundedCornerShape(YY.s(12))
+                    Box(Modifier.fillMaxWidth().height(YY.s(72)).clip(shape).background(paper).border(if (on) 2.dp else 1.dp, if (on) YY.tint.accent else YY.c.t3, shape)) {
+                        val ink = if (m == Appearance.DARK) Color(0x59EDEDEE) else if (m == Appearance.LIGHT) Color(0x592A2B2E) else Color(0x59888888)
+                        Column(Modifier.padding(start = YY.s(12), top = YY.s(20)), verticalArrangement = Arrangement.spacedBy(YY.s(7))) {
+                            Box(Modifier.width(YY.s(44)).height(YY.s(5)).background(ink, RoundedCornerShape(3.dp)))
+                            Box(Modifier.width(YY.s(30)).height(YY.s(5)).background(ink, RoundedCornerShape(3.dp)))
+                        }
+                    }
                     Text(modeTitle(m), style = YY.font(11f, if (on) FontWeight.SemiBold else FontWeight.Normal), color = if (on) YY.c.t1 else YY.c.t2)
                 }
             }
@@ -323,7 +339,7 @@ private fun AppearancePage() {
         YYGroup {
             for (tint in YYTints.All) {
                 row {
-                    YYRow(t(tint.name), value = if (tint.id == YYTints.Default.id) t("默认") else t("你确认过的原样"), onClick = { tintID = tint.id }, trailing = {
+                    YYRow(t(tint.name), value = if (tint.id == YYTints.Default.id) t("默认") else null, onClick = { tintID = tint.id }, trailing = {
                         Box(Modifier.size(YY.s(18)).background(tint.light.black, CircleShape))
                         Icon(Icons.check, null, tint = if (tint.id == tintID) YY.tint.accent else Color.Transparent, modifier = Modifier.size(YY.s(13)))
                     })

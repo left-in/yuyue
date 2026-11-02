@@ -24,6 +24,7 @@ struct YuyueApp: App {
                 // A window given another book starts over, rather than keep the last one's state.
                 ReaderScreen(library: library, bookID: bookID)
                     .id(bookID)
+                    .environment(\.switchBook) { $bookID.wrappedValue = $0 }
             }
         }
         // `.v-mac`: a landscape window, the column in the middle and room for the notes beside it.

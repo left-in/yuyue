@@ -70,8 +70,7 @@ struct FootnoteCard: View {
         .padding(.horizontal, 16)
         .padding(.top, 12)
         .padding(.bottom, 10)
-        .background(YYColor.card, in: .rect(cornerRadius: 16))
-        .yyShadow(scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
+        .yyFloatCard(.rect(cornerRadius: 16), shadow: scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
     }
 
     /// "呐喊 · 注释 1 / 8".

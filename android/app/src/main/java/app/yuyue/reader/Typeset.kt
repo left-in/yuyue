@@ -87,7 +87,7 @@ private fun Main(model: ReaderModel, openMore: () -> Unit, edit: (uniffi.yuyue_c
         Slider(
             s.fontSize.toFloat(), { v -> model.update { it.copy(fontSize = v.roundToInt().toDouble()) } }, valueRange = 12f..34f, steps = 21,
             modifier = Modifier.weight(1f).semantics { contentDescription = t("字号"); stateDescription = "${s.fontSize.roundToInt()}" },
-            colors = SliderDefaults.colors(thumbColor = YY.c.card, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line, activeTickColor = androidx.compose.ui.graphics.Color.Transparent, inactiveTickColor = androidx.compose.ui.graphics.Color.Transparent),
+            colors = SliderDefaults.colors(thumbColor = YY.tint.fill, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line, activeTickColor = androidx.compose.ui.graphics.Color.Transparent, inactiveTickColor = androidx.compose.ui.graphics.Color.Transparent),
         )
         Text("A", fontFamily = FontFamily.Serif, fontSize = 19.sp, color = YY.c.t1)
         Text("${s.fontSize.roundToInt()}", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = YY.c.t1, modifier = Modifier.width(26.dp))

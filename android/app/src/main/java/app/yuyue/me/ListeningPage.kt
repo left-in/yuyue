@@ -83,7 +83,7 @@ fun ListeningPage() {
                     Slider(
                         if (rate == 0f) 1f else rate, { rate = (it * 10).roundToInt() / 10f }, valueRange = 0.8f..2f,
                         modifier = Modifier.weight(1f).semantics { contentDescription = t("语速"); stateDescription = "%.1f×".format(if (rate == 0f) 1f else rate) },
-                        colors = SliderDefaults.colors(thumbColor = YY.c.card, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line),
+                        colors = SliderDefaults.colors(thumbColor = YY.tint.fill, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line),
                     )
                     Text("%.1f×".format(if (rate == 0f) 1f else rate), style = YY.font(10.5f, FontWeight.Medium), color = YY.c.t2)
                 }
@@ -125,10 +125,11 @@ private fun VoiceSection(tag: String, name: String, sample: String, version: Int
     YYLabel(name, if (voices.isEmpty()) null else t("%lld 个声音", voices.size))
     YYGroup {
         if (voices.isEmpty()) row { YYRow(t("这台设备上没有这种语言的声音")) }
-        for (v in voices.take(12)) row {
+        for (v in voices) row {
             Row(Modifier.fillMaxWidth().heightIn(min = YY.s(38)), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(YY.s(10))) {
                 Row(Modifier.weight(1f).clickable { chosen = v.id }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(YY.s(8))) {
                     Text(v.name, style = YY.font(11.5f), color = YY.c.t1, maxLines = 1, modifier = Modifier.weight(1f, fill = false))
+                    if (!v.isOffline) YYTag(t("联网"))
                     v.qualityName?.let { YYTag(it) }
                     Spacer(Modifier.weight(1f))
                     if (v.id == current?.id) Icon(Icons.check, null, tint = YY.tint.accent, modifier = Modifier.size(YY.s(13)))

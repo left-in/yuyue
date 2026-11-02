@@ -33,7 +33,7 @@ struct MacPdfView: View {
                             .id(toast.id)
                     }
                 }
-                .animation(.spring(duration: 0.4, bounce: 0.3), value: model.toast?.id)
+                .yyToastMotion(value: model.toast?.id)
                 .overlay(alignment: .bottom) {
                     capsule.padding(.bottom, 18)
                 }
@@ -242,10 +242,7 @@ struct MacPdfView: View {
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)
-        .background(YYColor.card, in: .rect(cornerRadius: YYRadius.card))
-        // One shadow for the card, not one under every line of text.
-        .compositingGroup()
-        .yyShadow(model.night ? YYShadow.floatDark : YYShadow.floatLight)
+        .yyFloatCard(.rect(cornerRadius: YYRadius.card), shadow: model.night ? YYShadow.floatDark : YYShadow.floatLight)
     }
 }
 

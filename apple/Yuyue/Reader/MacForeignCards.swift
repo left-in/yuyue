@@ -60,9 +60,7 @@ struct WordCard: View {
         // A little wider than `.dict` (310): 本书只出现这一次 and both buttons on one line.
         .frame(width: 350)
         .onChange(of: lookup.word) { full = false }
-        .background(YYColor.card, in: .rect(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.14), radius: 15, y: 10)
-        .shadow(color: .black.opacity(0.08), radius: 1.5, y: 1)
+        .yyFloatCard(.rect(cornerRadius: 14), shadow: ForeignCardShadow.layers)
     }
 
     @ViewBuilder private var meaning: some View {
@@ -145,9 +143,7 @@ struct SentenceCard: View {
         }
         .padding(.horizontal, 16).padding(.vertical, 13)
         .frame(width: 360, alignment: .leading)
-        .background(YYColor.card, in: .rect(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.14), radius: 15, y: 10)
-        .shadow(color: .black.opacity(0.08), radius: 1.5, y: 1)
+        .yyFloatCard(.rect(cornerRadius: 14), shadow: ForeignCardShadow.layers)
     }
 }
 
@@ -174,6 +170,11 @@ private struct CardLabel: LabelStyle {
             configuration.title
         }
     }
+}
+
+enum ForeignCardShadow {
+    static let layers = [YYShadowLayer(x: 0, y: 10, blur: 30, spread: 0, color: YYRGBA(0, 0, 0, 0.14)),
+                         YYShadowLayer(x: 0, y: 1, blur: 3, spread: 0, color: YYRGBA(0, 0, 0, 0.08))]
 }
 
 /// Puts a card under `rect` (above it when there is no room below), its left edge near the

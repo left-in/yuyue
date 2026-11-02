@@ -39,6 +39,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -193,9 +194,25 @@ fun NotesScreen(library: Library) {
                     }
                 }
             }
-            if (!selecting) Row(Modifier.padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            if (!selecting) Row(Modifier.padding(horizontal = 16.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                 YYSegments(listOf("all" to t("全部"), "thoughts" to t("想法"), "words" to t("生词")), kind, { kind = it; stopSelecting() }, modifier = Modifier.weight(1f))
-                if (kind != "words") YYSegments(listOf(false to t("按时间"), true to t("按书")), byBook, { byBook = it; stopSelecting() }, modifier = Modifier.width(140.dp))
+                // How they're ordered is a quieter choice than what's shown: the shelf's 最近读过 ⇅ menu.
+                if (kind != "words") Box {
+                    var sorting by remember { mutableStateOf(false) }
+                    Row(Modifier.clickable { sorting = true }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(if (byBook) t("按书") else t("按时间"), fontSize = 13.sp, color = YY.c.t2)
+                        Icon(Icons.sort, null, tint = YY.c.t2, modifier = Modifier.size(14.dp))
+                    }
+                    DropdownMenu(sorting, { sorting = false }, containerColor = YY.c.card) {
+                        for ((value, title) in listOf(false to t("按时间"), true to t("按书"))) {
+                            DropdownMenuItem(
+                                text = { Text(title, color = YY.c.t1) },
+                                trailingIcon = { if (value == byBook) Icon(Icons.check, null, tint = YY.tint.accent) },
+                                onClick = { byBook = value; stopSelecting(); sorting = false },
+                            )
+                        }
+                    }
+                }
             }
             Box(Modifier.weight(1f)) {
                 when {

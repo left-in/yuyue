@@ -121,7 +121,7 @@ fun ForeignPage(core: uniffi.yuyue_core.YuyueCore) {
                         val serif = FontFamily.Serif
                         Text("It is a truth universally ", style = YY.font(12f, family = serif), color = YY.c.t1)
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text("公认", style = YY.font(9.5f), color = if (gloss && !glossVocab && level <= 4) YY.tint.accent else YY.c.card.copy(alpha = 0f))
+                            Text("公认", style = YY.font(9f), color = if (gloss && !glossVocab && level <= 4) YY.c.t2 else YY.c.card.copy(alpha = 0f))
                             Text("acknowledged", style = YY.font(12f, family = serif), color = YY.c.t1)
                         }
                         Text(", that a…", style = YY.font(12f, family = serif), color = YY.c.t1, maxLines = 1)

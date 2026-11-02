@@ -246,7 +246,7 @@ struct MacReaderView: View {
                     .id(toast.id)
             }
         }
-        .animation(.spring(duration: 0.4, bounce: 0.3), value: model.toast?.id)
+        .yyToastMotion(value: model.toast?.id)
         .overlay(alignment: .bottom) {
             VStack(spacing: 10) {
                 if let e = model.elsewhere {
@@ -285,7 +285,7 @@ struct MacReaderView: View {
                 }
             }
             .padding(.bottom, 18)
-            .animation(.spring(duration: 0.35, bounce: 0.1), value: barAway)
+            .animation(.spring(duration: 0.35, bounce: 0), value: barAway)
             .animation(.snappy(duration: 0.25), value: model.toast?.id)
             .animation(.snappy(duration: 0.25), value: model.elsewhere == nil)
             .animation(.snappy(duration: 0.25), value: model.returnTo == nil)
@@ -692,10 +692,7 @@ struct MacReaderView: View {
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)
-        .background(YYColor.card, in: .rect(cornerRadius: YYRadius.card))
-        // One shadow for the card, not one under every line of text.
-        .compositingGroup()
-        .yyShadow(paper.isDark ? YYShadow.floatDark : YYShadow.floatLight)
+        .yyFloatCard(.rect(cornerRadius: YYRadius.card), shadow: paper.isDark ? YYShadow.floatDark : YYShadow.floatLight)
     }
 
     // MARK: Keys

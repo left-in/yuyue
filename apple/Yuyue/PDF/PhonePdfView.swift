@@ -37,7 +37,7 @@ struct PhonePdfView: View {
                         .id(toast.id)
                 }
             }
-            .animation(.spring(duration: 0.4, bounce: 0.3), value: model.toast?.id)
+            .yyToastMotion(value: model.toast?.id)
             .confirmationDialog(tappedMark.map { "“\($0.text.prefix(24))”" } ?? "", isPresented: Binding(get: { tappedMark != nil }, set: { if !$0 { tappedMark = nil } }), titleVisibility: .visible) {
                 if let mark = tappedMark {
                     Button(mark.note == nil ? String(localized: "写想法") : String(localized: "改想法")) { model.writing = mark }

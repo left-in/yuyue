@@ -54,8 +54,8 @@ struct PhoneWordCard: View {
             }
         }
         .padding(YYUI.s(16))
-        .background(YYColor.card, in: .rect(cornerRadius: YYUI.s(18)))
-        .shadow(color: .black.opacity(0.16), radius: 18, y: 8)
+        .yyFloatCard(.rect(cornerRadius: YYUI.s(18)),
+                     shadow: [YYShadowLayer(x: 0, y: 8, blur: 36, spread: 0, color: YYRGBA(0, 0, 0, 0.16))])
         .onChange(of: lookup.word) { full = false }
     }
 

@@ -167,7 +167,7 @@ struct PhoneNotes: View {
                 if selecting { selectionBar }
             }
             .overlay(alignment: .top) { toast }
-            .animation(.spring(duration: 0.4, bounce: 0.3), value: library.toast?.id)
+            .yyToastMotion(value: library.toast?.id)
             .navigationDestination(for: String.self) { id in
                 PhoneBookNotes(library: library, bookID: id, thoughtsOnly: kind == .thoughts)
             }

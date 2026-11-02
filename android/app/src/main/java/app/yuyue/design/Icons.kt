@@ -10,7 +10,6 @@ import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.automirrored.rounded.MenuBook
 import androidx.compose.material.icons.automirrored.rounded.Undo
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Coffee
 import androidx.compose.material.icons.rounded.AutoStories
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
@@ -27,7 +26,9 @@ import androidx.compose.material.icons.rounded.Headphones
 import androidx.compose.material.icons.rounded.Inbox
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.LibraryBooks
+import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.Person
@@ -51,10 +52,15 @@ import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.Upload
+import androidx.compose.material.icons.rounded.Bedtime
+import androidx.compose.material.icons.rounded.Forward30
+import androidx.compose.material.icons.rounded.Replay
 
 /** The iPhone's SF Symbols, by what they stand for, as Material's rounded icons. */
 object Icons {
     val add = Rounded.Add
+    /** 外观: the sun, as on Mac and iPhone (sun.max). */
+    val appearance = Rounded.LightMode
     val back = AutoMirrored.Rounded.ArrowBack
     val forward = AutoMirrored.Rounded.ArrowForward
     val book = AutoMirrored.Rounded.MenuBook
@@ -67,6 +73,7 @@ object Icons {
     val chevronRight = AutoMirrored.Rounded.KeyboardArrowRight
     val chevronLeft = AutoMirrored.Rounded.KeyboardArrowLeft
     val chevronDown = Rounded.KeyboardArrowDown
+    val chevronUp = Rounded.KeyboardArrowUp
     val close = Rounded.Close
     val cloudDownload = Rounded.CloudDownload
     val collection = Rounded.CollectionsBookmark
@@ -101,6 +108,10 @@ object Icons {
     val undo = AutoMirrored.Rounded.Undo
     val upload = Rounded.Upload
     val waveform = Rounded.GraphicEq
-    val cup = Rounded.Coffee
     val wifi = Rounded.Wifi
+    /** 有声书: −15 s and +30 s (gobackward.15, goforward.30); Material has no 15, so the plain turn back. */
+    val back15 = Rounded.Replay
+    val ahead30 = Rounded.Forward30
+    /** 定时 (moon.zzz). */
+    val sleep = Rounded.Bedtime
 }

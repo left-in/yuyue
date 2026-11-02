@@ -587,7 +587,9 @@ struct PhoneAppearance: View {
                                 .overlay(Circle().strokeBorder(.black.opacity(0.12), lineWidth: 0.5))
                             Text(t.name).font(YYUI.font(11.5)).foregroundStyle(YYColor.t1)
                             Spacer(minLength: YYUI.s(8))
-                            Text(t.id == YYTint.blue.id ? String(localized: "默认") : String(localized: "你确认过的原样")).font(YYUI.font(10.5)).foregroundStyle(YYColor.t3)
+                            if t.id == YYTint.blue.id {
+                                Text("默认").font(YYUI.font(10.5)).foregroundStyle(YYColor.t3)
+                            }
                             Image(systemName: "checkmark").font(YYUI.font(11, .bold)).foregroundStyle(tint.accent)
                                 .opacity(t.id == tintID ? 1 : 0)
                         }
@@ -759,9 +761,9 @@ struct PhoneAppearance: View {
             .foregroundStyle(paper.ink)
             .padding(.horizontal, YYUI.s(5))
             .frame(height: YYUI.s(40))
-            .background(paper.glass, in: .capsule)
-            .overlay(Capsule().stroke(paper.line, lineWidth: 0.5))
-            .shadow(color: .black.opacity(paper.isDark ? 0.4 : 0.1), radius: 8, y: 3)
+            // As the reader draws it: Liquid Glass when the switch is on.
+            .yyGlass(Capsule(), fill: paper.glass, line: paper.line, material: .ultraThinMaterial,
+                     shadow: paper.isDark ? 0.4 : 0.1, radius: 8, y: 3)
             .padding(.horizontal, YYUI.s(10))
             .padding(.bottom, YYUI.s(9))
         }
@@ -1041,7 +1043,7 @@ struct PhoneForeign: View {
             HStack(alignment: .lastTextBaseline, spacing: 0) {
                 Text(verbatim: "It is a truth universally ")
                 VStack(spacing: 0) {
-                    Text(verbatim: "公认").font(YYUI.font(9.5)).foregroundStyle(YYTint.standard.accent)
+                    Text(verbatim: "公认").font(YYUI.font(9)).foregroundStyle(YYColor.t2)
                         .opacity(gloss && !glossVocab && level <= 4 ? 1 : 0)
                     Text(verbatim: "acknowledged")
                 }

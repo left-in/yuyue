@@ -151,6 +151,21 @@ extension View {
     func yyCard() -> some View { modifier(YYCardBackground()) }
 }
 
+/// How a note (删除 · 撤销 and the rest) comes and goes: a spring that settles without overshoot,
+/// or with 减弱动态效果 on, a short fade.
+struct YYToastMotion<Value: Equatable>: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    let value: Value
+
+    func body(content: Content) -> some View {
+        content.animation(reduceMotion ? .easeOut(duration: 0.2) : .spring(duration: 0.4, bounce: 0), value: value)
+    }
+}
+
+extension View {
+    func yyToastMotion<Value: Equatable>(value: Value) -> some View { modifier(YYToastMotion(value: value)) }
+}
+
 /// `.grp .row`: an icon, what it is, and a grey value with a chevron.
 struct YYRow<Trailing: View>: View {
     let title: String

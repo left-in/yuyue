@@ -51,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
@@ -197,24 +198,7 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
     var companionSettings by remember { mutableStateOf(false) }
     if (model.companionShown) app.yuyue.companion.CompanionSheet(model, settings = { companionSettings = true }) { model.companionShown = false }
     if (companionSettings) app.yuyue.companion.CompanionSettingsSheet { companionSettings = false }
-    model.player?.failure?.let { message ->
-        AlertDialog(
-            onDismissRequest = { model.player.failure = null },
-            containerColor = YY.c.card,
-            title = { Text(t("朗读出错了"), color = YY.c.t1) },
-            text = { Text(message, color = YY.c.t2) },
-            confirmButton = { TextButton({ model.player.failure = null }) { Text(t("好"), color = YY.tint.accent) } },
-            dismissButton = if (model.player.missingVoice) {
-                {
-                    TextButton({
-                        model.player.failure = null
-                        // The engine's own page for voice data: Chinese, English and the rest.
-                        runCatching { context.startActivity(android.content.Intent(android.speech.tts.TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)) }
-                    }) { Text(t("下载声音"), color = YY.tint.accent) }
-                }
-            } else null,
-        )
-    }
+    model.player?.let { PlayerFailure(it) }
     thought?.let { mark ->
         ThoughtDialog(mark.note ?: "") { text ->
             if (text != null) model.setNote(text, mark)
@@ -256,8 +240,12 @@ private fun Modifier.glass(paper: YYPaper, shape: androidx.compose.ui.graphics.S
 private fun Chrome(model: ReaderModel, paper: YYPaper, close: () -> Unit) {
     Box(Modifier.fillMaxSize()) {
         AnimatedVisibility(model.chromeShown || model.searchShown, enter = fadeIn() + slideInVertically { -it }, exit = fadeOut() + slideOutVertically { -it }, modifier = Modifier.align(Alignment.TopCenter)) {
-            Box(Modifier.windowInsetsPadding(WindowInsets.statusBars).padding(horizontal = 12.dp).padding(top = 4.dp).widthIn(max = 560.dp)) {
-                if (model.searchShown) SearchField(model, paper) else TopBar(model, paper, close)
+            // The page fades out under the bar, so a chapter title never shows through the title pill.
+            val edge = Brush.verticalGradient(0f to paper.bg, 0.72f to paper.bg, 1f to paper.bg.copy(alpha = 0f))
+            Box(Modifier.fillMaxWidth().background(edge).padding(bottom = 20.dp), contentAlignment = Alignment.TopCenter) {
+                Box(Modifier.windowInsetsPadding(WindowInsets.statusBars).padding(horizontal = 12.dp).padding(top = 4.dp).widthIn(max = 560.dp)) {
+                    if (model.searchShown) SearchField(model, paper) else TopBar(model, paper, close)
+                }
             }
         }
         Column(
@@ -280,7 +268,7 @@ private fun Chrome(model: ReaderModel, paper: YYPaper, close: () -> Unit) {
             }
             if (!capsule) {
                 if (!ImmersivePrefs.hidesProgress) {
-                    Text(model.capsuleNote, fontSize = 10.sp, color = paper.ink2, modifier = Modifier.padding(bottom = 2.dp))
+                    Text(model.capsuleNote, fontSize = 12.sp, color = paper.ink2, modifier = Modifier.padding(bottom = 2.dp))
                 } else if (ImmersivePrefs.keepsLine) {
                     BoxWithConstraints(Modifier.fillMaxWidth().height(1.dp)) {
                         Box(Modifier.width(maxWidth * model.bookFraction.toFloat()).fillMaxHeight().background(paper.ink.copy(alpha = 0.25f)))
@@ -340,7 +328,7 @@ private fun Capsule(model: ReaderModel, paper: YYPaper) {
                     if (n > 0) t("第 %lld / %lld 句", minOf(model.sentence + 1, n), n) else model.chapterTitle ?: "",
                     fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = paper.ink, maxLines = 1,
                 )
-                Text(model.capsuleNote, fontSize = 10.5.sp, color = paper.ink2, maxLines = 1)
+                Text(model.capsuleNote, fontSize = 12.sp, color = paper.ink2, maxLines = 1)
             }
             val reading = model.player?.spot != null
             Glyph(Icons.chevronLeft, if (reading) t("上一句") else t("上一页"), paper.ink) { model.step(false) }
@@ -559,4 +547,32 @@ private fun PageTapHint(model: ReaderModel, paper: YYPaper) {
                 }
         }
     }
+}
+
+/** Why reading aloud stopped. With no voice for the language, the way to get one comes first. */
+@Composable
+internal fun PlayerFailure(player: app.yuyue.speech.Player) {
+    val message = player.failure ?: return
+    val context = LocalContext.current
+    val missing = player.missingVoice
+    AlertDialog(
+        onDismissRequest = { player.failure = null },
+        containerColor = YY.c.card,
+        title = { Text(if (missing != null) t("这台手机还没有%@声音", missing) else t("朗读出错了"), color = YY.c.t1) },
+        text = { Text(message, color = YY.c.t2) },
+        confirmButton = if (missing != null) {
+            {
+                TextButton({
+                    player.failure = null
+                    // The engine's own page for voice data: Chinese, English and the rest.
+                    runCatching { context.startActivity(android.content.Intent(android.speech.tts.TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)) }
+                }) { Text(t("下载%@声音", missing), color = YY.tint.accent) }
+            }
+        } else {
+            { TextButton({ player.failure = null }) { Text(t("好"), color = YY.tint.accent) } }
+        },
+        dismissButton = if (missing != null) {
+            { TextButton({ player.failure = null }) { Text(t("先不听"), color = YY.c.t2) } }
+        } else null,
+    )
 }

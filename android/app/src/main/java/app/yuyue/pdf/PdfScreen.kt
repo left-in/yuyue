@@ -297,13 +297,7 @@ fun PdfScreen(library: Library, bookID: String, close: () -> Unit) {
         }
         AnimatedVisibility(chrome, enter = fadeIn(), exit = fadeOut()) { Bars(model, close) }
     }
-    model.player?.failure?.let { message ->
-        androidx.compose.material3.AlertDialog(
-            onDismissRequest = { model.player.failure = null }, containerColor = YY.c.card,
-            title = { Text(t("朗读出错了"), color = YY.c.t1) }, text = { Text(message, color = YY.c.t2) },
-            confirmButton = { androidx.compose.material3.TextButton({ model.player.failure = null }) { Text(t("好"), color = YY.tint.accent) } },
-        )
-    }
+    model.player?.let { app.yuyue.reader.PlayerFailure(it) }
     if (model.pageCount == 0) app.yuyue.shelf.BookFailure(model.failure, close)
     else model.failure?.let { app.yuyue.shelf.FailureDialog(it) { model.failure = null } }
 }
@@ -365,7 +359,7 @@ private fun Bars(model: PdfModel, close: () -> Unit) {
                 sliding ?: model.page.toFloat(), { sliding = it }, valueRange = 0f..(model.pageCount - 1).toFloat(),
                 onValueChangeFinished = { sliding?.let { model.go(it.roundToInt()) }; sliding = null },
                 modifier = Modifier.semantics { contentDescription = t("翻页"); stateDescription = t("第 %lld 页", model.page + 1) },
-                colors = SliderDefaults.colors(thumbColor = YY.c.card, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line),
+                colors = SliderDefaults.colors(thumbColor = YY.tint.fill, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line),
             )
             if (!model.canListen) Text(t("这台手机的系统读不出 PDF 里的字，Android 15 起才能朗读 PDF"), fontSize = 11.sp, color = YY.c.t3, modifier = Modifier.padding(bottom = 4.dp))
         }

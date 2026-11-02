@@ -113,8 +113,7 @@ struct NarrationFlagCard: View {
         .padding(.horizontal, 16)
         .padding(.top, 14)
         .padding(.bottom, 12)
-        .background(YYColor.card, in: .rect(cornerRadius: 16))
-        .yyShadow(scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
+        .yyFloatCard(.rect(cornerRadius: 16), shadow: scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
     }
 
     private var note: String {

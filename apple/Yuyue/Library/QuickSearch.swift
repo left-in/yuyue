@@ -168,8 +168,12 @@ struct QuickSearchPanel: View {
     let ask: (String) -> Void
     @FocusState private var focused: Bool
     @Environment(\.openWindow) private var openWindow
+    /// In a book's window: a book chosen here takes this window's place.
+    @Environment(\.switchBook) private var switchBook
     @Environment(\.colorScheme) private var scheme
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    /// 墨水屏 has no glass.
+    @AppStorage(EInk.key) private var eink = false
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
 
     init(library: Library, query: String = "", close: @escaping () -> Void, ask: @escaping (String) -> Void) {
@@ -200,17 +204,20 @@ struct QuickSearchPanel: View {
     private var panel: some View {
         VStack(spacing: 0) {
             field
-            Rectangle().fill(YYColor.line).frame(height: 1)
-            results
-            Rectangle().fill(YYColor.line).frame(height: 1)
-            footer
+            // The glass stays on the field: what was found sits on the plain card, so the page
+            // behind doesn't show through the words.
+            VStack(spacing: 0) {
+                Rectangle().fill(YYColor.line).frame(height: 1)
+                results
+                Rectangle().fill(YYColor.line).frame(height: 1)
+                footer
+            }
+            .background(YYColor.card)
         }
         .frame(width: 640)
-        .background(YYColor.card.opacity(0.92))
-        .background(.ultraThinMaterial)
         .clipShape(.rect(cornerRadius: 18))
-        .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(.black.opacity(0.14), lineWidth: 0.5))
-        .shadow(color: .black.opacity(0.38), radius: 40, y: 32)
+        .yyGlass(RoundedRectangle(cornerRadius: 18), fill: YYColor.card.opacity(0.92), line: .black.opacity(0.14),
+                 material: .ultraThinMaterial, shadow: 0.38, radius: 40, y: 32, liquid: !eink)
         .shadow(color: .black.opacity(0.12), radius: 12, y: 10)
     }
 
@@ -447,15 +454,25 @@ struct QuickSearchPanel: View {
             } else {
                 library.open(t.book, nil)
             }
-            openWindow(id: "reader", value: t.book.id)
+            go(t.book.id)
         case .line(let l):
             library.open(l.book.id, at: Position(section: l.hit.section, sentence: l.hit.sentence))
-            openWindow(id: "reader", value: l.book.id)
+            go(l.book.id)
         case .note(let n):
             library.open(n.book.id, at: Position(section: n.mark.section, sentence: n.mark.start.sentence))
-            openWindow(id: "reader", value: n.book.id)
+            go(n.book.id)
         }
         close()
+    }
+
+    /// From a book's window the book is swapped in place; one with a window of its own already
+    /// (this book too) comes forward. From the shelf, a window of its own.
+    private func go(_ bookID: String) {
+        if let switchBook, !OneWindowPerBook.hasWindow(bookID) {
+            switchBook(bookID)
+        } else {
+            openWindow(id: "reader", value: bookID)
+        }
     }
 }
 

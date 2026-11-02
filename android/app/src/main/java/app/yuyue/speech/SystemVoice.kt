@@ -56,9 +56,12 @@ object SpokenLanguage {
  * rather than speaking it, so its length is known before it plays and the ink line keeps pace;
  * the samples are collected as they arrive.
  */
-class SystemVoice(private val voice: Voice) : BookVoice {
+class SystemVoice(private val voice: Voice, number: Int = 0) : BookVoice {
     override val id: String = "system.${voice.name}"
-    override val name: String = voice.locale.getDisplayName(Locale.getDefault()) + " · " + voice.name.substringAfterLast('-').ifEmpty { voice.name }
+    // The engine's own names (`en-us-x-iol-local`) say nothing to a person, so a language's voices
+    // are lettered in the order they're listed: 声音 A, 声音 B…
+    override val name: String = voice.locale.getDisplayName(Locale.getDefault()) + " · " +
+        app.yuyue.t("声音 %@", if (number < 26) ('A' + number).toString() else "${number + 1}")
     override val qualityName: String? = if (voice.quality >= Voice.QUALITY_HIGH) app.yuyue.t("高级") else null
     override val isOffline: Boolean = !voice.isNetworkConnectionRequired
 
@@ -87,8 +90,8 @@ class SystemVoice(private val voice: Voice) : BookVoice {
             val engine = tts ?: return emptyList()
             return (engine.voices ?: emptySet())
                 .filter { !it.features.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED) }
-                .sortedWith(compareBy({ it.locale.toLanguageTag() }, { -it.quality }, { it.isNetworkConnectionRequired }))
-                .map(::SystemVoice)
+                .sortedWith(compareBy({ it.locale.toLanguageTag() }, { it.isNetworkConnectionRequired }, { -it.quality }))
+                .let { all -> all.mapIndexed { i, v -> SystemVoice(v, all.take(i).count { it.locale == v.locale }) } }
         }
 
         suspend fun render(text: String, voice: Voice): Speech? = lock.withLock {

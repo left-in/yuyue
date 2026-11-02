@@ -465,7 +465,7 @@ private struct AppearanceSettings: View {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("主题色").font(.yy(size: 13, weight: .medium)).foregroundStyle(YYColor.t1)
-                            Text("墨蓝是默认；墨黑是你确认过的原样").font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
+                            Text("墨蓝是默认").font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
                         }
                         Spacer()
                         HStack(spacing: 14) {

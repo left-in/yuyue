@@ -38,6 +38,8 @@ struct UndoToast: View {
 private struct NoteCapsule: View {
     let toast: Library.Toast
     private let k = UndoToast.k
+    /// 墨水屏 has no glass.
+    @AppStorage(EInk.key) private var eink = false
 
     var body: some View {
         HStack(spacing: 7 * k) {
@@ -56,9 +58,7 @@ private struct NoteCapsule: View {
         .padding(.leading, 11 * k)
         .padding(.trailing, 14 * k)
         .frame(height: 34 * k)
-        .background(YYColor.card, in: .capsule)
-        .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
-        .shadow(color: .black.opacity(0.09), radius: 12, y: 4)
+        .yyGlass(Capsule(), fill: YYColor.card, line: YYColor.line, shadow: 0.09, radius: 12, y: 4, liquid: !eink)
         .frame(maxWidth: 420)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.updatesFrequently)
@@ -74,6 +74,7 @@ private struct UndoBanner: View {
     private let k = UndoToast.k
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage(EInk.key) private var eink = false
     @State private var start = Date.now
     @State private var done = false
 
@@ -116,11 +117,9 @@ private struct UndoBanner: View {
         .padding(.leading, 13 * k)
         .padding(.trailing, 10 * k)
         .padding(.vertical, 11 * k)
-        // The prototype's glass: near-white over a blur of the page.
-        .background(YYColor.glass, in: .rect(cornerRadius: 20 * k))
-        .background(.ultraThinMaterial, in: .rect(cornerRadius: 20 * k))
-        .overlay(RoundedRectangle(cornerRadius: 20 * k).strokeBorder(YYColor.line, lineWidth: 0.5))
-        .shadow(color: .black.opacity(0.16), radius: 18, y: 8)
+        // Liquid Glass, or the prototype's glass: near-white over a blur of the page.
+        .yyGlass(RoundedRectangle(cornerRadius: 20 * k), fill: YYColor.glass, line: YYColor.line, material: .ultraThinMaterial,
+                 shadow: 0.16, radius: 18, y: 8, liquid: !eink)
         .frame(maxWidth: UndoToast.bannerWidth)
         .accessibilityElement(children: .combine)
         .accessibilityAction(named: "撤销") { if !done { undo() } }

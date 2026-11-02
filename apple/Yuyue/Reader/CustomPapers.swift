@@ -138,6 +138,7 @@ struct PaperEditor: View {
     @State private var night: Bool
     @State private var hsl: PaperHsl
     @State private var tuning = false
+    @State private var doneHover = false
     @State private var failure: String?
     private let tint = YYTint.standard
 
@@ -170,12 +171,17 @@ struct PaperEditor: View {
                     .font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
                 Spacer()
                 Button { done() } label: {
+                    // A light grey capsule, not the dark fill: the papers are what's bright on this card.
                     Text("完成")
                         .font(.yy(size: 11.5, weight: .semibold))
-                        .foregroundStyle(tint.onBlack)
-                        .padding(.horizontal, 13).frame(height: 26)
-                        .background(tint.black, in: .capsule)
+                        .foregroundStyle(YYColor.t1)
+                        .padding(.horizontal, 14).frame(height: 26)
+                        .background(YYColor.inset, in: .capsule)
+                        .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
+                        .brightness(doneHover ? -0.03 : 0)
+                        .contentShape(.capsule)
                 }
+                .onHover { doneHover = $0 }
                 .keyboardShortcut(.defaultAction)
             }
             .font(.yy(size: 12))
@@ -184,7 +190,7 @@ struct PaperEditor: View {
             Segments(items: [(false, String(localized: "白天")), (true, String(localized: "夜里"))],
                      selection: Binding(get: { night }, set: { switchSide($0) }), small: true) { _, t in Text(t) }
 
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 6), spacing: 6) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 6), spacing: 8) {
                 ForEach(palette.swatches, id: \.color) { swatch in
                     let made = CustomPaper(id: "", name: swatch.name, bg: swatch.color, ink: draft.ink, layout: draft.layout, texture: draft.texture)
                     PaperTile(paper: YYPaper(custom: made), texture: draft.texture, name: swatch.name, selected: draft.bg == swatch.color, small: true) {
@@ -372,7 +378,9 @@ struct PaperTile: View {
                 Text("文")
                     .font(YYUI.serif(15))
                     .foregroundStyle(paper.ink)
-                    .frame(width: small ? 44 : 46, height: 38)
+                    // 调纸's six to a row share the card's width; a fixed 44 made them touch.
+                    .frame(width: small ? nil : 46, height: small ? 34 : 38)
+                    .frame(maxWidth: small ? .infinity : nil)
                     .background { paper.bg.overlay { PaperTextureView(texture: texture, dark: paper.isDark) } }
                     .clipShape(.rect(cornerRadius: 10))
                     .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(YYColor.line, lineWidth: paper.isDark ? 0 : 0.5))

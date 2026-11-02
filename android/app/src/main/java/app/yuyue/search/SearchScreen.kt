@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -142,13 +143,23 @@ fun SearchScreen(library: Library) {
                 if (titles.isNotEmpty()) {
                     item { YYLabel(t("最近读过")) }
                     item { YYGroup { for (h in titles) row { TitleRow(h) { open(library, h) } } } }
+                } else {
+                    item { Text(t("书名、书里的一句话、笔记和生词都能搜；搜不到的，可以直接问书伴。"), fontSize = 13.sp, color = YY.c.t2, modifier = Modifier.padding(horizontal = 4.dp, vertical = 12.dp)) }
                 }
             } else {
                 val ask = if (scope == Scope.All) askBook(library, titles) else null
                 if (ask != null) item { AskCard(q, ask) { library.ask(q, ask.id) } }
-                if ((scope == Scope.All || scope == Scope.Books) && titles.isNotEmpty()) {
-                    item { YYLabel(t("书"), "${titles.size}") }
-                    item { YYGroup { for (h in titles) row { TitleRow(h) { open(library, h) } } } }
+                // A book's name, then its chapters whose titles match, each under its own heading,
+                // so one book with four matching chapters doesn't read as four books.
+                val named = titles.filter { it.chapter == null }
+                val chapters = titles.filter { it.chapter != null }
+                if ((scope == Scope.All || scope == Scope.Books) && named.isNotEmpty()) {
+                    item { YYLabel(t("书"), "${named.size}") }
+                    item { YYGroup { for (h in named) row { TitleRow(h) { open(library, h) } } } }
+                }
+                if ((scope == Scope.All || scope == Scope.Books) && chapters.isNotEmpty()) {
+                    item { YYLabel(t("章节"), "${chapters.size}") }
+                    item { YYGroup { for (h in chapters) row { TitleRow(h) { open(library, h) } } } }
                 }
                 if ((scope == Scope.All || scope == Scope.Lines) && lines.isNotEmpty()) {
                     item { YYLabel(t("全文"), t("%lld 处 · %lld 本书", lineCount, lineBooks)) }
@@ -234,7 +245,7 @@ private fun AskCard(q: String, book: BookSummary, onClick: () -> Unit) {
         }
         Column(Modifier.weight(1f)) {
             Text(t("问书伴“%@”", q), fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = tint.accent, maxLines = 1)
-            Text(t("只用《%@》里你读过的部分回答，带出处", book.title), fontSize = 12.sp, color = YY.c.t3, maxLines = 1)
+            Text(t("用《%@》读过的部分回答", book.title), fontSize = 12.sp, color = YY.c.t2, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
         Icon(Icons.chevronRight, null, tint = YY.c.t3, modifier = Modifier.size(16.dp))
     }
@@ -245,8 +256,8 @@ private fun TitleRow(h: TitleHit, onClick: () -> Unit) {
     Row(Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         BookCover(h.book, Modifier.width(30.dp))
         Column(Modifier.weight(1f)) {
-            Text(h.chapter?.let { "${h.book.title} · ${it.title}" } ?: h.book.title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = YY.c.t1, maxLines = 1)
-            Text(h.book.authors.firstOrNull() ?: "", fontSize = 12.sp, color = YY.c.t3, maxLines = 1)
+            Text(h.chapter?.title ?: h.book.title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = YY.c.t1, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(if (h.chapter != null) h.book.title else h.book.authors.firstOrNull() ?: "", fontSize = 12.sp, color = YY.c.t2, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }

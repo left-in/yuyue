@@ -65,7 +65,7 @@ struct TxtLayoutView: View {
             if working {
                 ProgressView(String(localized: "正在按新的方式整理这本书…"))
                     .padding(20)
-                    .background(.regularMaterial, in: .rect(cornerRadius: 14))
+                    .yyGlass(RoundedRectangle(cornerRadius: 14), fill: .clear, shadow: 0)
             }
         }
         .task(id: choice) { await refresh() }

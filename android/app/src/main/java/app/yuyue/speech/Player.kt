@@ -83,8 +83,9 @@ class Player(private val context: Context, private val core: YuyueCore, val deta
     var spot by mutableStateOf<Spot?>(null)
         private set
     var failure by mutableStateOf<String?>(null)
-    /** The failure is that no voice reads this language: the system's voice data can be downloaded. */
-    var missingVoice by mutableStateOf(false)
+    /** The failure is that no voice reads this language, named as people say it (中文): the
+     *  system's voice data can be downloaded. */
+    var missingVoice by mutableStateOf<String?>(null)
     var sleep by mutableStateOf<Sleep>(Sleep.Off)
     /** 单句循环 */
     var loop by mutableStateOf(false)
@@ -122,7 +123,7 @@ class Player(private val context: Context, private val core: YuyueCore, val deta
     /** Starts reading at `position`, or at the first sentence after it with something to read. */
     fun play(from: Position) {
         failure = null
-        missingVoice = false
+        missingVoice = null
         reset()
         val start = first(Spot(from.section.toInt(), from.sentence.toInt())) ?: return stop()
         spot = start

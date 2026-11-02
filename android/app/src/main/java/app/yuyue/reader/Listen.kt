@@ -139,7 +139,7 @@ private fun Speed(model: ReaderModel, player: Player) {
         Slider(
             player.rate, { player.changeRate((it * 10).roundToInt() / 10f) }, valueRange = 0.8f..2.0f,
             modifier = Modifier.semantics { contentDescription = t("语速"); stateDescription = rateText(player.rate) },
-            colors = SliderDefaults.colors(thumbColor = YY.c.card, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line),
+            colors = SliderDefaults.colors(thumbColor = YY.tint.fill, activeTrackColor = YY.tint.fill, inactiveTrackColor = YY.c.line),
         )
         Row(Modifier.fillMaxWidth().padding(horizontal = 6.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             for (r in rates) {

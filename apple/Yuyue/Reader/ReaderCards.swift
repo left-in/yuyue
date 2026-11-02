@@ -6,6 +6,8 @@ struct Above: ViewModifier {
     let rect: CGRect
     let size: CGSize
     @State private var card = CGSize(width: 320, height: 120)
+    @AppStorage(LiquidGlass.key) private var liquidChosen = true
+    @AppStorage(EInk.key) private var eink = false
 
     init(rect: CGRect, in size: CGSize) {
         self.rect = rect
@@ -21,12 +23,15 @@ struct Above: ViewModifier {
         let tip = min(max(rect.midX - x, 22), max(22, card.width - 22))
         content
             .background(alignment: above ? .bottomLeading : .topLeading) {
-                RoundedRectangle(cornerRadius: 2).fill(YYColor.card)
-                    .frame(width: 11, height: 11)
-                    .rotationEffect(.degrees(45))
-                    // Behind the card, so only the part sticking out shows its edge on white paper.
-                    .shadow(color: .black.opacity(0.12), radius: 2, y: above ? 1.5 : -1.5)
-                    .offset(x: tip - 5.5, y: above ? 5 : -5)
+                // Glass cards have no point.
+                if !(liquidChosen && LiquidGlass.supported && !eink) {
+                    RoundedRectangle(cornerRadius: 2).fill(YYColor.card)
+                        .frame(width: 11, height: 11)
+                        .rotationEffect(.degrees(45))
+                        // Behind the card, so only the part sticking out shows its edge on white paper.
+                        .shadow(color: .black.opacity(0.12), radius: 2, y: above ? 1.5 : -1.5)
+                        .offset(x: tip - 5.5, y: above ? 5 : -5)
+                }
             }
             .onGeometryChange(for: CGSize.self) { $0.size } action: { card = $0 }
             .offset(x: x, y: y)
@@ -127,8 +132,7 @@ struct SelectionCard: View {
         }
         // `.v-mr-sc`
         .frame(width: Self.touch ? 340 : 332)
-        .background(YYColor.card, in: .rect(cornerRadius: YYRadius.block))
-        .yyShadow(scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
+        .yyFloatCard(.rect(cornerRadius: YYRadius.block), shadow: scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
     }
 
     private func ringed(_ style: MarkStyle) -> Bool {

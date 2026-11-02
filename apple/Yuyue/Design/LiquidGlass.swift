@@ -77,6 +77,35 @@ private struct YYGlass<S: Shape>: ViewModifier {
 }
 
 extension View {
+    /// A card that floats over the page (`.v-float`): the selection card, notes and recaps over
+    /// the text, the book menu, the side panel. Liquid Glass with a wash of the card colour, so
+    /// the words on it stay easy to read over the page; off, before 26 or on 墨水屏, the
+    /// prototype's white card and its float shadow.
+    func yyFloatCard(_ shape: some Shape, shadow: [YYShadowLayer]) -> some View {
+        modifier(YYFloatCard(shape: shape, shadow: shadow))
+    }
+}
+
+private struct YYFloatCard<S: Shape>: ViewModifier {
+    let shape: S
+    let shadow: [YYShadowLayer]
+    @AppStorage(LiquidGlass.key) private var chosen = true
+    @AppStorage(EInk.key) private var eink = false
+
+    func body(content: Content) -> some View {
+        if chosen && !eink, #available(macOS 26, iOS 26, *) {
+            content.glassEffect(.regular.tint(YYColor.card.opacity(0.6)), in: shape)
+        } else {
+            content
+                .background(YYColor.card, in: shape)
+                // One shadow for the card, not one under every line of text.
+                .compositingGroup()
+                .yyShadow(shadow)
+        }
+    }
+}
+
+extension View {
     /// macOS 26 and iOS 26 fade whatever scrolls under a bar; the prototype doesn't.
     @ViewBuilder func noScrollEdgeFade() -> some View {
         if #available(macOS 26, iOS 26, *) {

@@ -9,6 +9,9 @@ struct TypesetCard: View {
     let model: ReaderModel
     @AppStorage("reader.twoColumns") private var twoColumns = true
     @State private var more = false
+    /// 全部纸张, when 我的纸 are more than two rows.
+    @State private var all = false
+    @State private var hoverNew = false
     /// 调纸 open on this paper (a new one has no id yet).
     @State private var editing: CustomPaper?
     /// 重命名 asked for this paper.
@@ -28,14 +31,15 @@ struct TypesetCard: View {
                     if let saved { choose(saved) }
                 }
                 .id(editing.id)
-            } else if more { moreSettings } else { main }
+            } else if more { moreSettings } else if all { allPapers } else { main }
         }
         // `.v-mr-aa`: 304 wide in all.
         #if os(macOS)
         .frame(width: 272)
         #endif
-        .padding(.horizontal, 16).padding(.top, 16).padding(.bottom, more || editing != nil ? 16 : 6)
+        .padding(.horizontal, 16).padding(.top, 16).padding(.bottom, more || all || editing != nil ? 16 : 6)
         .animation(.snappy(duration: 0.2), value: more)
+        .animation(.snappy(duration: 0.2), value: all)
         .animation(.snappy(duration: 0.2), value: editing == nil)
         .alert(String(localized: "重命名"), isPresented: Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } })) {
             TextField(String(localized: "名字"), text: $newName)
@@ -219,9 +223,9 @@ struct TypesetCard: View {
         }
     }
 
-    /// The presets, then 我的纸, then ＋. Too many for the card: they scroll, fading at the right edge.
-    /// The presets, then 我的纸, scrolling when there are too many; ＋ stays pinned at the right so
-    /// making one is always in sight.
+    #if os(iOS)
+    /// The phone keeps the strip: the presets, then 我的纸, a finger swipes along them; ＋ stays
+    /// pinned at the right so making one is always in sight.
     private var papers: some View {
         HStack(alignment: .top, spacing: 0) {
             ScrollViewReader { proxy in
@@ -278,6 +282,176 @@ struct TypesetCard: View {
             .accessibilityLabel(Text("自己调一张纸"))
         }
         .padding(.leading, -16)
+    }
+    #else
+    /// 方案二 (docs/design/纸张选择.html): the five presets fill a row; 我的纸 go under them five to
+    /// a row, ＋ after the last. Two rows at most, so the card keeps its height: past that the last
+    /// cell is 全部, a page of every paper. The one on the page always shows, standing in for the
+    /// last of the two rows if it's further on.
+    private var papers: some View {
+        let mine = Papers.shared.list
+        return VStack(alignment: .leading, spacing: 10) {
+            paperGrid { ForEach(YYPaper.all) { presetTile($0) } }
+            if mine.isEmpty {
+                // The whole row is the button: the words alone were 13 high and easy to miss.
+                Button { editing = newPaper() } label: {
+                    HStack {
+                        Text("我的纸").font(.yy(size: 10.5, weight: .semibold)).foregroundStyle(YYColor.t2)
+                        Spacer()
+                        Label("自己调一张", systemImage: "plus").labelStyle(TightLabel())
+                            .font(.yy(size: 10.5)).foregroundStyle(YYColor.t2)
+                    }
+                    .padding(.horizontal, 8)
+                    .frame(height: 30)
+                    .background(hoverNew ? YYColor.inset : .clear, in: .rect(cornerRadius: 8))
+                    .contentShape(.rect)
+                }
+                .buttonStyle(.plain)
+                .onHover { hoverNew = $0 }
+                .help(Text("自己调一张纸"))
+                .padding(.horizontal, -6)
+                .padding(.vertical, -4)
+            } else {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    Text("我的纸").font(.yy(size: 10.5, weight: .semibold)).foregroundStyle(YYColor.t2)
+                    Text("\(mine.count) 张").font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
+                    Spacer()
+                    if mine.count > Self.shown {
+                        Button { all = true } label: {
+                            HStack(spacing: 2) {
+                                Text("全部")
+                                Image(systemName: "chevron.right").font(.yy(size: 8.5, weight: .semibold))
+                            }
+                            .font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
+                            .contentShape(.rect)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 2)
+                .padding(.bottom, -4)
+                paperGrid {
+                    ForEach(shownMine(mine), id: \.id) { mineTile($0) }
+                    addTile
+                    if mine.count > Self.shown { allTile(mine.count) }
+                }
+            }
+        }
+    }
+
+    #endif
+
+    /// Two rows of five: eight papers, ＋ and 全部. Nine papers and ＋ fit without 全部.
+    private static let shown = 9
+
+    private func shownMine(_ mine: [CustomPaper]) -> [CustomPaper] {
+        guard mine.count > Self.shown else { return mine }
+        var head = Array(mine.prefix(Self.shown - 1))
+        if let on = mine.firstIndex(where: { $0.id == model.settings.paperChoice }), on >= head.count { head[head.count - 1] = mine[on] }
+        return head
+    }
+
+    /// 全部纸张: the same kind of page as 更多, every paper, scrolling when they're many.
+    private var allPapers: some View {
+        let mine = Papers.shared.list
+        return VStack(alignment: .leading, spacing: 12) {
+            ZStack {
+                Text("全部纸张").font(.yy(size: 12.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                HStack {
+                    Button { all = false } label: {
+                        Label("排版", systemImage: "chevron.left")
+                            .font(.yy(size: 12.5, weight: .semibold))
+                            .foregroundStyle(tint.accent)
+                            .contentShape(.rect)
+                    }
+                    .buttonStyle(.plain)
+                    Spacer()
+                }
+            }
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 10) {
+                        groupTitle(String(localized: "自带"), nil)
+                        paperGrid { ForEach(YYPaper.all) { presetTile($0) } }
+                        groupTitle(String(localized: "我的纸"), String(localized: "\(mine.count) 张"))
+                        paperGrid {
+                            ForEach(mine, id: \.id) { mineTile($0) }
+                            addTile
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+                .scrollIndicators(.automatic)
+                .frame(maxHeight: 320)
+                .fixedSize(horizontal: false, vertical: true)
+                .onAppear { proxy.scrollTo(model.settings.paperChoice, anchor: .center) }
+            }
+            Text("右键一张自己调的纸：调整颜色、重命名、复制、删除。")
+                .font(.yy(size: 10.5)).foregroundStyle(YYColor.t3)
+        }
+    }
+
+    private func groupTitle(_ title: String, _ count: String?) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: 6) {
+            Text(title).font(.yy(size: 10.5, weight: .semibold)).foregroundStyle(YYColor.t2)
+            if let count { Text(count).font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3) }
+        }
+        .padding(.horizontal, 2)
+        .padding(.bottom, -4)
+    }
+
+    /// `.v-mr-papers`: five columns.
+    private func paperGrid(@ViewBuilder _ content: () -> some View) -> some View {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 5), alignment: .center, spacing: 10, content: content)
+    }
+
+    private func presetTile(_ paper: YYPaper) -> some View {
+        PaperTile(paper: paper, texture: paper.hasNoiseTexture ? .grain : .none, name: paper.name, selected: model.settings.paperChoice == paper.id) {
+            if let id = Paper(id: paper.id) { model.update { $0.paper = id; $0.customPaper = nil } }
+        }
+        .id(paper.id)
+    }
+
+    private func mineTile(_ mine: CustomPaper) -> some View {
+        PaperTile(paper: YYPaper(custom: mine), texture: mine.texture, name: mine.name, selected: model.settings.paperChoice == mine.id) { choose(mine) }
+            .id(mine.id)
+            // 长按 / 右键: the prototype's menu card, 删除 in red in a group of its own.
+            .contextMenu {
+                Button(String(localized: "调整颜色"), systemImage: "paintpalette") { editing = mine }
+                Button(String(localized: "重命名"), systemImage: "pencil") { newName = mine.name; renaming = mine }
+                Button(String(localized: "复制一张"), systemImage: "plus.square.on.square") { duplicate(mine) }
+                Divider()
+                Button(String(localized: "删除"), systemImage: "trash", role: .destructive) { delete(mine) }
+            }
+    }
+
+    private var addTile: some View {
+        cellButton(String(localized: "新建"), help: String(localized: "自己调一张纸")) { editing = newPaper() } face: {
+            Image(systemName: "plus").font(.yy(size: 15, weight: .medium)).foregroundStyle(YYColor.t2)
+        }
+    }
+
+    private func allTile(_ count: Int) -> some View {
+        cellButton(String(localized: "全部"), help: String(localized: "全部纸张")) { all = true } face: {
+            Text("\(count)").font(.yy(size: 11.5, weight: .semibold)).monospacedDigit().foregroundStyle(YYColor.t1)
+        }
+    }
+
+    /// A cell the size of a paper, on the inset grey: ＋ 新建 and 全部.
+    private func cellButton(_ title: String, help: String, action: @escaping () -> Void, @ViewBuilder face: () -> some View) -> some View {
+        Button(action: action) {
+            VStack(spacing: 6) {
+                face()
+                    .frame(width: 46, height: 38)
+                    .background(YYColor.inset, in: .rect(cornerRadius: 10))
+                    .padding(2)
+                Text(title).font(.yy(size: 10.5)).foregroundStyle(YYColor.t2).lineLimit(1)
+            }
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .help(Text(help))
+        .accessibilityLabel(Text(help))
     }
 
     private func choose(_ mine: CustomPaper) {
