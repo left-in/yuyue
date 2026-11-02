@@ -1,0 +1,682 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>语阅 书伴服务商 · 三套方案</title>
+<style>
+/* Three directions for 设置 · 书伴 and adding a service, each in the Mac settings window at full
+   size, all clickable. Tokens are the prototype's (v0.29): paper ground, near-black primary,
+   serif and kai for the book's own voice. Keys, checks and sign-ins are simulated. */
+:root {
+  --bg: #F6F5F3; --card: #FFFFFF; --inset: #EFEEEB; --line: #E7E5E1; --side: #F0EEEA;
+  --t1: #2A2B2E; --t2: #85827F; --t3: #A8A49F;
+  --black: #101214; --on-black: #FFFFFF; --accent: #2B4C7E; --accent-soft: rgba(43,76,126,.10);
+  --ok: #3B8A5A; --danger: #C2453D; --warn: #A86B12;
+  --zsh: 0 0 0 .5px var(--line), 0 1px 2px rgba(51,46,41,.04);
+  --float: 0 10px 30px rgba(51,46,41,.14), 0 1px 3px rgba(51,46,41,.08);
+  --page: #E9E6E1; --dim: rgba(42,38,34,.18);
+  --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", serif;
+  --kai: "LXGW WenKai", "Kaiti SC", "STKaiti", "KaiTi", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+:root[data-theme="dark"] {
+  --bg: #101112; --card: #1B1C1E; --inset: #26272A; --line: #2C2D30; --side: #151618;
+  --t1: #EDEDEE; --t2: #9A9895; --t3: #75726E;
+  --black: #EDEDEE; --on-black: #101214; --accent: #8FA8C8; --accent-soft: rgba(143,168,200,.14);
+  --ok: #6CBF8A; --danger: #E2776F; --warn: #E0A84F;
+  --zsh: 0 0 0 .5px rgba(255,255,255,.06);
+  --float: 0 10px 30px rgba(0,0,0,.5), 0 0 0 .5px rgba(255,255,255,.07);
+  --page: #08090A; --dim: rgba(0,0,0,.45);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--page); color: var(--t1); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+.top { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--page) 86%, transparent); backdrop-filter: blur(14px); border-bottom: .5px solid var(--line); }
+.top .in { max-width: 1120px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.top h1 { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 700; letter-spacing: .02em; }
+.tabs { display: flex; gap: 4px; }
+.tabs a { text-decoration: none; color: var(--t2); font-size: 12.5px; padding: 5px 11px; border-radius: 999px; }
+.tabs a:hover { color: var(--t1); background: var(--card); }
+.tg { margin-left: auto; display: flex; gap: 4px; font-size: 12px; }
+.tg button { border: 0; background: none; padding: 5px 10px; border-radius: 999px; color: var(--t2); }
+.tg button[aria-pressed="true"] { background: var(--card); color: var(--t1); box-shadow: var(--zsh); }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 30px 16px 90px; display: flex; flex-direction: column; gap: 64px; }
+.opt { display: flex; flex-direction: column; gap: 18px; scroll-margin-top: 70px; }
+.opt header { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 40px; align-items: end; }
+.opt h2 { margin: 0; font-family: var(--serif); font-size: 24px; font-weight: 700; letter-spacing: .02em; display: flex; align-items: baseline; gap: 12px; }
+.opt h2 em { font-style: normal; font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--t3); letter-spacing: .08em; }
+.opt .why { margin: 0; font-size: 13.5px; line-height: 1.85; color: var(--t2); }
+.opt .why b { color: var(--t1); font-weight: 600; }
+.try { font-size: 12px; color: var(--t3); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.try button { border: 0; background: var(--card); box-shadow: var(--zsh); border-radius: 999px; padding: 3px 10px; font-size: 11.5px; color: var(--t2); }
+.try button:hover { color: var(--t1); }
+@media (max-width: 860px) { .opt header { grid-template-columns: 1fr; } }
+.scroll { overflow-x: auto; padding: 6px 6px 40px; margin: -6px -6px -34px; }
+
+/* ---- the window ---- */
+.win { width: 860px; height: 580px; border-radius: 12px; overflow: hidden; position: relative; background: var(--bg); box-shadow: 0 0 0 .5px rgba(0,0,0,.18), 0 30px 70px rgba(51,46,41,.16); display: flex; font-size: 12px; flex: none; }
+.lights { position: absolute; left: 18px; top: 18px; display: flex; gap: 8px; z-index: 3; }
+.lights i { width: 12px; height: 12px; border-radius: 50%; background: #FF5F57; } .lights i:nth-child(2) { background: #FEBC2E; } .lights i:nth-child(3) { background: #28C840; }
+.side { width: 172px; flex: none; background: var(--side); border-right: .5px solid var(--line); padding: 50px 10px 10px; display: flex; flex-direction: column; gap: 1px; }
+.side a { display: flex; align-items: center; gap: 9px; height: 28px; padding: 0 9px; border-radius: 7px; color: var(--t1); font-size: 12.5px; }
+.side a svg { width: 14px; height: 14px; color: var(--t2); flex: none; }
+.side a.on { background: var(--inset); font-weight: 600; } .side a.on svg { color: var(--t1); }
+.pane { flex: 1; min-width: 0; position: relative; overflow: auto; }
+.pane-in { padding: 28px 32px 28px; display: flex; flex-direction: column; gap: 14px; min-height: 100%; }
+.ph { display: flex; align-items: baseline; gap: 10px; }
+.ph h3 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: .01em; }
+.ph span { font-size: 11.5px; color: var(--t3); }
+.lock { font-size: 11px; color: var(--t3); display: flex; gap: 6px; align-items: center; margin-top: auto; padding-top: 6px; }
+.lock svg { width: 11px; height: 11px; }
+
+/* ---- shared bits ---- */
+.lg { flex: none; display: inline-grid; place-items: center; }
+.lg svg { width: 100%; height: 100%; display: block; }
+.badge { flex: none; display: grid; place-items: center; border-radius: 28%; background: var(--card); box-shadow: 0 0 0 .5px var(--line), 0 1px 2px rgba(51,46,41,.06); }
+.disc { flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--inset); color: var(--t2); font-weight: 600; }
+.spin { width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid currentColor; border-top-color: transparent; animation: sp .7s linear infinite; flex: none; display: inline-block; opacity: .7; }
+@keyframes sp { to { transform: rotate(360deg); } }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); display: inline-block; flex: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 18%, transparent); }
+.btn { height: 30px; padding: 0 14px; border-radius: 999px; border: 0; font-size: 12px; font-weight: 600; background: var(--card); box-shadow: 0 0 0 .5px var(--line), 0 1px 2px rgba(51,46,41,.07); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.btn.k { background: var(--black); color: var(--on-black); box-shadow: none; }
+.btn.lg2 { height: 38px; padding: 0 20px; font-size: 13px; }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn.ghost { background: none; box-shadow: none; color: var(--t2); font-weight: 500; }
+.btn.ghost:hover { color: var(--t1); }
+.lnk { border: 0; background: none; padding: 0; color: var(--t2); font-size: 11.5px; }
+.lnk:hover { color: var(--t1); }
+.chk { font-size: 11.5px; display: flex; align-items: center; gap: 6px; color: var(--t2); min-height: 18px; }
+.chk.ok { color: var(--ok); } .chk.bad { color: var(--danger); } .chk.warn { color: var(--warn); }
+.chk button { border: 0; background: none; padding: 0; color: var(--accent); font-size: 11.5px; font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { height: 26px; padding: 0 10px; border-radius: 999px; border: 0; background: var(--inset); font-family: var(--mono); font-size: 11px; color: var(--t2); display: inline-flex; align-items: center; gap: 5px; }
+.chip:hover { color: var(--t1); }
+.chip.on { background: var(--black); color: var(--on-black); }
+.chip.more { font-family: var(--sans); }
+.key { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 6px 0 14px; border-radius: 10px; background: var(--card); box-shadow: 0 0 0 .5px var(--line), 0 1px 2px rgba(51,46,41,.05); }
+.key:focus-within { box-shadow: 0 0 0 .5px var(--t2), 0 0 0 4px var(--inset); }
+.key input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font-family: var(--mono); font-size: 12.5px; letter-spacing: .01em; }
+.key input::placeholder { color: var(--t3); font-family: var(--sans); letter-spacing: 0; }
+.key .tail { font-size: 11px; color: var(--t3); }
+.mini { height: 26px; border: 0; padding: 0 10px; border-radius: 7px; background: var(--inset); font-size: 11px; font-weight: 600; color: var(--t1); }
+.mini:hover { background: var(--line); }
+.pop { position: absolute; z-index: 30; background: var(--card); border-radius: 10px; box-shadow: var(--float); padding: 5px; min-width: 200px; animation: pin .14s ease; }
+@keyframes pin { from { opacity: 0; transform: translateY(-4px); } }
+.pop .it { display: flex; align-items: center; gap: 9px; height: 30px; padding: 0 9px; border-radius: 6px; border: 0; background: none; width: 100%; text-align: left; font-size: 12.5px; white-space: nowrap; }
+.pop .it:hover { background: var(--inset); }
+.pop .it .ck { margin-left: auto; color: var(--t1); font-size: 11px; }
+.pop .it.mono { font-family: var(--mono); font-size: 11.5px; }
+.pop .it small { color: var(--t3); font-size: 10.5px; margin-left: auto; }
+.pop hr { border: 0; border-top: .5px solid var(--line); margin: 4px 6px; }
+.toast { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); background: var(--black); color: var(--on-black); font-size: 12px; padding: 8px 14px; border-radius: 999px; z-index: 40; white-space: nowrap; display: flex; gap: 8px; align-items: center; animation: pin .2s ease; }
+.fade-in { animation: fin .22s ease; }
+@keyframes fin { from { opacity: 0; transform: translateY(6px); } }
+
+/* ================= A · 名片 ================= */
+.hero { position: relative; border-radius: 18px; background: var(--card); box-shadow: var(--zsh); padding: 20px 22px 18px; overflow: hidden; }
+.hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 90% at 0% 0%, var(--tint, transparent) 0%, transparent 55%); opacity: .14; pointer-events: none; }
+.hero .row1 { display: flex; align-items: center; gap: 14px; position: relative; }
+.hero .badge { width: 46px; height: 46px; }
+.hero .nm { font-family: var(--serif); font-size: 19px; font-weight: 700; letter-spacing: .02em; }
+.hero .meta { font-size: 11.5px; color: var(--t2); margin-top: 3px; display: flex; align-items: center; gap: 8px; }
+.hero .meta .m { font-family: var(--mono); font-size: 11px; color: var(--t1); border: 0; background: var(--inset); border-radius: 6px; padding: 2px 7px; }
+.hero .meta .m:hover { background: var(--line); }
+.hero .acts { margin-left: auto; display: flex; gap: 6px; align-self: flex-start; }
+.hero blockquote { position: relative; margin: 16px 0 0; padding: 12px 0 0 0; border-top: .5px solid var(--line); font-family: var(--kai); font-size: 14px; line-height: 1.85; color: var(--t1); }
+.hero blockquote small { display: block; font-family: var(--sans); font-size: 10.5px; color: var(--t3); margin-top: 6px; }
+.hero blockquote .q { color: var(--t3); }
+.deck { display: flex; gap: 8px; flex-wrap: wrap; }
+.mc { width: 128px; height: 74px; border-radius: 12px; background: var(--card); box-shadow: var(--zsh); border: 0; padding: 11px 12px; display: flex; flex-direction: column; justify-content: space-between; text-align: left; position: relative; transition: transform .15s, box-shadow .15s; }
+.mc:hover { transform: translateY(-1px); box-shadow: var(--float); }
+.mc .badge { width: 24px; height: 24px; }
+.mc b { font-size: 12.5px; font-weight: 600; display: block; }
+.mc span { font-size: 10.5px; color: var(--t3); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mc.on { box-shadow: 0 0 0 1.5px var(--t1); }
+.mc.on::after { content: "在用"; position: absolute; right: 9px; top: 9px; font-size: 9.5px; font-weight: 700; color: var(--on-black); background: var(--black); border-radius: 4px; padding: 1px 5px; }
+.mc.add { background: none; box-shadow: none; border: 1px dashed color-mix(in srgb, var(--t3) 70%, transparent); align-items: center; justify-content: center; flex-direction: row; gap: 6px; color: var(--t2); font-size: 12.5px; }
+.mc.add:hover { color: var(--t1); border-color: var(--t2); }
+.sec-t { font-size: 11.5px; font-weight: 600; color: var(--t2); margin: 4px 2px -4px; display: flex; justify-content: space-between; align-items: baseline; }
+/* gallery overlay */
+.gal { position: absolute; inset: 0; background: var(--bg); z-index: 20; display: flex; flex-direction: column; }
+.gal.anim { animation: fin .2s ease; }
+.gal-h { display: flex; align-items: center; gap: 12px; padding: 20px 28px 14px; }
+.gal-h h3 { margin: 0; font-size: 17px; font-weight: 700; }
+.gal-h .back { border: 0; background: var(--inset); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: var(--t2); }
+.gal-h .back:hover { color: var(--t1); }
+.gal-s { margin-left: auto; width: 230px; height: 30px; border-radius: 999px; background: var(--card); box-shadow: var(--zsh); display: flex; align-items: center; gap: 6px; padding: 0 12px; color: var(--t3); }
+.gal-s input { border: 0; outline: none; background: none; flex: 1; min-width: 0; font-size: 12px; color: var(--t1); }
+.gal-b { flex: 1; overflow: auto; padding: 0 28px 24px; }
+.gal-g { font-size: 11px; font-weight: 600; color: var(--t3); margin: 14px 2px 8px; display: flex; gap: 8px; align-items: baseline; }
+.gal-g span { font-weight: 400; }
+.tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.tile { height: 92px; border-radius: 14px; background: var(--card); box-shadow: var(--zsh); border: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; position: relative; transition: transform .15s, box-shadow .15s; }
+.tile:hover { transform: translateY(-2px); box-shadow: var(--float); }
+.tile .lg { width: 28px; height: 28px; }
+.tile b { font-size: 12px; font-weight: 600; }
+.tile i { position: absolute; top: 8px; right: 9px; font-style: normal; font-size: 9.5px; color: var(--ok); display: flex; align-items: center; gap: 4px; }
+.tile.wide { grid-column: span 2; flex-direction: row; justify-content: flex-start; padding: 0 18px; gap: 14px; text-align: left; }
+.tile.wide b { display: block; font-size: 13px; }
+.tile.wide small { display: block; font-size: 11px; color: var(--t3); font-weight: 400; margin-top: 3px; }
+.tile.dash { background: none; box-shadow: none; border: 1px dashed color-mix(in srgb, var(--t3) 70%, transparent); color: var(--t2); }
+/* detail page */
+.det { flex: 1; overflow: auto; padding: 4px 28px 24px; display: flex; flex-direction: column; align-items: center; }
+.det-in { width: 420px; display: flex; flex-direction: column; gap: 14px; }
+.det .badge { width: 64px; height: 64px; margin: 6px auto 0; border-radius: 18px; }
+.det .badge .lg { width: 36px; height: 36px; }
+.det h4 { margin: 0; text-align: center; font-family: var(--serif); font-size: 21px; font-weight: 700; letter-spacing: .02em; }
+.det p.s { margin: -8px 0 4px; text-align: center; font-size: 12px; color: var(--t2); line-height: 1.6; }
+.det p.s a { color: var(--accent); text-decoration: none; }
+.det .lab { font-size: 11px; color: var(--t3); font-weight: 600; margin-bottom: -6px; padding-left: 2px; }
+.det .fine { font-size: 11px; color: var(--t3); line-height: 1.6; text-align: center; }
+.det .or { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--t3); }
+.det .or::before, .det .or::after { content: ""; flex: 1; border-top: .5px solid var(--line); }
+.adv { border: 0; background: none; padding: 0; font-size: 11.5px; color: var(--t2); display: flex; align-items: center; gap: 5px; align-self: center; }
+.adv:hover { color: var(--t1); }
+
+/* ================= B · 一句话 ================= */
+.sent { font-family: var(--serif); font-size: 24px; line-height: 1.6; letter-spacing: .02em; font-weight: 600; margin: 18px 0 2px; }
+.sent .w { font-family: var(--sans); font-size: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; padding: 1px 6px 3px; margin: 0 2px; border-radius: 8px; border-bottom: 1.5px solid var(--line); vertical-align: 1px; }
+.sent .w:hover { background: var(--card); box-shadow: var(--zsh); border-bottom-color: transparent; }
+.sent .w.m { font-family: var(--mono); font-size: 17px; font-weight: 500; }
+.sent .w .lg { width: 20px; height: 20px; }
+.sent .w::after { content: ""; width: 7px; height: 7px; border-right: 1.5px solid var(--t3); border-bottom: 1.5px solid var(--t3); transform: rotate(45deg) translateY(-3px); margin-left: 2px; }
+.status { font-size: 12px; color: var(--t2); display: flex; gap: 8px; align-items: center; }
+.status .lnk { font-size: 12px; }
+.cmd { margin-top: 18px; position: relative; }
+.cmdbox { display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 8px 0 16px; border-radius: 14px; background: var(--card); box-shadow: 0 0 0 .5px var(--line), 0 2px 6px rgba(51,46,41,.05); }
+.cmdbox:focus-within { box-shadow: 0 0 0 .5px var(--t2), 0 0 0 4px var(--inset), 0 8px 24px rgba(51,46,41,.08); }
+.cmdbox svg.s { width: 16px; height: 16px; color: var(--t3); flex: none; }
+.cmdbox input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font-size: 14px; }
+.cmdbox input::placeholder { color: var(--t3); }
+.cmdbox kbd { font-family: var(--sans); font-size: 10.5px; color: var(--t3); border-radius: 5px; padding: 2px 6px; background: var(--inset); }
+.res { margin-top: 6px; border-radius: 14px; background: var(--card); box-shadow: var(--float); padding: 6px; }
+.res .it { display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 10px; border-radius: 9px; border: 0; background: none; width: 100%; text-align: left; font-size: 13px; }
+.res .it.kb { background: var(--inset); }
+.res .it .lg { width: 18px; height: 18px; }
+.res .it small { margin-left: auto; color: var(--t3); font-size: 11px; display: flex; align-items: center; gap: 6px; }
+.res .gt { font-size: 10.5px; color: var(--t3); font-weight: 600; padding: 8px 10px 4px; }
+.res .hint { font-size: 11.5px; color: var(--t3); padding: 10px; line-height: 1.6; }
+.card2 { margin-top: 6px; border-radius: 14px; background: var(--card); box-shadow: var(--float); padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 12px; }
+.card2 .h { display: flex; align-items: center; gap: 12px; }
+.card2 .badge { width: 36px; height: 36px; }
+.card2 .h b { font-size: 14px; display: block; } .card2 .h span { font-size: 11.5px; color: var(--t2); }
+.card2 .foot { display: flex; align-items: center; gap: 8px; }
+.card2 .foot .chk { flex: 1; }
+.others { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; color: var(--t3); margin-top: 6px; }
+.others button { border: 0; background: var(--card); box-shadow: var(--zsh); border-radius: 999px; height: 26px; padding: 0 10px 0 7px; display: inline-flex; gap: 6px; align-items: center; font-size: 12px; color: var(--t1); }
+.others button .lg { width: 14px; height: 14px; }
+.others button:hover { box-shadow: var(--float); }
+.sugg { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.sugg button { border: 0; background: none; box-shadow: inset 0 0 0 .5px var(--line); border-radius: 999px; height: 26px; padding: 0 10px 0 8px; display: inline-flex; gap: 6px; align-items: center; font-size: 11.5px; color: var(--t2); }
+.sugg button:hover { color: var(--t1); background: var(--card); }
+.sugg button .lg { width: 13px; height: 13px; }
+
+/* ================= C · 三条路 ================= */
+.ways { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.way { border: 0; text-align: left; border-radius: 16px; background: var(--card); box-shadow: var(--zsh); padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 10px; min-height: 154px; position: relative; transition: transform .15s, box-shadow .15s; }
+.way:hover { transform: translateY(-1px); box-shadow: var(--float); }
+.way.on { box-shadow: 0 0 0 1.5px var(--t1), var(--float); }
+.way .cl { display: flex; }
+.way .cl .badge { width: 28px; height: 28px; margin-right: -6px; border-radius: 50%; box-shadow: 0 0 0 2px var(--card), 0 0 0 2.5px var(--line); }
+.way .cl .badge .lg { width: 16px; height: 16px; }
+.way h5 { margin: 0; font-family: var(--serif); font-size: 16px; font-weight: 700; letter-spacing: .02em; }
+.way p { margin: 0; font-size: 11.5px; color: var(--t2); line-height: 1.6; }
+.way .cost { margin-top: auto; font-size: 10.5px; font-weight: 600; color: var(--t3); letter-spacing: .04em; }
+.way .tick { position: absolute; right: 14px; top: 14px; width: 18px; height: 18px; border-radius: 50%; background: var(--black); color: var(--on-black); display: grid; place-items: center; font-size: 10px; }
+.panel { border-radius: 16px; background: var(--card); box-shadow: var(--zsh); padding: 6px; }
+.opt-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 11px; }
+.opt-row + .opt-row { margin-top: 2px; }
+.opt-row.sel { background: var(--inset); }
+.opt-row .badge { width: 34px; height: 34px; }
+.opt-row .badge .lg { width: 19px; height: 19px; }
+.opt-row .tx { flex: 1; min-width: 0; }
+.opt-row b { font-size: 13px; display: flex; align-items: center; gap: 8px; }
+.opt-row span.d { font-size: 11.5px; color: var(--t2); display: block; margin-top: 2px; }
+.opt-row .tag { font-size: 9.5px; font-weight: 700; padding: 1px 6px; border-radius: 4px; background: var(--inset); color: var(--t2); }
+.opt-row.sel .tag { background: var(--card); }
+.opt-row .tag.ok { color: var(--ok); }
+.pastebig { padding: 14px 12px 10px; display: flex; flex-direction: column; gap: 10px; }
+.det-row { display: flex; align-items: center; gap: 10px; padding: 0 2px; }
+.det-row .badge { width: 26px; height: 26px; } .det-row .badge .lg { width: 15px; height: 15px; }
+.det-row b { font-size: 12.5px; }
+.listlink { border: 0; background: none; padding: 0; font-size: 11.5px; color: var(--t2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); }
+.listlink:hover { color: var(--t1); }
+.minigrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.minigrid button { border: 0; background: none; height: 34px; border-radius: 8px; display: flex; align-items: center; gap: 8px; padding: 0 8px; font-size: 12px; }
+.minigrid button:hover { background: var(--inset); }
+.minigrid .lg { width: 16px; height: 16px; }
+.now { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--t2); padding: 2px 2px 0; }
+.now .badge { width: 22px; height: 22px; } .now .badge .lg { width: 13px; height: 13px; }
+.now b { color: var(--t1); font-weight: 600; }
+.now .m { font-family: var(--mono); font-size: 11px; color: var(--t1); border: 0; background: var(--inset); border-radius: 6px; padding: 2px 7px; }
+
+.cmp { width: 100%; border-collapse: collapse; font-size: 12.5px; background: var(--card); border-radius: 14px; box-shadow: var(--zsh); overflow: hidden; }
+.cmp th, .cmp td { padding: 11px 14px; text-align: left; border-top: .5px solid var(--line); vertical-align: top; line-height: 1.6; }
+.cmp th { color: var(--t3); font-weight: 600; font-size: 11px; border-top: 0; }
+.cmp td:first-child { color: var(--t2); width: 120px; }
+</style></head><body>
+<div class="top"><div class="in">
+  <h1>书伴 · 接一个服务商</h1>
+  <nav class="tabs"><a href="#A">A 名片</a><a href="#B">B 一句话</a><a href="#C">C 三条路</a><a href="#cmp">对比</a></nav>
+  <div class="tg"><button data-th="light" aria-pressed="true">浅色</button><button data-th="dark" aria-pressed="false">深色</button></div>
+</div></div>
+<div class="wrap">
+
+<section class="opt" id="A">
+  <header>
+    <h2>名片 <em>A</em></h2>
+    <p class="why">在用的那个是一张<b>名片</b>：标识、模型、快不快，再放一句它<b>刚才答过的话</b>，让人知道接上的是什么。换一个是下面一排小卡片；添加是一面<b>标识墙</b>，点开那家就进它自己的一页，只问一件事：Key。</p>
+  </header>
+  <div class="try">试试：<button data-a-reset="A:fresh">什么都没加</button><button data-a-reset="A:some">加过三个</button>· 点「＋ 添加」，选 Claude 粘贴任意 Key；或在墙上的搜索框粘贴 <code>sk-or-v1-…</code></div>
+  <div class="scroll"><div class="win" id="winA"></div></div>
+</section>
+
+<section class="opt" id="B">
+  <header>
+    <h2>一句话 <em>B</em></h2>
+    <p class="why">整页就<b>一句话</b>：「书伴现在用 <u>Claude</u> 的 <u>opus</u>」，两个词都能点开换。下面<b>一个框</b>，什么都往里放：Key、地址、名字。它<b>自己认</b>：<code>sk-ant-</code> 是 Claude，<code>http://192.168…:11434</code> 是 Ollama，<code>magpie</code> 就找本机的 magpie；认出来当场验证，回车就接上。没有设置表单。</p>
+  </header>
+  <div class="try">试试在框里输：<button data-b-try="sk-ant-api03-7f2c9e1d">sk-ant-…</button><button data-b-try="http://192.168.1.8:11434/v1">http://192.168.1.8:11434/v1</button><button data-b-try="千问">千问</button><button data-b-try="magpie">magpie</button><button data-a-reset="B:fresh">重来</button></div>
+  <div class="scroll"><div class="win" id="winB"></div></div>
+</section>
+
+<section class="opt" id="C">
+  <header>
+    <h2>三条路 <em>C</em></h2>
+    <p class="why">读书的人不一定懂 API。先问<b>想怎么用</b>，三张卡：<b>免费</b>（这台 Mac 自带、本机的 Ollama）、<b>用我已有的账号</b>（OpenRouter 登录、magpie 转接 Claude / ChatGPT 会员）、<b>我有 Key</b>（粘贴就认，列表只是备用）。每条路只给它自己的那一两步，花不花钱写在卡片底下。</p>
+  </header>
+  <div class="try">试试：<button data-a-reset="C:fresh">从头</button>· 点「用我已有的账号」→ 用 OpenRouter 登录；或「我有 Key」粘贴 <code>AIza…</code></div>
+  <div class="scroll"><div class="win" id="winC"></div></div>
+</section>
+
+<section class="opt" id="cmp">
+  <header><h2>怎么选</h2><p class="why">三套共用同一份数据和验证；差在<b>从哪儿开始</b>。</p></header>
+  <table class="cmp">
+    <tr><th></th><th>A 名片</th><th>B 一句话</th><th>C 三条路</th></tr>
+    <tr><td>最适合</td><td>想一眼看清现在用的是谁、换来换去的人</td><td>手里已经有 Key / 地址，想最快接上的人</td><td>第一次用、不懂 API 的读者</td></tr>
+    <tr><td>加一个要几步</td><td>添加 → 点标识 → 粘贴 → 开始用（3 次点击）</td><td>粘贴 → 回车（1 步）</td><td>选路 → 登录或粘贴 → 开始用（2–3 步）</td></tr>
+    <tr><td>换服务商</td><td>点下面的小卡片</td><td>点句子里的词</td><td>点卡片里那一行</td></tr>
+    <tr><td>弱点</td><td>墙上服务商多了要滚动</td><td>不知道有哪些可选时，只能靠下面的推荐</td><td>老手会嫌多一步</td></tr>
+    <tr><td>手机上</td><td>名片 + 横滑小卡片；墙变两列</td><td>一句话 + 框，最省地方</td><td>三张卡竖排，一屏放下</td></tr>
+  </table>
+</section>
+</div>
+
+<script>
+const ICONS = {"claude": "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M4.709 15.955l4.72-2.647.08-.23-.08-.128H9.2l-.79-.048-2.698-.073-2.339-.097-2.266-.122-.571-.121L0 11.784l.055-.352.48-.321.686.06 1.52.103 2.278.158 1.652.097 2.449.255h.389l.055-.157-.134-.098-.103-.097-2.358-1.596-2.552-1.688-1.336-.972-.724-.491-.364-.462-.158-1.008.656-.722.881.06.225.061.893.686 1.908 1.476 2.491 1.833.365.304.145-.103.019-.073-.164-.274-1.355-2.446-1.446-2.49-.644-1.032-.17-.619a2.97 2.97 0 01-.104-.729L6.283.134 6.696 0l.996.134.42.364.62 1.414 1.002 2.229 1.555 3.03.456.898.243.832.091.255h.158V9.01l.128-1.706.237-2.095.23-2.695.08-.76.376-.91.747-.492.584.28.48.685-.067.444-.286 1.851-.559 2.903-.364 1.942h.212l.243-.242.985-1.306 1.652-2.064.73-.82.85-.904.547-.431h1.033l.76 1.129-.34 1.166-1.064 1.347-.881 1.142-1.264 1.7-.79 1.36.073.11.188-.02 2.856-.606 1.543-.28 1.841-.315.833.388.091.395-.328.807-1.969.486-2.309.462-3.439.813-.042.03.049.061 1.549.146.662.036h1.622l3.02.225.79.522.474.638-.079.485-1.215.62-1.64-.389-3.829-.91-1.312-.329h-.182v.11l1.093 1.068 2.006 1.81 2.509 2.33.127.578-.322.455-.34-.049-2.205-1.657-.851-.747-1.926-1.62h-.128v.17l.444.649 2.345 3.521.122 1.08-.17.353-.608.213-.668-.122-1.374-1.925-1.415-2.167-1.143-1.943-.14.08-.674 7.254-.316.37-.729.28-.607-.461-.322-.747.322-1.476.389-1.924.315-1.53.286-1.9.17-.632-.012-.042-.14.018-1.434 1.967-2.18 2.945-1.726 1.845-.414.164-.717-.37.067-.662.401-.589 2.388-3.036 1.44-1.882.93-1.086-.006-.158h-.055L4.132 18.56l-1.13.146-.487-.456.061-.746.231-.243 1.908-1.312-.006.006z\" fill=\"#D97757\" fill-rule=\"nonzero\"></path></svg>", "dashscope": "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12.604 1.34c.393.69.784 1.382 1.174 2.075a.18.18 0 00.157.091h5.552c.174 0 .322.11.446.327l1.454 2.57c.19.337.24.478.024.837-.26.43-.513.864-.76 1.3l-.367.658c-.106.196-.223.28-.04.512l2.652 4.637c.172.301.111.494-.043.77-.437.785-.882 1.564-1.335 2.34-.159.272-.352.375-.68.37-.777-.016-1.552-.01-2.327.016a.099.099 0 00-.081.05 575.097 575.097 0 01-2.705 4.74c-.169.293-.38.363-.725.364-.997.003-2.002.004-3.017.002a.537.537 0 01-.465-.271l-1.335-2.323a.09.09 0 00-.083-.049H4.982c-.285.03-.553-.001-.805-.092l-1.603-2.77a.543.543 0 01-.002-.54l1.207-2.12a.198.198 0 000-.197 550.951 550.951 0 01-1.875-3.272l-.79-1.395c-.16-.31-.173-.496.095-.965.465-.813.927-1.625 1.387-2.436.132-.234.304-.334.584-.335a338.3 338.3 0 012.589-.001.124.124 0 00.107-.063l2.806-4.895a.488.488 0 01.422-.246c.524-.001 1.053 0 1.583-.006L11.704 1c.341-.003.724.032.9.34zm-3.432.403a.06.06 0 00-.052.03L6.254 6.788a.157.157 0 01-.135.078H3.253c-.056 0-.07.025-.041.074l5.81 10.156c.025.042.013.062-.034.063l-2.795.015a.218.218 0 00-.2.116l-1.32 2.31c-.044.078-.021.118.068.118l5.716.008c.046 0 .08.02.104.061l1.403 2.454c.046.081.092.082.139 0l5.006-8.76.783-1.382a.055.055 0 01.096 0l1.424 2.53a.122.122 0 00.107.062l2.763-.02a.04.04 0 00.035-.02.041.041 0 000-.04l-2.9-5.086a.108.108 0 010-.113l.293-.507 1.12-1.977c.024-.041.012-.062-.035-.062H9.2c-.059 0-.073-.026-.043-.077l1.434-2.505a.107.107 0 000-.114L9.225 1.774a.06.06 0 00-.053-.031zm6.29 8.02c.046 0 .058.02.034.06l-.832 1.465-2.613 4.585a.056.056 0 01-.05.029.058.058 0 01-.05-.029L8.498 9.841c-.02-.034-.01-.052.028-.054l.216-.012 6.722-.012z\" fill=\"url(#lobe-icons-qwen-_R_0_)\" fill-rule=\"nonzero\"></path><defs><linearGradient id=\"lobe-icons-qwen-_R_0_\" x1=\"0%\" x2=\"100%\" y1=\"0%\" y2=\"0%\"><stop offset=\"0%\" stop-color=\"#6336E7\" stop-opacity=\".84\"></stop><stop offset=\"100%\" stop-color=\"#6F69F7\" stop-opacity=\".84\"></stop></linearGradient></defs></svg>", "deepseek": "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M23.748 4.482c-.254-.124-.364.113-.512.234-.051.039-.094.09-.137.136-.372.397-.806.657-1.373.626-.829-.046-1.537.214-2.163.848-.133-.782-.575-1.248-1.247-1.548-.352-.156-.708-.311-.955-.65-.172-.241-.219-.51-.305-.774-.055-.16-.11-.323-.293-.35-.2-.031-.278.136-.356.276-.313.572-.434 1.202-.422 1.84.027 1.436.633 2.58 1.838 3.393.137.093.172.187.129.323-.082.28-.18.552-.266.833-.055.179-.137.217-.329.14a5.526 5.526 0 01-1.736-1.18c-.857-.828-1.631-1.742-2.597-2.458a11.365 11.365 0 00-.689-.471c-.985-.957.13-1.743.388-1.836.27-.098.093-.432-.779-.428-.872.004-1.67.295-2.687.684a3.055 3.055 0 01-.465.137 9.597 9.597 0 00-2.883-.102c-1.885.21-3.39 1.102-4.497 2.623C.082 8.606-.231 10.684.152 12.85c.403 2.284 1.569 4.175 3.36 5.653 1.858 1.533 3.997 2.284 6.438 2.14 1.482-.085 3.133-.284 4.994-1.86.47.234.962.327 1.78.397.63.059 1.236-.03 1.705-.128.735-.156.684-.837.419-.961-2.155-1.004-1.682-.595-2.113-.926 1.096-1.296 2.746-2.642 3.392-7.003.05-.347.007-.565 0-.845-.004-.17.035-.237.23-.256a4.173 4.173 0 001.545-.475c1.396-.763 1.96-2.015 2.093-3.517.02-.23-.004-.467-.247-.588zM11.581 18c-2.089-1.642-3.102-2.183-3.52-2.16-.392.024-.321.471-.235.763.09.288.207.486.371.739.114.167.192.416-.113.603-.673.416-1.842-.14-1.897-.167-1.361-.802-2.5-1.86-3.301-3.307-.774-1.393-1.224-2.887-1.298-4.482-.02-.386.093-.522.477-.592a4.696 4.696 0 011.529-.039c2.132.312 3.946 1.265 5.468 2.774.868.86 1.525 1.887 2.202 2.891.72 1.066 1.494 2.082 2.48 2.914.348.292.625.514.891.677-.802.09-2.14.11-3.054-.614zm1-6.44a.306.306 0 01.415-.287.302.302 0 01.2.288.306.306 0 01-.31.307.303.303 0 01-.304-.308zm3.11 1.596c-.2.081-.399.151-.59.16a1.245 1.245 0 01-.798-.254c-.274-.23-.47-.358-.552-.758a1.73 1.73 0 01.016-.588c.07-.327-.008-.537-.239-.727-.187-.156-.426-.199-.688-.199a.559.559 0 01-.254-.078c-.11-.054-.2-.19-.114-.358.028-.054.16-.186.192-.21.356-.202.767-.136 1.146.016.352.144.618.408 1.001.782.391.451.462.576.685.914.176.265.336.537.445.848.067.195-.019.354-.25.452z\" fill=\"#4D6BFE\"></path></svg>", "gemini": "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M20.616 10.835a14.147 14.147 0 01-4.45-3.001 14.111 14.111 0 01-3.678-6.452.503.503 0 00-.975 0 14.134 14.134 0 01-3.679 6.452 14.155 14.155 0 01-4.45 3.001c-.65.28-1.318.505-2.002.678a.502.502 0 000 .975c.684.172 1.35.397 2.002.677a14.147 14.147 0 014.45 3.001 14.112 14.112 0 013.679 6.453.502.502 0 00.975 0c.172-.685.397-1.351.677-2.003a14.145 14.145 0 013.001-4.45 14.113 14.113 0 016.453-3.678.503.503 0 000-.975 13.245 13.245 0 01-2.003-.678z\" fill=\"#3186FF\"></path><path d=\"M20.616 10.835a14.147 14.147 0 01-4.45-3.001 14.111 14.111 0 01-3.678-6.452.503.503 0 00-.975 0 14.134 14.134 0 01-3.679 6.452 14.155 14.155 0 01-4.45 3.001c-.65.28-1.318.505-2.002.678a.502.502 0 000 .975c.684.172 1.35.397 2.002.677a14.147 14.147 0 014.45 3.001 14.112 14.112 0 013.679 6.453.502.502 0 00.975 0c.172-.685.397-1.351.677-2.003a14.145 14.145 0 013.001-4.45 14.113 14.113 0 016.453-3.678.503.503 0 000-.975 13.245 13.245 0 01-2.003-.678z\" fill=\"url(#lobe-icons-gemini-0-_R_0_)\"></path><path d=\"M20.616 10.835a14.147 14.147 0 01-4.45-3.001 14.111 14.111 0 01-3.678-6.452.503.503 0 00-.975 0 14.134 14.134 0 01-3.679 6.452 14.155 14.155 0 01-4.45 3.001c-.65.28-1.318.505-2.002.678a.502.502 0 000 .975c.684.172 1.35.397 2.002.677a14.147 14.147 0 014.45 3.001 14.112 14.112 0 013.679 6.453.502.502 0 00.975 0c.172-.685.397-1.351.677-2.003a14.145 14.145 0 013.001-4.45 14.113 14.113 0 016.453-3.678.503.503 0 000-.975 13.245 13.245 0 01-2.003-.678z\" fill=\"url(#lobe-icons-gemini-1-_R_0_)\"></path><path d=\"M20.616 10.835a14.147 14.147 0 01-4.45-3.001 14.111 14.111 0 01-3.678-6.452.503.503 0 00-.975 0 14.134 14.134 0 01-3.679 6.452 14.155 14.155 0 01-4.45 3.001c-.65.28-1.318.505-2.002.678a.502.502 0 000 .975c.684.172 1.35.397 2.002.677a14.147 14.147 0 014.45 3.001 14.112 14.112 0 013.679 6.453.502.502 0 00.975 0c.172-.685.397-1.351.677-2.003a14.145 14.145 0 013.001-4.45 14.113 14.113 0 016.453-3.678.503.503 0 000-.975 13.245 13.245 0 01-2.003-.678z\" fill=\"url(#lobe-icons-gemini-2-_R_0_)\"></path><defs><linearGradient gradientUnits=\"userSpaceOnUse\" id=\"lobe-icons-gemini-0-_R_0_\" x1=\"7\" x2=\"11\" y1=\"15.5\" y2=\"12\"><stop stop-color=\"#08B962\"></stop><stop offset=\"1\" stop-color=\"#08B962\" stop-opacity=\"0\"></stop></linearGradient><linearGradient gradientUnits=\"userSpaceOnUse\" id=\"lobe-icons-gemini-1-_R_0_\" x1=\"8\" x2=\"11.5\" y1=\"5.5\" y2=\"11\"><stop stop-color=\"#F94543\"></stop><stop offset=\"1\" stop-color=\"#F94543\" stop-opacity=\"0\"></stop></linearGradient><linearGradient gradientUnits=\"userSpaceOnUse\" id=\"lobe-icons-gemini-2-_R_0_\" x1=\"3.5\" x2=\"17.5\" y1=\"13.5\" y2=\"12\"><stop stop-color=\"#FABC12\"></stop><stop offset=\".46\" stop-color=\"#FABC12\" stop-opacity=\"0\"></stop></linearGradient></defs></svg>", "groq": "<svg fill=\"currentColor\" fill-rule=\"evenodd\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12.036 2c-3.853-.035-7 3-7.036 6.781-.035 3.782 3.055 6.872 6.908 6.907h2.42v-2.566h-2.292c-2.407.028-4.38-1.866-4.408-4.23-.029-2.362 1.901-4.298 4.308-4.326h.1c2.407 0 4.358 1.915 4.365 4.278v6.305c0 2.342-1.944 4.25-4.323 4.279a4.375 4.375 0 01-3.033-1.252l-1.851 1.818A7 7 0 0012.029 22h.092c3.803-.056 6.858-3.083 6.879-6.816v-6.5C18.907 4.963 15.817 2 12.036 2z\"></path></svg>", "lmstudio": "<svg fill=\"currentColor\" fill-rule=\"evenodd\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M2.84 2a1.273 1.273 0 100 2.547h14.107a1.273 1.273 0 100-2.547H2.84zM7.935 5.33a1.273 1.273 0 000 2.548H22.04a1.274 1.274 0 000-2.547H7.935zM3.624 9.935c0-.704.57-1.274 1.274-1.274h14.106a1.274 1.274 0 010 2.547H4.898c-.703 0-1.274-.57-1.274-1.273zM1.273 12.188a1.273 1.273 0 100 2.547H15.38a1.274 1.274 0 000-2.547H1.273zM3.624 16.792c0-.704.57-1.274 1.274-1.274h14.106a1.273 1.273 0 110 2.547H4.898c-.703 0-1.274-.57-1.274-1.273zM13.029 18.849a1.273 1.273 0 100 2.547h9.698a1.273 1.273 0 100-2.547h-9.698z\" fill-opacity=\".3\"></path><path d=\"M2.84 2a1.273 1.273 0 100 2.547h10.287a1.274 1.274 0 000-2.547H2.84zM7.935 5.33a1.273 1.273 0 000 2.548H18.22a1.274 1.274 0 000-2.547H7.935zM3.624 9.935c0-.704.57-1.274 1.274-1.274h10.286a1.273 1.273 0 010 2.547H4.898c-.703 0-1.274-.57-1.274-1.273zM1.273 12.188a1.273 1.273 0 100 2.547H11.56a1.274 1.274 0 000-2.547H1.273zM3.624 16.792c0-.704.57-1.274 1.274-1.274h10.286a1.273 1.273 0 110 2.547H4.898c-.703 0-1.274-.57-1.274-1.273zM13.029 18.849a1.273 1.273 0 100 2.547h5.78a1.273 1.273 0 100-2.547h-5.78z\"></path></svg>", "magpie": "<svg fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 44 44\"><path fill-rule=\"evenodd\" d=\"M1.5 5.5C1.3 5.7 1.2 6.5 1.2 6.9C1.2 6.9 1.2 7 1.2 7.1C1.1 7.4 1.3 8 1.4 8.3C1.4 8.4 1.5 8.5 1.5 8.7C1.5 8.9 1.7 9 1.8 9.3C2.2 9.9 2.2 10 2.3 10.1C2.4 10.2 2.5 10.3 2.6 10.5C2.8 10.8 3 11.1 3.2 11.3C3.3 11.3 3.4 11.6 3.6 11.8C3.8 12 4.1 12.4 4.2 12.5C4.7 13 5.2 13.7 5.4 13.9C6 14.5 6.5 15.1 6.7 15.3C6.7 15.4 6.9 15.5 6.9 15.7C7.3 15.9 7.7 16.5 7.9 16.8C7.9 16.8 8 16.9 8 16.9C8.1 16.9 8.2 17.2 8.2 17.3C8.2 17.3 8.1 17.2 8.1 17.1C7.9 16.9 7.9 16.9 7.6 16.6C7.5 16.5 7.4 16.5 7.4 16.3C7.2 16.2 6.7 15.7 6.3 15.2C6.1 15.1 6 14.9 6 14.9C5.9 14.8 5.7 14.7 5.7 14.6C5.6 14.5 5.4 14.3 5.3 14.2C5.1 14.1 4.9 13.8 4.7 13.5C4.5 13.3 4.2 13.1 4.1 12.9C4.1 12.9 3.8 12.7 3.8 12.5C3.5 12.3 3 11.8 2.8 11.4C1.8 10.5 0.9 9.6 0.7 9.6C0.6 9.7 0.6 9.8 0.5 10C0.5 10.1 0.6 10.2 0.5 10.3C0.5 10.4 0.6 10.5 0.6 10.6C0.5 10.7 0.5 10.9 0.6 11C0.5 11.1 0.6 11.4 0.6 11.5C0.9 12.9 1.3 13.8 2.8 14.9C2.9 15.1 3.3 15.3 3.4 15.4C3.4 15.5 3.6 15.6 3.7 15.7C4.2 16 6.4 17.8 7 18.4C7.4 18.8 7.4 18.8 7.5 18.9C7.6 19 7.7 19 7.7 19.1C7.7 19.2 7.8 19.2 7.9 19.2C7.9 19.3 8.1 19.4 8.1 19.5C8.2 19.6 8.2 19.7 8.3 19.7C8.3 19.7 8.3 19.7 8.2 19.7C8.2 19.6 8.1 19.6 8 19.6C7.9 19.5 7.9 19.4 7.8 19.4C7.7 19.3 7.6 19.2 7.6 19.2C7.6 19.1 7.5 19 7.3 18.9C7.2 18.9 6.9 18.6 6.7 18.4C6.1 17.8 4.5 16.6 3.5 16C3.4 15.8 3 15.6 2.9 15.5C2.6 15.3 1.5 14.6 0.9 14.3C0.7 14.1 0.6 14.1 0.6 14.2C0.5 14.5 0.8 15.9 0.9 16.1C0.9 16.2 1 16.2 0.9 16.3C1.2 16.8 1.9 17.6 2.7 18.3C2.8 18.5 4 19.2 4.7 19.5C6.2 20.5 6.6 20.7 7.4 21.5C8.2 22.2 8.7 22.7 9.3 23.6C9.5 24.1 9.9 24.4 10.3 25.3C10.4 25.5 10.5 25.8 10.5 25.8C10.7 25.8 10.8 25.7 11 25.4C11.6 25 11.9 24.6 12.3 24.3C12.8 24 13 23.8 13 23.7C13.1 23.7 13.1 23.8 13 24C12 24.8 11 26 10.2 26.9C10.1 27.1 9.9 27.5 9.7 27.7C9.5 27.8 9.4 28 9.4 28C9.4 28 9.3 28.3 9.1 28.5C8.6 29.2 7.7 30.8 7.7 30.9C7.7 31 7.8 31 8.3 30.8C9 30.4 9.5 30.2 10.4 30C11.7 29.6 12.5 29.6 11.6 30C10.5 30.2 9.7 30.6 9.2 31.2C8.8 31.7 8.8 31.7 9.3 31.7C10.1 31.8 10.9 31.9 11.6 32.2C12.8 32.7 13.5 33.1 15.5 34.8C16.4 35.5 17.3 36.2 17.8 36.4C17.9 36.5 18.1 36.7 18.2 36.8C19.1 37.3 21.2 38.1 22.3 38.3C22.4 38.3 22.7 38.3 22.8 38.3C22.8 38.5 23 38.5 23 38.5C23.1 38.5 23.2 38.5 23.3 38.5C23.6 38.6 25.9 38.6 26.1 38.5C26.2 38.5 26.3 38.5 26.4 38.5C26.5 38.5 26.6 38.5 26.7 38.3C26.7 38.3 27 38.3 27.1 38.3C28.3 38.1 30.2 37.3 31.4 36.7C31.5 36.7 31.7 36.4 31.8 36.4C32.2 36.2 33.2 35.4 33.4 35.2C34.2 34.5 35.5 33 35.8 32.6C35.8 32.5 36 32.2 36.1 32C36.4 31.8 36.6 31.4 36.6 31.2C36.7 31.1 36.8 30.9 36.9 30.8C37.2 30.4 37.5 29.6 37.7 29.2C37.7 29.1 37.8 28.7 37.9 28.7C38.1 28.5 38.4 27.1 38.5 26.8C39 25.2 39.1 23.7 39 22.4C39 22.2 38.9 21.9 38.9 21.8C38.9 21.7 38.9 21.6 38.9 21.4C38.6 20.5 38.5 19.9 38.2 19C37.9 18.5 37.5 17.5 37.3 17.2C37 16.8 36.8 15.8 36.8 15.2C36.8 13.8 37.7 12.7 39.6 12.2C40.1 12.1 41.3 11.8 42.1 11.7C43.5 11.5 43.5 11.5 43.4 11.3C42.9 10.7 40.9 9.9 39.2 9.7C37.9 9.5 38.1 9.5 37.6 9C37 8.6 36.4 8 36 7.9C36 7.8 35.8 7.8 35.7 7.7C35.1 7.3 34.2 7 33.1 6.9C32.6 6.7 31.6 6.9 31 7C29.6 7.3 28.3 8 27.3 9.2C26.7 9.8 26.2 10.8 25.7 11.7C25.5 12.1 24.8 13.4 24.7 13.7C24.6 13.9 24.5 14.1 24.1 14.7C23.5 15.7 22.1 16.9 20.6 17.8C20.5 18 20.3 18.2 20.1 18.3C19.7 18.5 19.4 18.8 19.1 19C18.9 19.1 18.7 19.3 18.5 19.4C18 19.8 17.2 20.3 17 20.5C16.9 20.5 16.8 20.6 16.7 20.7C16.3 20.8 16.1 20.9 16 20.9C15.5 20.8 14.9 20.5 14.2 20.2C13.7 19.8 12.7 18.9 12.4 18.6C12.3 18.5 12.2 18.4 12.1 18.2C11.9 18 11.2 17.1 11 16.6C10.9 16.5 10.8 16.4 10.7 16.3C10.7 16.2 10.6 16.1 10.6 15.9C10.5 15.9 10.4 15.7 10.4 15.6C10.3 15.5 10.2 15.2 10.1 15C10 14.8 9.8 14.4 9.7 14.2C9.6 14 9.5 13.7 9.4 13.6C9.4 13.4 9.3 13.2 9.2 13C9.2 12.8 9 12.6 9 12.5C8.9 12.3 8.7 12.1 8.7 12C8.7 12 8.5 11.7 8.5 11.7C8.3 11.2 8.2 10.9 7.5 10C6.4 8.3 4.2 6.4 2.7 5.8C2 5.5 1.6 5.4 1.5 5.5ZM28.4 16.7C29.2 16.9 29.7 17.2 29.9 17.7C30.1 18.2 30 18.9 29.6 19.4C29.2 19.9 28.2 20.9 27.6 21.2C26.8 21.7 25.3 22.4 24.2 22.7C23.9 22.8 23.6 22.9 23.5 22.9C22.8 23.2 20.7 23.7 19.6 24C19 24.2 18.4 24.3 18.1 24.4C17.9 24.4 16.1 24.9 15.3 25.1C14.6 25.2 14.7 25.1 15.7 23.6C16.4 22.7 18.5 20.6 19.4 19.9C20.8 18.8 21.4 18.4 23.2 17.6C23.8 17.4 25.6 16.8 25.9 16.8C25.9 16.8 26.3 16.8 26.6 16.7C26.8 16.7 28.2 16.7 28.4 16.7ZM30.4 20.2C30.5 20.3 30.6 20.6 30.6 20.7C31.7 23.1 33.4 24.6 35.6 25.3C36.1 25.5 36.7 25.7 37.2 25.8C37.7 25.8 37.8 25.9 37.8 26.1C37.7 26.2 37.7 26.3 37.7 26.5C37.7 26.6 37.7 26.8 37.6 27C37.4 28.5 36.8 29.9 36.1 31C36.1 31.2 35.9 31.4 35.9 31.6C35.7 31.9 35.2 32.6 34.7 33.3C32.6 35.6 29.7 37.3 26.6 37.8C26.5 37.8 26.3 37.9 26.2 37.9C25.8 37.9 23.7 37.9 23.3 37.9C23.2 37.9 23 37.8 22.9 37.8C21.1 37.6 19.3 36.8 18 35.7C17.7 35.4 17 34.7 16.8 34.5C16.3 33.8 16.1 33 16.3 32.5C16.5 31.8 16.8 31.6 17.9 31.1C19.1 30.5 19.4 30.4 20.2 30C21.4 29.4 23.2 28.4 23.9 27.9C23.9 27.8 24.2 27.7 24.5 27.6C26.3 26.3 28 24.6 28.9 22.9C29.5 22.2 29.7 21.6 29.9 20.7C30.1 20 30.2 19.9 30.4 20.2Z\"/></svg>\n", "minimax": "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><defs><linearGradient id=\"lobe-icons-minimax-_R_0_\" x1=\"0%\" x2=\"100.182%\" y1=\"50.057%\" y2=\"50.057%\"><stop offset=\"0%\" stop-color=\"#E2167E\"></stop><stop offset=\"100%\" stop-color=\"#FE603C\"></stop></linearGradient></defs><path d=\"M16.278 2c1.156 0 2.093.927 2.093 2.07v12.501a.74.74 0 00.744.709.74.74 0 00.743-.709V9.099a2.06 2.06 0 012.071-2.049A2.06 2.06 0 0124 9.1v6.561a.649.649 0 01-.652.645.649.649 0 01-.653-.645V9.1a.762.762 0 00-.766-.758.762.762 0 00-.766.758v7.472a2.037 2.037 0 01-2.048 2.026 2.037 2.037 0 01-2.048-2.026v-12.5a.785.785 0 00-.788-.753.785.785 0 00-.789.752l-.001 15.904A2.037 2.037 0 0113.441 22a2.037 2.037 0 01-2.048-2.026V18.04c0-.356.292-.645.652-.645.36 0 .652.289.652.645v1.934c0 .263.142.506.372.638.23.131.514.131.744 0a.734.734 0 00.372-.638V4.07c0-1.143.937-2.07 2.093-2.07zm-5.674 0c1.156 0 2.093.927 2.093 2.07v11.523a.648.648 0 01-.652.645.648.648 0 01-.652-.645V4.07a.785.785 0 00-.789-.78.785.785 0 00-.789.78v14.013a2.06 2.06 0 01-2.07 2.048 2.06 2.06 0 01-2.071-2.048V9.1a.762.762 0 00-.766-.758.762.762 0 00-.766.758v3.8a2.06 2.06 0 01-2.071 2.049A2.06 2.06 0 010 12.9v-1.378c0-.357.292-.646.652-.646.36 0 .653.29.653.646V12.9c0 .418.343.757.766.757s.766-.339.766-.757V9.099a2.06 2.06 0 012.07-2.048 2.06 2.06 0 012.071 2.048v8.984c0 .419.343.758.767.758.423 0 .766-.339.766-.758V4.07c0-1.143.937-2.07 2.093-2.07z\" fill=\"url(#lobe-icons-minimax-_R_0_)\" fill-rule=\"nonzero\"></path></svg>", "mistral": "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M3.428 3.4h3.429v3.428H3.428V3.4zm13.714 0h3.43v3.428h-3.43V3.4z\" fill=\"gold\"></path><path d=\"M3.428 6.828h6.857v3.429H3.429V6.828zm10.286 0h6.857v3.429h-6.857V6.828z\" fill=\"#FFAF00\"></path><path d=\"M3.428 10.258h17.144v3.428H3.428v-3.428z\" fill=\"#FF8205\"></path><path d=\"M3.428 13.686h3.429v3.428H3.428v-3.428zm6.858 0h3.429v3.428h-3.429v-3.428zm6.856 0h3.43v3.428h-3.43v-3.428z\" fill=\"#FA500F\"></path><path d=\"M0 17.114h10.286v3.429H0v-3.429zm13.714 0H24v3.429H13.714v-3.429z\" fill=\"#E10500\"></path></svg>", "moonshot": "<svg fill=\"currentColor\" fill-rule=\"evenodd\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M21.846 0a1.923 1.923 0 110 3.846H20.15a.226.226 0 01-.227-.226V1.923C19.923.861 20.784 0 21.846 0z\"></path><path d=\"M11.065 11.199l7.257-7.2c.137-.136.06-.41-.116-.41H14.3a.164.164 0 00-.117.051l-7.82 7.756c-.122.12-.302.013-.302-.179V3.82c0-.127-.083-.23-.185-.23H3.186c-.103 0-.186.103-.186.23V19.77c0 .128.083.23.186.23h2.69c.103 0 .186-.102.186-.23v-3.25c0-.069.025-.135.069-.178l2.424-2.406a.158.158 0 01.205-.023l6.484 4.772a7.677 7.677 0 003.453 1.283c.108.012.2-.095.2-.23v-3.06c0-.117-.07-.212-.164-.227a5.028 5.028 0 01-2.027-.807l-5.613-4.064c-.117-.078-.132-.279-.028-.381z\"></path></svg>", "ollama": "<svg fill=\"currentColor\" fill-rule=\"evenodd\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M7.905 1.09c.216.085.411.225.588.41.295.306.544.744.734 1.263.191.522.315 1.1.362 1.68a5.054 5.054 0 012.049-.636l.051-.004c.87-.07 1.73.087 2.48.474.101.053.2.11.297.17.05-.569.172-1.134.36-1.644.19-.52.439-.957.733-1.264a1.67 1.67 0 01.589-.41c.257-.1.53-.118.796-.042.401.114.745.368 1.016.737.248.337.434.769.561 1.287.23.934.27 2.163.115 3.645l.053.04.026.019c.757.576 1.284 1.397 1.563 2.35.435 1.487.216 3.155-.534 4.088l-.018.021.002.003c.417.762.67 1.567.724 2.4l.002.03c.064 1.065-.2 2.137-.814 3.19l-.007.01.01.024c.472 1.157.62 2.322.438 3.486l-.006.039a.651.651 0 01-.747.536.648.648 0 01-.54-.742c.167-1.033.01-2.069-.48-3.123a.643.643 0 01.04-.617l.004-.006c.604-.924.854-1.83.8-2.72-.046-.779-.325-1.544-.8-2.273a.644.644 0 01.18-.886l.009-.006c.243-.159.467-.565.58-1.12a4.229 4.229 0 00-.095-1.974c-.205-.7-.58-1.284-1.105-1.683-.595-.454-1.383-.673-2.38-.61a.653.653 0 01-.632-.371c-.314-.665-.772-1.141-1.343-1.436a3.288 3.288 0 00-1.772-.332c-1.245.099-2.343.801-2.67 1.686a.652.652 0 01-.61.425c-1.067.002-1.893.252-2.497.703-.522.39-.878.935-1.066 1.588a4.07 4.07 0 00-.068 1.886c.112.558.331 1.02.582 1.269l.008.007c.212.207.257.53.109.785-.36.622-.629 1.549-.673 2.44-.05 1.018.186 1.902.719 2.536l.016.019a.643.643 0 01.095.69c-.576 1.236-.753 2.252-.562 3.052a.652.652 0 01-1.269.298c-.243-1.018-.078-2.184.473-3.498l.014-.035-.008-.012a4.339 4.339 0 01-.598-1.309l-.005-.019a5.764 5.764 0 01-.177-1.785c.044-.91.278-1.842.622-2.59l.012-.026-.002-.002c-.293-.418-.51-.953-.63-1.545l-.005-.024a5.352 5.352 0 01.093-2.49c.262-.915.777-1.701 1.536-2.269.06-.045.123-.09.186-.132-.159-1.493-.119-2.73.112-3.67.127-.518.314-.95.562-1.287.27-.368.614-.622 1.015-.737.266-.076.54-.059.797.042zm4.116 9.09c.936 0 1.8.313 2.446.855.63.527 1.005 1.235 1.005 1.94 0 .888-.406 1.58-1.133 2.022-.62.375-1.451.557-2.403.557-1.009 0-1.871-.259-2.493-.734-.617-.47-.963-1.13-.963-1.845 0-.707.398-1.417 1.056-1.946.668-.537 1.55-.849 2.485-.849zm0 .896a3.07 3.07 0 00-1.916.65c-.461.37-.722.835-.722 1.25 0 .428.21.829.61 1.134.455.347 1.124.548 1.943.548.799 0 1.473-.147 1.932-.426.463-.28.7-.686.7-1.257 0-.423-.246-.89-.683-1.256-.484-.405-1.14-.643-1.864-.643zm.662 1.21l.004.004c.12.151.095.37-.056.49l-.292.23v.446a.375.375 0 01-.376.373.375.375 0 01-.376-.373v-.46l-.271-.218a.347.347 0 01-.052-.49.353.353 0 01.494-.051l.215.172.22-.174a.353.353 0 01.49.051zm-5.04-1.919c.478 0 .867.39.867.871a.87.87 0 01-.868.871.87.87 0 01-.867-.87.87.87 0 01.867-.872zm8.706 0c.48 0 .868.39.868.871a.87.87 0 01-.868.871.87.87 0 01-.867-.87.87.87 0 01.867-.872zM7.44 2.3l-.003.002a.659.659 0 00-.285.238l-.005.006c-.138.189-.258.467-.348.832-.17.692-.216 1.631-.124 2.782.43-.128.899-.208 1.404-.237l.01-.001.019-.034c.046-.082.095-.161.148-.239.123-.771.022-1.692-.253-2.444-.134-.364-.297-.65-.453-.813a.628.628 0 00-.107-.09L7.44 2.3zm9.174.04l-.002.001a.628.628 0 00-.107.09c-.156.163-.32.45-.453.814-.29.794-.387 1.776-.23 2.572l.058.097.008.014h.03a5.184 5.184 0 011.466.212c.086-1.124.038-2.043-.128-2.722-.09-.365-.21-.643-.349-.832l-.004-.006a.659.659 0 00-.285-.239h-.004z\"></path></svg>", "openai": "<svg fill=\"currentColor\" fill-rule=\"evenodd\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M9.205 8.658v-2.26c0-.19.072-.333.238-.428l4.543-2.616c.619-.357 1.356-.523 2.117-.523 2.854 0 4.662 2.212 4.662 4.566 0 .167 0 .357-.024.547l-4.71-2.759a.797.797 0 00-.856 0l-5.97 3.473zm10.609 8.8V12.06c0-.333-.143-.57-.429-.737l-5.97-3.473 1.95-1.118a.433.433 0 01.476 0l4.543 2.617c1.309.76 2.189 2.378 2.189 3.948 0 1.808-1.07 3.473-2.76 4.163zM7.802 12.703l-1.95-1.142c-.167-.095-.239-.238-.239-.428V5.899c0-2.545 1.95-4.472 4.591-4.472 1 0 1.927.333 2.712.928L8.23 5.067c-.285.166-.428.404-.428.737v6.898zM12 15.128l-2.795-1.57v-3.33L12 8.658l2.795 1.57v3.33L12 15.128zm1.796 7.23c-1 0-1.927-.332-2.712-.927l4.686-2.712c.285-.166.428-.404.428-.737v-6.898l1.974 1.142c.167.095.238.238.238.428v5.233c0 2.545-1.974 4.472-4.614 4.472zm-5.637-5.303l-4.544-2.617c-1.308-.761-2.188-2.378-2.188-3.948A4.482 4.482 0 014.21 6.327v5.423c0 .333.143.571.428.738l5.947 3.449-1.95 1.118a.432.432 0 01-.476 0zm-.262 3.9c-2.688 0-4.662-2.021-4.662-4.519 0-.19.024-.38.047-.57l4.686 2.71c.286.167.571.167.856 0l5.97-3.448v2.26c0 .19-.07.333-.237.428l-4.543 2.616c-.619.357-1.356.523-2.117.523zm5.899 2.83a5.947 5.947 0 005.827-4.756C22.287 18.339 24 15.84 24 13.296c0-1.665-.713-3.282-1.998-4.448.119-.5.19-.999.19-1.498 0-3.401-2.759-5.947-5.946-5.947-.642 0-1.26.095-1.88.31A5.962 5.962 0 0010.205 0a5.947 5.947 0 00-5.827 4.757C1.713 5.447 0 7.945 0 10.49c0 1.666.713 3.283 1.998 4.448-.119.5-.19 1-.19 1.499 0 3.401 2.759 5.946 5.946 5.946.642 0 1.26-.095 1.88-.309a5.96 5.96 0 004.162 1.713z\"></path></svg>", "openrouter": "<svg fill=\"currentColor\" fill-rule=\"evenodd\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M18.654 3.87a5.087 5.087 0 110 10.174L23.7 19.09c.64.641.187 1.737-.72 1.737H8.48a8.479 8.479 0 010-16.958h10.175zM8.479 7.26a5.087 5.087 0 100 10.176 5.087 5.087 0 000-10.175z\"></path></svg>", "siliconflow": "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path clip-rule=\"evenodd\" d=\"M22.956 6.521H12.522c-.577 0-1.044.468-1.044 1.044v3.13c0 .577-.466 1.044-1.043 1.044H1.044c-.577 0-1.044.467-1.044 1.044v4.174C0 17.533.467 18 1.044 18h10.434c.577 0 1.044-.467 1.044-1.043v-3.13c0-.578.466-1.044 1.043-1.044h9.391c.577 0 1.044-.467 1.044-1.044V7.565c0-.576-.467-1.044-1.044-1.044z\" fill=\"#6E29F6\" fill-rule=\"evenodd\"></path></svg>", "volcengine": "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M5.31 15.756c.172-3.75 1.883-5.999 2.549-6.739-3.26 2.058-5.425 5.658-6.358 8.308v1.12C1.501 21.513 4.226 24 7.59 24a6.59 6.59 0 002.2-.375c.353-.12.7-.248 1.039-.378.913-.899 1.65-1.91 2.243-2.992-4.877 2.431-7.974.072-7.763-4.5l.002.001z\" fill=\"#1E37FC\"></path><path d=\"M22.57 10.283c-1.212-.901-4.109-2.404-7.397-2.8.295 3.792.093 8.766-2.1 12.773a12.782 12.782 0 01-2.244 2.992c3.764-1.448 6.746-3.457 8.596-5.219 2.82-2.683 3.353-5.178 3.361-6.66a2.737 2.737 0 00-.216-1.084v-.002z\" fill=\"#37E1BE\"></path><path d=\"M14.303 1.867C12.955.7 11.248 0 9.39 0 7.532 0 5.883.677 4.545 1.807 2.791 3.29 1.627 5.557 1.5 8.125v9.201c.932-2.65 3.097-6.25 6.357-8.307.5-.318 1.025-.595 1.569-.829 1.883-.801 3.878-.932 5.746-.706-.222-2.83-.718-5.002-.87-5.617h.001z\" fill=\"#A569FF\"></path><path d=\"M17.305 4.961a199.47 199.47 0 01-1.08-1.094c-.202-.213-.398-.419-.586-.622l-1.333-1.378c.151.615.648 2.786.869 5.617 3.288.395 6.185 1.898 7.396 2.8-1.306-1.275-3.475-3.487-5.266-5.323z\" fill=\"#1E37FC\"></path></svg>", "xai": "<svg fill=\"currentColor\" fill-rule=\"evenodd\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M9.27 15.29l7.978-5.897c.391-.29.95-.177 1.137.272.98 2.369.542 5.215-1.41 7.169-1.951 1.954-4.667 2.382-7.149 1.406l-2.711 1.257c3.889 2.661 8.611 2.003 11.562-.953 2.341-2.344 3.066-5.539 2.388-8.42l.006.007c-.983-4.232.242-5.924 2.75-9.383.06-.082.12-.164.179-.248l-3.301 3.305v-.01L9.267 15.292M7.623 16.723c-2.792-2.67-2.31-6.801.071-9.184 1.761-1.763 4.647-2.483 7.166-1.425l2.705-1.25a7.808 7.808 0 00-1.829-1A8.975 8.975 0 005.984 5.83c-2.533 2.536-3.33 6.436-1.962 9.764 1.022 2.487-.653 4.246-2.34 6.022-.599.63-1.199 1.259-1.682 1.925l7.62-6.815\"></path></svg>", "zhipu": "<svg viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M11.991 23.503a.24.24 0 00-.244.248.24.24 0 00.244.249.24.24 0 00.245-.249.24.24 0 00-.22-.247l-.025-.001zM9.671 5.365a1.697 1.697 0 011.099 2.132l-.071.172-.016.04-.018.054c-.07.16-.104.32-.104.498-.035.71.47 1.279 1.186 1.314h.366c1.309.053 2.338 1.173 2.286 2.523-.052 1.332-1.152 2.38-2.478 2.327h-.174c-.715.018-1.274.64-1.239 1.368 0 .124.018.23.053.337.209.373.54.658.96.8.75.23 1.517-.125 1.9-.782l.018-.035c.402-.64 1.17-.96 1.92-.711.854.284 1.378 1.226 1.099 2.167a1.661 1.661 0 01-2.077 1.102 1.711 1.711 0 01-.907-.711l-.017-.035c-.2-.323-.463-.58-.851-.711l-.056-.018a1.646 1.646 0 00-1.954.746 1.66 1.66 0 01-1.065.764 1.677 1.677 0 01-1.989-1.279c-.209-.906.332-1.83 1.257-2.043a1.51 1.51 0 01.296-.035h.018c.68-.071 1.151-.622 1.116-1.333a1.307 1.307 0 00-.227-.693 2.515 2.515 0 01-.366-1.403 2.39 2.39 0 01.366-1.208c.14-.195.21-.444.227-.693.018-.71-.506-1.261-1.186-1.332l-.07-.018a1.43 1.43 0 01-.299-.07l-.05-.019a1.7 1.7 0 01-1.047-2.114 1.68 1.68 0 012.094-1.101zm-5.575 10.11c.26-.264.639-.367.994-.27.355.096.633.379.728.74.095.362-.007.748-.267 1.013-.402.41-1.053.41-1.455 0a1.062 1.062 0 010-1.482zm14.845-.294c.359-.09.738.024.992.297.254.274.344.665.237 1.025-.107.36-.396.634-.756.718-.551.128-1.1-.22-1.23-.781a1.05 1.05 0 01.757-1.26zm-.064-4.39c.314.32.49.753.49 1.206 0 .452-.176.886-.49 1.206-.315.32-.74.5-1.185.5-.444 0-.87-.18-1.184-.5a1.727 1.727 0 010-2.412 1.654 1.654 0 012.369 0zm-11.243.163c.364.484.447 1.128.218 1.691a1.665 1.665 0 01-2.188.923c-.855-.36-1.26-1.358-.907-2.228a1.68 1.68 0 011.33-1.038c.593-.08 1.183.169 1.547.652zm11.545-4.221c.368 0 .708.2.892.524.184.324.184.724 0 1.048a1.026 1.026 0 01-.892.524c-.568 0-1.03-.47-1.03-1.048 0-.579.462-1.048 1.03-1.048zm-14.358 0c.368 0 .707.2.891.524.184.324.184.724 0 1.048a1.026 1.026 0 01-.891.524c-.569 0-1.03-.47-1.03-1.048 0-.579.461-1.048 1.03-1.048zm10.031-1.475c.925 0 1.675.764 1.675 1.706s-.75 1.705-1.675 1.705-1.674-.763-1.674-1.705c0-.942.75-1.706 1.674-1.706zm-2.626-.684c.362-.082.653-.356.761-.718a1.062 1.062 0 00-.238-1.028 1.017 1.017 0 00-.996-.294c-.547.14-.881.7-.752 1.257.13.558.675.907 1.225.783zm0 16.876c.359-.087.644-.36.75-.72a1.062 1.062 0 00-.237-1.019 1.018 1.018 0 00-.985-.301 1.037 1.037 0 00-.762.717c-.108.361-.017.754.239 1.028.245.263.606.377.953.305l.043-.01zM17.19 3.5a.631.631 0 00.628-.64c0-.355-.279-.64-.628-.64a.631.631 0 00-.628.64c0 .355.28.64.628.64zm-10.38 0a.631.631 0 00.628-.64c0-.355-.28-.64-.628-.64a.631.631 0 00-.628.64c0 .355.279.64.628.64zm-5.182 7.852a.631.631 0 00-.628.64c0 .354.28.639.628.639a.63.63 0 00.627-.606l.001-.034a.62.62 0 00-.628-.64zm5.182 9.13a.631.631 0 00-.628.64c0 .355.279.64.628.64a.631.631 0 00.628-.64c0-.355-.28-.64-.628-.64zm10.38.018a.631.631 0 00-.628.64c0 .355.28.64.628.64a.631.631 0 00.628-.64c0-.355-.279-.64-.628-.64zm5.182-9.148a.631.631 0 00-.628.64c0 .354.279.639.628.639a.631.631 0 00.628-.64c0-.355-.28-.64-.628-.64zm-.384-4.992a.24.24 0 00.244-.249.24.24 0 00-.244-.249.24.24 0 00-.244.249c0 .142.122.249.244.249zM11.991.497a.24.24 0 00.245-.248A.24.24 0 0011.99 0a.24.24 0 00-.244.249c0 .133.108.236.223.247l.021.001zM2.011 6.36a.24.24 0 00.245-.249.24.24 0 00-.244-.249.24.24 0 00-.244.249.24.24 0 00.244.249zm0 11.263a.24.24 0 00-.243.248.24.24 0 00.244.249.24.24 0 00.244-.249.252.252 0 00-.244-.248zm19.995-.018a.24.24 0 00-.245.248.24.24 0 00.245.25.24.24 0 00.244-.25.252.252 0 00-.244-.248z\" fill=\"#3859FF\" fill-rule=\"nonzero\"></path></svg>"};
+const APPLE = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8c1.3 0 2.1-1.2 2.9-2.4.9-1.3 1.3-2.6 1.3-2.7 0 0-2.4-1-2.4-4.1zM14.1 5.5c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.6 2.8-1.4z"/></svg>`;
+const P = {
+  apple: { name: "Apple 智能", tint: "#8E8E93", kind: "free", sub: "在这台 Mac 上，不联网", models: [], ms: 0.6 },
+  openrouter: { name: "OpenRouter", tint: "#6467F2", kind: "signin", account: "OpenRouter", prefix: "sk-or-", site: "openrouter.ai", blurb: "登录就能用，几百个模型一个账号", models: ["openrouter/auto", "anthropic/claude-sonnet-4.5", "openai/gpt-5", "google/gemini-2.5-pro", "deepseek/deepseek-chat-v3.1"], ms: 1.3 },
+  magpie: { name: "magpie", tint: "#2A2B2E", kind: "local", running: true, port: 3425, blurb: "转接你在 magpie 里登录的 Claude、ChatGPT", models: ["claude-sonnet-4-5", "claude-opus-4-1", "gpt-5", "gemini-2.5-pro"], ms: 1.1, alias: "喜鹊 网关" },
+  claude: { name: "Claude", tint: "#D97757", kind: "key", account: "Anthropic", prefix: "sk-ant-", site: "console.anthropic.com", models: ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5"], ms: 1.4, alias: "anthropic 克劳德" },
+  openai: { name: "OpenAI", tint: "#10A37F", kind: "key", account: "OpenAI", prefix: "sk-proj-", site: "platform.openai.com", models: ["gpt-5-mini", "gpt-5", "gpt-5-nano"], ms: 1.2, alias: "chatgpt gpt" },
+  gemini: { name: "Gemini", tint: "#3186FF", kind: "key", account: "Google", prefix: "AIza", site: "aistudio.google.com", models: ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.5-flash-lite"], ms: 0.9, alias: "google 谷歌" },
+  deepseek: { name: "DeepSeek", tint: "#4D6BFE", kind: "key", account: "DeepSeek", site: "platform.deepseek.com", models: ["deepseek-chat", "deepseek-reasoner"], ms: 1.6, alias: "深度求索" },
+  dashscope: { name: "通义千问", tint: "#6336E7", kind: "key", account: "阿里云百炼", site: "bailian.console.aliyun.com", models: ["qwen-plus", "qwen-max", "qwen-turbo"], ms: 1.1, alias: "qwen 千问 阿里 百炼" },
+  moonshot: { name: "Kimi", tint: "#2A2B2E", kind: "key", account: "月之暗面", site: "platform.moonshot.cn", models: ["kimi-k2-turbo-preview", "kimi-k2-0905-preview"], ms: 1.3, alias: "moonshot 月之暗面" },
+  zhipu: { name: "智谱 GLM", tint: "#3859FF", kind: "key", account: "智谱", site: "open.bigmodel.cn", models: ["glm-4.6", "glm-4.5-air"], ms: 1.2, alias: "zhipu glm 清言" },
+  volcengine: { name: "豆包", tint: "#1E37FC", kind: "key", account: "火山引擎", site: "console.volcengine.com", models: ["doubao-seed-1-6-250615", "doubao-1-5-pro-32k"], ms: 1.0, alias: "doubao 火山引擎 字节" },
+  siliconflow: { name: "硅基流动", tint: "#6E29F6", kind: "key", account: "硅基流动", site: "cloud.siliconflow.cn", models: ["deepseek-ai/DeepSeek-V3", "Qwen/Qwen3-235B-A22B"], ms: 1.5, alias: "siliconflow" },
+  minimax: { name: "MiniMax", tint: "#E2167E", kind: "key", account: "MiniMax", site: "platform.minimaxi.com", models: ["MiniMax-M2"], ms: 1.4, alias: "海螺" },
+  xai: { name: "Grok", tint: "#2A2B2E", kind: "key", account: "xAI", prefix: "xai-", site: "console.x.ai", models: ["grok-4", "grok-4-fast"], ms: 1.2, alias: "xai" },
+  mistral: { name: "Mistral", tint: "#FA500F", kind: "key", account: "Mistral", site: "console.mistral.ai", models: ["mistral-small-latest", "mistral-large-latest"], ms: 1.0 },
+  groq: { name: "Groq", tint: "#F55036", kind: "key", account: "Groq", prefix: "gsk_", site: "console.groq.com", models: ["llama-3.3-70b-versatile", "openai/gpt-oss-120b"], ms: 0.5 },
+  ollama: { name: "Ollama", tint: "#2A2B2E", kind: "local", running: true, port: 11434, blurb: "跑在这台 Mac 上的开源模型", models: ["qwen3:8b", "gemma3:12b", "llama3.2:3b"], ms: 2.1 },
+  lmstudio: { name: "LM Studio", tint: "#4F46E5", kind: "local", running: false, port: 1234, blurb: "跑在这台 Mac 上的开源模型", models: ["qwen/qwen3-14b"], ms: 2.4 },
+};
+const KEYS = [["sk-ant-", "claude"], ["sk-or-", "openrouter"], ["AIza", "gemini"], ["gsk_", "groq"], ["xai-", "xai"], ["sk-proj-", "openai"]];
+const SAMPLE = {
+  apple: "黛玉初到贾府，处处小心，“步步留心，时时在意”，怕被人耻笑了去。",
+  default: "这一回写黛玉初进贾府。她“步步留心，时时在意”，从仪门、穿堂到荣禧堂，眼里看的是规矩，心里记的是自己寄人篱下。",
+};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function lg(id, size = 16) {
+  const s = `style="width:${size}px;height:${size}px"`;
+  if (id === "apple") return `<span class="lg" ${s}>${APPLE}</span>`;
+  if (ICONS[id]) return `<span class="lg" ${s}>${ICONS[id]}</span>`;
+  const n = (P[id]?.name || id || "?").slice(0, 1).toUpperCase();
+  return `<span class="disc" style="width:${size}px;height:${size}px;font-size:${size * .5}px">${n}</span>`;
+}
+const badge = (id, size, inner) => `<span class="badge" style="width:${size}px;height:${size}px">${lg(id, inner ?? Math.round(size * .56))}</span>`;
+const guessKey = q => { q = q.trim(); if (q.length < 8) return null; const m = KEYS.find(([p]) => q.startsWith(p)); return m ? m[1] : null; };
+const mask = k => !k ? "" : k.length <= 8 ? "•".repeat(k.length) : (k.match(/^(sk-[a-z]+-|sk-|AIza|gsk_|xai-)/)?.[0] ?? "") + "…" + k.slice(-4);
+const norm = s => s.toLowerCase().replace(/[\s_.\-]/g, "");
+const search = (q, skip = []) => { q = norm(q); return Object.keys(P).filter(id => id !== "apple" && !skip.includes(id) && (!q || norm(id + P[id].name + (P[id].alias || "")).includes(q))); };
+const ICON_UI = {
+  lock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>`,
+  search: `<svg class="s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>`,
+  back: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>`,
+  check: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`,
+};
+function side() {
+  const items = [["通用", "M4 6h16M4 12h16M4 18h10"], ["外观", "M12 3a9 9 0 100 18 9 9 0 000-18zm0 0v18"], ["阅读", "M4 5h6a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-6a2 2 0 00-2 2v12a2 2 0 012-2h6z"], ["朗读", "M3 14v-3a9 9 0 0118 0v3M3 14h3v5H3zM18 14h3v5h-3z"], ["外文", "M4 6h9M8.5 4v2M6 6c0 4 3 7 6 8M11 6c-1 4-4 7-7 8M14 20l3.5-8 3.5 8M15 18h5"], ["书伴", "M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z"], ["同步", "M4 12a8 8 0 0114-5.3L20 9M20 4v5h-5M20 12a8 8 0 01-14 5.3L4 15M4 20v-5h5"], ["存储空间", "M4 7h16v4H4zM4 13h16v4H4z"]];
+  return `<div class="lights"><i></i><i></i><i></i></div><nav class="side">${items.map(([n, d]) => `<a class="${n === "书伴" ? "on" : ""}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>${n}</a>`).join("")}</nav>`;
+}
+const lock = t => `<div class="lock">${ICON_UI.lock}${t}</div>`;
+
+// A tiny app per option: state, render, and clicks on [data-x].
+function app(el, init, view, handlers) {
+  const A = { s: null, timers: {} };
+  A.reset = p => { A.s = init(p); A.render(); };
+  A.render = () => {
+    const f = document.activeElement, k = f && el.contains(f) ? f.dataset.k : null, pos = f?.selectionStart;
+    el.innerHTML = side() + `<div class="pane">${view(A.s, A)}</div>`;
+    if (k) { const n = el.querySelector(`[data-k="${k}"]`); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} } }
+    A.s.anim = false;
+  };
+  A.toast = t => { A.s.toast = t; clearTimeout(A.timers.t); A.timers.t = setTimeout(() => { A.s.toast = null; A.render(); }, 2400); };
+  // Pretend to check a key or an address: ok, a wrong key, or someone else's.
+  A.check = (d, after) => {
+    clearTimeout(A.timers.c);
+    const p = P[d.id] || {};
+    const need = p.kind === "local" || d.id === "custom" ? (d.url || (p.running && !d.url)) : (d.key || "").length >= 8;
+    if (!need) { d.check = null; return A.render(); }
+    d.check = "busy"; A.render();
+    A.timers.c = setTimeout(() => {
+      const g = guessKey(d.key || "");
+      if (/bad/.test(d.key || "")) d.check = "bad";
+      else if (g && g !== d.id && P[d.id]?.kind !== "local") { d.check = "other"; d.other = g; }
+      else { d.check = "ok"; d.models = p.models?.length ? p.models : ["qwen2.5-72b-instruct", "llama-3.1-70b"]; d.model = d.model && d.models.includes(d.model) ? d.model : d.models[0]; }
+      A.render(); after && after();
+    }, 800);
+  };
+  el.addEventListener("click", e => {
+    const t = e.target.closest("[data-x]");
+    if (!t) { if (A.s.pop) { A.s.pop = null; A.render(); } return; }
+    const [x, arg] = t.dataset.x.split(":");
+    if (!["pop-model", "pop-prov"].includes(x)) A.s.pop = null;
+    handlers[x]?.(A, arg, t, e);
+    A.render();
+  });
+  el.addEventListener("input", e => { const k = e.target.dataset.k; if (k) { handlers["in-" + k]?.(A, e.target.value); } });
+  el.addEventListener("keydown", e => handlers.key?.(A, e));
+  return A;
+}
+const popAt = (el, t) => { const r = t.getBoundingClientRect(), b = el.getBoundingClientRect(); return { x: r.left - b.left, y: r.bottom - b.top + 6 }; };
+function checkLine(d) {
+  const p = P[d.id] || {};
+  const net = p.kind === "local" || d.id === "custom";
+  switch (d.check) {
+    case "busy": return `<div class="chk"><span class="spin"></span>${net ? "正在连…" : "正在验证…"}</div>`;
+    case "ok": return `<div class="chk ok">${ICON_UI.check}${net ? "连上了" : "Key 能用"} · 有 ${d.models.length} 个模型</div>`;
+    case "bad": return `<div class="chk bad">这个 Key 不对${p.site ? `，去 ${p.site} 重新复制一个` : ""}</div>`;
+    case "other": return `<div class="chk warn">这像是 ${P[d.other].name} 的 Key<button data-x="switch:${d.other}">换成 ${P[d.other].name}</button></div>`;
+    default: return `<div class="chk">${net ? "" : "粘贴后马上验证，不会发出你的书"}</div>`;
+  }
+}
+const statusOf = (s, id) => s.st?.[id];
+function test(A, id) {
+  A.s.st = A.s.st || {}; A.s.st[id] = "busy"; A.render();
+  setTimeout(() => { A.s.st[id] = (P[id]?.ms ?? 1.2) + (Math.random() * .4 - .2); A.render(); }, 900);
+}
+const sec = v => typeof v === "number" ? v.toFixed(1) + " 秒" : "";
+
+// ======================= A · 名片 =======================
+const AA = app(document.getElementById("winA"),
+  p => ({ added: p === "some" ? [{ id: "claude", key: "sk-ant-api03-xxxx3f9a", model: "claude-opus-5-5" }, { id: "magpie", key: "", model: "claude-sonnet-4-5" }, { id: "deepseek", key: "sk-xxxx81c0", model: "deepseek-chat" }] : [],
+          cur: p === "some" ? "claude" : "apple", st: p === "some" ? { claude: 1.4 } : { apple: 0.6 }, view: "home", q: "", d: null, pop: null }),
+  (s, A) => {
+    if (s.view !== "home") return galView(s, A);
+    const cur = s.cur, p = P[cur] || {}, a = s.added.find(x => x.id === cur);
+    const st = statusOf(s, cur);
+    let h = `<div class="pane-in"><div class="ph"><h3>书伴</h3><span>谁来回答你的问题</span></div>
+      <div class="hero" style="--tint:${p.tint}">
+        <div class="row1">${badge(cur, 46, 26)}<div><div class="nm">${esc(p.name)}</div>
+          <div class="meta">${cur === "apple" ? "在这台 Mac 上 · 不联网 · 不花钱" : `<button class="m" data-x="pop-model">${esc(a.model)} ⌄</button>`}
+          ${st === "busy" ? `<span class="spin"></span>` : st ? `<span style="display:flex;align-items:center;gap:6px;color:var(--ok)"><span class="dot"></span>${sec(st)}</span>` : ""}</div></div>
+          <div class="acts"><button class="btn ghost" data-x="test:${cur}">试一下</button>${cur !== "apple" ? `<button class="btn" data-x="edit:${cur}">设置</button>` : ""}</div></div>
+        <blockquote><span class="q">问：</span>黛玉进贾府时为什么那么小心？<br>${st === "busy" ? `<span style="color:var(--t3)">…</span>` : SAMPLE[cur === "apple" ? "apple" : "default"]}<small>它对《红楼梦》第三回的回答 · 只用读过的部分</small></blockquote>
+      </div>
+      <div class="sec-t"><span>换一个</span></div>
+      <div class="deck">${["apple", ...s.added.map(x => x.id)].map(id => {
+        const a2 = s.added.find(x => x.id === id);
+        return `<button class="mc${id === cur ? " on" : ""}" data-x="use:${id}">${badge(id, 24, 14)}<span><b>${esc(P[id].name)}</b><span>${id === "apple" ? "免费 · 本机" : esc(a2.model)}</span></span></button>`;
+      }).join("")}<button class="mc add" data-x="gallery">＋ 添加</button></div>
+      ${lock("Key 只存在这台 Mac 的钥匙串里。提问和书里相关的几段原文直接发给你选的服务商，语阅不经手。")}</div>`;
+    if (s.pop?.k === "model") h += `<div class="pop" style="left:${s.pop.x}px;top:${s.pop.y}px">${P[cur].models.map(m => `<button class="it mono" data-x="pick:${m}">${esc(m)}${m === a.model ? `<span class="ck">✓</span>` : ""}</button>`).join("")}</div>`;
+    if (s.toast) h += `<div class="toast">${ICON_UI.check}${esc(s.toast)}</div>`;
+    return h;
+  },
+  {
+    use: (A, id) => { A.s.cur = id; if (!statusOf(A.s, id)) test(A, id); },
+    test: (A, id) => test(A, id),
+    "pop-model": (A, _, t) => { A.s.pop = A.s.pop ? null : { k: "model", ...popAt(t.closest(".win"), t) }; },
+    pick: (A, m) => { A.s.added.find(x => x.id === A.s.cur).model = m; test(A, A.s.cur); },
+    gallery: A => { A.s.view = "gal"; A.s.q = ""; A.s.anim = true; },
+    back: A => { if (A.s.view === "det" && !A.s.d.edit) { A.s.view = "gal"; } else A.s.view = "home"; },
+    open: (A, id) => openDet(A, id),
+    edit: (A, id) => { const a = A.s.added.find(x => x.id === id); A.s.d = { id, key: a.key, locked: !!a.key, model: a.model, models: P[id].models, check: "ok", edit: true }; A.s.view = "det"; A.s.anim = true; },
+    switch: (A, id) => openDet(A, id, A.s.d.key),
+    change: A => { Object.assign(A.s.d, { key: "", locked: false, check: null }); },
+    paste: A => { const p = P[A.s.d.id]; A.s.d.key = (p.prefix || "sk-") + Math.random().toString(36).slice(2, 12) + "3f9a"; A.check(A.s.d); },
+    chip: (A, m) => { A.s.d.model = m; },
+    login: A => { const d = A.s.d; d.login = true; A.render(); setTimeout(() => { d.login = false; d.key = "sk-or-v1-" + Math.random().toString(36).slice(2, 12) + "a91c"; d.locked = true; A.check(d); }, 1400); },
+    go: A => { const d = A.s.d; if (d.id === "custom") P.custom = { name: "自己的接口", tint: "#888", kind: "custom", models: d.models, ms: 1.0 }; const i = A.s.added.findIndex(x => x.id === d.id); const e = { id: d.id, key: d.key, model: d.model }; if (i >= 0) A.s.added[i] = e; else A.s.added.push(e); A.s.cur = d.id; A.s.view = "home"; A.s.st[d.id] = P[d.id].ms; A.toast(`书伴现在用 ${P[d.id].name}`); },
+    remove: A => { const id = A.s.d.id; A.s.added = A.s.added.filter(x => x.id !== id); if (A.s.cur === id) A.s.cur = "apple"; A.s.view = "home"; A.toast(`已移除 ${P[id].name}，Key 也删了`); },
+    "in-q": (A, v) => { A.s.q = v; const g = guessKey(v); if (g) { openDet(A, g, v.trim()); } A.render(); },
+    "in-key": (A, v) => { A.s.d.key = v; A.check(A.s.d); },
+    "in-url": (A, v) => { A.s.d.url = v; A.check(A.s.d); },
+    key: (A, e) => { if (e.key === "Escape" && A.s.view !== "home") { handlersA.back(A); A.render(); } if (e.key === "Enter" && e.target.dataset.k === "q") { const f = search(A.s.q, A.s.added.map(x => x.id))[0]; if (f) { openDet(A, f); A.render(); } } },
+  });
+const handlersA = { back: A => { if (A.s.view === "det" && !A.s.d.edit) A.s.view = "gal"; else A.s.view = "home"; } };
+function openDet(A, id, key = "") {
+  A.s.d = { id, key, locked: false, model: P[id].models[0], models: [], check: null };
+  A.s.view = "det"; A.s.anim = true;
+  if (key || (P[id].kind === "local" && P[id].running)) A.check(A.s.d);
+}
+function galView(s, A) {
+  if (s.view === "det") return detView(s, A);
+  const skip = s.added.map(x => x.id), ids = search(s.q, skip);
+  const grp = (k, t, sub) => { const l = ids.filter(id => P[id].kind === k); if (!l.length) return ""; return `<div class="gal-g">${t}<span>${sub}</span></div><div class="tiles">${l.map(id => {
+    const p = P[id];
+    if (k !== "key") return `<button class="tile wide" data-x="open:${id}">${badge(id, 40, 22)}<span><b>${esc(p.name)}</b><small>${esc(p.blurb)}</small></span>${p.running ? `<i><span class="dot"></span>开着</i>` : ""}</button>`;
+    return `<button class="tile" data-x="open:${id}">${lg(id, 28)}<b>${esc(p.name)}</b></button>`;
+  }).join("")}</div>`; };
+  return `<div class="gal${s.anim ? " anim" : ""}"><div class="gal-h"><button class="back" data-x="back" title="返回">${ICON_UI.back}</button><h3>添加服务商</h3>
+      <label class="gal-s">${ICON_UI.search.replace('class="s"', 'width="13" height="13"')}<input data-k="q" placeholder="搜索，或粘贴 Key" value="${esc(s.q)}"></label></div>
+    <div class="gal-b">${grp("signin", "登录就能用", "不用找 Key") + grp("local", "这台 Mac 上的", "免费，不出门") + grp("key", "填 Key", "按用量付费，走你自己的账号")}
+      ${!ids.length ? `<div style="text-align:center;color:var(--t3);padding:40px 0;font-size:12px">没有「${esc(s.q)}」</div>` : ""}
+      <div class="gal-g">都不是<span></span></div><div class="tiles"><button class="tile wide dash" data-x="open:custom" style="grid-column:span 2">${badge("custom", 40, 22).replace(">C<", ">＋<")}<span><b>自己添加</b><small>任何 OpenAI 兼容接口</small></span></button></div>
+    </div></div>`;
+}
+function detView(s, A) {
+  const d = s.d, p = P[d.id] || { name: "自己添加", kind: "custom", models: [] };
+  const local = p.kind === "local";
+  const can = d.check === "ok";
+  let body = "";
+  if (p.kind === "signin" && !d.locked && !d.key) body += `<button class="btn k lg2" style="justify-content:center" data-x="login" ${d.login ? "disabled" : ""}>${d.login ? `<span class="spin"></span>在浏览器里登录…` : `用 OpenRouter 登录`}</button><div class="or">或者粘贴 Key</div>`;
+  if (p.kind === "custom") body += `<div class="lab">地址</div><div class="key"><input data-k="url" value="${esc(d.url ?? "")}" placeholder="https://…/v1"></div>`;
+  if (local) body += `<div class="lab">地址</div><div class="key"><input data-k="url" value="${esc(d.url ?? "")}" placeholder="http://127.0.0.1:${p.port}/v1"><span class="tail">${p.running ? "找到了" : ""}</span></div>`;
+  else body += `<div class="lab">${p.kind === "custom" ? "地址和 Key" : "API Key"}</div>${d.locked
+    ? `<div class="key"><input value="${esc(mask(d.key))}" disabled style="color:var(--t2)"><button class="mini" data-x="change">更换</button></div>`
+    : `<div class="key"><input data-k="key" type="password" value="${esc(d.key)}" placeholder="粘贴 ${esc(p.name)} 的 Key"><button class="mini" data-x="paste">粘贴</button></div>`}`;
+  body += checkLine(d);
+  if (can) body += `<div class="lab">模型</div><div class="chips">${d.models.slice(0, 4).map(m => `<button class="chip${m === d.model ? " on" : ""}" data-x="chip:${m}">${esc(m)}</button>`).join("")}${d.models.length > 4 ? `<button class="chip more">还有 ${d.models.length - 4} 个</button>` : ""}</div>`;
+  body += `<button class="btn k lg2" style="justify-content:center;margin-top:6px" data-x="go" ${can ? "" : "disabled"}>${d.edit ? "保存" : "开始用 " + esc(p.name)}</button>`;
+  body += `<div class="fine">${local ? "提问和书里相关的几段原文只发到这台 Mac 上的 " + p.name + "。" : `Key 只存在钥匙串里。费用走你自己的 ${p.account || ""} 账号，语阅看不到。`}</div>`;
+  if (d.edit) body += `<button class="adv" data-x="remove" style="color:var(--danger)">移除 ${esc(p.name)}</button>`;
+  return `<div class="gal${s.anim ? " anim" : ""}"><div class="gal-h"><button class="back" data-x="back" title="返回">${ICON_UI.back}</button></div>
+    <div class="det"><div class="det-in">${badge(d.id, 64, 36)}<h4>${esc(p.name)}</h4>
+      <p class="s">${p.blurb ? esc(p.blurb) : `用你自己的 ${p.account} 账号`}${p.site ? ` · <a href="#">在 ${p.site} 拿 Key ↗</a>` : ""}</p>${body}</div></div>
+    ${s.toast ? `<div class="toast">${esc(s.toast)}</div>` : ""}</div>`;
+}
+// A needs back() reachable from its own handler table too
+AA.reset("fresh");
+
+// ======================= B · 一句话 =======================
+const BB = app(document.getElementById("winB"),
+  p => ({ added: [], cur: "apple", st: { apple: 0.6 }, q: "", d: null, kb: 0, pop: null }),
+  (s, A) => {
+    const cur = s.cur, p = P[cur], a = s.added.find(x => x.id === cur), st = statusOf(s, cur);
+    let h = `<div class="pane-in"><div class="ph"><h3>书伴</h3></div>
+      <div class="sent">书伴现在用<button class="w" data-x="pop-prov">${lg(cur, 20)}${esc(p.name)}</button>${cur === "apple" ? "，" : `的<button class="w m" data-x="pop-model">${esc(a.model)}</button>`}${cur === "apple" ? "<br>在这台 Mac 上答，不联网。" : "。"}</div>
+      <div class="status">${st === "busy" ? `<span class="spin"></span>在问它…` : st ? `<span class="dot"></span><span style="color:var(--ok)">能用 · ${sec(st)}</span>` : ""}<span style="color:var(--line)">|</span><button class="lnk" data-x="test">试一下</button>${cur !== "apple" ? `<button class="lnk" data-x="forget">移除 ${esc(p.name)}</button>` : ""}</div>
+      <div class="cmd"><div class="cmdbox">${ICON_UI.search}<input data-k="q" value="${esc(s.q)}" placeholder="接一个新的：粘贴 Key 或地址，或者输入名字"><kbd>⌘ K</kbd></div>${cmdBelow(s)}</div>
+      ${!s.q && !s.d ? `<div class="sugg"><span style="font-size:11.5px;color:var(--t3);align-self:center;margin-right:2px">这台 Mac 上开着</span>${["magpie", "ollama"].filter(id => !s.added.some(x => x.id === id)).map(id => `<button data-x="pick:${id}">${lg(id, 13)}${P[id].name}</button>`).join("")}<span style="font-size:11.5px;color:var(--t3);align-self:center;margin:0 2px 0 8px">常用</span>${["openrouter", "claude", "deepseek", "dashscope"].filter(id => !s.added.some(x => x.id === id)).map(id => `<button data-x="pick:${id}">${lg(id, 13)}${P[id].name}</button>`).join("")}</div>` : ""}
+      ${lock("Key 只存在这台 Mac 的钥匙串里，不同步、不上传。")}</div>`;
+    if (s.pop?.k === "prov") h += `<div class="pop" style="left:${s.pop.x}px;top:${s.pop.y}px">${["apple", ...s.added.map(x => x.id)].map(id => `<button class="it" data-x="use:${id}">${lg(id, 16)}${esc(P[id].name)}${id === cur ? `<span class="ck">✓</span>` : `<small>${id === "apple" ? "本机" : esc(s.added.find(x => x.id === id).model)}</small>`}</button>`).join("")}<hr><button class="it" data-x="focus" style="color:var(--t2)">＋ 接一个新的…</button></div>`;
+    if (s.pop?.k === "model") h += `<div class="pop" style="left:${s.pop.x}px;top:${s.pop.y}px">${P[cur].models.map(m => `<button class="it mono" data-x="pickm:${m}">${esc(m)}${m === a.model ? `<span class="ck">✓</span>` : ""}</button>`).join("")}</div>`;
+    if (s.toast) h += `<div class="toast">${ICON_UI.check}${esc(s.toast)}</div>`;
+    return h;
+  },
+  {
+    "pop-prov": (A, _, t) => { A.s.pop = A.s.pop?.k === "prov" ? null : { k: "prov", ...popAt(t.closest(".win"), t) }; },
+    "pop-model": (A, _, t) => { A.s.pop = A.s.pop?.k === "model" ? null : { k: "model", ...popAt(t.closest(".win"), t) }; },
+    use: (A, id) => { A.s.cur = id; if (!statusOf(A.s, id)) test(A, id); },
+    pickm: (A, m) => { A.s.added.find(x => x.id === A.s.cur).model = m; test(A, A.s.cur); },
+    test: A => test(A, A.s.cur),
+    forget: A => { const id = A.s.cur; A.s.added = A.s.added.filter(x => x.id !== id); A.s.cur = "apple"; A.toast(`已移除 ${P[id].name}`); },
+    focus: A => { setTimeout(() => A.render() || document.querySelector('#winB [data-k="q"]').focus(), 0); },
+    pick: (A, id) => { A.s.q = ""; bPick(A, id); },
+    res: (A, i) => { bChoose(A, +i); },
+    cancel: A => { A.s.d = null; A.s.q = ""; },
+    login: A => { const d = A.s.d; d.login = true; A.render(); setTimeout(() => { d.login = false; d.key = "sk-or-v1-" + Math.random().toString(36).slice(2, 12) + "a91c"; A.check(d); }, 1400); },
+    switch: (A, id) => bPick(A, id, A.s.d.key),
+    chip: (A, m) => { A.s.d.model = m; },
+    go: A => bGo(A),
+    "in-q": (A, v) => { A.s.q = v; A.s.kb = 0; bParse(A); },
+    "in-key": (A, v) => { A.s.d.key = v; A.check(A.s.d); },
+    key: (A, e) => {
+      if (e.target.dataset.k === "q") {
+        const r = bResults(A.s);
+        if (e.key === "ArrowDown") { A.s.kb = Math.min(r.length - 1, A.s.kb + 1); e.preventDefault(); A.render(); }
+        if (e.key === "ArrowUp") { A.s.kb = Math.max(0, A.s.kb - 1); e.preventDefault(); A.render(); }
+        if (e.key === "Enter") { if (A.s.d?.check === "ok") bGo(A); else bChoose(A, A.s.kb); A.render(); }
+        if (e.key === "Escape") { A.s.q = ""; A.s.d = null; A.render(); }
+      }
+    },
+  });
+function bResults(s) {
+  if (s.d || !s.q.trim()) return [];
+  return search(s.q, s.added.map(x => x.id)).slice(0, 5).map(id => ({ id }));
+}
+function bParse(A) {
+  const q = A.s.q.trim(), g = guessKey(q);
+  if (g) return bPick(A, g, q);
+  const url = q.match(/^https?:\/\/[^\s]+/);
+  if (url) {
+    const port = +(q.match(/:(\d+)/)?.[1] || 0);
+    const id = Object.keys(P).find(k => P[k].port === port) || "custom";
+    A.s.d = { id, url: q, key: "", check: null, models: [], model: "", fromUrl: true };
+    return A.check(A.s.d);
+  }
+  if (A.s.d && !A.s.d.fixed) A.s.d = null;
+  A.render();
+}
+function bPick(A, id, key = "") {
+  A.s.d = { id, key, check: null, models: [], model: "", fixed: !key };
+  A.s.q = key ? A.s.q : "";
+  if (key || P[id].kind === "local") A.check(A.s.d); else A.render();
+  setTimeout(() => document.querySelector('#winB [data-k="key"]')?.focus(), 0);
+}
+function bChoose(A, i) { const r = bResults(A.s)[i]; if (r) bPick(A, r.id); }
+function bGo(A) {
+  const d = A.s.d, id = d.id === "custom" ? "custom" : d.id;
+  if (id === "custom") P.custom = P.custom || { name: "自己的接口", tint: "#888", kind: "custom", models: d.models, ms: 1.0 };
+  const i = A.s.added.findIndex(x => x.id === id), e = { id, key: d.key, model: d.model };
+  if (i >= 0) A.s.added[i] = e; else A.s.added.push(e);
+  A.s.cur = id; A.s.st[id] = P[id].ms; A.s.d = null; A.s.q = "";
+  A.toast(`接上了 · 书伴现在用 ${P[id].name}`);
+}
+function cmdBelow(s) {
+  if (s.d) {
+    const d = s.d, p = P[d.id] || { name: "自己的接口", kind: "custom" }, local = p.kind === "local" || d.id === "custom";
+    const what = d.fromUrl ? (d.id === "custom" ? "一个 OpenAI 兼容接口" : `局域网里的 ${p.name}`) : guessKey(d.key) === d.id ? `${p.name} 的 Key` : p.name;
+    let h = `<div class="card2 fade-in"><div class="h">${d.id === "custom" ? `<span class="badge" style="width:36px;height:36px"><span class="disc" style="width:20px;height:20px;font-size:11px">＋</span></span>` : badge(d.id, 36, 20)}<div><b>${esc(what)}</b><span>${local ? esc(d.url || `本机 · 127.0.0.1:${p.port}`) : d.key ? esc(mask(d.key)) : (p.blurb ? esc(p.blurb) : `用你自己的 ${p.account} 账号`)}</span></div>
+      <button class="btn ghost" data-x="cancel" style="margin-left:auto">取消</button></div>`;
+    if (p.kind === "signin" && !d.key) h += `<button class="btn k lg2" style="justify-content:center" data-x="login" ${d.login ? "disabled" : ""}>${d.login ? `<span class="spin"></span>在浏览器里登录…` : "用 OpenRouter 登录"}</button>`;
+    if (!local && !d.key && !d.login) h += `<div class="key"><input data-k="key" type="password" placeholder="${p.kind === "signin" ? "或者粘贴 Key" : `粘贴 ${p.name} 的 Key · 在 ${p.site} 拿`}" value=""></div>`;
+    if (d.check === "ok") h += `<div class="chips">${d.models.slice(0, 5).map(m => `<button class="chip${m === d.model ? " on" : ""}" data-x="chip:${m}">${esc(m)}</button>`).join("")}</div>`;
+    h += `<div class="foot">${checkLine(d)}<button class="btn k" data-x="go" ${d.check === "ok" ? "" : "disabled"}>接上 <span style="opacity:.6;font-weight:400">↩</span></button></div></div>`;
+    return h;
+  }
+  const r = bResults(s);
+  if (!s.q.trim()) return "";
+  if (!r.length) return `<div class="res fade-in"><div class="hint">没认出来。可以粘贴一个 Key（比如 <code>sk-ant-…</code>）、一个地址（<code>http://…/v1</code>），或者输入服务商的名字。</div></div>`;
+  return `<div class="res fade-in"><div class="gt">服务商</div>${r.map((x, i) => `<button class="it${i === s.kb ? " kb" : ""}" data-x="res:${i}">${lg(x.id, 18)}${esc(P[x.id].name)}<small>${P[x.id].kind === "local" ? (P[x.id].running ? `<span class="dot"></span>这台 Mac 上开着` : "本机") : P[x.id].kind === "signin" ? "登录" : "填 Key"}${i === s.kb ? " ↩" : ""}</small></button>`).join("")}</div>`;
+}
+BB.reset("fresh");
+
+// ======================= C · 三条路 =======================
+const CC = app(document.getElementById("winC"),
+  p => ({ added: [], cur: "apple", st: { apple: 0.6 }, way: "free", d: null, list: false, pop: null }),
+  (s, A) => {
+    const ways = [
+      ["free", "免费", "这台 Mac 自己答，或者用本机的 Ollama。不联网也行。", ["apple", "ollama", "lmstudio"], "不花钱"],
+      ["acct", "用我已有的账号", "登录 OpenRouter；或者让 magpie 转接你的 Claude、ChatGPT 会员。", ["openrouter", "magpie", "claude"], "按你的会员或余额"],
+      ["key", "我有 Key", "粘贴就认得是哪家：Claude、DeepSeek、通义千问、Kimi……", ["deepseek", "dashscope", "gemini"], "按用量付费"],
+    ];
+    const cur = s.cur, a = s.added.find(x => x.id === cur);
+    let h = `<div class="pane-in"><div class="ph"><h3>书伴</h3><span>想怎么用？</span></div>
+      <div class="ways">${ways.map(([k, t, d, ids, cost]) => `<button class="way${s.way === k ? " on" : ""}" data-x="way:${k}">${waysOn(s, k) ? `<span class="tick">✓</span>` : ""}<div class="cl">${ids.map(id => badge(id, 28, 16)).join("")}</div><h5>${t}</h5><p>${d}</p><div class="cost">${cost}</div></button>`).join("")}</div>
+      <div class="panel fade-in" style="${s.anim ? "" : "animation:none"}">${cPanel(s)}</div>
+      <div class="now">书伴现在用 ${badge(cur, 22, 13)}<b>${esc(P[cur].name)}</b>${a ? `<button class="m" data-x="pop-model">${esc(a.model)} ⌄</button>` : ""}${statusOf(s, cur) === "busy" ? `<span class="spin"></span>` : statusOf(s, cur) ? `<span class="dot"></span><span style="color:var(--ok)">${sec(statusOf(s, cur))}</span>` : ""}</div>
+      ${lock("Key 只存在这台 Mac 的钥匙串里。提问和书里相关的几段原文只发给你选的那一家。")}</div>`;
+    if (s.pop?.k === "model") h += `<div class="pop" style="left:${s.pop.x}px;top:${s.pop.y - 150}px">${P[cur].models.map(m => `<button class="it mono" data-x="pickm:${m}">${esc(m)}${m === a.model ? `<span class="ck">✓</span>` : ""}</button>`).join("")}</div>`;
+    if (s.toast) h += `<div class="toast">${ICON_UI.check}${esc(s.toast)}</div>`;
+    return h;
+  },
+  {
+    way: (A, k) => { A.s.way = k; A.s.d = null; A.s.list = false; A.s.anim = true; },
+    use: (A, id) => { cUse(A, id); },
+    add: (A, id) => { cStart(A, id); },
+    login: A => { const d = A.s.d; d.login = true; A.render(); setTimeout(() => { d.login = false; d.key = "sk-or-v1-" + Math.random().toString(36).slice(2, 12) + "a91c"; A.check(d, () => {}); }, 1400); },
+    go: A => { const d = A.s.d; const i = A.s.added.findIndex(x => x.id === d.id); const e = { id: d.id, key: d.key, model: d.model }; if (i >= 0) A.s.added[i] = e; else A.s.added.push(e); cUse(A, d.id); A.s.d = null; A.toast(`书伴现在用 ${P[d.id].name}`); },
+    chip: (A, m) => { A.s.d.model = m; },
+    "in-url": (A, v) => { A.s.d.url = v; A.check(A.s.d); },
+    list: A => { A.s.list = !A.s.list; },
+    switch: (A, id) => cStart(A, id, A.s.d.key),
+    cancel: A => { A.s.d = null; },
+    "pop-model": (A, _, t) => { A.s.pop = A.s.pop ? null : { k: "model", ...popAt(t.closest(".win"), t) }; },
+    pickm: (A, m) => { A.s.added.find(x => x.id === A.s.cur).model = m; test(A, A.s.cur); },
+    "in-key": (A, v) => { if (!A.s.d) { const g = guessKey(v); A.s.d = { id: g || "unknown", key: v, check: null, models: [], model: "" }; if (!g) return A.render(); } A.s.d.key = v; const g = guessKey(v); if (g && A.s.d.id === "unknown") A.s.d.id = g; A.check(A.s.d); },
+  });
+const waysOn = (s, k) => (k === "free" && ["apple", "ollama", "lmstudio"].includes(s.cur)) || (k === "acct" && ["openrouter", "magpie"].includes(s.cur)) || (k === "key" && P[s.cur]?.kind === "key");
+function cUse(A, id) { A.s.cur = id; if (!statusOf(A.s, id)) test(A, id); }
+function cStart(A, id, key = "") { A.s.d = { id, key, check: null, models: [], model: "" }; A.s.list = false; if (key || P[id].kind === "local") A.check(A.s.d); }
+function cRow(s, id, right) {
+  const p = P[id], on = s.cur === id, added = s.added.some(x => x.id === id) || id === "apple";
+  return `<div class="opt-row${on ? " sel" : ""}">${badge(id, 34, 19)}<div class="tx"><b>${esc(p.name)}${p.running ? `<span class="tag ok">● 开着</span>` : ""}${on ? `<span class="tag">在用</span>` : ""}</b><span class="d">${esc(id === "apple" ? "在这台 Mac 上，不联网" : p.blurb || "")}</span></div>${right ?? (on ? "" : added ? `<button class="btn" data-x="use:${id}">用它</button>` : `<button class="btn" data-x="add:${id}">${p.kind === "signin" ? "登录" : "接上"}</button>`)}</div>`;
+}
+function cForm(s) {
+  const d = s.d; if (!d) return "";
+  const p = P[d.id] || {};
+  let h = `<div class="pastebig fade-in" style="border-top:.5px solid var(--line);margin-top:4px">`;
+  if (p.kind === "signin" && !d.key) h += `<button class="btn k lg2" style="justify-content:center" data-x="login" ${d.login ? "disabled" : ""}>${d.login ? `<span class="spin"></span>在浏览器里登录 OpenRouter…` : "用 OpenRouter 登录"}</button>`;
+  if (p.kind === "local") h += `<div class="key"><input data-k="url" value="" placeholder="http://127.0.0.1:${p.port}/v1"><span class="tail">${p.running ? "已经找到了" : "没开着"}</span></div>`;
+  h += checkLine(d);
+  if (d.check === "ok") h += `<div class="chips">${d.models.slice(0, 4).map(m => `<button class="chip${m === d.model ? " on" : ""}" data-x="chip:${m}">${esc(m)}</button>`).join("")}</div>`;
+  h += `<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" data-x="cancel">取消</button><button class="btn k" data-x="go" ${d.check === "ok" ? "" : "disabled"}>开始用 ${esc(p.name)}</button></div></div>`;
+  return h;
+}
+function cPanel(s) {
+  if (s.way === "free") return cRow(s, "apple") + ["ollama", "lmstudio"].map(id => cRow(s, id) + (s.d?.id === id ? cForm(s) : "")).join("");
+  if (s.way === "acct") return ["openrouter", "magpie"].map(id => cRow(s, id) + (s.d?.id === id ? cForm(s) : "")).join("")
+    + `<div class="opt-row" style="opacity:.75">${badge("claude", 34, 19)}<div class="tx"><b>Claude、ChatGPT 会员</b><span class="d">它们不给别的 App 登录。装上 magpie 登录一次，语阅经它转接。</span></div><button class="btn ghost">了解 magpie ↗</button></div>`;
+  // 我有 Key: one box that tells whose key it is; the list is the fallback.
+  const d = s.d, keyAdded = s.added.filter(x => P[x.id].kind === "key");
+  let h = keyAdded.map(x => cRow(s, x.id)).join("");
+  h += `<div class="pastebig"><div class="key"><input data-k="key" type="password" value="${esc(d?.key || "")}" placeholder="粘贴你的 API Key，语阅认得出是哪家"></div>`;
+  if (d) {
+    if (d.id === "unknown") h += `<div class="chk">${(d.key || "").length > 6 ? "认不出是哪家的 Key，在下面选一下" : ""}</div>`;
+    else h += `<div class="det-row">${badge(d.id, 26, 15)}<b>${esc(P[d.id].name)}</b><span style="flex:1"></span>${checkLine(d)}</div>`;
+    if (d.check === "ok") h += `<div class="chips">${d.models.slice(0, 4).map(m => `<button class="chip${m === d.model ? " on" : ""}" data-x="chip:${m}">${esc(m)}</button>`).join("")}</div>
+      <div style="display:flex;justify-content:flex-end"><button class="btn k" data-x="go">开始用 ${esc(P[d.id].name)}</button></div>`;
+  }
+  h += `<div><button class="listlink" data-x="list">${s.list ? "收起" : "认不出来？从列表里选"}</button></div>`;
+  if (s.list) h += `<div class="minigrid fade-in">${Object.keys(P).filter(id => P[id].kind === "key").map(id => `<button data-x="add:${id}">${lg(id, 16)}${esc(P[id].name)}</button>`).join("")}</div>`;
+  return h + `</div>`;
+}
+CC.reset("fresh");
+
+// ---------------- page controls ----------------
+document.querySelectorAll("[data-a-reset]").forEach(b => b.onclick = () => { const [o, p] = b.dataset.aReset.split(":"); ({ A: AA, B: BB, C: CC })[o].reset(p); });
+document.querySelectorAll("[data-b-try]").forEach(b => b.onclick = () => { BB.reset("fresh"); BB.s.q = b.dataset.bTry; bParse(BB); BB.render(); });
+document.querySelectorAll("[data-th]").forEach(b => b.onclick = () => {
+  document.documentElement.dataset.theme = b.dataset.th;
+  document.querySelectorAll("[data-th]").forEach(o => o.setAttribute("aria-pressed", o === b));
+});
+</script>
+</body></html>

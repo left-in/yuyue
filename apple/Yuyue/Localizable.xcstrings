@@ -44,6 +44,7 @@
         }
       }
     },
+    " · 正在写" : {},
     " · 没读到" : {
       "localizations" : {
         "en" : {
@@ -217,6 +218,7 @@
       }
     },
     "…this truth is so well %@ in the minds…" : {},
+    "。" : {},
     "· %@" : {},
     "“" : {},
     "“%@”" : {},
@@ -264,6 +266,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No sound could be read from “%@”. Try an M4B, MP3 or M4A file"
+          }
+        }
+      }
+    },
+    "“第 2 集”排在“第 10 集”前面。顺序不对，按住一行拖。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“Episode 2” comes before “Episode 10”. If the order is wrong, drag a row."
           }
         }
       }
@@ -413,7 +425,40 @@
         }
       }
     },
+    "%@ · %lld" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %lld"
+          }
+        }
+      }
+    },
+    "%@ · %lld 个模型" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld models"
+          }
+        }
+      }
+    },
+    "%@ · %u 条评论" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$u 条评论"
+          }
+        }
+      }
+    },
     "%@ · ⌘Z 也能撤销" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -423,6 +468,7 @@
         }
       }
     },
+    "%@ · 今天讲这几件事" : {},
     "%@ · 划线的想法" : {
       "localizations" : {
         "en" : {
@@ -434,6 +480,7 @@
       }
     },
     "%@ · 完" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -605,6 +652,7 @@
         }
       }
     },
+    "%@ 上最新的一条" : {},
     "%@ 上的 %@" : {
       "localizations" : {
         "en" : {
@@ -684,6 +732,7 @@
       }
     },
     "%@ 处 · %lld 本书" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -740,6 +789,7 @@
       }
     },
     "%@ 条 · 来自 %lld 本书" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -785,6 +835,17 @@
         }
       }
     },
+    "%@ 秒" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ s"
+          }
+        }
+      }
+    },
     "%@ 笔记.md" : {
       "localizations" : {
         "en" : {
@@ -816,11 +877,22 @@
       }
     },
     "%@ 章" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ chapters"
+          }
+        }
+      }
+    },
+    "%@，%lld 本" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@，%2$lld 本"
           }
         }
       }
@@ -845,12 +917,34 @@
         }
       }
     },
+    "%@：能用，找到 %lld 个模型" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: works, %2$lld models found"
+          }
+        }
+      }
+    },
     "%@（带笔记）.epub" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ (with notes).epub"
+          }
+        }
+      }
+    },
+    "%@（本机）" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ (this Mac)"
           }
         }
       }
@@ -968,16 +1062,6 @@
       }
     },
     "%lld" : {},
-    "%lld / %lld" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld / %2$lld"
-          }
-        }
-      }
-    },
     "%lld 万" : {
       "localizations" : {
         "en" : {
@@ -1052,6 +1136,22 @@
         }
       }
     },
+    "%lld 个文件 · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld files · %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld 个文件 · %2$@"
+          }
+        }
+      }
+    },
     "%lld 个没导入" : {
       "localizations" : {
         "en" : {
@@ -1102,6 +1202,17 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld 个词条" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld entries"
           }
         }
       }
@@ -1200,6 +1311,58 @@
         }
       }
     },
+    "%lld 处 · %lld 本书" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@n@ · %#@b@"
+          },
+          "substitutions" : {
+            "b" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg book"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg books"
+                    }
+                  }
+                }
+              }
+            },
+            "n" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg place"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg places"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld 处%@" : {
       "localizations" : {
         "en" : {
@@ -1256,6 +1419,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld 天前" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld days ago"
           }
         }
       }
@@ -1388,6 +1561,28 @@
         }
       }
     },
+    "%lld 张" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld paper"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld papers"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld 日" : {
       "localizations" : {
         "en" : {
@@ -1485,6 +1680,7 @@
       }
     },
     "%lld 本书 · %@ 条" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1496,6 +1692,58 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$lld 本书 · %2$@ 条"
+          }
+        }
+      }
+    },
+    "%lld 本书 · %lld 条" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@b@ · %#@n@"
+          },
+          "substitutions" : {
+            "b" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg book"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg books"
+                    }
+                  }
+                }
+              }
+            },
+            "n" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg item"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg items"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1515,6 +1763,58 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%lld items"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld 条 · 来自 %lld 本书" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@n@ · from %#@b@"
+          },
+          "substitutions" : {
+            "b" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg book"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg books"
+                    }
+                  }
+                }
+              }
+            },
+            "n" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg item"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg items"
+                    }
+                  }
                 }
               }
             }
@@ -1614,6 +1914,17 @@
         }
       }
     },
+    "%lld 集" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld episodes"
+          }
+        }
+      }
+    },
+    "%lld 集没听" : {},
     "%lld 章" : {
       "localizations" : {
         "en" : {
@@ -1879,6 +2190,16 @@
       }
     },
     "%lld." : {},
+    "%lld. %@%@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld. %2$@%3$@"
+          }
+        }
+      }
+    },
     "%lld.%lld 万" : {
       "localizations" : {
         "en" : {
@@ -1895,6 +2216,7 @@
         }
       }
     },
+    "%lld%%" : {},
     "%lld%% · 本章还剩 %lld 分钟" : {
       "localizations" : {
         "en" : {
@@ -1927,6 +2249,8 @@
         }
       }
     },
+    "%llu 个词条" : {},
+    "%u" : {},
     "%u 本" : {
       "localizations" : {
         "en" : {
@@ -1978,6 +2302,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "↩ Open"
+          }
+        }
+      }
+    },
+    "＋ 新建合集“%@”并放进去" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ New Collection “%@” and Put Book In"
+          }
+        }
+      }
+    },
+    "＋ 新建合集并放进去" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ New Collection and Put Book In"
           }
         }
       }
@@ -2037,6 +2381,8 @@
         }
       }
     },
+    "5 分钟" : {},
+    "10 分钟" : {},
     "15 分钟" : {
       "localizations" : {
         "en" : {
@@ -2047,6 +2393,7 @@
         }
       }
     },
+    "20 分钟" : {},
     "30 分钟" : {
       "localizations" : {
         "en" : {
@@ -2090,6 +2437,17 @@
     },
     "A" : {},
     "Aa" : {},
+    "AI 服务" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI Services"
+          }
+        }
+      }
+    },
     "Anki 卡片" : {
       "localizations" : {
         "en" : {
@@ -2111,6 +2469,7 @@
       }
     },
     "API Key（可不填）" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2150,6 +2509,28 @@
         }
       }
     },
+    "Apple 智能（这台 Mac 上）" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence (on this Mac)"
+          }
+        }
+      }
+    },
+    "Apple 智能（这台设备上）" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence (on this device)"
+          }
+        }
+      }
+    },
     "Apple 智能现在用不了" : {
       "localizations" : {
         "en" : {
@@ -2180,6 +2561,7 @@
         }
       }
     },
+    "Ask HN" : {},
     "Azure 门户里建一个“语音”资源，拷它的密钥和区域（比如 eastasia）。有免费额度。" : {
       "localizations" : {
         "en" : {
@@ -2206,6 +2588,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Calibre: http://computer-address:8080/opds\nKavita: the OPDS address in its settings, API key included\nKomga: http://address:25600/opds/v1.2/catalog"
+          }
+        }
+      }
+    },
+    "Claude、DeepSeek、通义千问、Ollama…都可以" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude, DeepSeek, Qwen, Ollama… any of them"
           }
         }
       }
@@ -2240,6 +2633,9 @@
         }
       }
     },
+    "EPUB、PDF、MOBI、AZW3、TXT；会拷一份进语阅，原文件挪走、删掉都不影响" : {},
+    "EPUB、PDF、TXT、MOBI" : {},
+    "EPUB、PDF、TXT、MOBI、AZW3。传完直接放进书架。" : {},
     "EPUB（书和笔记一起）" : {
       "localizations" : {
         "en" : {
@@ -2291,6 +2687,7 @@
         }
       }
     },
+    "Hacker News" : {},
     "http，密码明着传" : {
       "localizations" : {
         "en" : {
@@ -2333,6 +2730,28 @@
         }
       }
     },
+    "Key …%@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key …%@"
+          }
+        }
+      }
+    },
+    "Key 不对，去设置 · AI 服务里重新接" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The key didn't work. Reconnect it in Settings · AI Services."
+          }
+        }
+      }
+    },
     "Key 不对，去设置 · 书伴里重新填" : {
       "localizations" : {
         "en" : {
@@ -2343,12 +2762,45 @@
         }
       }
     },
+    "Key 只存在这台设备上，加密保存。提问和书里相关的几段原文直接发到这个地址，语阅不经手。" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The key stays on this device, encrypted. Questions and the related passages from the book go straight to this address; Yuyue never handles them."
+          }
+        }
+      }
+    },
+    "Key 只存在这台设备上，加密保存。费用走你自己的 %@ 账号，语阅不经手，也看不到。" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The key stays on this device, encrypted. Charges go to your own %@ account; Yuyue never handles or sees them."
+          }
+        }
+      }
+    },
     "Key 只存在这台设备的钥匙串里，不同步、不上传" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The key stays in this device's keychain. It's never synced or uploaded"
+          }
+        }
+      }
+    },
+    "Key 只存在这台设备的钥匙串里，不同步、不上传；本机的 magpie、Ollama 不出这台 Mac" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keys stay in this device's keychain, never synced or uploaded; magpie and Ollama on this Mac never leave it."
           }
         }
       }
@@ -2364,6 +2816,7 @@
       }
     },
     "Key 只存在这台设备的钥匙串里。Ollama 这类本机模型不用 Key，填上地址和模型名就行。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2374,11 +2827,23 @@
       }
     },
     "Key 只存在这台设备的钥匙串里。Ollama 这类自己部署的模型不用 Key，填上地址和模型名就行。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The key stays in this device's keychain. Self-hosted models like Ollama need no key—just the address and model name."
+          }
+        }
+      }
+    },
+    "Key 只存在这台设备的钥匙串里。提问和书里相关的几段原文直接发到这个地址，语阅不经手。" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The key stays in this device's keychain. Questions and the related passages from the book go straight to this address; Yuyue never handles them."
           }
         }
       }
@@ -2393,7 +2858,19 @@
         }
       }
     },
+    "Key（没有就空着）" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key (leave empty if none)"
+          }
+        }
+      }
+    },
     "L 形" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2424,6 +2901,16 @@
       }
     },
     "Markdown" : {},
+    "MDict 词典" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MDict Dictionaries"
+          }
+        }
+      }
+    },
     "Notion 页面" : {
       "localizations" : {
         "en" : {
@@ -2445,6 +2932,7 @@
       }
     },
     "Ollama 不用填" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2474,6 +2962,16 @@
         }
       }
     },
+    "OpenRouter 没给 Key，再登录一次" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenRouter didn't give a key. Sign in again."
+          }
+        }
+      }
+    },
     "platform.openai.com › API keys 里建一个。费用按字数算，走你的账号。" : {
       "localizations" : {
         "en" : {
@@ -2484,6 +2982,7 @@
         }
       }
     },
+    "Show HN" : {},
     "WebDAV" : {},
     "WebDAV 服务器" : {
       "localizations" : {
@@ -2525,6 +3024,8 @@
         }
       }
     },
+    "一天都不选：只在点“现在写一集”的时候写" : {},
+    "一档只给你听的节目" : {},
     "一次可以放很多本" : {
       "localizations" : {
         "en" : {
@@ -2536,11 +3037,22 @@
       }
     },
     "一次性付款，不会自动续费。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "A one-time payment. Nothing renews."
+          }
+        }
+      }
+    },
+    "一集一集来" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One episode at a time"
           }
         }
       }
@@ -2636,6 +3148,7 @@
       }
     },
     "上下" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2656,6 +3169,7 @@
       }
     },
     "上架之后就能付了。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2695,6 +3209,7 @@
         }
       }
     },
+    "下一集" : {},
     "下一章" : {
       "localizations" : {
         "en" : {
@@ -2761,6 +3276,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Download %@"
+          }
+        }
+      }
+    },
+    "下载对齐模型 %lld%%" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloading the alignment model %lld%%"
           }
         }
       }
@@ -2835,6 +3360,39 @@
         }
       }
     },
+    "不支持这种文件，目前能打开 EPUB、PDF、MOBI、AZW3、TXT" : {},
+    "不用填" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not needed"
+          }
+        }
+      }
+    },
+    "不用填模型名" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No model name needed"
+          }
+        }
+      }
+    },
+    "不用填模型名：接上时会问它有哪些模型。" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No model name needed: Yuyue asks the service which models it has."
+          }
+        }
+      }
+    },
     "不用提示了" : {
       "localizations" : {
         "en" : {
@@ -2885,6 +3443,7 @@
         }
       }
     },
+    "不联网" : {},
     "不要了" : {
       "localizations" : {
         "en" : {
@@ -2895,7 +3454,9 @@
         }
       }
     },
+    "不要最后一条" : {},
     "不解锁任何功能，给不给用起来都一样。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2905,6 +3466,7 @@
         }
       }
     },
+    "两人对谈" : {},
     "两份都留" : {
       "localizations" : {
         "en" : {
@@ -2976,6 +3538,7 @@
       }
     },
     "中间呼出菜单；左右跟着方向对调" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2995,6 +3558,7 @@
         }
       }
     },
+    "主持人的声音" : {},
     "主题色" : {
       "localizations" : {
         "en" : {
@@ -3052,6 +3616,7 @@
       }
     },
     "书伴 · %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3062,6 +3627,7 @@
       }
     },
     "书伴 ⌘K" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3101,7 +3667,19 @@
         }
       }
     },
+    "书伴用" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Companion uses"
+          }
+        }
+      }
+    },
     "书伴用哪个" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3131,7 +3709,29 @@
         }
       }
     },
+    "书伴还没接上：在设置 · AI 服务里接一个" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Companion isn't connected yet. Connect a service in Settings · AI Services."
+          }
+        }
+      }
+    },
+    "书伴还没接上：在设置 · 书伴里添加一个服务商" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Companion isn't connected yet: add a provider in Settings · Companion"
+          }
+        }
+      }
+    },
     "书伴还没接上：在设置 · 书伴里选一个" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3162,11 +3762,22 @@
       }
     },
     "书伴默认用这台 Mac 自带的，不花钱，不联网也能用。想换更强的，就填你自己的 Key，费用直接走你的账号，语阅不经手。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "By default the companion uses what this Mac has built in: free, and it works offline. For a stronger one, add your own key; costs go straight to your account, and Yuyue never handles them."
+          }
+        }
+      }
+    },
+    "书伴默认用这台 Mac 自带的，不花钱，不联网也能用。想换更强的，就添加一个服务商，填你自己的 Key，费用直接走你的账号，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Companion uses this Mac's own model by default: free, and it works offline. For a stronger one, add a provider with your own key; charges go straight to your account, and Yuyue never handles them."
           }
         }
       }
@@ -3351,6 +3962,16 @@
         }
       }
     },
+    "书架上有《%@》电子书" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The e-book “%@” is in your library"
+          }
+        }
+      }
+    },
     "书架上有同一本《%@》" : {
       "localizations" : {
         "en" : {
@@ -3391,6 +4012,8 @@
         }
       }
     },
+    "书架是空的，把 EPUB、PDF、MOBI、TXT 拖进窗口就能开始读" : {},
+    "书架是空的。点右上角的加号，导入 EPUB、PDF、MOBI、TXT" : {},
     "书架里已经有这本了，没有再导入一份" : {
       "localizations" : {
         "en" : {
@@ -3407,6 +4030,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Book Info"
+          }
+        }
+      }
+    },
+    "书的多少" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Number of Books"
           }
         }
       }
@@ -3457,6 +4090,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nothing in books or notes. Press ⌘↩ to ask the companion"
+          }
+        }
+      }
+    },
+    "书里没写章节，往后翻就行" : {},
+    "书里的原文没有“%@”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No book text contains “%@”"
           }
         }
       }
@@ -3541,6 +4185,17 @@
         }
       }
     },
+    "亚麻" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linen"
+          }
+        }
+      }
+    },
+    "什么时候、多长" : {},
     "今天" : {
       "localizations" : {
         "en" : {
@@ -3591,6 +4246,17 @@
         }
       }
     },
+    "今天收到 %lld 篇新的，都讲：" : {},
+    "今天收到 %lld 篇新的。挑了这 %lld 篇，按这个顺序讲：" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "今天收到 %1$lld 篇新的。挑了这 %2$lld 篇，按这个顺序讲："
+          }
+        }
+      }
+    },
     "今天的 %lld 条看完了" : {
       "localizations" : {
         "en" : {
@@ -3611,6 +4277,7 @@
         }
       }
     },
+    "今天还没写。要现在写一集吗？" : {},
     "今年" : {
       "localizations" : {
         "en" : {
@@ -3631,6 +4298,7 @@
         }
       }
     },
+    "从“%@”开始" : {},
     "从书架上选一本" : {
       "localizations" : {
         "en" : {
@@ -3662,6 +4330,7 @@
       }
     },
     "从右往左" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3692,6 +4361,7 @@
       }
     },
     "从左往右" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3761,6 +4431,7 @@
         }
       }
     },
+    "他是什么样的人" : {},
     "令牌" : {
       "localizations" : {
         "en" : {
@@ -3797,6 +4468,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pair books with this name the same way from now on"
+          }
+        }
+      }
+    },
+    "任何 OpenAI 兼容接口" : {},
+    "任何 OpenAI 兼容接口，比如公司里部署的模型" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Any OpenAI-compatible API, such as a model your company runs"
           }
         }
       }
@@ -3851,22 +4534,13 @@
         }
       }
     },
+    "你定从哪些网站、博客取新内容，书伴里选的模型来写稿，两位主持人念给你听。都在这台 Mac 上做，不发布出去。" : {},
     "你是一个简短的助手。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "You are a brief assistant."
-          }
-        }
-      }
-    },
-    "你确认过的原样" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The original you confirmed"
           }
         }
       }
@@ -3911,6 +4585,7 @@
         }
       }
     },
+    "信息源里没有新内容" : {},
     "修改" : {
       "localizations" : {
         "en" : {
@@ -3931,6 +4606,16 @@
         }
       }
     },
+    "倍速" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed"
+          }
+        }
+      }
+    },
     "倍速按实际时间算：1.5× 听 1 小时，记 1 小时。" : {
       "localizations" : {
         "en" : {
@@ -3942,6 +4627,7 @@
       }
     },
     "倒序" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3951,6 +4637,8 @@
         }
       }
     },
+    "做产品的，好奇心重，爱打比方" : {},
+    "停下" : {},
     "停下了 · " : {
       "localizations" : {
         "en" : {
@@ -4031,6 +4719,28 @@
         }
       }
     },
+    "像素白" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Like Plain"
+          }
+        }
+      }
+    },
+    "像纸本" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Like Paper"
+          }
+        }
+      }
+    },
     "像翻开一本书，左右两页" : {
       "localizations" : {
         "en" : {
@@ -4051,6 +4761,7 @@
         }
       }
     },
+    "先停一停" : {},
     "先听对好的 %lld 章" : {
       "localizations" : {
         "en" : {
@@ -4121,6 +4832,16 @@
         }
       }
     },
+    "全书还剩 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ left in book"
+          }
+        }
+      }
+    },
     "全屏只留下字；指针移到最底下，胶囊就出来" : {
       "localizations" : {
         "en" : {
@@ -4162,6 +4883,7 @@
       }
     },
     "全部 %@ 章" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4172,6 +4894,16 @@
       }
     },
     "全部 %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All %lld"
+          }
+        }
+      }
+    },
+    "全部 %lld 本" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4223,12 +4955,32 @@
         }
       }
     },
+    "全部合集" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Collections"
+          }
+        }
+      }
+    },
     "全部笔记" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "All Notes"
+          }
+        }
+      }
+    },
+    "全部纸张" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All papers"
           }
         }
       }
@@ -4389,12 +5141,32 @@
         }
       }
     },
+    "关闭定时" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off timer"
+          }
+        }
+      }
+    },
     "其他" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Other"
+          }
+        }
+      }
+    },
+    "其余 %lld 本" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld more"
           }
         }
       }
@@ -4449,6 +5221,17 @@
         }
       }
     },
+    "最新" : {},
+    "最近用过" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently Used"
+          }
+        }
+      }
+    },
     "最近记的在上面" : {
       "localizations" : {
         "en" : {
@@ -4469,6 +5252,7 @@
         }
       }
     },
+    "写了二十年代码，说话慢，讲清楚来龙去脉" : {},
     "写好要查找的字，这里马上显示改前改后" : {
       "localizations" : {
         "en" : {
@@ -4499,6 +5283,8 @@
         }
       }
     },
+    "写稿用 %@" : {},
+    "写稿用的模型" : {},
     "几位作者用顿号隔开" : {
       "localizations" : {
         "en" : {
@@ -4599,6 +5385,7 @@
         }
       }
     },
+    "划" : {},
     "划%@" : {
       "localizations" : {
         "en" : {
@@ -4669,6 +5456,16 @@
         }
       }
     },
+    "划线和想法里没有“%@”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No highlights or thoughts contain “%@”"
+          }
+        }
+      }
+    },
     "划线样式" : {
       "localizations" : {
         "en" : {
@@ -4680,6 +5477,7 @@
       }
     },
     "列表" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4809,6 +5607,8 @@
         }
       }
     },
+    "删除这一集" : {},
+    "删除这档节目" : {},
     "别的章都在 %@字上下，多半是这里有一章的标题写法不一样，没认出来。" : {
       "localizations" : {
         "en" : {
@@ -4845,12 +5645,33 @@
         }
       }
     },
+    "刷新模型" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh Models"
+          }
+        }
+      }
+    },
     "前情提要" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Previously"
+          }
+        }
+      }
+    },
+    "前进 30 秒" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forward 30 seconds"
           }
         }
       }
@@ -4975,6 +5796,7 @@
         }
       }
     },
+    "单人播报" : {},
     "单句循环" : {
       "localizations" : {
         "en" : {
@@ -5016,6 +5838,7 @@
       }
     },
     "单页 · 双页 · 条漫" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5031,6 +5854,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Storage"
+          }
+        }
+      }
+    },
+    "即将推出" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coming soon"
           }
         }
       }
@@ -5065,6 +5899,16 @@
         }
       }
     },
+    "原样" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As Is"
+          }
+        }
+      }
+    },
     "去广告、改读音" : {
       "localizations" : {
         "en" : {
@@ -5075,6 +5919,7 @@
         }
       }
     },
+    "去掉" : {},
     "去看看" : {
       "localizations" : {
         "en" : {
@@ -5091,6 +5936,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Go to chapter %lld"
+          }
+        }
+      }
+    },
+    "去设置" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Settings"
           }
         }
       }
@@ -5185,6 +6040,8 @@
         }
       }
     },
+    "发布更新" : {},
+    "发送" : {},
     "发邮件给开发者" : {
       "localizations" : {
         "en" : {
@@ -5205,12 +6062,23 @@
         }
       }
     },
+    "取不到 %@ 的内容" : {},
     "取消" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "取消固定" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unpin"
           }
         }
       }
@@ -5386,6 +6254,7 @@
       }
     },
     "只滑动" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5456,6 +6325,7 @@
       }
     },
     "可以接 Ollama 和自己部署的模型" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5525,6 +6395,17 @@
         }
       }
     },
+    "右边五格是“多讲一点还是少讲一点”。还可以写一句给编辑：" : {},
+    "右键一张自己调的纸：调整颜色、重命名、复制、删除。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Right-click one of your papers to adjust, rename, duplicate or delete it."
+          }
+        }
+      }
+    },
     "合上盖子照样会停" : {
       "localizations" : {
         "en" : {
@@ -5555,12 +6436,32 @@
         }
       }
     },
+    "合成" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make"
+          }
+        }
+      }
+    },
     "合成一本听读书：听到哪句，书页上就走到哪句，点一句就从那句听。全部在你的设备上做，不上传。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Make a read-along book: the page follows each sentence you hear, and tapping a sentence plays from there. It's all done on your device, nothing uploaded."
+          }
+        }
+      }
+    },
+    "合成以后听到哪句，书页就走到哪句" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Then the page follows the sentence you’re hearing"
           }
         }
       }
@@ -5675,6 +6576,16 @@
         }
       }
     },
+    "名字" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
     "名称" : {
       "localizations" : {
         "en" : {
@@ -5685,7 +6596,28 @@
         }
       }
     },
+    "后退 15 秒" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back 15 seconds"
+          }
+        }
+      }
+    },
+    "后退 15 秒 / 前进 30 秒" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back 15 s / forward 30 s"
+          }
+        }
+      }
+    },
     "后面 %lld 页" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "variations" : {
@@ -5837,12 +6769,43 @@
         }
       }
     },
+    "听什么" : {},
     "听到哪句，书页上就走到哪句。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The page follows each sentence you hear."
+          }
+        }
+      }
+    },
+    "听到想记住的地方，点书签按钮记一下。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap the bookmark button to mark a place you want to remember."
+          }
+        }
+      }
+    },
+    "听完" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listened"
+          }
+        }
+      }
+    },
+    "听完了" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finished"
           }
         }
       }
@@ -5857,6 +6820,7 @@
         }
       }
     },
+    "听这两句" : {},
     "周" : {
       "localizations" : {
         "en" : {
@@ -5867,6 +6831,7 @@
         }
       }
     },
+    "和书伴用同一个：设置 › 书伴" : {},
     "哪些词" : {
       "localizations" : {
         "en" : {
@@ -5937,12 +6902,25 @@
         }
       }
     },
+    "回到播客" : {},
+    "回到正在读的页" : {},
     "回到第 %lld 页" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Back to page %lld"
+          }
+        }
+      }
+    },
+    "回到语阅" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back to Yuyue"
           }
         }
       }
@@ -5967,6 +6945,17 @@
         }
       }
     },
+    "回答关于这本书的问题" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answers questions about the book"
+          }
+        }
+      }
+    },
     "回顾《%@》" : {
       "localizations" : {
         "en" : {
@@ -5987,7 +6976,18 @@
         }
       }
     },
+    "固定到侧栏" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pin to Sidebar"
+          }
+        }
+      }
+    },
     "在 %@ 本书和 %@ 条笔记里搜" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5999,6 +6999,58 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "在 %1$@ 本书和 %2$@ 条笔记里搜"
+          }
+        }
+      }
+    },
+    "在 %lld 本书和 %lld 条笔记里搜" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search %#@b@ and %#@n@"
+          },
+          "substitutions" : {
+            "b" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg book"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg books"
+                    }
+                  }
+                }
+              }
+            },
+            "n" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg note"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg notes"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -6121,6 +7173,7 @@
         }
       }
     },
+    "在书架窗口左边的“播客”里配节目、写新一集" : {},
     "在书架里显示" : {
       "localizations" : {
         "en" : {
@@ -6137,6 +7190,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "On another device"
+          }
+        }
+      }
+    },
+    "在听" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listening"
           }
         }
       }
@@ -6261,6 +7324,28 @@
         }
       }
     },
+    "在运行，%lld 个模型" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running, %lld models"
+          }
+        }
+      }
+    },
+    "在运行，%lld 个模型；背后接着你在 magpie 里配的所有 Key 和订阅" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running, %lld models, backed by every key and plan you set up in magpie"
+          }
+        }
+      }
+    },
     "在这个 PDF 里找" : {
       "localizations" : {
         "en" : {
@@ -6329,6 +7414,17 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "在这里粘贴 Key，自动认出是哪家" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste a key here and Yuyue works out whose it is"
           }
         }
       }
@@ -6545,6 +7641,16 @@
         }
       }
     },
+    "复制一张" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicate"
+          }
+        }
+      }
+    },
     "外文" : {
       "localizations" : {
         "en" : {
@@ -6575,6 +7681,19 @@
         }
       }
     },
+    "多一点少一点" : {},
+    "多讲一点第一条" : {},
+    "多讲开源工具，少讲融资" : {},
+    "夜里" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Night"
+          }
+        }
+      }
+    },
     "夜间" : {
       "localizations" : {
         "en" : {
@@ -6595,6 +7714,7 @@
         }
       }
     },
+    "好。" : {},
     "好了" : {
       "localizations" : {
         "en" : {
@@ -6655,7 +7775,40 @@
         }
       }
     },
+    "字和底色太接近，可能看不清" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text and background are close: may be hard to read"
+          }
+        }
+      }
+    },
+    "字看得清" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Easy to read"
+          }
+        }
+      }
+    },
+    "字色" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text color"
+          }
+        }
+      }
+    },
     "存下的回答" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6685,6 +7838,36 @@
         }
       }
     },
+    "存储空间不够，要约 30 MB" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "needs about 30 MB of free storage"
+          }
+        }
+      }
+    },
+    "存储空间不够：对齐用的模型要约 800 MB 空间才装得下" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not enough space: the alignment model needs about 800 MB to install"
+          }
+        }
+      }
+    },
+    "存储空间不够了，腾出一些地方再试" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not enough storage. Free some space, then try again"
+          }
+        }
+      }
+    },
     "存图" : {
       "localizations" : {
         "en" : {
@@ -6695,12 +7878,54 @@
         }
       }
     },
+    "它列出的模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Models it lists"
+          }
+        }
+      }
+    },
+    "它的 Key 也会从这台设备上删掉。" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Its key is deleted from this device too."
+          }
+        }
+      }
+    },
+    "它的 Key 也会从钥匙串里删掉。正在用它的话，书伴换回设备自带的。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Its key is deleted from the keychain too. If Companion was using it, it goes back to this device's own model."
+          }
+        }
+      }
+    },
     "宋体" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Songti"
+          }
+        }
+      }
+    },
+    "宋体，首行缩进" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serif, first lines indented"
           }
         }
       }
@@ -6725,12 +7950,42 @@
         }
       }
     },
+    "完整释义" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full Entry"
+          }
+        }
+      }
+    },
+    "定时" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleep timer"
+          }
+        }
+      }
+    },
     "定时到了，停在这里" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Timer ended; stopped here"
+          }
+        }
+      }
+    },
+    "宣纸" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rice paper"
           }
         }
       }
@@ -6815,12 +8070,53 @@
         }
       }
     },
+    "对齐用的模型没下载下来，连上网再试一次" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The alignment model didn’t download. Connect to the internet and try again."
+          }
+        }
+      }
+    },
+    "对齐用的模型没下载完整，连上网再试一次" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The alignment model didn’t download completely. Connect to the internet and try again."
+          }
+        }
+      }
+    },
     "导入" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import"
+          }
+        }
+      }
+    },
+    "导入 EPUB、PDF、MOBI、TXT 就能开始读" : {},
+    "导入 MDict 词典" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import MDict Dictionary"
+          }
+        }
+      }
+    },
+    "导入 MDict 词典（.mdx）" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import MDict Dictionary (.mdx)"
           }
         }
       }
@@ -6845,6 +8141,7 @@
         }
       }
     },
+    "导入书（⌘O）：EPUB、PDF、MOBI、AZW3、TXT；也可以直接拖进窗口" : {},
     "导入了 %lld 个文件" : {
       "localizations" : {
         "en" : {
@@ -6877,6 +8174,16 @@
         }
       }
     },
+    "导入后合成听读书：听到哪句，书页就走到哪句" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make a read-along after importing: the page follows the sentence you’re hearing"
+          }
+        }
+      }
+    },
     "导入快照" : {
       "localizations" : {
         "en" : {
@@ -6893,6 +8200,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Snapshot…"
+          }
+        }
+      }
+    },
+    "导入有声书" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Audiobook"
+          }
+        }
+      }
+    },
+    "导入的词典里查不到时用 Mac 自带的。哪几本打开、谁在前面，在“词典”App 的设置里选" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used when the imported dictionaries don't have a word. Choose which are on, and their order, in the Dictionary app's settings."
           }
         }
       }
@@ -7049,6 +8376,8 @@
         }
       }
     },
+    "小林" : {},
+    "少数派" : {},
     "就快好了 · " : {
       "localizations" : {
         "en" : {
@@ -7065,6 +8394,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Size"
+          }
+        }
+      }
+    },
+    "局域网里用才要填网关 Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only needed on the network: a gateway key"
           }
         }
       }
@@ -7089,7 +8428,50 @@
         }
       }
     },
+    "展开" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expand"
+          }
+        }
+      }
+    },
+    "展开书列" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Book List"
+          }
+        }
+      }
+    },
+    "展开书列 ⌘⌥N" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Book List ⌘⌥N"
+          }
+        }
+      }
+    },
+    "展开书列 ⌘⌥S" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Book List ⌘⌥S"
+          }
+        }
+      }
+    },
+    "工作日 %@" : {},
     "左右" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7110,6 +8492,7 @@
       }
     },
     "左右跟着方向对调" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7248,6 +8631,7 @@
       }
     },
     "已填 Key" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7309,6 +8693,37 @@
         }
       }
     },
+    "已展开" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expanded"
+          }
+        }
+      }
+    },
+    "已接上" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connected"
+          }
+        }
+      }
+    },
+    "已收起" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collapsed"
+          }
+        }
+      }
+    },
     "已放进“%@”" : {
       "localizations" : {
         "en" : {
@@ -7355,6 +8770,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "In the library"
+          }
+        }
+      }
+    },
+    "已经登录 OpenRouter，可以回到语阅了。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed in to OpenRouter. You can go back to Yuyue."
           }
         }
       }
@@ -7471,6 +8896,18 @@
         }
       }
     },
+    "底色" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background"
+          }
+        }
+      }
+    },
+    "建好了" : {},
     "建好就把这本书放进去" : {
       "localizations" : {
         "en" : {
@@ -7542,6 +8979,7 @@
       }
     },
     "开始看" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7561,6 +8999,7 @@
         }
       }
     },
+    "开源动态" : {},
     "开源许可" : {
       "localizations" : {
         "en" : {
@@ -7641,12 +9080,32 @@
         }
       }
     },
+    "往前挪" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move Up"
+          }
+        }
+      }
+    },
     "往后" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Later"
+          }
+        }
+      }
+    },
+    "往后挪" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move Down"
           }
         }
       }
@@ -7671,6 +9130,16 @@
         }
       }
     },
+    "微调颜色" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fine-tune color"
+          }
+        }
+      }
+    },
     "微软 Azure" : {
       "localizations" : {
         "en" : {
@@ -7681,6 +9150,7 @@
         }
       }
     },
+    "快好了" : {},
     "快照存在“文件”App 的“语阅”文件夹里。" : {
       "localizations" : {
         "en" : {
@@ -7707,6 +9177,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "How it's counted"
+          }
+        }
+      }
+    },
+    "想听" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Want to Listen"
           }
         }
       }
@@ -7771,12 +9251,44 @@
         }
       }
     },
+    "我在看今天有什么新的，挑好了告诉你。" : {},
     "我的" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Me"
+          }
+        }
+      }
+    },
+    "我的纸" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My paper"
+          }
+        }
+      }
+    },
+    "或者先选是哪家" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or pick the service first"
+          }
+        }
+      }
+    },
+    "或者粘贴一个已有的 Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or paste a key you already have"
           }
         }
       }
@@ -7802,6 +9314,7 @@
       }
     },
     "打不开这个 PDF" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7891,6 +9404,7 @@
         }
       }
     },
+    "打开文稿" : {},
     "打开词典" : {
       "localizations" : {
         "en" : {
@@ -7922,6 +9436,7 @@
       }
     },
     "扫描版四周的白边裁掉，画大一些" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7932,6 +9447,7 @@
       }
     },
     "扫描版的双页图，单页看时拆成两半" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7942,6 +9458,7 @@
       }
     },
     "扫描版的双页图，竖着看时拆成两页" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7972,11 +9489,23 @@
       }
     },
     "找不到这本书的文件" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The book's file can't be found"
+          }
+        }
+      }
+    },
+    "找不到这本书的文件，可能被移走或删掉了。从书架上删掉，再导入一次就好" : {},
+    "找出每集念的是哪一段" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finding what each file reads"
           }
         }
       }
@@ -8151,6 +9680,7 @@
         }
       }
     },
+    "按现在这样，%@ 大概是这样" : {},
     "按钮、开关、进度和选中都用这个颜色" : {
       "localizations" : {
         "en" : {
@@ -8197,6 +9727,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choose a folder you can write to, or give this account write access on the server."
+          }
+        }
+      }
+    },
+    "换一家" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick Another"
           }
         }
       }
@@ -8341,6 +9882,39 @@
         }
       }
     },
+    "接上" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect"
+          }
+        }
+      }
+    },
+    "接上 %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect %@"
+          }
+        }
+      }
+    },
+    "接上一次，书伴就能用。可以接本机的 magpie、Ollama，或者填你自己的 Key；费用直接走你的账号，语阅不经手。" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect once and the Companion can use it: magpie or Ollama on this Mac, or your own key. Any cost goes to your own account; Yuyue never handles it."
+          }
+        }
+      }
+    },
     "接口地址" : {
       "localizations" : {
         "en" : {
@@ -8371,6 +9945,7 @@
         }
       }
     },
+    "接着用" : {},
     "接着读" : {
       "localizations" : {
         "en" : {
@@ -8387,6 +9962,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recommended"
+          }
+        }
+      }
+    },
+    "提问和书里相关的几段原文直接发到这个地址，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questions and the related passages go straight to this address; Yuyue never handles them."
           }
         }
       }
@@ -8431,6 +10016,27 @@
         }
       }
     },
+    "搜索服务商，比如 千问、Kimi" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search providers, e.g. Qwen, Kimi"
+          }
+        }
+      }
+    },
+    "搜索服务商，比如 千问、Kimi、magpie" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search providers, e.g. Qwen, Kimi, magpie"
+          }
+        }
+      }
+    },
     "搜索结果" : {
       "localizations" : {
         "en" : {
@@ -8471,7 +10077,30 @@
         }
       }
     },
+    "播客" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podcasts"
+          }
+        }
+      }
+    },
+    "播放" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play"
+          }
+        }
+      }
+    },
+    "收到 %lld 篇，正在挑" : {},
     "收到了。语阅会一直免费下去。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8501,12 +10130,74 @@
         }
       }
     },
+    "收起书列" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Book List"
+          }
+        }
+      }
+    },
+    "收起书列 ⌘⌥N" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Book List ⌘⌥N"
+          }
+        }
+      }
+    },
+    "收起书列 ⌘⌥S" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Book List ⌘⌥S"
+          }
+        }
+      }
+    },
+    "收起成一个播放键" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fold Down to a Play Button"
+          }
+        }
+      }
+    },
+    "收起释义" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Entry"
+          }
+        }
+      }
+    },
     "改前" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before"
+          }
+        }
+      }
+    },
+    "改名" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename"
           }
         }
       }
@@ -8551,6 +10242,7 @@
         }
       }
     },
+    "改设置…" : {},
     "放回在学，书里重新标出来" : {
       "localizations" : {
         "en" : {
@@ -8577,6 +10269,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Into “%@”. Title, author and cover come from the file; you can change them later"
+          }
+        }
+      }
+    },
+    "放进哪个合集… 打字找" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Put into which collection… type to filter"
           }
         }
       }
@@ -8691,6 +10393,48 @@
         }
       }
     },
+    "文字" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text"
+          }
+        }
+      }
+    },
+    "文字颜色" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text color"
+          }
+        }
+      }
+    },
+    "新合集" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Collection"
+          }
+        }
+      }
+    },
+    "新建" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
+          }
+        }
+      }
+    },
     "新建合集" : {
       "localizations" : {
         "en" : {
@@ -8722,6 +10466,7 @@
       }
     },
     "方向" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8761,6 +10506,16 @@
         }
       }
     },
+    "无纹理" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No texture"
+          }
+        }
+      }
+    },
     "日" : {
       "localizations" : {
         "en" : {
@@ -8771,6 +10526,10 @@
         }
       }
     },
+    "早上好，今天讲几件事。" : {},
+    "早上好。先从一个有点反常识的事说起。" : {},
+    "时间" : {},
+    "明早 %@" : {},
     "昨天" : {
       "localizations" : {
         "en" : {
@@ -8821,12 +10580,64 @@
         }
       }
     },
+    "是 %@ 的 Key，但核对没通过：%@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This looks like a %1$@ key, but it didn't check out: %2$@"
+          }
+        }
+      }
+    },
     "显示" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Display"
+          }
+        }
+      }
+    },
+    "显示 Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Key"
+          }
+        }
+      }
+    },
+    "显示侧栏" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Sidebar"
+          }
+        }
+      }
+    },
+    "显示侧栏 ⌘⌥N" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Sidebar ⌘⌥N"
+          }
+        }
+      }
+    },
+    "显示侧栏 ⌘⌥S" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Sidebar ⌘⌥S"
           }
         }
       }
@@ -8861,7 +10672,18 @@
         }
       }
     },
+    "显示或收起侧栏" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show or Hide Sidebar"
+          }
+        }
+      }
+    },
     "显示或收起笔记栏" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8877,6 +10699,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "View"
+          }
+        }
+      }
+    },
+    "智谱" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zhipu"
+          }
+        }
+      }
+    },
+    "智谱 GLM" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zhipu GLM"
           }
         }
       }
@@ -8921,6 +10763,17 @@
         }
       }
     },
+    "暖白" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warm white"
+          }
+        }
+      }
+    },
     "暗黑" : {
       "localizations" : {
         "en" : {
@@ -8951,6 +10804,17 @@
         }
       }
     },
+    "更多颜色" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More colors"
+          }
+        }
+      }
+    },
     "更好的声音：设置 › 辅助功能 › 朗读内容 › 声音" : {
       "localizations" : {
         "en" : {
@@ -8961,6 +10825,17 @@
         }
       }
     },
+    "更换" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change"
+          }
+        }
+      }
+    },
+    "更改" : {},
     "替换为" : {
       "localizations" : {
         "en" : {
@@ -9001,6 +10876,17 @@
         }
       }
     },
+    "月之暗面" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moonshot AI"
+          }
+        }
+      }
+    },
+    "有 %lld 本书的文件没下载下来，下次同步再试" : {},
     "有 %u 处字认不出来，换一种编码试试" : {
       "localizations" : {
         "en" : {
@@ -9033,6 +10919,7 @@
         }
       }
     },
+    "有个小团队，把 SQLite 当消息队列用了三年……" : {},
     "有声" : {
       "localizations" : {
         "en" : {
@@ -9289,12 +11176,79 @@
         }
       }
     },
+    "本机和局域网" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On this computer or network"
+          }
+        }
+      }
+    },
     "本机或云盘里的" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "On this device or in cloud storage"
+          }
+        }
+      }
+    },
+    "本机或局域网里跑的，提问和书里相关的几段原文只发到这个地址。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It runs on this computer or your network; questions and the related passages go only to this address."
+          }
+        }
+      }
+    },
+    "本机或局域网里跑的模型不用 Key，填上地址和模型名就行。提问和书里相关的几段原文只发到这个地址。" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Models running on this computer or your network don't need a key; just fill in the address and model name. Questions and the related passages from the book go only to this address."
+          }
+        }
+      }
+    },
+    "本集完" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End of episode"
+          }
+        }
+      }
+    },
+    "本集还剩 %@ · 全书还剩 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ left in episode · %@ left in book"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "本集还剩 %1$@ · 全书还剩 %2$@"
+          }
+        }
+      }
+    },
+    "本集进度" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Episode progress"
           }
         }
       }
@@ -9320,6 +11274,7 @@
       }
     },
     "条漫" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9330,6 +11285,7 @@
       }
     },
     "条漫 · %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9480,11 +11436,33 @@
       }
     },
     "查词用系统自带的词典：设置 › 通用 › 词典 里可以加别的。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Look-up uses the system dictionaries. Add others in Settings › General › Dictionary."
+          }
+        }
+      }
+    },
+    "标为听完" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark as finished"
+          }
+        }
+      }
+    },
+    "标为没听" : {},
+    "标为没听完" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark as unfinished"
           }
         }
       }
@@ -9530,6 +11508,7 @@
       }
     },
     "格子" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9569,6 +11548,7 @@
         }
       }
     },
+    "模型交回的稿子格式不对，再试一次" : {},
     "横图" : {
       "localizations" : {
         "en" : {
@@ -9629,6 +11609,19 @@
         }
       }
     },
+    "正在写" : {},
+    "正在写 %lld / %lld" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "正在写 %1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "正在写稿" : {},
+    "正在准备" : {},
     "正在准备…" : {
       "localizations" : {
         "en" : {
@@ -9639,12 +11632,32 @@
         }
       }
     },
+    "正在取新内容 %lld / %lld" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "正在取新内容 %1$lld / %2$lld"
+          }
+        }
+      }
+    },
     "正在同步…" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Syncing…"
+          }
+        }
+      }
+    },
+    "正在听" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listening"
           }
         }
       }
@@ -9679,6 +11692,16 @@
         }
       }
     },
+    "正在导入 %@…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing %@…"
+          }
+        }
+      }
+    },
     "正在导入 %lld 个文件" : {
       "localizations" : {
         "en" : {
@@ -9697,6 +11720,17 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "正在找本机的 magpie、Ollama、LM Studio…" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looking for magpie, Ollama and LM Studio on this Mac…"
           }
         }
       }
@@ -9727,6 +11761,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Adding to library…"
+          }
+        }
+      }
+    },
+    "正在核对…" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checking…"
           }
         }
       }
@@ -9771,6 +11816,17 @@
         }
       }
     },
+    "正在认是哪家、核对 Key…" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Working out whose key it is…"
+          }
+        }
+      }
+    },
     "正在读…" : {
       "localizations" : {
         "en" : {
@@ -9791,7 +11847,28 @@
         }
       }
     },
+    "正在读第 %lld / %lld 篇" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "正在读第 %1$lld / %2$lld 篇"
+          }
+        }
+      }
+    },
+    "正在问它有哪些模型…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asking for its models…"
+          }
+        }
+      }
+    },
     "正序" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9831,6 +11908,18 @@
         }
       }
     },
+    "每台设备自己选，在配节目的“谁来讲”里试听" : {},
+    "每周%@ %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "每周%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "每天 %@" : {},
     "每本书" : {
       "localizations" : {
         "en" : {
@@ -9891,6 +11980,16 @@
         }
       }
     },
+    "比如 http://192.168.1.5:3425/v1" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. http://192.168.1.5:3425/v1"
+          }
+        }
+      }
+    },
     "比如 http://192.168.1.5:11434/v1" : {
       "localizations" : {
         "en" : {
@@ -9902,6 +12001,7 @@
       }
     },
     "比如 http://localhost:11434/v1" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9921,6 +12021,16 @@
         }
       }
     },
+    "比如 公司的模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. Work model"
+          }
+        }
+      }
+    },
     "沉浸阅读" : {
       "localizations" : {
         "en" : {
@@ -9931,6 +12041,17 @@
         }
       }
     },
+    "没下载下来" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "didn't download"
+          }
+        }
+      }
+    },
+    "没写成" : {},
     "没发出去" : {
       "localizations" : {
         "en" : {
@@ -9971,6 +12092,7 @@
         }
       }
     },
+    "没导出来，再试一次" : {},
     "没开" : {
       "localizations" : {
         "en" : {
@@ -9987,6 +12109,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not found"
+          }
+        }
+      }
+    },
+    "没找到。在下面自己添加，填上接口地址就行" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not found. Add your own below with its API address."
           }
         }
       }
@@ -10033,6 +12165,16 @@
         }
       }
     },
+    "没有书名里带“%@”的书" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No book titles contain “%@”"
+          }
+        }
+      }
+    },
     "没有加密" : {
       "localizations" : {
         "en" : {
@@ -10063,6 +12205,7 @@
         }
       }
     },
+    "没有声音" : {},
     "没有就空着" : {
       "localizations" : {
         "en" : {
@@ -10123,12 +12266,32 @@
         }
       }
     },
+    "没有登录成功，回到语阅再试一次。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign-in didn't work. Go back to Yuyue and try again."
+          }
+        }
+      }
+    },
     "没有联网" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "You're offline"
+          }
+        }
+      }
+    },
+    "没有联网，连上网再试" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You're offline. Connect, then try again"
           }
         }
       }
@@ -10143,22 +12306,22 @@
         }
       }
     },
-    "没有能读这种语言的声音（%@）" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No voice for this language (%@)"
-          }
-        }
-      }
-    },
     "没有要看的地方" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nothing needs a look"
+          }
+        }
+      }
+    },
+    "没查到。可以在 我的 › 外文阅读 里导入 MDict 词典。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not found. You can import an MDict dictionary in Me › Languages."
           }
         }
       }
@@ -10219,6 +12382,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not checked; connect first"
+          }
+        }
+      }
+    },
+    "没用过" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Never Used"
           }
         }
       }
@@ -10299,12 +12472,33 @@
         }
       }
     },
+    "浅灰" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Light gray"
+          }
+        }
+      }
+    },
     "浅色" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Light"
+          }
+        }
+      }
+    },
+    "测试" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test"
           }
         }
       }
@@ -10319,6 +12513,16 @@
         }
       }
     },
+    "浓淡" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strength"
+          }
+        }
+      }
+    },
     "液态玻璃效果" : {
       "localizations" : {
         "en" : {
@@ -10329,12 +12533,44 @@
         }
       }
     },
+    "淡蓝" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pale blue"
+          }
+        }
+      }
+    },
+    "深浅" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shade"
+          }
+        }
+      }
+    },
     "深色" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dark"
+          }
+        }
+      }
+    },
+    "深蓝夜" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navy night"
           }
         }
       }
@@ -10365,6 +12601,37 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Library"
+          }
+        }
+      }
+    },
+    "添加服务" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Service"
+          }
+        }
+      }
+    },
+    "添加服务商" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Provider"
+          }
+        }
+      }
+    },
+    "添加服务商…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Provider…"
           }
         }
       }
@@ -10409,6 +12676,16 @@
         }
       }
     },
+    "火山引擎" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volcengine"
+          }
+        }
+      }
+    },
     "点「编辑」后按住右边的把手拖动排序。一本书可以同时放进几个合集。" : {
       "localizations" : {
         "en" : {
@@ -10449,7 +12726,9 @@
         }
       }
     },
+    "点了才写" : {},
     "点哪里翻页" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -10480,6 +12759,7 @@
       }
     },
     "点窗口左右两边，或按 ← →、空格；点中间呼出菜单" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -10515,6 +12795,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tap a word"
+          }
+        }
+      }
+    },
+    "点词先查这里导入的词典，查不到再用系统翻译。左滑一本可以移除。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapped words are looked up in these dictionaries first, then translated by the system. Swipe left on one to remove it."
           }
         }
       }
@@ -10569,6 +12859,18 @@
         }
       }
     },
+    "版式" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Layout"
+          }
+        }
+      }
+    },
+    "版式和夜间" : {},
     "版本 %@" : {
       "localizations" : {
         "en" : {
@@ -10590,6 +12892,7 @@
       }
     },
     "现在从右往左翻，点一下改成从左往右" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -10600,6 +12903,7 @@
       }
     },
     "现在从左往右翻，点一下改成从右往左" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -10609,6 +12913,7 @@
         }
       }
     },
+    "现在写一集" : {},
     "现在清掉" : {
       "localizations" : {
         "en" : {
@@ -10695,7 +13000,39 @@
         }
       }
     },
+    "生词本里没有“%@”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” isn't in your word list"
+          }
+        }
+      }
+    },
+    "用 %@ 登录" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign In with %@"
+          }
+        }
+      }
+    },
+    "用 Key 接" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect with a Key"
+          }
+        }
+      }
+    },
     "用 Mac 自带的词典。哪几本打开、谁在前面，在“词典”App 的设置里选" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -10775,6 +13112,17 @@
         }
       }
     },
+    "用哪个" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which One"
+          }
+        }
+      }
+    },
     "用回自动识别" : {
       "localizations" : {
         "en" : {
@@ -10785,6 +13133,7 @@
         }
       }
     },
+    "用底下的滑杆翻到想看的页" : {},
     "用户名" : {
       "localizations" : {
         "en" : {
@@ -10895,6 +13244,16 @@
         }
       }
     },
+    "电脑打不开这个地址？" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Computer can't open the address?"
+          }
+        }
+      }
+    },
     "界面" : {
       "localizations" : {
         "en" : {
@@ -10935,6 +13294,16 @@
         }
       }
     },
+    "留下 %lld 条" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kept %lld"
+          }
+        }
+      }
+    },
     "留下的以后还会再出现。不要了的只是不再回顾，笔记还在；点一条可以改主意。" : {
       "localizations" : {
         "en" : {
@@ -10951,6 +13320,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stay Here"
+          }
+        }
+      }
+    },
+    "留空就叫“第几集”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave empty to number it"
           }
         }
       }
@@ -10985,12 +13364,42 @@
         }
       }
     },
+    "登录就能用，几百个模型一个账号" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Just sign in: hundreds of models, one account"
+          }
+        }
+      }
+    },
     "登录时断了" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Disconnected while signing in"
+          }
+        }
+      }
+    },
+    "登录账号" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign In"
+          }
+        }
+      }
+    },
+    "白天" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day"
           }
         }
       }
@@ -11026,6 +13435,7 @@
       }
     },
     "目录 · 共 %lld 页" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "variations" : {
@@ -11107,6 +13517,8 @@
         }
       }
     },
+    "看它怎么挑的 ›" : {},
+    "看完了" : {},
     "看看" : {
       "localizations" : {
         "en" : {
@@ -11137,6 +13549,16 @@
         }
       }
     },
+    "看看电脑和 iPhone 是不是连的同一个 Wi‑Fi。都对的话，多半是没让语阅用“本地网络”：在设置 › 语阅 里把它打开，再回来。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check that the computer and iPhone are on the same Wi‑Fi. If they are, Yuyue probably isn't allowed Local Network access: turn it on in Settings › Yuyue, then come back."
+          }
+        }
+      }
+    },
     "睡前自动停止" : {
       "localizations" : {
         "en" : {
@@ -11163,6 +13585,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sleep timer stopped"
+          }
+        }
+      }
+    },
+    "短一点" : {},
+    "硅基流动" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SiliconFlow"
           }
         }
       }
@@ -11207,6 +13640,27 @@
         }
       }
     },
+    "科技早报" : {},
+    "移除" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        }
+      }
+    },
+    "移除 %@？" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove %@?"
+          }
+        }
+      }
+    },
     "空格" : {
       "localizations" : {
         "en" : {
@@ -11218,6 +13672,7 @@
       }
     },
     "空着就用官方的" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -11238,6 +13693,7 @@
       }
     },
     "窗口竖着时拆开跨页" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -11278,6 +13734,7 @@
       }
     },
     "竖屏时拆开跨页" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -11512,6 +13969,7 @@
       }
     },
     "第 %lld / %lld 张" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -11591,6 +14049,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Section %lld"
+          }
+        }
+      }
+    },
+    "第 %lld 集" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Episode %lld"
           }
         }
       }
@@ -11842,11 +14310,42 @@
       }
     },
     "等确认后就完成了" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "It completes once confirmed"
+          }
+        }
+      }
+    },
+    "简体" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simplified"
+          }
+        }
+      }
+    },
+    "简繁" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chinese Script"
+          }
+        }
+      }
+    },
+    "管理服务商" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Providers"
           }
         }
       }
@@ -11871,6 +14370,29 @@
         }
       }
     },
+    "粘贴 %@ 的 Key" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste your %@ key"
+          }
+        }
+      }
+    },
+    "粘贴 Key，自动认出是哪家" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste a key to detect the service"
+          }
+        }
+      }
+    },
+    "粘贴网址：博客、新闻站、RSS" : {},
     "系统" : {
       "localizations" : {
         "en" : {
@@ -11991,6 +14513,7 @@
         }
       }
     },
+    "约 %u 分钟" : {},
     "级别" : {
       "localizations" : {
         "en" : {
@@ -12052,11 +14575,23 @@
       }
     },
     "纸本 · 夜" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paper · Night"
+          }
+        }
+      }
+    },
+    "纸纹" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paper grain"
           }
         }
       }
@@ -12077,6 +14612,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The paper turns a grainy e-ink grey and text pure black; highlights become black solid or wavy lines; covers and pictures turn greyscale; there are no animations, pages switch at once, and the interface drops shadows and blur. Turn it off to get your paper color back."
+          }
+        }
+      }
+    },
+    "纹理" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texture"
+          }
+        }
+      }
+    },
+    "细颗粒" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fine grain"
           }
         }
       }
@@ -12111,6 +14666,16 @@
         }
       }
     },
+    "给这一集起个名字" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name this episode"
+          }
+        }
+      }
+    },
     "继续问…" : {
       "localizations" : {
         "en" : {
@@ -12121,6 +14686,7 @@
         }
       }
     },
+    "编" : {},
     "编码" : {
       "localizations" : {
         "en" : {
@@ -12191,12 +14757,23 @@
         }
       }
     },
+    "编辑部" : {},
     "繁体中文" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Traditional Chinese"
+          }
+        }
+      }
+    },
+    "繁體" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traditional"
           }
         }
       }
@@ -12217,6 +14794,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Web addresses, extra blank lines…"
+          }
+        }
+      }
+    },
+    "网断了，下载停在半路。连好网再点一次，会重新下" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The connection dropped partway. Reconnect and tap again to download it afresh"
+          }
+        }
+      }
+    },
+    "网断了，没下完" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the connection dropped before it finished"
           }
         }
       }
@@ -12251,6 +14848,18 @@
         }
       }
     },
+    "网页" : {},
+    "羊皮纸" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parchment"
+          }
+        }
+      }
+    },
     "美音" : {
       "localizations" : {
         "en" : {
@@ -12272,6 +14881,7 @@
       }
     },
     "翻到之前先备好，翻页不等" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -12332,6 +14942,7 @@
       }
     },
     "翻页" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -12351,6 +14962,7 @@
         }
       }
     },
+    "老周" : {},
     "考研" : {
       "localizations" : {
         "en" : {
@@ -12401,6 +15013,17 @@
         }
       }
     },
+    "能用，找到 %lld 个模型" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Works, %lld models found"
+          }
+        }
+      }
+    },
     "能连上服务器" : {
       "localizations" : {
         "en" : {
@@ -12432,6 +15055,7 @@
       }
     },
     "自动裁白边" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -12451,6 +15075,89 @@
         }
       }
     },
+    "自动配" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic"
+          }
+        }
+      }
+    },
+    "自定义" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        }
+      }
+    },
+    "自己排的" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Order"
+          }
+        }
+      }
+    },
+    "自己添加" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Your Own"
+          }
+        }
+      }
+    },
+    "自己调一张" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make one"
+          }
+        }
+      }
+    },
+    "自己调一张纸" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make your own paper"
+          }
+        }
+      }
+    },
+    "自己选" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose"
+          }
+        }
+      }
+    },
+    "自带" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Built in"
+          }
+        }
+      }
+    },
     "自签名或来路不明" : {
       "localizations" : {
         "en" : {
@@ -12461,6 +15168,28 @@
         }
       }
     },
+    "色调" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hue"
+          }
+        }
+      }
+    },
+    "色调、浓淡、深浅" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hue, strength, shade"
+          }
+        }
+      }
+    },
+    "节目" : {},
+    "节目名" : {},
     "英文" : {
       "localizations" : {
         "en" : {
@@ -12541,12 +15270,33 @@
         }
       }
     },
+    "藏起 Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Key"
+          }
+        }
+      }
+    },
     "藏起密码" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hide password"
+          }
+        }
+      }
+    },
+    "藕粉" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blush"
           }
         }
       }
@@ -12592,6 +15342,7 @@
       }
     },
     "裁白边" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -12691,6 +15442,28 @@
         }
       }
     },
+    "认不出是哪家的 Key：在下面选是哪家，再粘贴一次" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't tell whose key this is. Pick the service below and paste it again."
+          }
+        }
+      }
+    },
+    "认出是 %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looks like %@"
+          }
+        }
+      }
+    },
     "设备" : {
       "localizations" : {
         "en" : {
@@ -12711,6 +15484,17 @@
         }
       }
     },
+    "设置 %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings for %@"
+          }
+        }
+      }
+    },
     "设置和替换规则" : {
       "localizations" : {
         "en" : {
@@ -12722,6 +15506,7 @@
       }
     },
     "设置顶上的分页、读书窗口的工具胶囊和阅读胶囊、提示条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃，选中的垫一层浅色" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -12752,6 +15537,7 @@
       }
     },
     "识别出 %@ 章" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -12761,6 +15547,29 @@
         }
       }
     },
+    "识别出 %lld 章" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Found %lld chapter"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Found %lld chapters"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "词" : {},
     "词典" : {
       "localizations" : {
         "en" : {
@@ -12777,6 +15586,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Translate"
+          }
+        }
+      }
+    },
+    "试一下" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try It"
           }
         }
       }
@@ -12837,6 +15657,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yuyue · Wi‑Fi Transfer"
+          }
+        }
+      }
+    },
+    "语阅 · 书伴" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yuyue · Companion"
           }
         }
       }
@@ -12978,6 +15808,7 @@
       }
     },
     "请开发者喝咖啡" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -13103,6 +15934,16 @@
         }
       }
     },
+    "读书窗口的工具胶囊和阅读胶囊、提示条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃，选中的垫一层浅色" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Floating things like the reading window's tool and reading capsules, and banners use the system's Liquid Glass; when off, they use frosted blur with a light fill for the selection"
+          }
+        }
+      }
+    },
     "读书窗口里调的也是这一个" : {
       "localizations" : {
         "en" : {
@@ -13170,6 +16011,7 @@
       }
     },
     "读到%@ · %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -13212,6 +16054,7 @@
       }
     },
     "读到这里" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -13281,6 +16124,48 @@
         }
       }
     },
+    "谁来讲" : {},
+    "谁用哪个" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who Uses What"
+          }
+        }
+      }
+    },
+    "调整“%@”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjust “%@”"
+          }
+        }
+      }
+    },
+    "调整颜色" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjust Colors"
+          }
+        }
+      }
+    },
+    "调纸" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paper"
+          }
+        }
+      }
+    },
     "调过了" : {
       "localizations" : {
         "en" : {
@@ -13291,12 +16176,45 @@
         }
       }
     },
+    "调颜色…" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjust Colors…"
+          }
+        }
+      }
+    },
     "谢谢你的咖啡" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Thanks for the coffee"
+          }
+        }
+      }
+    },
+    "豆包" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doubao"
+          }
+        }
+      }
+    },
+    "豆沙绿" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sage"
           }
         }
       }
@@ -13392,6 +16310,7 @@
       }
     },
     "跟着转写一章一章来" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -13401,6 +16320,7 @@
         }
       }
     },
+    "跟编辑说…" : {},
     "跟随系统" : {
       "localizations" : {
         "en" : {
@@ -13432,6 +16352,7 @@
       }
     },
     "转写" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -13442,6 +16363,7 @@
       }
     },
     "转写录音要 iOS 26 或 macOS 26 以上的系统" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -13452,11 +16374,22 @@
       }
     },
     "转写用的语音模型没下载下来，连上网再试一次" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The speech model for transcription didn't download. Connect to the internet and try again"
+          }
+        }
+      }
+    },
+    "转接你在 magpie 里登录的 Claude、ChatGPT 账号" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses the Claude or ChatGPT accounts you signed in to in magpie"
           }
         }
       }
@@ -13501,6 +16434,16 @@
         }
       }
     },
+    "返回" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back"
+          }
+        }
+      }
+    },
     "返回书架" : {
       "localizations" : {
         "en" : {
@@ -13517,6 +16460,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "left"
+          }
+        }
+      }
+    },
+    "还剩 %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ left"
           }
         }
       }
@@ -13587,12 +16540,33 @@
         }
       }
     },
+    "还没听" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not started"
+          }
+        }
+      }
+    },
     "还没填 %@ 的 Key" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No %@ key yet"
+          }
+        }
+      }
+    },
+    "还没填好" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not finished"
           }
         }
       }
@@ -13607,6 +16581,17 @@
         }
       }
     },
+    "还没填好，点设置补上" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not finished — click Settings to complete it"
+          }
+        }
+      }
+    },
     "还没开同步" : {
       "localizations" : {
         "en" : {
@@ -13617,6 +16602,8 @@
         }
       }
     },
+    "还没挑好，等我挑完再说。" : {},
+    "还没有一集。点节目封面，再点“现在写一集”" : {},
     "还没有书。把书拖到左边这个合集上，或者把文件拖进来" : {
       "localizations" : {
         "en" : {
@@ -13653,6 +16640,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No collections yet. Tap the top right to make one"
+          }
+        }
+      }
+    },
+    "还没有合集。点右上角“新建合集”，或者在一本书上右键“加入合集…”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No collections yet. Click New Collection at the top right, or right-click a book and choose Add to Collection…"
           }
         }
       }
@@ -13717,6 +16714,16 @@
         }
       }
     },
+    "还没添加服务商" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No providers added yet"
+          }
+        }
+      }
+    },
     "还没生效" : {
       "localizations" : {
         "en" : {
@@ -13773,6 +16780,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not Chosen"
+          }
+        }
+      }
+    },
+    "还没选：先添加一个服务" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not chosen yet: add a service first"
+          }
+        }
+      }
+    },
+    "还没选写稿用的模型。设置 › 书伴 里选一个服务商" : {},
+    "还没选好模型" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No model chosen yet"
           }
         }
       }
@@ -13907,6 +16936,7 @@
         }
       }
     },
+    "这一集的标题" : {},
     "这一章讲了什么？" : {
       "localizations" : {
         "en" : {
@@ -13953,6 +16983,7 @@
         }
       }
     },
+    "这不是一个网址" : {},
     "这个 PDF 没有目录" : {
       "localizations" : {
         "en" : {
@@ -13983,6 +17014,7 @@
         }
       }
     },
+    "这个 PDF 读不出来，文件可能坏了" : {},
     "这个压缩包设了密码，打不开" : {
       "localizations" : {
         "en" : {
@@ -14033,6 +17065,7 @@
         }
       }
     },
+    "这个网页没写它的 RSS 在哪" : {},
     "这个账号对这个文件夹没有写的权限。" : {
       "localizations" : {
         "en" : {
@@ -14139,6 +17172,17 @@
         }
       }
     },
+    "这台 Mac 上找到的" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Found on This Mac"
+          }
+        }
+      }
+    },
     "这台 Mac 上没有这种语言的声音" : {
       "localizations" : {
         "en" : {
@@ -14155,6 +17199,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not supported on this Mac"
+          }
+        }
+      }
+    },
+    "这台 Mac 来写 · 模板已经替你定好" : {},
+    "这台 Mac 用不了 Apple 智能，书伴要接一个：填你自己的 Key，或接本机的 Ollama。费用直接走你的账号，语阅不经手。" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Intelligence isn't available on this Mac, so the Companion needs one connected: add your own key, or a local Ollama. Any cost goes to your own account; Yuyue never handles it."
+          }
+        }
+      }
+    },
+    "这台 Mac 用不了 Apple 智能，书伴要接一个：添加一个服务商填你自己的 Key，或接本机的 Ollama、magpie。费用直接走你的账号，语阅不经手。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac can't use Apple Intelligence, so Companion needs one: add a provider with your own key, or connect Ollama or magpie on this Mac. Charges go straight to your account; Yuyue never handles them."
+          }
+        }
+      }
+    },
+    "这台 Mac 用不了 Apple 智能，书伴要接一个：添加一个服务商填你自己的 Key，或接本机的 Ollama。费用直接走你的账号，语阅不经手。" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Mac can't use Apple Intelligence, so Companion needs one: add a provider with your own key, or connect Ollama on this Mac. Charges go straight to your account; Yuyue never handles them."
           }
         }
       }
@@ -14239,6 +17316,16 @@
         }
       }
     },
+    "这台设备还没有%@声音。在设置的“辅助功能 › 朗读内容”里可以下载一个。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This device has no %@ voice yet. You can download one in Settings under Accessibility › Spoken Content."
+          }
+        }
+      }
+    },
     "这周" : {
       "localizations" : {
         "en" : {
@@ -14259,6 +17346,8 @@
         }
       }
     },
+    "这本书太大了，读不进来" : {},
+    "这本书打不开" : {},
     "这本书有版权保护（DRM），打不开" : {
       "localizations" : {
         "en" : {
@@ -14269,6 +17358,7 @@
         }
       }
     },
+    "这本书没有目录" : {},
     "这本书没有笔记了" : {
       "localizations" : {
         "en" : {
@@ -14289,7 +17379,10 @@
         }
       }
     },
+    "这本书读不出来，文件可能坏了" : {},
+    "这本书读不出来，文件可能坏了，或者不是它看起来的格式" : {},
     "这本书读不出来（%@）" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -14595,6 +17688,7 @@
         }
       }
     },
+    "连评论" : {},
     "退出" : {
       "localizations" : {
         "en" : {
@@ -14621,6 +17715,27 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Medium"
+          }
+        }
+      }
+    },
+    "选" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose"
+          }
+        }
+      }
+    },
+    "选 .mdx 文件。点词时先查这里的词典，查不到再用系统的；右键一本可以移除" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a .mdx file. Tapped words are looked up here first, then in the system dictionary. Right-click one to remove it."
           }
         }
       }
@@ -14685,6 +17800,7 @@
         }
       }
     },
+    "选中文字点“划线”，就会出现在这里" : {},
     "选中的笔记" : {
       "localizations" : {
         "en" : {
@@ -14725,6 +17841,16 @@
         }
       }
     },
+    "选文件…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose File…"
+          }
+        }
+      }
+    },
     "选文件夹…" : {
       "localizations" : {
         "en" : {
@@ -14751,6 +17877,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Translate each sentence"
+          }
+        }
+      }
+    },
+    "通义千问" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qwen"
           }
         }
       }
@@ -14852,6 +17988,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All known. New words you add to the word list will show up here"
+          }
+        }
+      }
+    },
+    "配一档节目" : {},
+    "配置" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure"
+          }
+        }
+      }
+    },
+    "配置 %@…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure %@…"
           }
         }
       }
@@ -15037,6 +18195,7 @@
       }
     },
     "阅读方式" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -15047,6 +18206,7 @@
       }
     },
     "阅读方式和方向" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -15067,11 +18227,22 @@
       }
     },
     "阅读设置" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reading Settings"
+          }
+        }
+      }
+    },
+    "阿里云百炼" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alibaba Cloud Model Studio"
           }
         }
       }
@@ -15082,6 +18253,37 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Privacy"
+          }
+        }
+      }
+    },
+    "隐藏侧栏" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Sidebar"
+          }
+        }
+      }
+    },
+    "隐藏侧栏 ⌘⌥N" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Sidebar ⌘⌥N"
+          }
+        }
+      }
+    },
+    "隐藏侧栏 ⌘⌥S" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Sidebar ⌘⌥S"
           }
         }
       }
@@ -15146,6 +18348,36 @@
         }
       }
     },
+    "霞鹜文楷" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LXGW WenKai"
+          }
+        }
+      }
+    },
+    "霞鹜文楷%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LXGW WenKai: %@"
+          }
+        }
+      }
+    },
+    "霞鹜文楷正在下载 %lld%%，先用楷体" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Downloading LXGW WenKai %lld%%; using Kaiti for now"
+          }
+        }
+      }
+    },
     "靠左" : {
       "localizations" : {
         "en" : {
@@ -15162,6 +18394,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chapter"
+          }
+        }
+      }
+    },
+    "章节" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapters"
+          }
+        }
+      }
+    },
+    "章节 · 文件里自带的" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapters · from the file"
+          }
+        }
+      }
+    },
+    "章节 %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapters %lld"
+          }
+        }
+      }
+    },
+    "章节顺序 · 按文件名里的数字排" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapter order · by the numbers in file names"
           }
         }
       }
@@ -15207,6 +18479,7 @@
       }
     },
     "预加载" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -15246,6 +18519,7 @@
         }
       }
     },
+    "首页热门" : {},
     "高级" : {
       "localizations" : {
         "en" : {
@@ -15267,11 +18541,23 @@
       }
     },
     "黑体" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Heiti"
+          }
+        }
+      }
+    },
+    "黑体，段落之间空一行" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans, a blank line between paragraphs"
           }
         }
       }
@@ -15296,7 +18582,19 @@
         }
       }
     },
+    "墨绿夜" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forest night"
+          }
+        }
+      }
+    },
     "墨蓝" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -15306,17 +18604,18 @@
         }
       }
     },
-    "墨蓝是默认；墨黑是你确认过的原样" : {
+    "墨蓝是默认" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ink blue is the default; ink black is the original you confirmed"
+            "value" : "Ink blue is the default"
           }
         }
       }
     },
     "墨黑" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -15332,2458 +18631,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Default"
-          }
-        }
-      }
-    },
-    "读书窗口的工具胶囊和阅读胶囊、提示条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃，选中的垫一层浅色" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Floating things like the reading window's tool and reading capsules, and banners use the system's Liquid Glass; when off, they use frosted blur with a light fill for the selection"
-          }
-        }
-      }
-    },
-    "识别出 %lld 章" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Found %lld chapter"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Found %lld chapters"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "%lld 本书 · %lld 条" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%#@b@ · %#@n@"
-          },
-          "substitutions" : {
-            "b" : {
-              "argNum" : 1,
-              "formatSpecifier" : "lld",
-              "variations" : {
-                "plural" : {
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg book"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg books"
-                    }
-                  }
-                }
-              }
-            },
-            "n" : {
-              "argNum" : 2,
-              "formatSpecifier" : "lld",
-              "variations" : {
-                "plural" : {
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg item"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg items"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "%lld 处 · %lld 本书" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%#@n@ · %#@b@"
-          },
-          "substitutions" : {
-            "n" : {
-              "argNum" : 1,
-              "formatSpecifier" : "lld",
-              "variations" : {
-                "plural" : {
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg place"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg places"
-                    }
-                  }
-                }
-              }
-            },
-            "b" : {
-              "argNum" : 2,
-              "formatSpecifier" : "lld",
-              "variations" : {
-                "plural" : {
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg book"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg books"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "%lld 条 · 来自 %lld 本书" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%#@n@ · from %#@b@"
-          },
-          "substitutions" : {
-            "n" : {
-              "argNum" : 1,
-              "formatSpecifier" : "lld",
-              "variations" : {
-                "plural" : {
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg item"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg items"
-                    }
-                  }
-                }
-              }
-            },
-            "b" : {
-              "argNum" : 2,
-              "formatSpecifier" : "lld",
-              "variations" : {
-                "plural" : {
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg book"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg books"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "在 %lld 本书和 %lld 条笔记里搜" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search %#@b@ and %#@n@"
-          },
-          "substitutions" : {
-            "b" : {
-              "argNum" : 1,
-              "formatSpecifier" : "lld",
-              "variations" : {
-                "plural" : {
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg book"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg books"
-                    }
-                  }
-                }
-              }
-            },
-            "n" : {
-              "argNum" : 2,
-              "formatSpecifier" : "lld",
-              "variations" : {
-                "plural" : {
-                  "one" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg note"
-                    }
-                  },
-                  "other" : {
-                    "stringUnit" : {
-                      "state" : "translated",
-                      "value" : "%arg notes"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "留下 %lld 条" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kept %lld"
-          }
-        }
-      }
-    },
-    "霞鹜文楷" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "LXGW WenKai"
-          }
-        }
-      }
-    },
-    "霞鹜文楷正在下载 %lld%%，先用楷体" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Downloading LXGW WenKai %lld%%; using Kaiti for now"
-          }
-        }
-      }
-    },
-    "霞鹜文楷%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "LXGW WenKai: %@"
-          }
-        }
-      }
-    },
-    "没下载下来" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "didn't download"
-          }
-        }
-      }
-    },
-    "书的多少" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Number of Books"
-          }
-        }
-      }
-    },
-    "全部合集" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Collections"
-          }
-        }
-      }
-    },
-    "取消固定" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unpin"
-          }
-        }
-      }
-    },
-    "名字" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name"
-          }
-        }
-      }
-    },
-    "听完" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Listened"
-          }
-        }
-      }
-    },
-    "固定到侧栏" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pin to Sidebar"
-          }
-        }
-      }
-    },
-    "在听" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Listening"
-          }
-        }
-      }
-    },
-    "想听" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Want to Listen"
-          }
-        }
-      }
-    },
-    "展开" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Expand"
-          }
-        }
-      }
-    },
-    "已展开" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Expanded"
-          }
-        }
-      }
-    },
-    "已收起" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Collapsed"
-          }
-        }
-      }
-    },
-    "展开书列" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Book List"
-          }
-        }
-      }
-    },
-    "展开书列 ⌘⌥S" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Book List ⌘⌥S"
-          }
-        }
-      }
-    },
-    "收起书列" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide Book List"
-          }
-        }
-      }
-    },
-    "收起书列 ⌘⌥S" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide Book List ⌘⌥S"
-          }
-        }
-      }
-    },
-    "往前挪" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Move Up"
-          }
-        }
-      }
-    },
-    "往后挪" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Move Down"
-          }
-        }
-      }
-    },
-    "放进哪个合集… 打字找" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Put into which collection… type to filter"
-          }
-        }
-      }
-    },
-    "新合集" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "New Collection"
-          }
-        }
-      }
-    },
-    "新建" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create"
-          }
-        }
-      }
-    },
-    "显示侧栏" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Sidebar"
-          }
-        }
-      }
-    },
-    "显示侧栏 ⌘⌥S" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Sidebar ⌘⌥S"
-          }
-        }
-      }
-    },
-    "隐藏侧栏" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide Sidebar"
-          }
-        }
-      }
-    },
-    "隐藏侧栏 ⌘⌥S" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide Sidebar ⌘⌥S"
-          }
-        }
-      }
-    },
-    "最近用过" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recently Used"
-          }
-        }
-      }
-    },
-    "没用过" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Never Used"
-          }
-        }
-      }
-    },
-    "自己排的" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Custom Order"
-          }
-        }
-      }
-    },
-    "还没有合集。点右上角“新建合集”，或者在一本书上右键“加入合集…”" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No collections yet. Click New Collection at the top right, or right-click a book and choose Add to Collection…"
-          }
-        }
-      }
-    },
-    "＋ 新建合集并放进去" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+ New Collection and Put Book In"
-          }
-        }
-      }
-    },
-    "＋ 新建合集“%@”并放进去" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+ New Collection “%@” and Put Book In"
-          }
-        }
-      }
-    },
-    "%lld 天前" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld days ago"
-          }
-        }
-      }
-    },
-    "%@ · %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · %lld"
-          }
-        }
-      }
-    },
-    "隐藏侧栏 ⌘⌥N" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide Sidebar ⌘⌥N"
-          }
-        }
-      }
-    },
-    "显示侧栏 ⌘⌥N" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Sidebar ⌘⌥N"
-          }
-        }
-      }
-    },
-    "收起书列 ⌘⌥N" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide Book List ⌘⌥N"
-          }
-        }
-      }
-    },
-    "展开书列 ⌘⌥N" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Book List ⌘⌥N"
-          }
-        }
-      }
-    },
-    "显示或收起侧栏" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show or Hide Sidebar"
-          }
-        }
-      }
-    },
-    "其余 %lld 本" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld more"
-          }
-        }
-      }
-    },
-    "这台 Mac 用不了 Apple 智能，书伴要接一个：填你自己的 Key，或接本机的 Ollama。费用直接走你的账号，语阅不经手。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence isn't available on this Mac, so the Companion needs one connected: add your own key, or a local Ollama. Any cost goes to your own account; Yuyue never handles it."
-          }
-        }
-      }
-    },
-    "AI 服务" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AI Services"
-          }
-        }
-      }
-    },
-    "Apple 智能（这台 Mac 上）" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence (on this Mac)"
-          }
-        }
-      }
-    },
-    "Apple 智能（这台设备上）" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence (on this device)"
-          }
-        }
-      }
-    },
-    "Key 不对，去设置 · AI 服务里重新接" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The key didn't work. Reconnect it in Settings · AI Services."
-          }
-        }
-      }
-    },
-    "Key 只存在这台设备的钥匙串里，不同步、不上传；本机的 magpie、Ollama 不出这台 Mac" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keys stay in this device's keychain, never synced or uploaded; magpie and Ollama on this Mac never leave it."
-          }
-        }
-      }
-    },
-    "Key（没有就空着）" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Key (leave empty if none)"
-          }
-        }
-      }
-    },
-    "%@：能用，找到 %lld 个模型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@: works, %2$lld models found"
-          }
-        }
-      }
-    },
-    "%@ · %lld 个模型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ · %2$lld models"
-          }
-        }
-      }
-    },
-    "%@（本机）" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ (this Mac)"
-          }
-        }
-      }
-    },
-    "%@ 秒" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ s"
-          }
-        }
-      }
-    },
-    "不用填模型名" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No model name needed"
-          }
-        }
-      }
-    },
-    "不用填模型名：接上时会问它有哪些模型。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No model name needed: Yuyue asks the service which models it has."
-          }
-        }
-      }
-    },
-    "书伴用" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Companion uses"
-          }
-        }
-      }
-    },
-    "书伴还没接上：在设置 · AI 服务里接一个" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The Companion isn't connected yet. Connect a service in Settings · AI Services."
-          }
-        }
-      }
-    },
-    "刷新模型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refresh Models"
-          }
-        }
-      }
-    },
-    "回答关于这本书的问题" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Answers questions about the book"
-          }
-        }
-      }
-    },
-    "在运行，%lld 个模型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Running, %lld models"
-          }
-        }
-      }
-    },
-    "在运行，%lld 个模型；背后接着你在 magpie 里配的所有 Key 和订阅" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Running, %lld models, backed by every key and plan you set up in magpie"
-          }
-        }
-      }
-    },
-    "在这里粘贴 Key，自动认出是哪家" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paste a key here and Yuyue works out whose it is"
-          }
-        }
-      }
-    },
-    "已接上" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connected"
-          }
-        }
-      }
-    },
-    "或者先选是哪家" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Or pick the service first"
-          }
-        }
-      }
-    },
-    "换一家" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pick Another"
-          }
-        }
-      }
-    },
-    "接上" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect"
-          }
-        }
-      }
-    },
-    "接上 %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect %@"
-          }
-        }
-      }
-    },
-    "接上一次，书伴就能用。可以接本机的 magpie、Ollama，或者填你自己的 Key；费用直接走你的账号，语阅不经手。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect once and the Companion can use it: magpie or Ollama on this Mac, or your own key. Any cost goes to your own account; Yuyue never handles it."
-          }
-        }
-      }
-    },
-    "智谱 GLM" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zhipu GLM"
-          }
-        }
-      }
-    },
-    "正在找本机的 magpie、Ollama、LM Studio…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Looking for magpie, Ollama and LM Studio on this Mac…"
-          }
-        }
-      }
-    },
-    "正在核对…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Checking…"
-          }
-        }
-      }
-    },
-    "正在认是哪家、核对 Key…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Working out whose key it is…"
-          }
-        }
-      }
-    },
-    "正在问它有哪些模型…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Asking for its models…"
-          }
-        }
-      }
-    },
-    "添加服务" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add Service"
-          }
-        }
-      }
-    },
-    "用 Key 接" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect with a Key"
-          }
-        }
-      }
-    },
-    "硅基流动" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SiliconFlow"
-          }
-        }
-      }
-    },
-    "移除" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove"
-          }
-        }
-      }
-    },
-    "粘贴 Key，自动认出是哪家" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paste a key to detect the service"
-          }
-        }
-      }
-    },
-    "粘贴 %@ 的 Key" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paste your %@ key"
-          }
-        }
-      }
-    },
-    "能用，找到 %lld 个模型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Works, %lld models found"
-          }
-        }
-      }
-    },
-    "自定义" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Custom"
-          }
-        }
-      }
-    },
-    "认不出是哪家的 Key：在下面选是哪家，再粘贴一次" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Couldn't tell whose key this is. Pick the service below and paste it again."
-          }
-        }
-      }
-    },
-    "认出是 %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Looks like %@"
-          }
-        }
-      }
-    },
-    "试一下" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try It"
-          }
-        }
-      }
-    },
-    "谁用哪个" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Who Uses What"
-          }
-        }
-      }
-    },
-    "还没选：先添加一个服务" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not chosen yet: add a service first"
-          }
-        }
-      }
-    },
-    "这台 Mac 上找到的" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Found on This Mac"
-          }
-        }
-      }
-    },
-    "通义千问" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Qwen"
-          }
-        }
-      }
-    },
-    "Key …%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Key …%@"
-          }
-        }
-      }
-    },
-    "是 %@ 的 Key，但核对没通过：%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This looks like a %1$@ key, but it didn't check out: %2$@"
-          }
-        }
-      }
-    },
-    "收起成一个播放键" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fold Down to a Play Button"
-          }
-        }
-      }
-    },
-    "简繁" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chinese Script"
-          }
-        }
-      }
-    },
-    "原样" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "As Is"
-          }
-        }
-      }
-    },
-    "简体" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Simplified"
-          }
-        }
-      }
-    },
-    "繁體" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Traditional"
-          }
-        }
-      }
-    },
-    "MDict 词典" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MDict Dictionaries"
-          }
-        }
-      }
-    },
-    "导入的词典里查不到时用 Mac 自带的。哪几本打开、谁在前面，在“词典”App 的设置里选" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Used when the imported dictionaries don't have a word. Choose which are on, and their order, in the Dictionary app's settings."
-          }
-        }
-      }
-    },
-    "%lld 个词条" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld entries"
-          }
-        }
-      }
-    },
-    "正在导入 %@…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importing %@…"
-          }
-        }
-      }
-    },
-    "导入 MDict 词典" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import MDict Dictionary"
-          }
-        }
-      }
-    },
-    "选 .mdx 文件。点词时先查这里的词典，查不到再用系统的；右键一本可以移除" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a .mdx file. Tapped words are looked up here first, then in the system dictionary. Right-click one to remove it."
-          }
-        }
-      }
-    },
-    "选文件…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose File…"
-          }
-        }
-      }
-    },
-    "完整释义" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Full Entry"
-          }
-        }
-      }
-    },
-    "收起释义" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide Entry"
-          }
-        }
-      }
-    },
-    "导入 MDict 词典（.mdx）" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import MDict Dictionary (.mdx)"
-          }
-        }
-      }
-    },
-    "点词先查这里导入的词典，查不到再用系统翻译。左滑一本可以移除。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tapped words are looked up in these dictionaries first, then translated by the system. Swipe left on one to remove it."
-          }
-        }
-      }
-    },
-    "没查到。可以在 我的 › 外文阅读 里导入 MDict 词典。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not found. You can import an MDict dictionary in Me › Languages."
-          }
-        }
-      }
-    },
-    "存储空间不够了，腾出一些地方再试" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not enough storage. Free some space, then try again"
-          }
-        }
-      }
-    },
-    "没有联网，连上网再试" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You're offline. Connect, then try again"
-          }
-        }
-      }
-    },
-    "网断了，下载停在半路。连好网再点一次，会重新下" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The connection dropped partway. Reconnect and tap again to download it afresh"
-          }
-        }
-      }
-    },
-    "存储空间不够，要约 30 MB" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "needs about 30 MB of free storage"
-          }
-        }
-      }
-    },
-    "网断了，没下完" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "the connection dropped before it finished"
-          }
-        }
-      }
-    },
-    "没有书名里带“%@”的书" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No book titles contain “%@”"
-          }
-        }
-      }
-    },
-    "书里的原文没有“%@”" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No book text contains “%@”"
-          }
-        }
-      }
-    },
-    "划线和想法里没有“%@”" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No highlights or thoughts contain “%@”"
-          }
-        }
-      }
-    },
-    "生词本里没有“%@”" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“%@” isn't in your word list"
-          }
-        }
-      }
-    },
-    "电脑打不开这个地址？" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Computer can't open the address?"
-          }
-        }
-      }
-    },
-    "看看电脑和 iPhone 是不是连的同一个 Wi‑Fi。都对的话，多半是没让语阅用“本地网络”：在设置 › 语阅 里把它打开，再回来。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check that the computer and iPhone are on the same Wi‑Fi. If they are, Yuyue probably isn't allowed Local Network access: turn it on in Settings › Yuyue, then come back."
-          }
-        }
-      }
-    },
-    "去设置" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Settings"
-          }
-        }
-      }
-    },
-    "我的纸" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "My paper"
-          }
-        }
-      }
-    },
-    "暖白" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Warm white"
-          }
-        }
-      }
-    },
-    "豆沙绿" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sage"
-          }
-        }
-      }
-    },
-    "羊皮纸" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Parchment"
-          }
-        }
-      }
-    },
-    "淡蓝" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pale blue"
-          }
-        }
-      }
-    },
-    "藕粉" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Blush"
-          }
-        }
-      }
-    },
-    "浅灰" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Light gray"
-          }
-        }
-      }
-    },
-    "深蓝夜" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Navy night"
-          }
-        }
-      }
-    },
-    "墨绿夜" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Forest night"
-          }
-        }
-      }
-    },
-    "调纸" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paper"
-          }
-        }
-      }
-    },
-    "底色" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Background"
-          }
-        }
-      }
-    },
-    "更多颜色" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More colors"
-          }
-        }
-      }
-    },
-    "文字" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text"
-          }
-        }
-      }
-    },
-    "自动配" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatic"
-          }
-        }
-      }
-    },
-    "自己选" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose"
-          }
-        }
-      }
-    },
-    "文字颜色" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text color"
-          }
-        }
-      }
-    },
-    "版式" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Layout"
-          }
-        }
-      }
-    },
-    "像素白" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Like Plain"
-          }
-        }
-      }
-    },
-    "像纸本" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Like Paper"
-          }
-        }
-      }
-    },
-    "黑体，段落之间空一行" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sans, a blank line between paragraphs"
-          }
-        }
-      }
-    },
-    "宋体，首行缩进" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Serif, first lines indented"
-          }
-        }
-      }
-    },
-    "纸纹" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paper grain"
-          }
-        }
-      }
-    },
-    "字看得清" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Easy to read"
-          }
-        }
-      }
-    },
-    "字和底色太接近，可能看不清" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text and background are close: may be hard to read"
-          }
-        }
-      }
-    },
-    "调颜色…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adjust Colors…"
-          }
-        }
-      }
-    },
-    "复制一张" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duplicate"
-          }
-        }
-      }
-    },
-    "自己调一张纸" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Make your own paper"
-          }
-        }
-      }
-    },
-    "白天" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Day"
-          }
-        }
-      }
-    },
-    "夜里" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Night"
-          }
-        }
-      }
-    },
-    "微调颜色" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fine-tune color"
-          }
-        }
-      }
-    },
-    "色调、浓淡、深浅" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hue, strength, shade"
-          }
-        }
-      }
-    },
-    "色调" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hue"
-          }
-        }
-      }
-    },
-    "浓淡" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Strength"
-          }
-        }
-      }
-    },
-    "深浅" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shade"
-          }
-        }
-      }
-    },
-    "纹理" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texture"
-          }
-        }
-      }
-    },
-    "无纹理" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No texture"
-          }
-        }
-      }
-    },
-    "细颗粒" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fine grain"
-          }
-        }
-      }
-    },
-    "宣纸" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rice paper"
-          }
-        }
-      }
-    },
-    "亚麻" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Linen"
-          }
-        }
-      }
-    },
-    "字色" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text color"
-          }
-        }
-      }
-    },
-    "调整颜色" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adjust Colors"
-          }
-        }
-      }
-    },
-    "调整“%@”" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adjust “%@”"
-          }
-        }
-      }
-    },
-    "播客" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Podcasts"
-          }
-        }
-      }
-    },
-    "即将推出" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Coming soon"
-          }
-        }
-      }
-    },
-    "本机和局域网" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "On this computer or network"
-          }
-        }
-      }
-    },
-    "阿里云百炼" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alibaba Cloud Model Studio"
-          }
-        }
-      }
-    },
-    "月之暗面" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moonshot AI"
-          }
-        }
-      }
-    },
-    "智谱" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zhipu"
-          }
-        }
-      }
-    },
-    "豆包" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Doubao"
-          }
-        }
-      }
-    },
-    "火山引擎" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Volcengine"
-          }
-        }
-      }
-    },
-    "不用填" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not needed"
-          }
-        }
-      }
-    },
-    "书伴还没接上：在设置 · 书伴里添加一个服务商" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Companion isn't connected yet: add a provider in Settings · Companion"
-          }
-        }
-      }
-    },
-    "添加服务商" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add Provider"
-          }
-        }
-      }
-    },
-    "搜索服务商，比如 千问、Kimi" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search providers, e.g. Qwen, Kimi"
-          }
-        }
-      }
-    },
-    "没找到。在下面自己添加，填上接口地址就行" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not found. Add your own below with its API address."
-          }
-        }
-      }
-    },
-    "自己添加" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add Your Own"
-          }
-        }
-      }
-    },
-    "任何 OpenAI 兼容接口，比如公司里部署的模型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Any OpenAI-compatible API, such as a model your company runs"
-          }
-        }
-      }
-    },
-    "返回" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Back"
-          }
-        }
-      }
-    },
-    "比如 公司的模型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "e.g. Work model"
-          }
-        }
-      }
-    },
-    "移除 %@？" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove %@?"
-          }
-        }
-      }
-    },
-    "它的 Key 也会从钥匙串里删掉。正在用它的话，书伴换回设备自带的。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Its key is deleted from the keychain too. If Companion was using it, it goes back to this device's own model."
-          }
-        }
-      }
-    },
-    "更换" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change"
-          }
-        }
-      }
-    },
-    "藏起 Key" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide Key"
-          }
-        }
-      }
-    },
-    "显示 Key" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Key"
-          }
-        }
-      }
-    },
-    "本机或局域网里跑的模型不用 Key，填上地址和模型名就行。提问和书里相关的几段原文只发到这个地址。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Models running on this computer or your network don't need a key; just fill in the address and model name. Questions and the related passages from the book go only to this address."
-          }
-        }
-      }
-    },
-    "Key 只存在这台设备的钥匙串里。提问和书里相关的几段原文直接发到这个地址，语阅不经手。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The key stays in this device's keychain. Questions and the related passages from the book go straight to this address; Yuyue never handles them."
-          }
-        }
-      }
-    },
-    "书伴默认用这台 Mac 自带的，不花钱，不联网也能用。想换更强的，就添加一个服务商，填你自己的 Key，费用直接走你的账号，语阅不经手。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Companion uses this Mac's own model by default: free, and it works offline. For a stronger one, add a provider with your own key; charges go straight to your account, and Yuyue never handles them."
-          }
-        }
-      }
-    },
-    "这台 Mac 用不了 Apple 智能，书伴要接一个：添加一个服务商填你自己的 Key，或接本机的 Ollama。费用直接走你的账号，语阅不经手。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Mac can't use Apple Intelligence, so Companion needs one: add a provider with your own key, or connect Ollama on this Mac. Charges go straight to your account; Yuyue never handles them."
-          }
-        }
-      }
-    },
-    "还没添加服务商" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No providers added yet"
-          }
-        }
-      }
-    },
-    "Claude、DeepSeek、通义千问、Ollama…都可以" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Claude, DeepSeek, Qwen, Ollama… any of them"
-          }
-        }
-      }
-    },
-    "还没填好，点设置补上" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not finished — click Settings to complete it"
-          }
-        }
-      }
-    },
-    "还没填好" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not finished"
-          }
-        }
-      }
-    },
-    "设置 %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Settings for %@"
-          }
-        }
-      }
-    },
-    "用哪个" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Which One"
-          }
-        }
-      }
-    },
-    "Key 只存在这台设备上，加密保存。提问和书里相关的几段原文直接发到这个地址，语阅不经手。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The key stays on this device, encrypted. Questions and the related passages from the book go straight to this address; Yuyue never handles them."
-          }
-        }
-      }
-    },
-    "Key 只存在这台设备上，加密保存。费用走你自己的 %@ 账号，语阅不经手，也看不到。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The key stays on this device, encrypted. Charges go to your own %@ account; Yuyue never handles or sees them."
-          }
-        }
-      }
-    },
-    "它的 Key 也会从这台设备上删掉。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Its key is deleted from this device too."
-          }
-        }
-      }
-    },
-    "登录账号" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign In"
-          }
-        }
-      }
-    },
-    "登录就能用，几百个模型一个账号" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Just sign in: hundreds of models, one account"
-          }
-        }
-      }
-    },
-    "局域网里用才要填网关 Key" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only needed on the network: a gateway key"
-          }
-        }
-      }
-    },
-    "转接你在 magpie 里登录的 Claude、ChatGPT 账号" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uses the Claude or ChatGPT accounts you signed in to in magpie"
-          }
-        }
-      }
-    },
-    "比如 http://192.168.1.5:3425/v1" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "e.g. http://192.168.1.5:3425/v1"
-          }
-        }
-      }
-    },
-    "OpenRouter 没给 Key，再登录一次" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OpenRouter didn't give a key. Sign in again."
-          }
-        }
-      }
-    },
-    "已经登录 OpenRouter，可以回到语阅了。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Signed in to OpenRouter. You can go back to Yuyue."
-          }
-        }
-      }
-    },
-    "没有登录成功，回到语阅再试一次。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign-in didn't work. Go back to Yuyue and try again."
-          }
-        }
-      }
-    },
-    "语阅 · 书伴" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yuyue · Companion"
-          }
-        }
-      }
-    },
-    "回到语阅" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Back to Yuyue"
-          }
-        }
-      }
-    },
-    "搜索服务商，比如 千问、Kimi、magpie" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search providers, e.g. Qwen, Kimi, magpie"
-          }
-        }
-      }
-    },
-    "管理服务商" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Manage Providers"
-          }
-        }
-      }
-    },
-    "配置" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configure"
-          }
-        }
-      }
-    },
-    "用 %@ 登录" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign In with %@"
-          }
-        }
-      }
-    },
-    "或者粘贴一个已有的 Key" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Or paste a key you already have"
-          }
-        }
-      }
-    },
-    "本机或局域网里跑的，提问和书里相关的几段原文只发到这个地址。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It runs on this computer or your network; questions and the related passages go only to this address."
-          }
-        }
-      }
-    },
-    "提问和书里相关的几段原文直接发到这个地址，语阅不经手。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Questions and the related passages go straight to this address; Yuyue never handles them."
-          }
-        }
-      }
-    },
-    "这台 Mac 用不了 Apple 智能，书伴要接一个：添加一个服务商填你自己的 Key，或接本机的 Ollama、magpie。费用直接走你的账号，语阅不经手。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Mac can't use Apple Intelligence, so Companion needs one: add a provider with your own key, or connect Ollama or magpie on this Mac. Charges go straight to your account; Yuyue never handles them."
-          }
-        }
-      }
-    },
-    "测试" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Test"
-          }
-        }
-      }
-    },
-    "配置 %@…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configure %@…"
-          }
-        }
-      }
-    },
-    "添加服务商…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add Provider…"
-          }
-        }
-      }
-    },
-    "它列出的模型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Models it lists"
-          }
-        }
-      }
-    },
-    "还没选好模型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No model chosen yet"
-          }
-        }
-      }
-    },
-    "选" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose"
           }
         }
       }
