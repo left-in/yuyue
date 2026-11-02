@@ -165,14 +165,24 @@ final class AudiobookPlayer {
         if let held = library.nowPlaying, held !== self { library.nowPlaying = nil; held.stopAndClose() }
         #endif
         // Picked up after a while: a few seconds back, to hear where it was.
+        var moved = false
         if let pausedAt {
             let gap = Date().timeIntervalSince(pausedAt)
             let back = gap > 3600 ? 10.0 : gap > 300 ? 5 : gap > 30 ? 2 : 0
-            time = max(chapters.indices.contains(chapter) ? chapters[chapter].start : 0, time - back)
+            if back > 0 {
+                time = max(chapters.indices.contains(chapter) ? chapters[chapter].start : 0, time - back)
+                moved = true
+            }
         }
-        if time >= total - 0.5 { time = 0 }
+        // Heard to the end: from the start again.
+        if time >= total - 0.5 {
+            time = 0
+            moved = true
+        }
         pausedAt = nil
-        if items.isEmpty { load(at: time) }
+        // The queue goes where `time` is: changing `time` alone doesn't move what's heard, and a
+        // queue played to its end has nothing left in it.
+        if items.isEmpty || moved || queue.currentItem == nil { load(at: time) }
         queue.playImmediately(atRate: rate)
         isPlaying = true
         library.listening = bookID

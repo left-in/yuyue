@@ -253,16 +253,6 @@ class Library(private val context: Context) {
             val named = uris.map { it to displayName(it) }
             val (sounds, files) = named.partition { AudioImporter.isAudio(it.second) }
             val (m4b, loose) = sounds.partition { it.second.endsWith(".m4b", ignoreCase = true) }
-            for (recording in m4b.map { listOf(it) } + listOfNotNull(loose.takeIf { it.isNotEmpty() })) {
-                try {
-                    val pending = withContext(Dispatchers.IO) { readRecording(recording) }
-                    // Several brought in at once: one sheet after another.
-                    while (pendingRecording != null) delay(200)
-                    pendingRecording = pending
-                } catch (e: Exception) {
-                    failures += "${recording.first().second}：${message(e)}"
-                }
-            }
             for ((uri, name) in files) {
                 if (name.endsWith(".yuyue", ignoreCase = true)) {
                     try {
@@ -304,6 +294,26 @@ class Library(private val context: Context) {
                 files.isEmpty() -> {}
                 else -> note(Toast.Icon.Check, t("书架里已经有这本了，没有再导入一份"), "")
             }
+            // Recordings after the books: their sheet waits on the reader, and the books
+            // shouldn't wait on it.
+            val recordingFailures = mutableListOf<String>()
+            for (recording in m4b.map { listOf(it) } + listOfNotNull(loose.takeIf { it.isNotEmpty() })) {
+                importing++
+                val pending = try {
+                    withContext(Dispatchers.IO) { readRecording(recording) }
+                } catch (e: Exception) {
+                    recordingFailures += "${recording.first().second}：${message(e)}"
+                    null
+                } finally {
+                    importing--
+                }
+                if (pending != null) {
+                    // Several brought in at once: one sheet after another.
+                    while (pendingRecording != null) delay(200)
+                    pendingRecording = pending
+                }
+            }
+            if (recordingFailures.isNotEmpty()) alert = (listOfNotNull(alert) + recordingFailures).joinToString("\n")
         }
     }
 

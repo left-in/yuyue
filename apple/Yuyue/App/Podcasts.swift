@@ -23,6 +23,12 @@ final class Podcasts {
 
     @ObservationIgnored private let workDir: URL
     @ObservationIgnored private var tasks: [String: Task<Void, Never>] = [:]
+    /// Which run of a show is the current one, so a cancelled run finishing late doesn't clear
+    /// the one started after it.
+    @ObservationIgnored private var runs: [String: UUID] = [:]
+    /// 编辑部 changed the pick while an episode was being written: the run takes it up at its
+    /// next step (it holds its own copy of the work, and would write over a change on disk).
+    @ObservationIgnored private var repick: [String: [Int]] = [:]
 
     struct Progress: Equatable {
         enum Step: Int, Comparable {
@@ -116,6 +122,8 @@ final class Podcasts {
     func write(_ show: Show) {
         guard tasks[show.id] == nil else { return }
         failure[show.id] = nil
+        let run = UUID()
+        runs[show.id] = run
         tasks[show.id] = Task { [weak self] in
             guard let self else { return }
             do {
@@ -125,6 +133,9 @@ final class Podcasts {
                 self.failure[show.id] = Self.message(for: error)
                 Self.log("failed: \(error)")
             }
+            // Cancelled and started again meanwhile: the new run is the show's now.
+            guard self.runs[show.id] == run else { return }
+            self.runs[show.id] = nil
             self.writing[show.id] = nil
             self.tasks[show.id] = nil
             self.reload()
@@ -134,6 +145,8 @@ final class Podcasts {
     func cancel(_ show: String) {
         tasks[show]?.cancel()
         tasks[show] = nil
+        runs[show] = nil
+        repick[show] = nil
         writing[show] = nil
     }
 
@@ -145,7 +158,7 @@ final class Podcasts {
         Task { [weak self] in
             guard let self else { return }
             var work = self.load(show.id)
-            guard let picked = work.picked else {
+            guard let picked = self.repick[show.id] ?? work.picked else {
                 self.talk[show.id, default: []].append(Message(fromEditor: true, text: String(localized: "还没挑好，等我挑完再说。")))
                 return
             }
@@ -158,11 +171,16 @@ final class Podcasts {
                 let all = picked + work.items.indices.filter { !picked.contains($0) }
                 let order = pick.pick.compactMap { n in all.indices.contains(Int(n) - 1) ? all[Int(n) - 1] : nil }
                 if !order.isEmpty {
-                    work.picked = order
-                    // What's written for articles still picked stays; the script is written again.
-                    work.script = nil
+                    if self.tasks[show.id] != nil {
+                        // Being written: the run takes it up at its next step.
+                        self.repick[show.id] = order
+                    } else {
+                        work.picked = order
+                        // What's written for articles still picked stays; the script is written again.
+                        work.script = nil
+                        self.save(show.id, work)
+                    }
                 }
-                self.save(show.id, work)
                 if var p = self.writing[show.id] {
                     p.picked = order.map { work.items[$0].title }
                     self.writing[show.id] = p
@@ -230,7 +248,7 @@ final class Podcasts {
             save(show.id, work)
             Self.log("picked \(work.picked ?? [])")
         }
-        let picked = work.picked ?? []
+        var picked = work.picked ?? []
         writing[show.id]?.picked = picked.map { work.items[$0].title }
         writing[show.id]?.skipped = work.skipped ?? ""
         if talk[show.id] == nil {
@@ -242,13 +260,25 @@ final class Podcasts {
             if let s = work.skipped, !s.isEmpty { talk[show.id]?.append(Message(fromEditor: true, text: s)) }
         }
 
+        // 编辑部 said to change the pick: from here on the run follows it.
+        func takeRepick() {
+            guard let order = repick.removeValue(forKey: show.id) else { return }
+            work.picked = order
+            work.script = nil
+            picked = order
+            writing[show.id]?.picked = order.map { work.items[$0].title }
+            save(show.id, work)
+        }
+
         // 2 取正文 and 4 逐篇摘要, one article at a time, each saved when done.
-        for (n, i) in picked.enumerated() {
+        while true {
             try Task.checkCancellation()
+            takeRepick()
+            guard let i = picked.first(where: { work.items[$0].summary == nil }) else { break }
+            let n = picked.count { work.items[$0].summary != nil }
             writing[show.id]?.step = .summarize
             writing[show.id]?.done = n
             writing[show.id]?.total = picked.count
-            if work.items[i].summary != nil { continue }
             var item = work.items[i]
             if item.summaryOnly, let full = try? await Self.article(item.url), full.units > 200 {
                 item.text = full.paragraphs.joined(separator: "\n")
@@ -263,6 +293,7 @@ final class Podcasts {
             save(show.id, work)
             Self.log("summary \(n + 1)/\(picked.count)")
         }
+        // (A change asked for while the script is being written comes too late for this episode.)
         writing[show.id]?.done = picked.count
 
         // 5 写稿; asked again once if the answer doesn't check.
@@ -299,6 +330,7 @@ final class Podcasts {
         _ = try core.saveEpisode(show: show.id, date: work.date, script: script)
         try core.markTold(show: show.id, keys: picked.map { work.items[$0].key })
         clear(show.id)
+        repick[show.id] = nil
         talk[show.id] = nil
         Self.log("done")
     }

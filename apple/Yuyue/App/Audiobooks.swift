@@ -373,6 +373,9 @@ final class Audiobooks {
         var a = a
         a.book = book.id
         a.made = nil
+        // One job at a time: one already running (合成 again, another recording) stops first, or
+        // the two would run the model side by side and write each other's timings.
+        job?.cancel()
         // Another recording of the same book gives way.
         for other in all where other.book == book.id && other.id != a.id { remove(other) }
         save(a)
@@ -437,7 +440,7 @@ final class Audiobooks {
             done.took = Date().timeIntervalSince(started)
             save(done)
             job.step = .done
-            self.job = nil
+            if self.job === job { self.job = nil }
             Self.notify(String(localized: "《\(book.title)》的有声书合成好了"), Timings.summary(timings(done)))
         } catch is CancellationError {
         } catch {
