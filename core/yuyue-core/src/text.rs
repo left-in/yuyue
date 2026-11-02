@@ -229,11 +229,10 @@ pub fn refine_language(declared: Option<&str>, sample: &str) -> String {
         }
         None => guessed.to_string(),
     };
-    if lang.eq_ignore_ascii_case("zh") {
-        if let Some(script) = chinese_script(sample) {
+    if lang.eq_ignore_ascii_case("zh")
+        && let Some(script) = chinese_script(sample) {
             return format!("zh-{script}");
         }
-    }
     lang
 }
 

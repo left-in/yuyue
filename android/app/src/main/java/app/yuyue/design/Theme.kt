@@ -140,5 +140,3 @@ fun <T> rememberPref(key: String, default: T): MutableState<T> {
 
 fun Color.alpha(a: Float) = copy(alpha = a)
 
-@Composable
-fun isPreview(): Boolean = LocalContext.current.javaClass.name.contains("Preview")

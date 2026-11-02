@@ -305,7 +305,7 @@ fn name_at(cast: &Cast, text: &str) -> Option<String> {
             break;
         }
     }
-    (!out.is_empty()).then(|| out.join(". ").replace("Mr. ", "Mr. ").replace(". ", " ").replace("Mr ", "Mr. ").replace("Mrs ", "Mrs. ").replace("Dr ", "Dr. "))
+    (!out.is_empty()).then(|| out.join(" ").replace("Mr ", "Mr. ").replace("Mrs ", "Mrs. ").replace("Dr ", "Dr. "))
 }
 
 /// Who says a quote that follows `before` in sentence `at`; `prev` is who said the line before,

@@ -163,11 +163,10 @@ fn is_couplet(line: &str) -> bool {
 /// novels are couplets of two equal halves ("第三十一回　撕扇子作千金一笑　因麒麟伏白首雙星"), so
 /// anything after the second half is the chapter's first words.
 fn split_heading(line: &str) -> (String, Option<String>) {
-    if let Some(c) = COUPLET_HEADING.captures(line) {
-        if c[2].chars().count() == c[3].chars().count() {
+    if let Some(c) = COUPLET_HEADING.captures(line)
+        && c[2].chars().count() == c[3].chars().count() {
             return (format!("{} {} {}", collapse_inner(&c[1]), &c[2], &c[3]), Some(c[4].to_string()));
         }
-    }
     (collapse_inner(line), None)
 }
 

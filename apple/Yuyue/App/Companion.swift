@@ -106,9 +106,6 @@ struct CompanionProvider: Hashable, Identifiable {
     /// Its logo in the asset catalogue (`scripts/provider-icons.py`); the user's own have none.
     var logo: String? { isCustom || kind == .apple ? nil : "provider-\(id)" }
 
-    /// Filled in only when the service has no address of its own.
-    var needsURL: Bool { kind != .apple && defaultURL == nil }
-
     var modelHint: String { defaultModel.isEmpty ? String(localized: "比如 qwen3:8b") : defaultModel }
 
     var urlHint: String {

@@ -6,7 +6,6 @@
 //! yuyue toc <library> <book>
 //! yuyue doc <library> <book> <section> [--native]
 //! yuyue sentences <library> <book> <section>
-//! yuyue align <library> <book> <heard>
 //! yuyue site <library> <out> [--app <reader build>] [--native]
 //! ```
 //!
@@ -21,7 +20,7 @@ use std::process::ExitCode;
 use std::sync::Arc;
 
 use yuyue_core::document::Paging;
-use yuyue_core::{BookSummary, CoreError, HeardWord, MarkStyle, PageGeometry, Position, SectionKind, TextPoint, YuyueCore};
+use yuyue_core::{BookSummary, CoreError, MarkStyle, PageGeometry, Position, SectionKind, TextPoint, YuyueCore};
 
 const USAGE: &str = "usage:
   yuyue import <library> <file>...
@@ -29,7 +28,6 @@ const USAGE: &str = "usage:
   yuyue toc <library> <book>
   yuyue doc <library> <book> <section> [--native]
   yuyue sentences <library> <book> <section>
-  yuyue align <library> <book> <heard>   (heard: start, end, word per line, tab-separated)
   yuyue site <library> <out> [--app <reader build>] [--native]
   yuyue progress <library> <book> <section> <sentence>
   yuyue heard <library> <book> <section> <sentence>
@@ -159,23 +157,6 @@ fn run(args: &[String]) -> Result<(), String> {
             }
             Ok(())
         }
-        // 听读对齐 from a transcript: one heard word per line, `start<TAB>end<TAB>text`.
-        ["align", library, book, heard] => {
-            let core = open(library)?;
-            let id = find(&core, book)?.id;
-            let mut words = Vec::new();
-            for line in fs::read_to_string(heard).map_err(|e| e.to_string())?.lines() {
-                let mut f = line.splitn(3, '\t');
-                let (Some(start), Some(end), Some(text)) = (f.next(), f.next(), f.next()) else { continue };
-                let (Ok(start), Ok(end)) = (start.parse(), end.parse()) else { continue };
-                words.push(HeardWord { text: text.to_string(), start, end });
-            }
-            let a = core.align_recording(id, words).map_err(err)?;
-            for s in a.sentences {
-                println!("{}\t{}\t{:.2}\t{:.2}\t{:.2}", s.section, s.sentence, s.start, s.end, s.heard);
-            }
-            Ok(())
-        }
         ["progress", library, book, section, sentence] => {
             let core = open(library)?;
             let id = find(&core, book)?.id;
@@ -264,7 +245,7 @@ fn run(args: &[String]) -> Result<(), String> {
             let mut files = Vec::new();
             for pair in rest.chunks(2) {
                 let bytes = fs::read(pair[0]).map_err(|e| e.to_string())?;
-                let em: Vec<f32> = bytes.chunks_exact(4).map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]])).collect();
+                let em: Vec<f32> = bytes.as_chunks::<4>().0.iter().map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]])).collect();
                 let frames = em.len() / classes;
                 let seconds: f64 = pair[1].parse().map_err(|_| "seconds".to_string())?;
                 files.push(yuyue_core::forced::FileEmissions { em, frames, seconds });

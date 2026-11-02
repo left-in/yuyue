@@ -168,11 +168,10 @@ fn strip_trailing(mut r: &[u8], flags: u32) -> &[u8] {
         }
         r = &r[..r.len().saturating_sub(size)];
     }
-    if flags & 1 != 0 {
-        if let Some(&last) = r.last() {
+    if flags & 1 != 0
+        && let Some(&last) = r.last() {
             r = &r[..r.len().saturating_sub((last & 3) as usize + 1)];
         }
-    }
     r
 }
 
@@ -550,11 +549,10 @@ fn insert_anchors(text: &mut Vec<u8>, at: &BTreeSet<usize>, id: impl Fn(usize) -
         .map(|&offset| {
             let mut p = offset.min(text.len());
             // Inside a tag: before it instead.
-            if let Some(lt) = text[..p].iter().rposition(|&b| b == b'<') {
-                if text[lt..p].iter().all(|&b| b != b'>') {
+            if let Some(lt) = text[..p].iter().rposition(|&b| b == b'<')
+                && text[lt..p].iter().all(|&b| b != b'>') {
                     p = lt;
                 }
-            }
             // Never inside a UTF-8 character.
             while p > 0 && p < text.len() && text[p] & 0xc0 == 0x80 {
                 p -= 1;
@@ -579,11 +577,10 @@ fn insert_anchors(text: &mut Vec<u8>, at: &BTreeSet<usize>, id: impl Fn(usize) -
 fn ncx_depths(entries: &[Entry]) -> Vec<u16> {
     let mut depths = vec![0u16; entries.len()];
     for i in 0..entries.len() {
-        if let Some(&p) = entries[i].tags.get(&21).and_then(|v| v.first()) {
-            if (p as usize) < i {
+        if let Some(&p) = entries[i].tags.get(&21).and_then(|v| v.first())
+            && (p as usize) < i {
                 depths[i] = (depths[p as usize] + 1).min(6);
             }
-        }
     }
     depths
 }
@@ -692,8 +689,8 @@ fn kf8_book(pdb: &Pdb, h: &Header, start: usize, resource_start: usize, meta: Me
 
     // Flows: 0 is the text; the rest stylesheets and SVG.
     let mut flows = vec![(0usize, raw.len())];
-    if h.fdst != NONE {
-        if let Some(f) = pdb.record(start + h.fdst as usize).filter(|r| r.starts_with(b"FDST")) {
+    if h.fdst != NONE
+        && let Some(f) = pdb.record(start + h.fdst as usize).filter(|r| r.starts_with(b"FDST")) {
             let n = u32_at(f, 8) as usize;
             let list: Vec<(usize, usize)> = (0..n.min(4096))
                 .map(|i| (u32_at(f, 12 + i * 8) as usize, u32_at(f, 16 + i * 8) as usize))
@@ -703,7 +700,6 @@ fn kf8_book(pdb: &Pdb, h: &Header, start: usize, resource_start: usize, meta: Me
                 flows = list;
             }
         }
-    }
 
     let (frags, _) = index(pdb, start, h.frag)?;
     let (skels, _) = index(pdb, start, h.skel)?;

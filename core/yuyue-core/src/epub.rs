@@ -114,11 +114,10 @@ impl Book {
         }
         let Some((path, fragment)) = href.strip_prefix('/').map(split_fragment) else { return Link::Dead };
         let Some(path) = self.archive.name(path) else { return Link::Dead };
-        if let Some(id) = fragment {
-            if let Some((section, anchor)) = self.targets.get(&(path.to_string(), id.to_string())) {
+        if let Some(id) = fragment
+            && let Some((section, anchor)) = self.targets.get(&(path.to_string(), id.to_string())) {
                 return Link::Internal(*section, Some(anchor.clone()));
             }
-        }
         match self.doc_sections.get(path) {
             Some(section) => Link::Internal(*section, None),
             None => Link::Dead,
@@ -334,13 +333,13 @@ pub(crate) fn isbn13(text: &str) -> Option<String> {
         13 => {
             let d: Vec<u32> = chars.iter().map(digit).collect::<Option<_>>()?;
             let sum: u32 = d.iter().enumerate().map(|(i, v)| if i % 2 == 0 { *v } else { v * 3 }).sum();
-            (sum % 10 == 0 && (d[..3] == [9, 7, 8] || d[..3] == [9, 7, 9])).then(|| chars.iter().collect())
+            (sum.is_multiple_of(10) && (d[..3] == [9, 7, 8] || d[..3] == [9, 7, 9])).then(|| chars.iter().collect())
         }
         10 => {
             let mut d: Vec<u32> = chars[..9].iter().map(digit).collect::<Option<_>>()?;
             let last = if matches!(chars[9], 'x' | 'X') { 10 } else { digit(&chars[9])? };
             let sum: u32 = d.iter().enumerate().map(|(i, v)| (10 - i as u32) * v).sum::<u32>() + last;
-            if sum % 11 != 0 {
+            if !sum.is_multiple_of(11) {
                 return None;
             }
             let mut full = vec![9, 7, 8];
@@ -512,18 +511,15 @@ struct RawToc {
 
 fn read_toc(archive: &mut Archive, package: &Package) -> Vec<RawToc> {
     let mut out = Vec::new();
-    if let Some(nav) = &package.nav {
-        if let Ok(bytes) = archive.read(nav) {
+    if let Some(nav) = &package.nav
+        && let Ok(bytes) = archive.read(nav) {
             out = parse_nav(&decode_markup(&bytes), nav);
         }
-    }
-    if out.is_empty() {
-        if let Some(ncx) = &package.ncx {
-            if let Ok(bytes) = archive.read(ncx) {
+    if out.is_empty()
+        && let Some(ncx) = &package.ncx
+            && let Ok(bytes) = archive.read(ncx) {
                 out = parse_ncx(&decode_markup(&bytes), ncx);
             }
-        }
-    }
     for e in &mut out {
         e.title = clean_title(&e.title);
         if let Some(name) = archive.name(&e.path) {
@@ -677,11 +673,10 @@ fn read_document(bytes: &[u8], path: &str, linear: bool, index: usize, inline: &
             if e.is("link") {
                 let rel = e.attr("rel").unwrap_or_default().to_ascii_lowercase();
                 let stylesheet = rel.split_ascii_whitespace().any(|r| r == "stylesheet") && !rel.contains("alternate");
-                if let Some((css, _)) = e.attr("href").filter(|_| stylesheet).and_then(|h| resolve(path, h)) {
-                    if !styles.contains(&css) {
+                if let Some((css, _)) = e.attr("href").filter(|_| stylesheet).and_then(|h| resolve(path, h))
+                    && !styles.contains(&css) {
                         styles.push(css);
                     }
-                }
             } else if e.is("style") {
                 let css = rebase_css(&e.text_content(), &dir_of(path));
                 if css.trim().is_empty() {
@@ -725,11 +720,10 @@ fn read_document(bytes: &[u8], path: &str, linear: bool, index: usize, inline: &
 fn prepare(el: &mut Element, doc: &str, index: usize) {
     for child in &mut el.children {
         let Node::Element(e) = child else { continue };
-        if e.is("a") && e.attr("id").is_none() {
-            if let Some(name) = e.remove_attr("name") {
+        if e.is("a") && e.attr("id").is_none()
+            && let Some(name) = e.remove_attr("name") {
                 e.set_attr("id", name);
             }
-        }
         if e.attr("id").is_some() {
             e.set_attr(SRC_ATTR, index.to_string());
         }

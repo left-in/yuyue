@@ -267,12 +267,4 @@ nonisolated final class CloudVoice: Voice, @unchecked Sendable {
             return voices.count
         }
     }
-
-    /// Bytes kept for the cloud voices.
-    static func cacheSize() -> Int64 {
-        guard let e = FileManager.default.enumerator(at: cacheDir, includingPropertiesForKeys: [.fileSizeKey]) else { return 0 }
-        var total: Int64 = 0
-        for case let url as URL in e { total += Int64((try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0) }
-        return total
-    }
 }

@@ -139,11 +139,10 @@ fn ends_with_abbreviation(s: &str) -> bool {
     }
     // Initials: "J." Multi-dot abbreviations: "e.g.", "U.S."
     let mut chars = word.chars();
-    if let (Some(c), None) = (chars.next(), chars.next()) {
-        if c.is_uppercase() {
+    if let (Some(c), None) = (chars.next(), chars.next())
+        && c.is_uppercase() {
             return true;
         }
-    }
     if word.contains('.') && word.split('.').all(|p| p.chars().count() == 1) {
         return true;
     }

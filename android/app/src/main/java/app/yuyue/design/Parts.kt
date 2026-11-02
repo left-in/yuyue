@@ -297,11 +297,3 @@ fun ProgressLine(value: Double, height: Dp = 3.dp, modifier: Modifier = Modifier
     }
 }
 
-/** A round icon button, 38 across. */
-@Composable
-fun CircleButton(icon: ImageVector, description: String, size: Dp = 38.dp, background: Color = YY.c.inset, tint: Color = YY.c.t1, shape: Shape = CircleShape, onClick: () -> Unit) {
-    Box(
-        Modifier.size(size).clip(shape).background(background).clickable(onClickLabel = description, onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) { Icon(icon, description, tint = tint, modifier = Modifier.size(size * 0.45f)) }
-}

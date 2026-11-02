@@ -338,7 +338,7 @@ final class PdfModel {
         player.onSleep = { [weak self] spot in
             guard let self else { return }
             self.listened(playing: false)
-            try? self.core.addBookmark(book: self.bookID, section: 0, sentence: UInt32(spot.section))
+            _ = try? self.core.addBookmark(book: self.bookID, section: 0, sentence: UInt32(spot.section))
             self.show(Library.Toast(icon: "moon.zzz", title: String(localized: "睡眠定时停了"), detail: String(localized: "在第 \(self.label(of: Int(spot.section))) 页加了书签")))
         }
         player.onMarkHeard = { [weak self] spot in self?.markHeard(spot) }

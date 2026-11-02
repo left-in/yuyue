@@ -364,12 +364,6 @@ final class ReaderModel {
         settings.mode == .paginated && section != nil ? "\(page + 1) / \(pageCount)" : nil
     }
 
-    /// The table of contents entry the reader is in.
-    var tocIndex: Int? {
-        guard let section, let toc = detail?.toc else { return nil }
-        return toc.lastIndex { $0.section <= section }
-    }
-
     private func turnedByHand() {
         followFrom = Date().addingTimeInterval(8)
         clock.lastTurn = Date()

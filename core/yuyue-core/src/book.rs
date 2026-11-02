@@ -73,12 +73,6 @@ pub struct TxtOptions {
     pub doubt: Option<String>,
 }
 
-impl TxtOptions {
-    pub fn same_choice(&self, other: &TxtOptions) -> bool {
-        self.encoding == other.encoding && self.rule == other.rule
-    }
-}
-
 pub fn txt_options(dir: &Path) -> TxtOptions {
     fs::read_to_string(dir.join("layout.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default()
 }

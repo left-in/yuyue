@@ -310,7 +310,7 @@ pub(crate) fn read_mdx(path: &Path, mut each: impl FnMut(&str, &str) -> Result<(
     let header_len = r.number(false)? as usize;
     let header_bytes = r.take(header_len)?;
     r.take(4)?;
-    let header_text = String::from_utf16_lossy(&header_bytes.chunks_exact(2).map(|c| u16::from_le_bytes([c[0], c[1]])).collect::<Vec<_>>());
+    let header_text = String::from_utf16_lossy(&header_bytes.as_chunks::<2>().0.iter().map(|c| u16::from_le_bytes([c[0], c[1]])).collect::<Vec<_>>());
     let attr = |name: &str| -> Option<String> {
         let key = format!("{name}=\"");
         let start = header_text.find(&key)? + key.len();

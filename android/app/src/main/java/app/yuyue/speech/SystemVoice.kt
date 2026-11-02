@@ -181,10 +181,6 @@ class SystemVoice(private val voice: Voice, number: Int = 0) : BookVoice {
             engine.voice = voice
             engine.speak(text, TextToSpeech.QUEUE_FLUSH, null, "preview")
         }
-
-        fun stopPreview() {
-            tts?.stop()
-        }
     }
 
     fun preview(text: String) = Engine.preview(voice, text)

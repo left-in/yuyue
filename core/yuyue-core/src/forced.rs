@@ -516,25 +516,6 @@ impl YuyueCore {
             .collect();
         Ok(align_files(&book, chinese, &files))
     }
-
-    /// 强制对齐 one recording against chapters `first`–`last` of the book: `emissions` is what the
-    /// acoustic model gave, `frames` rows of `LETTERS.len()` log probabilities; `seconds`, how
-    /// long the recording is.
-    pub fn align_emissions(&self, book_id: String, first: u32, last: u32, emissions: Vec<f32>, frames: u32, seconds: f64) -> Result<Alignment> {
-        if frames == 0 || emissions.len() != frames as usize * LETTERS.chars().count() {
-            return Err(CoreError::bad_book("emissions"));
-        }
-        let detail = self.book(book_id.clone())?;
-        let chinese = detail.summary.language.starts_with("zh");
-        let mut book = Vec::new();
-        for i in first..=last.min(detail.sections.len() as u32 - 1) {
-            if detail.sections[i as usize].sentences == 0 {
-                continue;
-            }
-            book.push((i, self.sentences(book_id.clone(), i)?));
-        }
-        Ok(align(&book, chinese, &emissions, frames as usize, seconds))
-    }
 }
 
 #[cfg(test)]

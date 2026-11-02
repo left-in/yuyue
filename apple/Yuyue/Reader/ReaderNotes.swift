@@ -209,14 +209,14 @@ extension ReaderModel {
                 self?.run { try $0.core.restoreBookmark(book: $0.bookID, id: mark.id) }
             })
         } else if let position = pager.position {
-            run { try $0.core.addBookmark(book: $0.bookID, section: position.section, sentence: position.sentence) }
+            run { _ = try $0.core.addBookmark(book: $0.bookID, section: position.section, sentence: position.sentence) }
             show(Library.Toast(icon: "bookmark.fill", title: String(localized: "加了书签"), detail: estimatedPage(section: position.section, sentence: Int(position.sentence)).map { String(localized: "第 \($0) 页") } ?? ""))
         }
     }
 
     /// The sleep timer stopped the voice: a bookmark where it stopped, to find the place again.
     func fellAsleep(at spot: Player.Spot) {
-        run { try $0.core.addBookmark(book: $0.bookID, section: spot.section, sentence: UInt32(spot.sentence)) }
+        run { _ = try $0.core.addBookmark(book: $0.bookID, section: spot.section, sentence: UInt32(spot.sentence)) }
         show(Library.Toast(icon: "moon.zzz", title: String(localized: "定时到了，停在这里"), detail: String(localized: "加了一个书签")))
     }
 
