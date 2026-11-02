@@ -323,10 +323,10 @@ final class Library {
         // A folder of books brings in each of them.
         let folders = urls.filter { $0.hasDirectoryPath && $0.startAccessingSecurityScopedResource() }
         defer { folders.forEach { $0.stopAccessingSecurityScopedResource() } }
-        // 有声书 go to be paired with their e-book instead.
+        // 有声书 go onto the shelf on their own.
         let (recordings, rest) = Self.recordings(in: urls)
         defer {
-            // After the books, so an e-book brought in with its recording is there to pair with.
+            // After the books, so they come first on the shelf.
             if !recordings.isEmpty {
                 Task { for files in recordings { await importRecording(files) } }
             }
@@ -422,21 +422,103 @@ final class Library {
         return (books, rest)
     }
 
-    /// A recording in, then the 配对 sheet — or straight to 合成 when 以后同名的书都这样配 is on
-    /// and the e-book is clear.
+    /// A recording read and waiting on 导入有声书 (prototype v0.30 C1): its name, author, cover and
+    /// the order of its files can be changed before it goes onto the shelf.
+    struct PendingRecording: Identifiable {
+        let id = UUID()
+        var audio: AudioImport
+        /// A folder's files, or loose ones: copied to a scratch folder, as the picker's access
+        /// ends when the import does.
+        let scratch: URL
+        /// Each file's name as it was, for the list.
+        var names: [String]
+        /// The e-book on the shelf with the same name, to make 听读书 with afterwards.
+        let match: BookSummary?
+    }
+
+    var pendingRecording: PendingRecording?
+
+    /// A recording read: copied aside, then onto 导入有声书 to look over.
     private func importRecording(_ files: [URL]) async {
         let scoped = files.filter { $0.startAccessingSecurityScopedResource() }
         defer { scoped.forEach { $0.stopAccessingSecurityScopedResource() } }
+        let scratch = FileManager.default.temporaryDirectory.appending(path: "recording-\(UUID().uuidString)", directoryHint: .isDirectory)
         do {
-            let a = try await audiobooks.add(files)
-            if Audiobooks.autoPair, let book = audiobooks.match(a, in: books) {
-                audiobooks.make(a, with: book)
-            } else {
-                audiobooks.pairing = a
+            try FileManager.default.createDirectory(at: scratch, withIntermediateDirectories: true)
+            var copies: [URL] = []
+            for url in files {
+                let copy = scratch.appending(path: url.lastPathComponent)
+                try FileManager.default.copyItem(at: url, to: copy)
+                copies.append(copy)
             }
+            let folderName = files.count > 1 ? files[0].deletingLastPathComponent().lastPathComponent : nil
+            let audio = try await AudioImporter.read(core, files: copies, folderName: folderName)
+            let probe = Audiobook(id: "", title: audio.title, author: audio.authors.first, files: [], seconds: [])
+            // Several brought in at once: one sheet after another.
+            while pendingRecording != nil { try? await Task.sleep(for: .milliseconds(200)) }
+            let pending = PendingRecording(
+                audio: audio, scratch: scratch,
+                names: audio.files.map { URL(filePath: $0.path).lastPathComponent },
+                match: audiobooks.match(probe, in: books))
+            #if DEBUG
+            // `-debugImportDirect 1`: straight onto the shelf, as 完成 would.
+            if UserDefaults.standard.bool(forKey: "debugImportDirect") {
+                finishRecording(pending)
+                return
+            }
+            #endif
+            pendingRecording = pending
         } catch {
+            try? FileManager.default.removeItem(at: scratch)
             alert = "\(files.first?.lastPathComponent ?? "")：\((error as? AudiobookError)?.message ?? Self.message(for: error))"
         }
+    }
+
+    /// 完成 on 导入有声书: onto the shelf as a book of its own.
+    @discardableResult
+    func finishRecording(_ pending: PendingRecording) -> BookSummary? {
+        defer {
+            try? FileManager.default.removeItem(at: pending.scratch)
+            pendingRecording = nil
+        }
+        let had = Set(books.map(\.id))
+        do {
+            let book = try core.importAudiobook(import: pending.audio)
+            reload()
+            if !had.contains(book.id) {
+                show(Toast(icon: "headphones", title: String(localized: "已导入《\(book.title)》"), detail: String(localized: "在书架最前面")) { [weak self] in
+                    try? self?.core.deleteBook(id: book.id)
+                    self?.reload()
+                })
+            }
+            return book
+        } catch {
+            alert = Self.message(for: error)
+            return nil
+        }
+    }
+
+    /// 合成听读书 from an 有声书 on the shelf: laid against `ebook`, as a recording brought in to
+    /// pair would be.
+    func pair(_ audio: BookSummary, with ebook: BookSummary) {
+        do {
+            let a = try audiobooks.add(shelf: audio)
+            audiobooks.make(a, with: ebook)
+        } catch {
+            alert = Self.message(for: error)
+        }
+    }
+
+    /// The e-book on the shelf that is the same book as this 有声书, not yet laid against it.
+    func ebook(for audio: BookSummary) -> BookSummary? {
+        guard audio.format == .audio, audiobooks.all.first(where: { $0.id == audio.id })?.book == nil else { return nil }
+        let probe = Audiobook(id: "", title: audio.title, author: audio.authors.first, files: [], seconds: [])
+        return audiobooks.match(probe, in: books.filter { $0.format != .audio })
+    }
+
+    func cancelRecording() {
+        if let p = pendingRecording { try? FileManager.default.removeItem(at: p.scratch) }
+        pendingRecording = nil
     }
 
     /// The books in a folder, all the way down.

@@ -95,6 +95,9 @@ class Player(private val context: Context, private val core: YuyueCore, val deta
 
     /** The ink line: the sentence, its length and how much has been read (ms at the current speed), and whether it moves. */
     var onSentence: ((Spot, Double, Double, Boolean) -> Unit)? = null
+    /** 听读书: the narrator's recording of the book, read instead of a voice where it has the
+     *  sentence; the voice reads the rest. */
+    var narrator: NarratorVoice? = null
     var onStop: (() -> Unit)? = null
     var onSleep: ((Spot) -> Unit)? = null
 
@@ -241,11 +244,22 @@ class Player(private val context: Context, private val core: YuyueCore, val deta
         rendering = scope.launch {
             while (generation == g && queued.size <= AHEAD) {
                 val s = nextToRender ?: break
+                // 听读书: the narrator's own voice where the recording has the sentence.
+                narrator?.takeIf { it.has(s.section, s.sentence) }?.let { n ->
+                    val speech = kotlinx.coroutines.withContext(Dispatchers.IO) { n.speech(s.section, s.sentence) }
+                    if (generation != g) return@launch
+                    if (speech != null) {
+                        nextToRender = after(s)
+                        schedule(Line(s, speech))
+                        continue
+                    }
+                }
                 val language = lang(s.section)
                 val voice = voice(language)
                 if (voice == null) {
-                    failed(t("没有能读这种语言的声音（%@）", language))
-                    missingVoice = true
+                    val name = java.util.Locale.forLanguageTag(language).getDisplayLanguage(java.util.Locale.getDefault()).ifEmpty { language }
+                    failed(t("下载一个%@声音就能朗读这本书，系统会带你去它的下载页。", name))
+                    missingVoice = name
                     return@launch
                 }
                 if (voice is CloudVoice) fetchAhead(voice, s, language)

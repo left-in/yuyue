@@ -1710,6 +1710,8 @@ struct PhoneStorage: View {
         case .txt: "TXT"
         case .mobi: "MOBI"
         case .epub: "EPUB"
+        case .audio: String(localized: "有声书")
+        case .podcast: String(localized: "播客")
         }
     }
 
@@ -1795,7 +1797,7 @@ struct PhoneAbout: View {
 
     static var licences: String {
         String(localized: "语阅用到了这些开源项目，感谢它们的作者：") + "\n\n"
-            + "UniFFI (MPL-2.0) · rusqlite / SQLite (MIT / Public Domain) · serde, serde_json, regex, encoding_rs, chardetng, zip, html5ever, roxmltree, ICU4X, blake3, percent-encoding, thiserror (MIT / Apache-2.0) · Lucide “radio” icon (ISC) · LobeHub Icons (MIT) · magpie icon (MIT)"
+            + "UniFFI (MPL-2.0) · rusqlite / SQLite (MIT / Public Domain) · serde, serde_json, regex, encoding_rs, chardetng, zip, html5ever, roxmltree, ICU4X, blake3, percent-encoding, thiserror (MIT / Apache-2.0) · Lucide “radio” icon (ISC) · pinyin, pypinyin 词表 (MIT) · Meta MMS 对齐模型 (CC-BY-NC 4.0) · LobeHub Icons (MIT) · magpie icon (MIT)"
             + "\n\n" + String(localized: "完整的许可文本随源代码一起发布。")
     }
 

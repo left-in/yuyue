@@ -32,7 +32,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- 用语阅打开: books shared or opened from other apps. -->
+            <!-- 用语阅打开: books and 有声书 shared or opened from other apps. -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.SEND" />
@@ -43,6 +43,7 @@
                 <data android:mimeType="application/x-mobipocket-ebook" />
                 <data android:mimeType="application/zip" />
                 <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="audio/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />

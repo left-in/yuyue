@@ -8,6 +8,7 @@ struct ReaderScreen: View {
     let bookID: String
     @State private var model: ReaderModel?
     @State private var pdf: PdfModel?
+    @State private var audio: AudiobookPlayer?
 
     var body: some View {
         Group {
@@ -25,6 +26,13 @@ struct ReaderScreen: View {
                 #else
                 PhonePdfView(model: pdf)
                 #endif
+            } else if let audio {
+                #if os(macOS)
+                AudiobookScreen(library: library, player: audio)
+                    .background(ReaderWindowShape(kind: .book))
+                #else
+                AudiobookScreen(library: library, player: audio) { library.presented = nil }
+                #endif
             } else {
                 Color.clear
             }
@@ -33,21 +41,32 @@ struct ReaderScreen: View {
         .background(OneWindowPerBook(bookID: bookID))
         #endif
         .onAppear {
-            guard model == nil, pdf == nil else { return }
+            guard model == nil, pdf == nil, audio == nil else { return }
             #if os(iOS)
             // Still being read aloud from the shelf: pick it up as it is.
             if let held = library.nowPlaying, held.bookID == bookID {
-                if let held = held as? ReaderModel { model = held } else if let held = held as? PdfModel { pdf = held }
+                if let held = held as? ReaderModel { model = held } else if let held = held as? PdfModel { pdf = held } else if let held = held as? AudiobookPlayer { audio = held }
                 library.nowPlaying = nil
-                if model != nil || pdf != nil { return }
+                if model != nil || pdf != nil || audio != nil { return }
             } else if let held = library.nowPlaying {
                 // Another book: one voice at a time.
                 held.stopAndClose()
                 library.nowPlaying = nil
             }
             #endif
-            let format = library.books.first(where: { $0.id == bookID })?.format
-            if format == .pdf {
+            let book = library.books.first(where: { $0.id == bookID })
+            let format = book?.format
+            if format == .audio, let book {
+                audio = AudiobookPlayer(library: library, book: book)
+                // 接着听 plays at once; opened from the shelf, it waits for ▶.
+                switch library.takeIntent(for: bookID) {
+                case .listen: audio?.play()
+                case .listenFromStart:
+                    audio?.seek(to: 0)
+                    audio?.play()
+                default: break
+                }
+            } else if format == .pdf {
                 pdf = PdfModel(library: library, bookID: bookID)
             } else {
                 model = ReaderModel(library: library, bookID: bookID)
@@ -67,13 +86,17 @@ struct ReaderScreen: View {
                 library.nowPlaying = model
             } else if let pdf, pdf.isPlaying {
                 library.nowPlaying = pdf
+            } else if let audio, audio.isPlaying {
+                library.nowPlaying = audio
             } else {
                 model?.close()
                 pdf?.close()
+                audio?.close()
             }
             #else
             model?.close()
             pdf?.close()
+            audio?.close()
             #endif
             // The shelf shows how far each book has been read; this one has just moved on.
             library.reload()
@@ -85,11 +108,22 @@ struct ReaderScreen: View {
 /// A book has one window. Opening it again comes to the window it has; but windows put back from
 /// last time (and any opened while they were being put back) can bring a book twice, so a second
 /// window for a book brings the first forward and closes itself.
-private struct OneWindowPerBook: NSViewRepresentable {
+extension EnvironmentValues {
+    /// Puts another book in this reading window.
+    @Entry var switchBook: ((String) -> Void)?
+}
+
+struct OneWindowPerBook: NSViewRepresentable {
     let bookID: String
 
     @MainActor private static var open: [String: WeakWindow] = [:]
     private struct WeakWindow { weak var window: NSWindow? }
+
+    /// The book is in a window already.
+    @MainActor static func hasWindow(_ bookID: String) -> Bool {
+        guard let window = open[bookID]?.window else { return false }
+        return window.isVisible || window.isMiniaturized
+    }
 
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
@@ -101,6 +135,8 @@ private struct OneWindowPerBook: NSViewRepresentable {
                 window.close()
                 return
             }
+            // A window switched to another book (搜索 · 问) no longer holds the one before.
+            Self.open = Self.open.filter { $0.value.window != nil && $0.value.window !== window }
             Self.open[bookID] = WeakWindow(window: window)
         }
         return view
@@ -245,7 +281,7 @@ private struct ReaderContent: View {
                         .id(toast.id)
                 }
             }
-            .animation(.spring(duration: 0.4, bounce: 0.3), value: model.toast?.id)
+            .yyToastMotion(value: model.toast?.id)
             .animation(.easeOut(duration: 0.15), value: model.selection)
             .animation(.easeOut(duration: 0.15), value: model.openMark)
             .sheet(item: $thought) { mark in

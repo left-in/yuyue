@@ -160,8 +160,12 @@ private struct AlignCheck: View {
         let list = texts[sentence.section] ?? []
         let here = Int(sentence.sentence)
         let s = timings.sentences
+        // The stretch's part in this chapter: it may run on into the next (notes nobody read, then
+        // the next story), and the chapter's text may be shorter than its numbers.
         let box: Range<Int>? = stretch.flatMap { r in
-            s[r.lowerBound].section == sentence.section ? Int(s[r.lowerBound].sentence) ..< Int(s[r.upperBound].sentence) + 1 : nil
+            let inHere = r.filter { s[$0].section == sentence.section }.map { Int(s[$0].sentence) }
+            guard let lo = inHere.min(), let hi = inHere.max(), lo < list.count else { return nil }
+            return lo ..< min(list.count, hi + 1)
         }
         let focus = box ?? here ..< here + 1
         let from = max(0, focus.lowerBound - 8), to = min(list.count, focus.upperBound + 12)
@@ -286,10 +290,8 @@ private struct AlignCheck: View {
         .padding(.horizontal, 16)
         .padding(.top, 10)
         .padding(.bottom, 12)
-        .background(paper.glass, in: .rect(cornerRadius: 18))
-        .background(.ultraThinMaterial, in: .rect(cornerRadius: 18))
-        .overlay { RoundedRectangle(cornerRadius: 18).strokeBorder(paper.line, lineWidth: 0.5) }
-        .shadow(color: .black.opacity(0.1), radius: 12, y: 8)
+        .yyGlass(RoundedRectangle(cornerRadius: 18), fill: paper.glass, line: paper.line, material: .ultraThinMaterial,
+                 shadow: 0.1, radius: 12, y: 8)
     }
 
     private var ticks: [Double] {
@@ -367,8 +369,7 @@ private struct AlignCheck: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
         .frame(maxHeight: .infinity, alignment: .top)
-        .background(YYColor.card, in: .rect(cornerRadius: 16))
-        .yyShadow(scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
+        .yyFloatCard(.rect(cornerRadius: 16), shadow: scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
     }
 
     private var chapterMenu: some View {

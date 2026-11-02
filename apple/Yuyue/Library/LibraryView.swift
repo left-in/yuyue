@@ -130,6 +130,19 @@ struct BookCover: View {
     @AppStorage(EInk.key) private var eink = false
 
     var body: some View {
+        if book.format == .audio {
+            // A recording's cover is square, at the bottom of the book's place.
+            Color.clear
+                .aspectRatio(2 / 3, contentMode: .fit)
+                .overlay(alignment: .bottom) {
+                    SquareCover(book: book, shadow: false)
+                }
+        } else {
+            page
+        }
+    }
+
+    private var page: some View {
         Color.clear
             .aspectRatio(2 / 3, contentMode: .fit)
             .overlay {

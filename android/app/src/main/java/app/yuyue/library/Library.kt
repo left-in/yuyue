@@ -57,6 +57,8 @@ class Library(private val context: Context) {
     val sync = app.yuyue.sync.Sync(context, core, this)
     /** 远程书库 filled in under 书库来源. */
     val sources = RemoteSources()
+    /** 听读书: 有声书 laid against their e-books. */
+    val recordings by lazy { app.yuyue.speech.Recordings(context, this) }
     /** 监听一个文件夹. */
     val watched = WatchedFolder(context)
     /** A 数据快照 opened from another app, waiting to be looked at before it's brought back. */
@@ -247,8 +249,21 @@ class Library(private val context: Context) {
             importing++
             val failures = mutableListOf<String>()
             val imported = mutableListOf<BookSummary>()
-            for (uri in uris) {
-                val name = displayName(uri)
+            // Sound files picked together are one 有声书; an M4B is one on its own.
+            val named = uris.map { it to displayName(it) }
+            val (sounds, files) = named.partition { AudioImporter.isAudio(it.second) }
+            val (m4b, loose) = sounds.partition { it.second.endsWith(".m4b", ignoreCase = true) }
+            for (recording in m4b.map { listOf(it) } + listOfNotNull(loose.takeIf { it.isNotEmpty() })) {
+                try {
+                    val pending = withContext(Dispatchers.IO) { readRecording(recording) }
+                    // Several brought in at once: one sheet after another.
+                    while (pendingRecording != null) delay(200)
+                    pendingRecording = pending
+                } catch (e: Exception) {
+                    failures += "${recording.first().second}：${message(e)}"
+                }
+            }
+            for ((uri, name) in files) {
                 if (name.endsWith(".yuyue", ignoreCase = true)) {
                     try {
                         openedSnapshot = withContext(Dispatchers.IO) { app.yuyue.me.copyIn(uri)?.let { it to core.readSnapshot(it.path) } }
@@ -285,9 +300,62 @@ class Library(private val context: Context) {
                     })
                 }
                 openedSnapshot != null && uris.size == 1 -> {}
+                // Recordings wait on 导入有声书; the note comes when they go in.
+                files.isEmpty() -> {}
                 else -> note(Toast.Icon.Check, t("书架里已经有这本了，没有再导入一份"), "")
             }
         }
+    }
+
+    /** A recording read and waiting on 导入有声书 (prototype v0.30 C1): its name, author, cover
+     *  and the order of its files can be changed before it goes onto the shelf. Its files sit in
+     *  `scratch` till then. */
+    data class PendingRecording(val audio: uniffi.yuyue_core.AudioImport, val scratch: File, val names: List<String>)
+
+    var pendingRecording by mutableStateOf<PendingRecording?>(null)
+
+    /** A recording's files copied next to the library and read. */
+    private fun readRecording(files: List<Pair<Uri, String>>): PendingRecording {
+        val tmp = File(context.cacheDir, "import-${UUID.randomUUID()}").apply { mkdirs() }
+        try {
+            val copied = files.map { (uri, name) ->
+                File(tmp, name.replace('/', '-')).also { f ->
+                    context.contentResolver.openInputStream(uri)?.use { input -> f.outputStream().use { input.copyTo(it) } } ?: throw CoreException.NotFound(name)
+                }
+            }
+            val audio = AudioImporter.read(core, copied, null)
+            return PendingRecording(audio, tmp, audio.files.map { File(it.path).name })
+        } catch (e: Exception) {
+            tmp.deleteRecursively()
+            throw e
+        }
+    }
+
+    /** 完成 on 导入有声书: onto the shelf as a book of its own. */
+    fun finishRecording(p: PendingRecording) {
+        pendingRecording = null
+        scope.launch {
+            val had = books.map { it.id }.toSet()
+            try {
+                val book = withContext(Dispatchers.IO) { core.importAudiobook(p.audio) }
+                reload()
+                if (book.id !in had) {
+                    show(Toast(Toast.Icon.Add, t("已导入《%@》", book.title), t("在书架最前面")) {
+                        runCatching { core.deleteBook(book.id) }
+                        reload()
+                    })
+                }
+            } catch (e: Exception) {
+                alert = message(e)
+            } finally {
+                withContext(Dispatchers.IO) { p.scratch.deleteRecursively() }
+            }
+        }
+    }
+
+    fun cancelRecording() {
+        pendingRecording?.scratch?.deleteRecursively()
+        pendingRecording = null
     }
 
     /** Copies the picked file next to the library (the core reads paths) and imports it. */

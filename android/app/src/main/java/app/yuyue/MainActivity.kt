@@ -122,6 +122,20 @@ class MainActivity : ComponentActivity() {
             Intent.ACTION_SEND_MULTIPLE -> IntentCompat.getParcelableArrayListExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)?.let { uris += it }
         }
         if (uris.isNotEmpty()) library.importUris(uris)
+        // Debug builds: `-e listen <书 id>,<章>,<句>` reads the book aloud from there.
+        if (BuildConfig.DEBUG) intent.getStringExtra("listen")?.split(',')?.takeIf { it.size == 3 }?.let { (b, sec, n) ->
+            runCatching { library.core.saveProgress(b, uniffi.yuyue_core.Position(sec.toUInt(), n.toUInt())) }
+            library.books.firstOrNull { it.id == b }?.let { library.open(it, Library.OpenIntent.Listen) }
+        }
+        // Debug builds: `-e pair <有声书 id>,<电子书 id>` lays the one against the other (合成).
+        if (BuildConfig.DEBUG) intent.getStringExtra("pair")?.split(',')?.takeIf { it.size == 2 }?.let { (a, e) ->
+            val audio = library.books.firstOrNull { it.id == a }
+            val ebook = library.books.firstOrNull { it.id == e }
+            if (audio != null && ebook != null) {
+                library.recordings.make(audio, ebook)
+                library.presented = audio.id
+            }
+        }
     }
 }
 
@@ -188,6 +202,7 @@ fun Root(library: Library) {
             }
             when (library.books.firstOrNull { it.id == id }?.format) {
                 uniffi.yuyue_core.BookFormat.PDF -> app.yuyue.pdf.PdfScreen(library, id, closeBook)
+                uniffi.yuyue_core.BookFormat.AUDIO -> app.yuyue.shelf.AudiobookScreen(library, id, closeBook)
                 else -> ReaderScreen(library, id, closeBook)
             }
         }
@@ -204,6 +219,7 @@ fun Root(library: Library) {
         onDispose { lifecycle.removeObserver(observer) }
     }
     library.openedSnapshot?.let { (file, info) -> app.yuyue.me.SnapshotImportSheet(library, file, info) { library.openedSnapshot = null } }
+    library.pendingRecording?.let { app.yuyue.shelf.AudiobookImportSheet(library, it) }
 
     library.alert?.let { message ->
         AlertDialog(
@@ -278,6 +294,7 @@ fun Placeholder(title: String) {
  *  and a thin line for the chapter along its bottom. A tap anywhere else goes back to the page. */
 @Composable
 private fun NowPlayingBar(library: Library) {
+    (library.nowPlaying as? app.yuyue.speech.AudiobookPlayer)?.let { return AudioPlayingBar(library, it) }
     val model = library.nowPlaying as? app.yuyue.reader.ReaderModel ?: return
     val player = model.player ?: return
     val book = library.books.firstOrNull { it.id == model.bookID } ?: return
@@ -325,6 +342,47 @@ private fun NowPlayingBar(library: Library) {
         androidx.compose.foundation.layout.BoxWithConstraints(Modifier.align(Alignment.BottomStart).padding(horizontal = YY.s(12)).fillMaxWidth().height(2.dp)) {
             Box(Modifier.fillMaxSize().clip(CircleShape).background(YY.c.line))
             Box(Modifier.width(maxWidth * player.sectionProgress.toFloat()).fillMaxHeight().clip(CircleShape).background(tint.fill))
+        }
+    }
+}
+
+/** The 播放条 for an 有声书 (prototype v0.30 C2): −15 s, ▶, +30 s, and the time. */
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
+@Composable
+private fun AudioPlayingBar(library: Library, player: app.yuyue.speech.AudiobookPlayer) {
+    val book = library.books.firstOrNull { it.id == player.bookID } ?: return
+    val tint = YY.tint
+    val (at, of) = player.inChapter
+    val shape = RoundedCornerShape(YY.s(14))
+    Box(
+        Modifier.fillMaxWidth().padding(start = YY.s(8), end = YY.s(8), top = YY.s(8), bottom = YY.s(6)).height(YY.s(54))
+            .shadow(if (YY.dark) 0.dp else 6.dp, shape, ambientColor = Color(0x14000000), spotColor = Color(0x14000000))
+            .clip(shape).background(YY.c.card.copy(alpha = 0.92f)).border(0.5.dp, YY.c.line, shape)
+            .clickable(onClickLabel = t("回到播放页"), role = androidx.compose.ui.semantics.Role.Button) { library.presented = book.id },
+    ) {
+        Row(
+            Modifier.fillMaxSize().padding(start = YY.s(9), end = YY.s(6)),
+            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(YY.s(2)),
+        ) {
+            app.yuyue.shelf.SquareCover(book, Modifier.padding(end = YY.s(6)).size(YY.s(36)), radius = 5.dp, shadow = 0.dp)
+            Column(Modifier.weight(1f)) {
+                Text(t("%@ · %@", book.title, player.title(player.chapter)), style = YY.font(11.5f, FontWeight.SemiBold), color = YY.c.t1, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text("${app.yuyue.speech.AudiobookPlayer.clock(at)} / ${app.yuyue.speech.AudiobookPlayer.clock(of)}", style = YY.font(10f).copy(fontFeatureSettings = "tnum"), color = YY.c.t2, maxLines = 1)
+            }
+            Box(Modifier.size(YY.s(32)).clip(CircleShape).clickable(onClickLabel = t("后退 15 秒")) { player.skip(-app.yuyue.speech.AudiobookPlayer.BACK) }, contentAlignment = Alignment.Center) {
+                Icon(Icons.back15, t("后退 15 秒"), tint = YY.c.t1, modifier = Modifier.size(YY.s(20)))
+            }
+            val label = if (player.isPlaying) t("暂停") else t("接着听")
+            Box(Modifier.size(YY.s(36)).clip(CircleShape).background(tint.black).clickable(onClickLabel = label) { player.toggle() }, contentAlignment = Alignment.Center) {
+                Icon(if (player.isPlaying) Icons.pause else Icons.play, label, tint = tint.onBlack, modifier = Modifier.size(YY.s(17)))
+            }
+            Box(Modifier.size(YY.s(32)).clip(CircleShape).clickable(onClickLabel = t("前进 30 秒")) { player.skip(app.yuyue.speech.AudiobookPlayer.AHEAD) }, contentAlignment = Alignment.Center) {
+                Icon(Icons.ahead30, t("前进 30 秒"), tint = YY.c.t1, modifier = Modifier.size(YY.s(20)))
+            }
+        }
+        androidx.compose.foundation.layout.BoxWithConstraints(Modifier.align(Alignment.BottomStart).padding(horizontal = YY.s(12)).fillMaxWidth().height(2.dp)) {
+            Box(Modifier.fillMaxSize().clip(CircleShape).background(YY.c.line))
+            Box(Modifier.width(maxWidth * (if (of > 0) (at / of).toFloat().coerceIn(0f, 1f) else 0f)).fillMaxHeight().clip(CircleShape).background(tint.fill))
         }
     }
 }

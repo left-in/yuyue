@@ -103,7 +103,7 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
     val model = remember(bookID) {
         // Still being read aloud with its pages closed: picked up as it is.
         (library.nowPlaying as? ReaderModel)?.takeIf { it.bookID == bookID }?.also { library.nowPlaying = null } ?: run {
-            library.nowPlaying?.let { (it as? ReaderModel)?.close() }
+            library.nowPlaying?.let { (it as? ReaderModel)?.close(); (it as? app.yuyue.speech.AudiobookPlayer)?.close() }
             library.nowPlaying = null
             val pager = ReaderPager(context, library.core, bookID)
             pager.insetTop = top

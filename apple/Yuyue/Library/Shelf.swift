@@ -56,11 +56,12 @@ extension BookSummary {
 
     /// 还剩 4 小时 20 分 · 还没读 · 读完了
     var remaining: String {
+        let audio = format == .audio
         switch status {
-        case .finished: return String(localized: "读完了")
-        case .want where progress == 0: return String(localized: "还没读")
+        case .finished: return audio ? String(localized: "听完了") : String(localized: "读完了")
+        case .want where progress == 0: return audio ? String(localized: "还没听") : String(localized: "还没读")
         default:
-            let minutes = max(1, Int((Double(readMinutes) * (1 - progress)).rounded()))
+            let minutes = max(1, Int((Double(audio ? listenMinutes : readMinutes) * (1 - progress)).rounded()))
             let h = minutes / 60, m = minutes % 60
             if h == 0 { return String(localized: "还剩 \(m) 分") }
             return m == 0 ? String(localized: "还剩 \(h) 小时") : String(localized: "还剩 \(h) 小时 \(m) 分")
@@ -206,11 +207,15 @@ struct TightLabel: LabelStyle {
 }
 
 extension Library {
-    /// 有声: whether a narrator's recording is laid against this book.
-    func hasAudio(_ book: BookSummary) -> Bool { audiobooks.audiobook(for: book.id) != nil }
+    /// 有声: an 有声书 of its own, or a narrator's recording laid against this book.
+    func hasAudio(_ book: BookSummary) -> Bool { book.format == .audio || audiobooks.audiobook(for: book.id) != nil }
 
     /// Under the cover: `有声 · 6 小时` until it's opened, then `有声 · 42%`.
     func shelfNote(_ book: BookSummary) -> String {
+        if book.available, book.format == .audio {
+            if book.status == .finished { return String(localized: "有声 · 听完") }
+            return String(localized: "有声 · ") + (book.progress > 0 ? book.percent : Audiobook.length(Double(book.listenMinutes) * 60).replacingOccurrences(of: #" \d+ 分$"#, with: "", options: .regularExpression))
+        }
         guard book.available, let a = audiobooks.audiobook(for: book.id) else { return book.shelfNote }
         if book.status == .finished { return String(localized: "有声 · 听完") }
         return String(localized: "有声 · ") + (book.progress > 0 ? book.percent : Audiobook.length(a.total).replacingOccurrences(of: #" \d+ 分$"#, with: "", options: .regularExpression))

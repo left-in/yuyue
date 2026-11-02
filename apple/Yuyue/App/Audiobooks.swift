@@ -180,6 +180,8 @@ final class Audiobooks {
 
     @ObservationIgnored private let core: YuyueCore
     @ObservationIgnored let dir: URL
+    /// The library's folder, where the alignment model is kept.
+    @ObservationIgnored let dataDir: URL
     @ObservationIgnored private var recordings: [String: Recording] = [:]
 
     nonisolated static let extensions: Set<String> = ["m4b", "m4a", "mp3", "aac", "wav", "aiff", "flac"]
@@ -188,6 +190,7 @@ final class Audiobooks {
 
     init(core: YuyueCore, dataDir: URL) {
         self.core = core
+        self.dataDir = dataDir
         dir = dataDir.appending(path: "audiobooks", directoryHint: .isDirectory)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         load()
@@ -274,6 +277,29 @@ final class Audiobooks {
         return a
     }
 
+    /// An 有声书 on the shelf, to lay against its e-book: its files linked in (the same disk, so
+    /// no second copy), under the shelf book's id.
+    func add(shelf book: BookSummary) throws -> Audiobook {
+        if let a = all.first(where: { $0.id == book.id }) { return a }
+        let r = try core.audioRecording(bookId: book.id)
+        let folder = folder(book.id)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        var names: [String] = []
+        for f in r.files {
+            let source = URL(filePath: f.path)
+            let name = source.lastPathComponent
+            let target = folder.appending(path: name)
+            if !FileManager.default.fileExists(atPath: target.path(percentEncoded: false)) {
+                do { try FileManager.default.linkItem(at: source, to: target) } catch { try FileManager.default.copyItem(at: source, to: target) }
+            }
+            names.append(name)
+        }
+        if let cover = book.coverPath { try? FileManager.default.copyItem(at: URL(filePath: cover), to: folder.appending(path: "cover.jpg")) }
+        let a = Audiobook(id: book.id, title: book.title, author: book.authors.first, files: names, seconds: r.files.map(\.seconds))
+        save(a)
+        return a
+    }
+
     func coverURL(_ a: Audiobook) -> URL? {
         let url = folder(a.id).appending(path: "cover.jpg")
         return FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) ? url : nil
@@ -294,7 +320,7 @@ final class Audiobooks {
            let book = books.first(where: { $0.id == id && $0.available }) {
             return book
         }
-        let candidates = books.filter { $0.available && $0.format != .pdf }
+        let candidates = books.filter { $0.available && $0.format != .pdf && $0.format != .audio }
         let same = candidates.filter { Self.plain($0.title) == want }
         let near = same.isEmpty ? candidates.filter { want.count >= 2 && (Self.plain($0.title).contains(want) || want.contains(Self.plain($0.title))) && Self.plain($0.title).count >= 2 } : same
         guard !near.isEmpty else { return nil }
@@ -340,8 +366,9 @@ final class Audiobooks {
 
     // MARK: Making it
 
-    /// Lays the recording against `book`: transcribes it on this device, a file at a time, and
-    /// lays out the sentences every little while, so chapters can be listened to as they come.
+    /// Lays the recording against `book` on this device (强制对齐): a file at a time through the
+    /// alignment model, the sentences laid out again after each, so chapters can be listened to
+    /// as they come.
     func make(_ a: Audiobook, with book: BookSummary) {
         var a = a
         a.book = book.id
@@ -368,41 +395,43 @@ final class Audiobooks {
         defer { UIApplication.shared.isIdleTimerDisabled = false }
         #endif
         Self.askToNotify()
-        guard #available(iOS 26, macOS 26, *) else {
-            job.problem = String(localized: "转写录音要 iOS 26 或 macOS 26 以上的系统")
-            return
-        }
         do {
+            // The alignment model, fetched the first time (about 270 MB).
+            if !Aligner.installed(dataDir) {
+                job.step = .reading
+                try await Aligner.ensure(dataDir) { f in Task { @MainActor in job.downloaded = f } }
+                job.downloaded = nil
+            }
+            try Task.checkCancellation()
+            // 找出每集念的是哪一段, then 逐句对齐: each file through the model (kept, so a stopped
+            // job picks up where it was), the whole book laid out again after each.
             job.step = .transcribing
-            let locale = try await Transcriber.locale(for: book.language)
-            var heard: [HeardWord] = []
+            var files: [Emissions] = []
             var offset = 0.0
             for (i, name) in a.files.enumerated() {
-                let cache = folder(a.id).appending(path: "heard-\(i)-\(locale.identifier).json")
-                if let data = try? Data(contentsOf: cache), let words = try? JSONDecoder().decode([Word].self, from: data) {
-                    heard += words.map { HeardWord(text: $0.t, start: $0.a, end: $0.b) }
+                let cache = folder(a.id).appending(path: "emissions-\(i).f32")
+                let em: Emissions
+                if let data = try? Data(contentsOf: cache), data.count % (4 * Aligner.letters) == 0, !data.isEmpty {
+                    let values = data.withUnsafeBytes { Array($0.bindMemory(to: Float.self)) }
+                    em = Emissions(values: values, frames: UInt32(values.count / Aligner.letters), seconds: a.seconds[i])
                 } else {
-                    let base = heard
-                    var last = Date()
-                    let words = try await Transcriber.words(in: folder(a.id).appending(path: name), locale: locale, offset: offset) { [weak self] got, through in
-                        job.heard = through
-                        // Lays out what's heard so far now and then, for 先听对好的.
-                        if Date().timeIntervalSince(last) > 20 {
-                            last = Date()
-                            self?.layOut(a, base + got, through: through, job: job)
-                        }
+                    let base = offset
+                    let out = try await Aligner.emissions(dataDir, file: folder(a.id).appending(path: name)) { done in
+                        Task { @MainActor in job.heard = base + done }
                     }
                     try Task.checkCancellation()
-                    try? JSONEncoder().encode(words.map { Word(t: $0.text, a: $0.start, b: $0.end) }).write(to: cache, options: .atomic)
-                    heard += words
+                    out.em.withUnsafeBufferPointer { try? Data(buffer: $0).write(to: cache, options: .atomic) }
+                    em = Emissions(values: out.em, frames: UInt32(out.frames), seconds: out.seconds)
                 }
+                files.append(em)
                 offset += a.seconds[i]
                 job.heard = offset
                 job.transcribed = Date().timeIntervalSince(started)
-                layOut(a, heard, through: offset, job: job)
+                job.step = .aligning
+                layOut(a, files, through: offset, job: job)
             }
             job.step = .checking
-            layOut(a, heard, through: a.total, job: job)
+            layOut(a, files, through: a.total, job: job)
             var done = a
             done.made = .now
             done.took = Date().timeIntervalSince(started)
@@ -412,14 +441,14 @@ final class Audiobooks {
             Self.notify(String(localized: "《\(book.title)》的有声书合成好了"), Timings.summary(timings(done)))
         } catch is CancellationError {
         } catch {
-            job.problem = (error as? AudiobookError)?.message ?? String(localized: "合成没做完（\(error.localizedDescription)）")
+            job.problem = Library.isOutOfSpace(error) ? String(localized: "存储空间不够：对齐用的模型要约 800 MB 空间才装得下")
+                : (error as? AudiobookError)?.message ?? (Library.offline(error) != nil ? String(localized: "对齐用的模型没下载下来，连上网再试一次")
+                : String(localized: "合成没做完（\(error.localizedDescription)）"))
         }
     }
 
-    private struct Word: Codable { let t: String; let a: Double; let b: Double }
-
-    private func layOut(_ a: Audiobook, _ heard: [HeardWord], through: Double, job: Job) {
-        guard let book = a.book, let alignment = try? core.alignRecording(bookId: book, heard: heard) else { return }
+    private func layOut(_ a: Audiobook, _ files: [Emissions], through: Double, job: Job) {
+        guard let book = a.book, let alignment = try? core.alignRecordingFiles(bookId: book, files: files) else { return }
         var t = Timings(alignment, through: through)
         // Moves made by hand stay.
         if let old = timings(a) {
@@ -436,10 +465,8 @@ final class Audiobooks {
         job = nil
     }
 
-    /// The sheet put away. A recording never paired goes again: it can only be listened to laid
-    /// against its e-book.
+    /// The sheet put away. A recording not paired stays: it's on the shelf as an 有声书 of its own.
     func dismiss() {
-        if let a = pairing, a.book == nil, job?.audiobook != a.id { remove(a) }
         pairing = nil
         showing = nil
         stopListening()
@@ -510,8 +537,10 @@ final class Job {
     var step = Step.reading
     /// Seconds of the recording heard so far.
     var heard = 0.0
-    /// How long transcribing took, once it's done.
+    /// How long running the model took, once it's done.
     var transcribed: Double?
+    /// 0–1 while the alignment model is being fetched.
+    var downloaded: Double?
     var timings: Timings?
     var problem: String?
     let started = Date()
@@ -544,7 +573,7 @@ enum AudiobookError: Error {
         switch self {
         case .unreadable(let name): String(localized: "“\(name)”读不出声音，换一个 M4B、MP3 或 M4A 文件试试")
         case .language(let l): String(localized: "这台设备还不能转写这种语言（\(l)）")
-        case .model: String(localized: "转写用的语音模型没下载下来，连上网再试一次")
+        case .model: String(localized: "对齐用的模型没下载完整，连上网再试一次")
         }
     }
 }

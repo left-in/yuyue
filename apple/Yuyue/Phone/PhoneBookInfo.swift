@@ -168,6 +168,8 @@ struct PhoneBookInfo: View {
         case .txt: "TXT"
         case .pdf: "PDF"
         case .mobi: "MOBI"
+        case .audio: String(localized: "有声书")
+        case .podcast: String(localized: "播客")
         }
     }
 }

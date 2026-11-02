@@ -399,5 +399,5 @@ private val PRIVACY: String
 
 private val LICENCES: String
     get() = t("语阅用到了这些开源项目，感谢它们的作者：") + "\n\n" +
-        "UniFFI (MPL-2.0) · rusqlite / SQLite (MIT / Public Domain) · serde, serde_json, regex, encoding_rs, chardetng, zip, html5ever, roxmltree, ICU4X, blake3, percent-encoding, thiserror (MIT / Apache-2.0) · rars (MIT) · ECDICT (MIT) · OkHttp, JNA (Apache-2.0) · AndroidX, Jetpack Compose, Media3 (Apache-2.0) · LobeHub Icons (MIT) · magpie icon (MIT)" + "\n\n" +
+        "UniFFI (MPL-2.0) · rusqlite / SQLite (MIT / Public Domain) · serde, serde_json, regex, encoding_rs, chardetng, zip, html5ever, roxmltree, ICU4X, blake3, percent-encoding, thiserror (MIT / Apache-2.0) · rars (MIT) · ECDICT (MIT) · OkHttp, JNA (Apache-2.0) · AndroidX, Jetpack Compose, Media3 (Apache-2.0) · pinyin, pypinyin 词表 (MIT) · Meta MMS 对齐模型 (CC-BY-NC 4.0) · LobeHub Icons (MIT) · magpie icon (MIT)" + "\n\n" +
         t("完整的许可文本随源代码一起发布。")

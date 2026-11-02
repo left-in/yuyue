@@ -105,6 +105,8 @@ dependencies {
     implementation("androidx.webkit:webkit:1.14.0")
     implementation("androidx.media3:media3-session:1.8.0")
     implementation("androidx.media3:media3-exoplayer:1.8.0")
+    // 强制对齐: Meta's MMS alignment model, run on the device (the model itself is downloaded).
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.30.0")
     implementation("androidx.documentfile:documentfile:1.1.0")
     implementation("androidx.exifinterface:exifinterface:1.4.1")
     implementation("androidx.security:security-crypto:1.1.0")

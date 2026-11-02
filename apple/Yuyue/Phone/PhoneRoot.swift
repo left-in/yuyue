@@ -19,6 +19,11 @@ extension PdfModel: NowPlaying {
     func stopAndClose() { close() }
 }
 
+extension AudiobookPlayer: NowPlaying {
+    var player: Player? { nil }
+    func stopAndClose() { close() }
+}
+
 /// The phone: 书架 · 笔记 · 我的, and 搜索 in its own circle (iOS 26 draws them as a floating
 /// glass bar). A book opens over all of them, full screen; while one is read aloud with its
 /// pages closed, a 播放条 sits above the tabs.
@@ -70,6 +75,7 @@ struct PhoneRoot: View {
         }
         .openingSnapshots(library)
         .audiobookSheets(library)
+        .recordingImportSheet(library)
         .task { await library.sync.keepUp() }
         .onAppear {
             // 上次停在书页上，打开 App 就直接回到那一页.
@@ -112,31 +118,43 @@ struct NowPlayingBar: View {
     let book: BookSummary
     let open: () -> Void
     private let tint = YYTint.standard
+    /// 有声书: −15 s / +30 s, and the time.
+    private var audio: AudiobookPlayer? { playing as? AudiobookPlayer }
 
     var body: some View {
         HStack(spacing: 10) {
             BookCover(book: book)
                 .frame(width: 30)
             VStack(alignment: .leading, spacing: 2) {
-                Text(playing.player?.line ?? book.title)
+                Text(audio.map { $0.title($0.chapter) } ?? playing.player?.line ?? book.title)
                     .font(.footnote.weight(.medium))
                     .foregroundStyle(YYColor.t1)
                     .lineLimit(1)
-                Text(book.title)
-                    .font(.caption2)
+                Text(audio.map { "\(book.title) · \(AudiobookPlayer.clock($0.inChapter.at)) / \(AudiobookPlayer.clock($0.inChapter.of))" } ?? book.title)
+                    .font(.caption2.monospacedDigit())
                     .foregroundStyle(YYColor.t3)
                     .lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            Button("上一句", systemImage: "backward.end.fill") { playing.player?.skip(forward: false) }
-                .frame(width: 34, height: 40)
+            if let audio {
+                Button("后退 15 秒", systemImage: "gobackward.15") { audio.skip(-AudiobookPlayer.back) }
+                    .frame(width: 34, height: 40)
+            } else {
+                Button("上一句", systemImage: "backward.end.fill") { playing.player?.skip(forward: false) }
+                    .frame(width: 34, height: 40)
+            }
             Button(playing.isPlaying ? String(localized: "暂停") : String(localized: "接着听"), systemImage: playing.isPlaying ? "pause.fill" : "play.fill") {
                 playing.togglePlay()
             }
             .font(.title3)
             .frame(width: 38, height: 40)
-            Button("下一句", systemImage: "forward.end.fill") { playing.player?.skip(forward: true) }
-                .frame(width: 34, height: 40)
+            if let audio {
+                Button("前进 30 秒", systemImage: "goforward.30") { audio.skip(AudiobookPlayer.ahead) }
+                    .frame(width: 34, height: 40)
+            } else {
+                Button("下一句", systemImage: "forward.end.fill") { playing.player?.skip(forward: true) }
+                    .frame(width: 34, height: 40)
+            }
         }
         .labelStyle(.iconOnly)
         .buttonStyle(.plain)
@@ -147,7 +165,7 @@ struct NowPlayingBar: View {
         .overlay(alignment: .bottom) {
             GeometryReader { g in
                 Capsule().fill(tint.accent)
-                    .frame(width: g.size.width * (playing.player?.sectionProgress ?? 0), height: 2)
+                    .frame(width: g.size.width * (audio.map { $0.inChapter.of > 0 ? $0.inChapter.at / $0.inChapter.of : 0 } ?? playing.player?.sectionProgress ?? 0), height: 2)
             }
             .frame(height: 2)
             .padding(.horizontal, 22)

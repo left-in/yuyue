@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.yuyue.design.Icons
@@ -51,6 +52,11 @@ import uniffi.yuyue_core.BookSummary
 /** The cover, or a plain paper with the title when the book has none. */
 @Composable
 fun BookCover(book: BookSummary, modifier: Modifier = Modifier) {
+    if (book.format == uniffi.yuyue_core.BookFormat.AUDIO) {
+        // A recording's cover is square, at the bottom of the book's place.
+        Box(modifier.aspectRatio(2f / 3f), contentAlignment = Alignment.BottomCenter) { SquareCover(book, Modifier.fillMaxWidth(), radius = 4.dp, shadow = 3.dp) }
+        return
+    }
     var bitmap by remember(book.coverPath) { mutableStateOf(book.coverPath?.let(Thumbnails::cached)) }
     LaunchedEffect(book.coverPath) {
         if (bitmap == null) bitmap = book.coverPath?.let { Thumbnails.load(it, 600) }
@@ -93,6 +99,38 @@ private fun Placeholder(book: BookSummary) {
             book.authors.firstOrNull()?.let {
                 Text(it, maxLines = 1, fontFamily = YY.serif, fontSize = (9.5 * unit).sp, color = YYPapers.Kami.ink2, modifier = Modifier.padding(top = (5 * unit).dp))
             }
+        }
+    }
+}
+
+/** A recording's cover, square; the headphones on grey when it has none. */
+@Composable
+fun SquareCover(book: BookSummary, modifier: Modifier = Modifier, radius: Dp = 10.dp, shadow: Dp = 14.dp) {
+    var bitmap by remember(book.coverPath) { mutableStateOf(book.coverPath?.let(Thumbnails::cached)) }
+    LaunchedEffect(book.coverPath) {
+        if (bitmap == null) bitmap = book.coverPath?.let { Thumbnails.load(it, 600) }
+    }
+    val eink by rememberPref("eink.on", false)
+    val shape = RoundedCornerShape(radius)
+    Box(
+        modifier
+            .aspectRatio(1f)
+            .shadow(if (eink) 0.dp else shadow, shape, ambientColor = Color.Black.copy(alpha = 0.12f), spotColor = Color.Black.copy(alpha = 0.18f))
+            .clip(shape)
+            .background(YY.c.inset)
+            .border(0.5.dp, Color.Black.copy(alpha = 0.12f), shape),
+        contentAlignment = Alignment.Center,
+    ) {
+        val b = bitmap
+        if (b != null) {
+            Image(
+                b.asImageBitmap(), null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+                colorFilter = if (eink) ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) }) else null,
+            )
+        } else {
+            Icon(Icons.headphones, null, tint = YY.c.t3, modifier = Modifier.fillMaxSize(0.25f))
         }
     }
 }

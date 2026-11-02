@@ -74,7 +74,7 @@ struct MacShelfView: View {
         // Over every page beside the sidebar (书架, 笔记, 生词本, 合集), so deleting a mark, a
         // word or a collection shows its banner too, not only deleting a book.
         .overlay(alignment: .top) { toast.padding(.leading, sidebarShown ? 228 : 0).padding(.horizontal, 16) }
-        .animation(.spring(duration: 0.4, bounce: 0.3), value: library.toast?.id)
+        .yyToastMotion(value: library.toast?.id)
         .ignoresSafeArea(.container, edges: .top)
         .onReceive(NotificationCenter.default.publisher(for: .toggleShelfSidebar)) { _ in toggleSidebar() }
         .onGeometryChange(for: Bool.self) { $0.size.width < 760 } action: { narrow in
@@ -110,6 +110,7 @@ struct MacShelfView: View {
         .onReceive(NotificationCenter.default.publisher(for: .filesOpened)) { _ in takeOpenedFiles() }
         .openingSnapshots(library)
         .audiobookSheets(library)
+        .recordingImportSheet(library)
         .sheet(item: $editing) { book in
             EditInfoSheet(library: library, book: book)
         }
@@ -134,6 +135,29 @@ struct MacShelfView: View {
         .onReceive(NotificationCenter.default.publisher(for: .vocabChanged)) { _ in countNotes() }
         #if DEBUG
         .task {
+            // `-debugImport <file>|<file>` imports them as 导入 would, even onto an empty shelf;
+            // `-debugOpen 红楼` opens the first book whose title has that in it.
+            Task {
+                if let path = UserDefaults.standard.string(forKey: "debugImport") { await library.importFiles(path.split(separator: "|").map { URL(filePath: String($0)) }) }
+                // A recording goes in after the books, in a task of its own.
+                try? await Task.sleep(for: .seconds(2))
+                // `-debugAudiobook 1` shows the first 有声书's page; `-debugAudiobook remake` makes it again.
+                if let what = UserDefaults.standard.string(forKey: "debugAudiobook"), let a = library.audiobooks.all.first {
+                    if what == "remake", let book = library.books.first(where: { $0.id == a.book }) { library.audiobooks.make(a, with: book) } else { library.audiobooks.showing = a.id }
+                }
+                // `-debugPair 1` lays the first 有声书 on the shelf against the first e-book (合成).
+                if UserDefaults.standard.bool(forKey: "debugPair") {
+                    while library.pendingRecording != nil { try? await Task.sleep(for: .milliseconds(300)) }
+                    if let audio = library.books.first(where: { $0.format == .audio }), let ebook = library.books.first(where: { $0.format != .audio }) {
+                        library.pair(audio, with: ebook)
+                    }
+                }
+                if let title = UserDefaults.standard.string(forKey: "debugOpen"), let book = library.books.first(where: { $0.title.contains(title) }) {
+                    openWindow(id: "reader", value: book.id)
+                }
+            }
+            // `-debugPodcast 1` opens on 播客; `desk` on its 编辑部, `make` with 配一档节目.
+            if UserDefaults.standard.string(forKey: "debugPodcast") != nil { filter = .podcasts }
             // `-debugMenu 1` / `-debugPick 1` open the card or the picker on the first book,
             // to look at them without clicking.
             guard let first = shown.first else { return }
@@ -168,18 +192,6 @@ struct MacShelfView: View {
             if let q = UserDefaults.standard.string(forKey: "debugQuick") { quick = q }
             // `-debugDrop 3` shows what dragging three files in looks like.
             if UserDefaults.standard.object(forKey: "debugDrop") != nil { dropCount = UserDefaults.standard.integer(forKey: "debugDrop") }
-            // `-debugImport <file>|<file>` imports them as 导入 would; `-debugOpen 红楼` opens the first book
-            // whose title has that in it.
-            Task {
-                if let path = UserDefaults.standard.string(forKey: "debugImport") { await library.importFiles(path.split(separator: "|").map { URL(filePath: String($0)) }) }
-                // `-debugAudiobook 1` shows the first 有声书's page; `-debugAudiobook remake` makes it again.
-                if let what = UserDefaults.standard.string(forKey: "debugAudiobook"), let a = library.audiobooks.all.first {
-                    if what == "remake", let book = library.books.first(where: { $0.id == a.book }) { library.audiobooks.make(a, with: book) } else { library.audiobooks.showing = a.id }
-                }
-                if let title = UserDefaults.standard.string(forKey: "debugOpen"), let book = library.books.first(where: { $0.title.contains(title) }) {
-                    openWindow(id: "reader", value: book.id)
-                }
-            }
         }
         .overlay(alignment: .topTrailing) {
             if let id = debugPicking {
@@ -628,7 +640,7 @@ struct MacShelfView: View {
                 }
 
                 if !reading.isEmpty {
-                    sectionHeader(String(localized: "在读"), trailing: String(localized: "\(library.books.count { $0.status == .reading }) 本"))
+                    readingHeader(count: allReading.count, shown: reading.count)
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 210), spacing: 12)], spacing: 12) {
                         ForEach(reading) { book in
                             ReadingCard(book: book, listening: library.listening == book.id) { intent in
@@ -707,8 +719,8 @@ struct MacShelfView: View {
             .foregroundStyle(YYColor.t1)
             .padding(.horizontal, 12)
             .frame(height: 28)
-            .background(YYColor.card, in: .capsule)
-            .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
+            // Liquid Glass that answers the pointer, or the prototype's white capsule.
+            .yyGlass(Capsule(), fill: YYColor.card, line: YYColor.line, shadow: 0, interactive: true, liquid: !eink)
             .contentShape(.capsule)
         }
         .buttonStyle(.plain)
@@ -731,6 +743,33 @@ struct MacShelfView: View {
                     .padding(.bottom, 28)
                 }
             }
+        }
+    }
+
+    /// 在读, and when more are being read than the cards hold, the way to the rest of them.
+    @ViewBuilder
+    private func readingHeader(count: Int, shown: Int) -> some View {
+        if count > shown {
+            HStack {
+                Text("在读")
+                    .font(.yy(size: 12.5, weight: .semibold))
+                    .foregroundStyle(YYColor.t1)
+                Spacer()
+                Button { filter = .status(.reading) } label: {
+                    HStack(spacing: 2) {
+                        Text("全部 \(count) 本")
+                        Image(systemName: "chevron.right").font(.yy(size: 9, weight: .semibold))
+                    }
+                    .font(.yy(size: 11.5, weight: .medium))
+                    .foregroundStyle(tint.accent)
+                    .contentShape(.rect)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 2)
+            .padding(.bottom, 10)
+        } else {
+            sectionHeader(String(localized: "在读"), trailing: String(localized: "\(count) 本"))
         }
     }
 
@@ -996,15 +1035,18 @@ enum ShelfDesk {
 
         var body: some View {
             let shape = RoundedRectangle(cornerRadius: ShelfDesk.paperRadius)
+            // The hairline is `box-shadow: 0 0 0 .5px`: just outside the paper, over the desk, so
+            // the edge reads crisp. Drawn inside it fell on the paper and all but vanished.
+            let ring = shape.inset(by: -0.25)
             if scheme == .dark {
                 shape.fill(YYColor.bg)
                     .shadow(color: .black.opacity(0.4), radius: 12, y: 8)
-                    .overlay(shape.strokeBorder(.white.opacity(0.07), lineWidth: 0.5))
+                    .overlay(ring.stroke(.white.opacity(0.07), lineWidth: 0.5))
             } else {
                 shape.fill(YYColor.bg)
                     .shadow(color: Color(yy: YYRGBA(51, 46, 41, 0.06)), radius: 12, y: 8)
                     .shadow(color: Color(yy: YYRGBA(51, 46, 41, 0.06)), radius: 1.5, y: 1)
-                    .overlay(shape.strokeBorder(.black.opacity(0.07), lineWidth: 0.5))
+                    .overlay(ring.stroke(.black.opacity(0.07), lineWidth: 0.5))
             }
         }
     }
@@ -1233,9 +1275,13 @@ struct ReadingCard: View {
                 }
             }
             HStack(spacing: 6) {
-                Button { open(nil) } label: {
+                Button { open(audio ? .listen : nil) } label: {
                     HStack {
-                        Text("接着读").font(.yy(size: 11.5, weight: .semibold))
+                        if audio, listening {
+                            Image(systemName: "waveform").symbolEffect(.variableColor.iterative, options: .repeating)
+                                .font(.yy(size: 11.5, weight: .semibold))
+                        }
+                        Text(audio ? (listening ? String(localized: "正在听") : String(localized: "接着听")) : String(localized: "接着读")).font(.yy(size: 11.5, weight: .semibold))
                         Spacer(minLength: 8)
                         Text(book.percent).font(.yy(size: 11.5, weight: .medium)).monospacedDigit().opacity(0.7)
                     }
@@ -1254,23 +1300,7 @@ struct ReadingCard: View {
                     .contentShape(.rect(cornerRadius: 9))
                 }
                 .buttonStyle(CardPress())
-                Button { open(listening ? nil : .listen) } label: {
-                    Group {
-                        if listening {
-                            Image(systemName: "waveform").symbolEffect(.variableColor.iterative, options: .repeating)
-                        } else {
-                            Image(systemName: "headphones")
-                        }
-                    }
-                    .font(.yy(size: 13, weight: .medium))
-                    .foregroundStyle(listening ? colors.bg : colors.fg)
-                    .frame(width: 32, height: 32)
-                    .background(listening ? colors.fg : colors.fg.opacity(0.13), in: .rect(cornerRadius: 9))
-                    .contentShape(.rect(cornerRadius: 9))
-                }
-                .buttonStyle(CardPress())
-                .help(listening ? String(localized: "听中") : String(localized: "听"))
-                .accessibilityLabel(listening ? String(localized: "听中") : String(localized: "听"))
+                if !audio { listenButton(colors) }
             }
         }
         .foregroundStyle(colors.fg)
@@ -1285,6 +1315,26 @@ struct ReadingCard: View {
         .task(id: book.coverPath) {
             hue = await CoverHue.load(book.coverPath)
         }
+    }
+
+    private func listenButton(_ colors: (bg: Color, fg: Color)) -> some View {
+        Button { open(listening ? nil : .listen) } label: {
+            Group {
+                if listening {
+                    Image(systemName: "waveform").symbolEffect(.variableColor.iterative, options: .repeating)
+                } else {
+                    Image(systemName: "headphones")
+                }
+            }
+            .font(.yy(size: 13, weight: .medium))
+            .foregroundStyle(listening ? colors.bg : colors.fg)
+            .frame(width: 32, height: 32)
+            .background(listening ? colors.fg : colors.fg.opacity(0.13), in: .rect(cornerRadius: 9))
+            .contentShape(.rect(cornerRadius: 9))
+        }
+        .buttonStyle(CardPress())
+        .help(listening ? String(localized: "听中") : String(localized: "听"))
+        .accessibilityLabel(listening ? String(localized: "听中") : String(localized: "听"))
     }
     #endif
 
@@ -1307,11 +1357,18 @@ struct ReadingCard: View {
                 ProgressLine(value: book.progress)
                     .padding(.bottom, 10)
                 HStack(spacing: 6) {
-                    pill(String(localized: "接着读"), fill: tint.black, text: tint.onBlack) { open(nil) }
-                    if listening {
-                        pill(String(localized: "听中"), symbol: "waveform", fill: tint.accentSoft, text: tint.accent) { open(nil) }
+                    // 有声书 has only 接着听, moving while it plays.
+                    if audio, listening {
+                        pill(String(localized: "正在听"), symbol: "waveform", fill: tint.accentSoft, text: tint.accent) { open(nil) }
+                    } else if audio {
+                        pill(String(localized: "接着听"), fill: tint.black, text: tint.onBlack) { open(.listen) }
                     } else {
-                        pill(String(localized: "听"), fill: YYColor.inset, text: YYColor.t1) { open(.listen) }
+                        pill(String(localized: "接着读"), fill: tint.black, text: tint.onBlack) { open(nil) }
+                        if listening {
+                            pill(String(localized: "听中"), symbol: "waveform", fill: tint.accentSoft, text: tint.accent) { open(nil) }
+                        } else {
+                            pill(String(localized: "听"), fill: YYColor.inset, text: YYColor.t1) { open(.listen) }
+                        }
                     }
                 }
             }
@@ -1322,9 +1379,12 @@ struct ReadingCard: View {
         .yyShadow(scheme == .dark ? YYShadow.ringDark : YYShadow.ringLight)
     }
 
+    private var audio: Bool { book.format == .audio }
+
     private var meta: String {
         if book.format == .pdf, book.page > 0 { return [book.author, String(localized: "第 \(book.page) 页"), book.percent].compactMap { $0 }.joined(separator: " · ") }
-        return [book.author, book.percent, listening ? String(localized: "听中") : nil].compactMap { $0 }.joined(separator: " · ")
+        // The percentage is on 接着读 already; here, how long is left.
+        return [book.author, book.remaining, listening ? String(localized: "听中") : nil].compactMap { $0 }.joined(separator: " · ")
     }
 
     private func pill(_ title: String, symbol: String? = nil, fill: Color, text: Color, action: @escaping () -> Void) -> some View {

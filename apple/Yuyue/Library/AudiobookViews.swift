@@ -241,6 +241,8 @@ private struct AudiobookPair: View {
         case .txt: "TXT"
         case .mobi: "Kindle"
         case .pdf: "PDF"
+        case .audio: String(localized: "有声书")
+        case .podcast: String(localized: "播客")
         }
     }
 
@@ -395,6 +397,7 @@ private struct Making {
     var step: Job.Step
     var heard: Double
     var transcribed: Double?
+    var downloaded: Double?
     var left: Double?
     var problem: String?
     var running: Bool
@@ -451,11 +454,11 @@ private struct AudiobookPage: View {
     private var progress: Making {
         if let job {
             return Making(fraction: job.step == .done ? 1 : job.step == .checking ? 0.99 : job.fraction, step: job.step, heard: job.heard,
-                          transcribed: job.transcribed, left: job.left, problem: job.problem, running: job.problem == nil)
+                          transcribed: job.transcribed, downloaded: job.downloaded, left: job.left, problem: job.problem, running: job.problem == nil)
         }
         let through = timings?.through ?? 0
         return Making(fraction: audiobook.total > 0 ? min(1, through / audiobook.total) : 0, step: .transcribing, heard: through,
-                      transcribed: nil, left: nil, problem: nil, running: false)
+                      transcribed: nil, downloaded: nil, left: nil, problem: nil, running: false)
     }
 
     // MARK: Chapters
@@ -523,9 +526,9 @@ private struct AudiobookPage: View {
                     .padding(.bottom, YYUI.s(22))
                     VStack(alignment: .leading, spacing: 0) {
                         YYGroup {
-                            step(String(localized: "读取章节"), String(localized: "\(states.count) 章 · \(Audiobook.length(audiobook.total))"), p.step.rawValue > Job.Step.reading.rawValue ? .done : .now)
-                            step(String(localized: "转写"), transcribeValue(p), p.step.rawValue > Job.Step.transcribing.rawValue ? .done : p.step == .transcribing ? .now : .todo)
-                            step(String(localized: "逐句对齐"), p.step == .done || p.step == .checking ? String(localized: "\(states.count) 章") : ready > 0 ? String(localized: "第 \(min(ready + 1, states.count)) / \(states.count) 章") : String(localized: "跟着转写一章一章来"),
+                            step(String(localized: "读取章节"), p.downloaded.map { String(localized: "下载对齐模型 \(Int($0 * 100))%") } ?? String(localized: "\(states.count) 章 · \(Audiobook.length(audiobook.total))"), p.step.rawValue > Job.Step.reading.rawValue ? .done : .now)
+                            step(String(localized: "找出每集念的是哪一段"), transcribeValue(p), p.step.rawValue > Job.Step.transcribing.rawValue && p.heard >= audiobook.total - 1 ? .done : p.step.rawValue >= Job.Step.transcribing.rawValue && p.step != .done && p.step != .checking ? .now : p.step.rawValue > Job.Step.transcribing.rawValue ? .done : .todo)
+                            step(String(localized: "逐句对齐"), p.step == .done || p.step == .checking ? String(localized: "\(states.count) 章") : ready > 0 ? String(localized: "第 \(min(ready + 1, states.count)) / \(states.count) 章") : String(localized: "一集一集来"),
                                  p.step.rawValue >= Job.Step.checking.rawValue ? .done : ready > 0 ? .now : .todo)
                             step(String(localized: "检查"), String(localized: "最后一步"), p.step == .done ? .done : p.step == .checking ? .now : .todo)
                         }

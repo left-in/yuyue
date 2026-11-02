@@ -85,7 +85,10 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     /** The pull-down of 下拉加书签, 0 when not pulled. */
     var pull by mutableStateOf(0f)
     /** Reads the book aloud; null for a book without words to read. */
-    val player: app.yuyue.speech.Player? = detail?.let { app.yuyue.speech.Player(context, core, it) }
+    val player: app.yuyue.speech.Player? = detail?.let { app.yuyue.speech.Player(context, core, it) }?.also {
+        // 听读书: the narrator reads where the recording has the sentence.
+        it.narrator = library.recordings.voice(bookID)
+    }
     var listenShown by mutableStateOf(false)
     var immersiveShown by mutableStateOf(false)
     var infoShown by mutableStateOf(false)

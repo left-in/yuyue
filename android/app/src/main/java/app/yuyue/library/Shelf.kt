@@ -29,6 +29,11 @@ val BookSummary.percent: String get() = "${maxOf(1, (progress * 100).roundToInt(
 val BookSummary.shelfNote: String
     get() {
         if (!available) return t("在别的设备上")
+        if (format == uniffi.yuyue_core.BookFormat.AUDIO) return when {
+            status == ReadingStatus.FINISHED -> t("有声 · 听完")
+            progress > 0 -> t("有声 · %@", percent)
+            else -> t("有声 · %@", app.yuyue.shelf.length(listenMinutes.toDouble() * 60).replace(Regex(" \\d+ 分$"), ""))
+        }
         return when (status) {
             ReadingStatus.FINISHED -> t("读完")
             ReadingStatus.WANT -> t("想读")
@@ -39,11 +44,12 @@ val BookSummary.shelfNote: String
 /** 还剩 4 小时 20 分 · 还没读 · 读完了 */
 val BookSummary.remaining: String
     get() {
+        val audio = format == uniffi.yuyue_core.BookFormat.AUDIO
         return when {
-            status == ReadingStatus.FINISHED -> t("读完了")
-            status == ReadingStatus.WANT && progress == 0.0 -> t("还没读")
+            status == ReadingStatus.FINISHED -> if (audio) t("听完了") else t("读完了")
+            status == ReadingStatus.WANT && progress == 0.0 -> if (audio) t("还没听") else t("还没读")
             else -> {
-                val minutes = maxOf(1, (readMinutes.toDouble() * (1 - progress)).roundToInt())
+                val minutes = maxOf(1, ((if (audio) listenMinutes else readMinutes).toDouble() * (1 - progress)).roundToInt())
                 val h = minutes / 60
                 val m = minutes % 60
                 when {

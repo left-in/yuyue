@@ -115,8 +115,8 @@ fun ShelfScreen(library: Library, openWifi: () -> Unit, openRemote: () -> Unit, 
     val all = library.books
     fun ofKind(b: BookSummary) = when (kind) {
         Kind.All -> true
-        Kind.Books -> true
-        Kind.Audio -> false
+        Kind.Books -> b.format != uniffi.yuyue_core.BookFormat.AUDIO
+        Kind.Audio -> b.format == uniffi.yuyue_core.BookFormat.AUDIO
     }
     val shown = sort.sorted(all.filter { b ->
         when (val f = filter) {
@@ -291,15 +291,21 @@ fun ReadingCard(book: BookSummary, listening: Boolean, modifier: Modifier = Modi
             Text(book.title, fontSize = 12.5.sp, fontWeight = FontWeight.SemiBold, color = YY.c.t1, maxLines = 1, overflow = TextOverflow.Ellipsis)
             val meta = when {
                 book.format == BookFormat.PDF && book.page > 0u -> listOfNotNull(book.author, t("第 %lld 页", book.page.toInt()), book.percent).joinToString(" · ")
+                book.format == BookFormat.AUDIO -> listOfNotNull(book.author, book.remaining).joinToString(" · ")
                 else -> listOfNotNull(book.author, book.percent, if (listening) t("听中") else null).joinToString(" · ")
             }
             Text(meta, fontSize = 10.5.sp, color = YY.c.t3, maxLines = 1, modifier = Modifier.padding(top = 3.dp, bottom = 8.dp))
             ProgressLine(book.progress, modifier = Modifier.padding(bottom = 10.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Pill(t("接着读"), tint.black, tint.onBlack) { open(null) }
                 when {
-                    listening -> Pill(t("听中"), tint.accentSoft, tint.accent, Icons.waveform) { open(null) }
-                    else -> Pill(t("听"), YY.c.inset, YY.c.t1) { open(Library.OpenIntent.Listen) }
+                    // 有声书 has only 接着听, moving while it plays.
+                    book.format == BookFormat.AUDIO && listening -> Pill(t("正在听"), tint.accentSoft, tint.accent, Icons.waveform) { open(null) }
+                    book.format == BookFormat.AUDIO -> Pill(t("接着听"), tint.black, tint.onBlack) { open(Library.OpenIntent.Listen) }
+                    else -> {
+                        Pill(t("接着读"), tint.black, tint.onBlack) { open(null) }
+                        if (listening) Pill(t("听中"), tint.accentSoft, tint.accent, Icons.waveform) { open(null) }
+                        else Pill(t("听"), YY.c.inset, YY.c.t1) { open(Library.OpenIntent.Listen) }
+                    }
                 }
             }
         }
@@ -323,7 +329,7 @@ private fun Kinds(kind: Kind, onKind: (Kind) -> Unit, sort: ShelfSort, onSort: (
     val tint = YY.tint
     var sorting by remember { mutableStateOf(false) }
     Row(Modifier.fillMaxWidth().padding(top = 22.dp, bottom = 0.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        for (k in Kind.entries.filter { it != Kind.Audio }) {
+        for (k in Kind.entries) {
             val on = k == kind
             Box(
                 Modifier.height(30.dp).clip(CircleShape).background(if (on) tint.black else YY.c.inset).clickable { onKind(k) }.padding(horizontal = 14.dp),
@@ -427,6 +433,7 @@ private fun Cell(
                     !book.available -> Box(Modifier.align(Alignment.BottomEnd).padding(6.dp).size(24.dp).clip(CircleShape).background(YY.c.card), contentAlignment = Alignment.Center) {
                         Icon(Icons.cloudDownload, null, tint = YY.c.t2, modifier = Modifier.size(13.dp))
                     }
+                    book.format == BookFormat.AUDIO -> AudioBadge(Modifier.align(Alignment.BottomEnd))
                 }
             }
             Text(book.title, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = YY.c.t1, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(bottom = 2.dp))
@@ -452,15 +459,17 @@ private fun BookMenu(library: Library, book: BookSummary, shown: Boolean, dismis
     DropdownMenu(shown, dismiss, containerColor = YY.c.card, shape = RoundedCornerShape(14.dp)) {
         BookPreview(book)
         HorizontalDivider(color = YY.c.line)
+        val audio = book.format == BookFormat.AUDIO
         val resume = when {
+            audio -> if (book.progress > 0) t("接着听") else t("开始听")
             book.status == ReadingStatus.FINISHED -> t("重读")
             else -> if (book.progress > 0) t("接着读") else t("开始读")
         }
-        Item(resume, Icons.book) { dismiss(); library.open(book) }
+        Item(resume, if (audio) Icons.headphones else Icons.book) { dismiss(); library.open(book, if (audio) Library.OpenIntent.Listen else null) }
         Item(t("从头听"), Icons.headphones) { dismiss(); library.open(book, Library.OpenIntent.ListenFromStart) }
         val finished = book.status == ReadingStatus.FINISHED
         Item(
-            if (finished) t("标为没读完") else t("标为读完"),
+            if (audio) (if (finished) t("标为没听完") else t("标为听完")) else if (finished) t("标为没读完") else t("标为读完"),
             if (finished) Icons.undo else Icons.check,
         ) { dismiss(); library.setFinished(book, !finished) }
         HorizontalDivider(color = YY.c.line)

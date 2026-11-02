@@ -23,9 +23,11 @@ enum BookAction: CaseIterable {
 
     func title(for book: BookSummary) -> String {
         return switch self {
+        case .resume where book.format == .audio: book.progress > 0 ? String(localized: "接着听") : String(localized: "开始听")
         case .resume: book.progress > 0 ? String(localized: "接着读") : String(localized: "开始读")
         case .listenFromStart: String(localized: "从头听")
         case .audiobook: String(localized: "有声书…")
+        case .toggleFinished where book.format == .audio: book.status == .finished ? String(localized: "标为没听完") : String(localized: "标为听完")
         case .toggleFinished: book.status == .finished ? String(localized: "标为没读完") : String(localized: "标为读完")
         case .editInfo: String(localized: "编辑信息…")
         case .addToCollection: String(localized: "加入合集…")
@@ -36,7 +38,7 @@ enum BookAction: CaseIterable {
 
     func symbol(for book: BookSummary) -> String {
         switch self {
-        case .resume: "book"
+        case .resume: book.format == .audio ? "headphones" : "book"
         case .listenFromStart: "headphones"
         case .audiobook: "waveform"
         case .toggleFinished: book.status == .finished ? "arrow.uturn.backward" : "checkmark"
@@ -72,8 +74,7 @@ struct BookMenuCard: View {
             }
         }
         .frame(width: 214)
-        .background(YYColor.card, in: .rect(cornerRadius: YYRadius.block))
-        .yyShadow(scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
+        .yyFloatCard(.rect(cornerRadius: YYRadius.block), shadow: scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
         .focusable()
         .focusEffectDisabled()
         .focused($focused)

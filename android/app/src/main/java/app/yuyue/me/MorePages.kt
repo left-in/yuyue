@@ -279,7 +279,7 @@ fun StoragePage(library: Library) {
                     row {
                         Row(Modifier.fillMaxWidth().padding(vertical = YY.s(7)), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(YY.s(10))) {
                             BookCover(book, Modifier.width(YY.s(24)))
-                            TwoLines(book.title, when (book.format) { BookFormat.PDF -> "PDF"; BookFormat.TXT -> "TXT"; BookFormat.MOBI -> "MOBI"; BookFormat.EPUB -> "EPUB" }, Modifier.weight(1f))
+                            TwoLines(book.title, when (book.format) { BookFormat.PDF -> "PDF"; BookFormat.TXT -> "TXT"; BookFormat.MOBI -> "MOBI"; BookFormat.EPUB -> "EPUB"; BookFormat.AUDIO -> "有声书"; BookFormat.PODCAST -> "播客" }, Modifier.weight(1f))
                             Text(size(b), style = YY.font(11f, FontWeight.SemiBold), color = YY.c.t1)
                         }
                     }

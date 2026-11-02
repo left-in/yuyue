@@ -35,7 +35,12 @@ object Session {
     /** This player is the one the notification controls now. */
     fun claim(p: Player) {
         if (current !== p) current?.stop()
+        audio?.pause()
         current = p
+        if (audio != null) {
+            audio = null
+            onPlayerChanged?.invoke()
+        }
         player.refresh()
         p.startService()
     }
@@ -49,6 +54,29 @@ object Session {
 
     fun update() = player.refresh()
     fun updateLine() = player.refresh()
+
+    /** 有声书: its own ExoPlayer goes to the notification instead of the sentence player. */
+    var audio: AudiobookPlayer? = null
+        private set
+    /** Set while the service runs, to hand the session the player that's playing. */
+    internal var onPlayerChanged: (() -> Unit)? = null
+
+    fun claimAudio(p: AudiobookPlayer) {
+        current?.stop()
+        if (audio !== p) audio?.pause()
+        audio = p
+        onPlayerChanged?.invoke()
+        p.startService()
+    }
+
+    fun releaseAudio(p: AudiobookPlayer) {
+        if (audio !== p) return
+        audio = null
+        onPlayerChanged?.invoke()
+    }
+
+    /** What the session should hold now. */
+    val sessionPlayer: Media3Player get() = audio?.sessionPlayer ?: player
 
     class SessionPlayer : SimpleBasePlayer(Looper.getMainLooper()) {
         private var artBook: String? = null
@@ -126,10 +154,11 @@ class PlaybackService : MediaLibraryService() {
     override fun onCreate() {
         super.onCreate()
         val open = PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_IMMUTABLE)
-        session = MediaLibrarySession.Builder(this, Session.player, Library()).setSessionActivity(open).build().also {
+        session = MediaLibrarySession.Builder(this, Session.sessionPlayer, Library()).setSessionActivity(open).build().also {
             // Started by the player, not by a controller: the notification needs the session added.
             addSession(it)
         }
+        Session.onPlayerChanged = { session?.let { if (it.player !== Session.sessionPlayer) it.player = Session.sessionPlayer } }
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? = session
@@ -158,10 +187,11 @@ class PlaybackService : MediaLibraryService() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         // Swiped away while paused: nothing left to keep going.
-        if (!Session.player.playWhenReady) stopSelf()
+        if (!Session.sessionPlayer.playWhenReady) stopSelf()
     }
 
     override fun onDestroy() {
+        Session.onPlayerChanged = null
         session?.release()
         session = null
         super.onDestroy()
