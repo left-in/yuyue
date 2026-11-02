@@ -178,7 +178,6 @@ private fun Main(library: Library, push: (MePage) -> Unit) {
             }
             Group {
                 row { YYRow(t("关于"), Icons.info, BuildConfig.VERSION_NAME, chevron = true) { push(MePage.About) } }
-                row { YYRow(t("请开发者喝咖啡"), Icons.cup, null, chevron = true) { push(MePage.About) } }
             }
         }
     }
@@ -354,7 +353,6 @@ private fun About(push: (MePage) -> Unit) {
             Text(t("版本 %@", "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"), style = YY.font(10f), color = YY.c.t3)
             Text(t("免费，没有服务器，不收集任何数据。"), style = YY.font(12.5f, FontWeight.SemiBold), color = YY.c.t1, modifier = Modifier.padding(top = YY.s(22), bottom = YY.s(26)))
         }
-        TipCard(Modifier.padding(bottom = YY.s(14)))
         YYGroup {
             row { YYRow(t("开源许可"), Icons.list, chevron = true) { push(MePage.Licences) } }
             row { YYRow(t("隐私说明"), Icons.info, chevron = true) { push(MePage.Privacy) } }

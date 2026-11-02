@@ -47,9 +47,7 @@ targets:
         buildPhase: resources
     dependencies:
       - package: YuyueCore
-    # 请开发者喝咖啡's tips, for trying in Xcode before they exist in App Store Connect.
-    scheme:
-      storeKitConfiguration: Tips.storekit
+    scheme: {}
     info:
       path: Yuyue/Info.plist
       properties:

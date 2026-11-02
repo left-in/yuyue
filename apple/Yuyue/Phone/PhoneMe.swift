@@ -49,7 +49,6 @@ struct PhoneMe: View {
                 }
                 group {
                     link(String(localized: "关于"), "info.circle", Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) { PhoneAbout() }
-                    link(String(localized: "请开发者喝咖啡"), "cup.and.saucer", nil) { PhoneAbout() }
                 }
             }
             .navigationTitle("我的")
@@ -1773,7 +1772,6 @@ struct PhoneAbout: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.top, YYUI.s(24))
-            TipCard().padding(.bottom, YYUI.s(14))
             YYGroup {
                 NavigationLink { PhoneTextPage(title: String(localized: "开源许可"), text: Self.licences) } label: {
                     YYRow(String(localized: "开源许可"), icon: "chevron.left.forwardslash.chevron.right", chevron: true)
