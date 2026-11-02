@@ -101,5 +101,6 @@
   "下载对齐模型 %lld%%": "Downloading the alignment model %lld%%",
   "合成中 %lld%%": "Making %lld%%",
   "存储空间不够：对齐用的模型要约 800 MB 空间才装得下": "Not enough space: the alignment model needs about 800 MB to install",
-  "对齐用的模型没下载下来，连上网再试一次": "The alignment model didn’t download. Connect to the internet and try again."
+  "对齐用的模型没下载下来，连上网再试一次": "The alignment model didn’t download. Connect to the internet and try again.",
+  "已暂停 · 通话结束后继续": "Paused · resumes after the call"
 }

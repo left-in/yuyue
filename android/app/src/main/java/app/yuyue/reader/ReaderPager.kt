@@ -509,6 +509,11 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
     private val glossed = mutableMapOf<Int, List<Pair<String, String>>>()
     /** 沉浸阅读 can hide 难词注释 too. */
     var glossesHidden = false
+        set(value) {
+            if (field == value) return
+            field = value
+            slots.forEach(::sendGlosses)
+        }
 
     fun refreshGlosses() {
         if (glosser == null) return

@@ -56,6 +56,10 @@ class AudiobookPlayer(private val context: Context, private val library: Library
     var bookmarks by mutableStateOf(runCatching { library.core.bookmarks(book.id) }.getOrDefault(emptyList()))
         private set
     var failure by mutableStateOf<String?>(if (recording == null) t("这本有声书的录音不在这台设备上") else null)
+    /** A call (or the navigation's voice) has the sound for a moment: shown as paused, and it
+     *  goes on by itself when they're done. */
+    var waiting by mutableStateOf(false)
+        private set
 
     private val core get() = library.core
     private val main = Handler(Looper.getMainLooper())
@@ -101,6 +105,28 @@ class AudiobookPlayer(private val context: Context, private val library: Library
 
         override fun onPlaybackStateChanged(state: Int) {
             if (state == androidx.media3.common.Player.STATE_ENDED) finished()
+        }
+
+        override fun onPlaybackSuppressionReasonChanged(reason: Int) {
+            if (closed) return
+            val held = reason == androidx.media3.common.Player.PLAYBACK_SUPPRESSION_REASON_TRANSIENT_AUDIO_FOCUS_LOSS
+            if (held && isPlaying) {
+                // The player still means to play; to the reader it's paused until the call ends.
+                readTime()
+                isPlaying = false
+                waiting = true
+                listened()
+                save(now = true)
+                main.removeCallbacks(tick)
+            } else if (!held && waiting) {
+                waiting = false
+                if (exo.playWhenReady) {
+                    isPlaying = true
+                    listened()
+                    main.removeCallbacks(tick)
+                    main.post(tick)
+                }
+            }
         }
     }
 
@@ -160,6 +186,7 @@ class AudiobookPlayer(private val context: Context, private val library: Library
 
     fun play() {
         if (recording == null || isPlaying || closed) return
+        waiting = false
         // Picked up after a while: a few seconds back, to hear where it was.
         if (pausedAt > 0) {
             val gap = (System.currentTimeMillis() - pausedAt) / 1000.0
@@ -179,6 +206,13 @@ class AudiobookPlayer(private val context: Context, private val library: Library
     }
 
     fun pause() {
+        if (waiting) {
+            // Paused during a call: it stays paused after it.
+            waiting = false
+            exo.pause()
+            pausedAt = System.currentTimeMillis()
+            return
+        }
         if (!isPlaying) return
         exo.pause()
         stopped()

@@ -164,6 +164,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     fun applyImmersive() {
         pager.calm = (immersive && ImmersivePrefs.stillPages) || settings.paper == Paper.EINK
         pager.marksHidden = immersive && ImmersivePrefs.hidesMarks
+        pager.glossesHidden = immersive && ImmersivePrefs.hidesHints
     }
 
     /** Opens 书伴 with a question. */

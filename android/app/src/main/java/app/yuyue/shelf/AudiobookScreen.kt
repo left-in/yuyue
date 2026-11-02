@@ -83,7 +83,7 @@ fun AudiobookScreen(library: Library, bookID: String, close: () -> Unit) {
     DisposableEffect(player) {
         onDispose {
             // Closed while it plays: it goes on, with the 播放条 over the tabs.
-            if (player.isPlaying) library.nowPlaying = player else player.close()
+            if (player.isPlaying || player.waiting) library.nowPlaying = player else player.close()
         }
     }
     BackHandler(onBack = close)
@@ -112,6 +112,7 @@ fun AudiobookScreen(library: Library, bookID: String, close: () -> Unit) {
         Controls(player, Modifier.padding(vertical = YY.s(14)))
         Tiles(player) { list = it }
         PairCard(library, player.summary)
+        if (player.waiting) Text(t("已暂停 · 通话结束后继续"), style = YY.font(11f), color = YY.c.t2, modifier = Modifier.padding(top = YY.s(10)))
         player.failure?.let { Text(it, style = YY.font(11f), color = YY.c.danger, modifier = Modifier.padding(top = YY.s(10))) }
     }
     list?.let { ChapterSheet(player, it, { list = it }) { list = null } }

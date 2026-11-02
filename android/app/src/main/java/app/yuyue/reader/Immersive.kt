@@ -70,6 +70,8 @@ object ImmersivePrefs {
     val hidesStatusBar get() = Prefs.bool(STATUS, true)
     val hidesProgress get() = Prefs.bool(PROGRESS, true)
     val quiet get() = Prefs.bool(QUIET, true)
+    /** 关掉书伴提示和难词注释, on at first as on Apple. */
+    val hidesHints get() = Prefs.bool(HINTS, true)
     val always get() = Prefs.bool(ALWAYS, false)
 }
 
@@ -162,6 +164,7 @@ fun ImmersiveSettings(model: ReaderModel?) {
     var quiet by rememberPref(ImmersivePrefs.QUIET, true)
     var still by rememberPref(ImmersivePrefs.STILL, true)
     var marks by rememberPref(ImmersivePrefs.MARKS, false)
+    var hints by rememberPref(ImmersivePrefs.HINTS, true)
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(t("沉浸阅读"), style = YY.font(13f, FontWeight.SemiBold), color = YY.c.t1, modifier = Modifier.weight(1f))
         Switch(
@@ -181,6 +184,7 @@ fun ImmersiveSettings(model: ReaderModel?) {
         row { SwitchRow(t("读书时通知不打扰"), quiet) { quiet = it } }
         row { SwitchRow(t("关掉翻页动画"), still) { still = it; model?.applyImmersive() } }
         row { SwitchRow(t("隐藏划线和想法"), marks) { marks = it; model?.applyImmersive() } }
+        row { SwitchRow(t("关掉书伴提示和难词注释"), hints) { hints = it; model?.applyImmersive() } }
     }
     if (quiet && !DoNotDisturb.allowed(context)) {
         YYNote(t("要让语阅读书时打开勿扰，先在系统里允许它管理勿扰。"))
