@@ -71,6 +71,10 @@ pub enum BookFormat {
     Pdf,
     /// A Kindle book (MOBI, AZW3), read like an EPUB.
     Mobi,
+    /// 有声书 on its own: listened to, not read (`audiobook`).
+    Audio,
+    /// 播客: an episode written for one of the reader's shows.
+    Podcast,
 }
 
 /// What the app read from a PDF with the system's viewer.
@@ -133,6 +137,9 @@ pub struct SectionSummary {
     pub units: u32,
     /// A PDF's pages; its positions count pages instead of sentences.
     pub pages: u32,
+    /// An audiobook chapter's length in milliseconds; its positions count milliseconds.
+    #[uniffi(default = 0)]
+    pub ms: u32,
 }
 
 #[derive(Clone, Debug, PartialEq, uniffi::Record)]
@@ -230,6 +237,8 @@ pub struct YuyueCore {
     pub(crate) books_dir: PathBuf,
     pub(crate) store: Mutex<Store>,
     pub(crate) manifests: Mutex<HashMap<String, Arc<Manifest>>>,
+    /// Each book's 剧本 cast, read once from the whole book.
+    pub(crate) casts: Mutex<HashMap<String, Arc<crate::script::Cast>>>,
 }
 
 pub(crate) fn now_ms() -> i64 {
@@ -261,7 +270,7 @@ impl YuyueCore {
         if !changed.is_empty() {
             store.set_fields(&entity, &changed)?;
         }
-        Ok(Arc::new(YuyueCore { books_dir, store: Mutex::new(store), manifests: Mutex::new(HashMap::new()) }))
+        Ok(Arc::new(YuyueCore { books_dir, store: Mutex::new(store), manifests: Mutex::new(HashMap::new()), casts: Mutex::new(HashMap::new()) }))
     }
 
     pub fn device_id(&self) -> String {
@@ -272,30 +281,7 @@ impl YuyueCore {
     pub fn import_book(&self, path: String) -> Result<BookSummary> {
         let manifest = book::import(&self.books_dir, Path::new(&path))?;
         let id = manifest.id.clone();
-        {
-            let mut store = lock(&self.store);
-            let entity = format!("book/{id}");
-            let existing = store.fields(&entity)?;
-            let mut fields = vec![
-                ("title", json!(manifest.title)),
-                ("authors", json!(manifest.authors)),
-                ("language", json!(manifest.language)),
-                ("format", json!(manifest.format)),
-            ];
-            if let Some(isbn) = &manifest.isbn {
-                fields.push(("isbn", json!(isbn)));
-            }
-            if existing.get("deleted") != Some(&json!(false)) {
-                fields.push(("deleted", json!(false)));
-            }
-            if !existing.contains_key("addedAt") || existing.get("deleted") == Some(&json!(true)) {
-                fields.push(("addedAt", json!(now_ms())));
-            }
-            let fields: Vec<_> = fields.into_iter().filter(|(k, v)| existing.get(*k) != Some(v)).collect();
-            if !fields.is_empty() {
-                store.set_fields(&entity, &fields)?;
-            }
-        }
+        self.record_import(&manifest)?;
         lock(&self.manifests).insert(id.clone(), Arc::new(manifest));
         self.summary(&id)
     }
@@ -401,6 +387,7 @@ impl YuyueCore {
                     sentences: s.sentences,
                     units: s.units,
                     pages: s.pages,
+                    ms: s.ms,
                 })
                 .collect(),
             toc: m
@@ -654,6 +641,7 @@ impl YuyueCore {
         if changed > 0 {
             // A TXT may be read another way now; its manifest is checked again when next needed.
             lock(&self.manifests).clear();
+            lock(&self.casts).clear();
         }
         Ok(changed)
     }
@@ -686,13 +674,12 @@ impl YuyueCore {
             let Some((book, device)) = entity.strip_prefix("progress/").and_then(|r| r.split_once('/')) else { continue };
             let Some(p) = fields.get("position") else { continue };
             let at = p["at"].as_i64().unwrap_or(0);
-            if let Some(d) = out.iter_mut().find(|d| d.id == device) {
-                if d.last_at.is_none_or(|t| at > t) {
+            if let Some(d) = out.iter_mut().find(|d| d.id == device)
+                && d.last_at.is_none_or(|t| at > t) {
                     d.last_book = Some(book.to_string());
                     d.last_fraction = p["fraction"].as_f64();
                     d.last_at = Some(at);
                 }
-            }
         }
         out.sort_by(|a, b| b.this_device.cmp(&a.this_device).then(b.last_at.cmp(&a.last_at)));
         Ok(out)
@@ -714,7 +701,8 @@ impl YuyueCore {
         }
         let dir = self.book_dir(id)?;
         let mut m = book::load(&dir)?;
-        if m.version != book::FORMAT_VERSION {
+        // A recording has nothing the importer made, so nothing to make again.
+        if m.version != book::FORMAT_VERSION && !matches!(m.format, Format::Audio | Format::Podcast) {
             m = book::reimport(&self.books_dir, id, None)?;
         }
         // Another device chose another encoding or chapter rule; a bad choice leaves the book as it is.
@@ -742,6 +730,8 @@ impl YuyueCore {
             (None, Some("txt")) => BookFormat::Txt,
             (None, Some("pdf")) => BookFormat::Pdf,
             (None, Some("mobi")) => BookFormat::Mobi,
+            (None, Some("audio")) => BookFormat::Audio,
+            (None, Some("podcast")) => BookFormat::Podcast,
             (None, _) => BookFormat::Epub,
         };
         Ok(BookSummary {
@@ -903,15 +893,15 @@ pub(crate) fn fraction(m: &Manifest, p: Position) -> f64 {
     if m.units == 0 {
         return 0.0;
     }
-    // A PDF's pages count as its text; its positions are pages.
-    let counts = |s: &book::SectionInfo| s.linear && (s.kind == Kind::Text || s.pages > 0);
+    // A PDF's pages count as its text, an audiobook's milliseconds likewise.
+    let counts = |s: &book::SectionInfo| s.linear && (s.kind == Kind::Text || s.pages > 0 || s.ms > 0);
     let before: u32 = m.sections.iter().take(p.section as usize).filter(|s| counts(s)).map(|s| s.units).sum();
     let within = m
         .sections
         .get(p.section as usize)
         .filter(|s| counts(s))
         .map(|s| {
-            let steps = if s.pages > 0 { s.pages } else { s.sentences };
+            let steps = if s.ms > 0 { s.ms } else if s.pages > 0 { s.pages } else { s.sentences };
             if steps == 0 { 0.0 } else { s.units as f64 * (p.sentence.min(steps) as f64 / steps as f64) }
         })
         .unwrap_or(0.0);
@@ -946,6 +936,8 @@ impl From<Format> for BookFormat {
             Format::Txt => BookFormat::Txt,
             Format::Pdf => BookFormat::Pdf,
             Format::Mobi => BookFormat::Mobi,
+            Format::Audio => BookFormat::Audio,
+            Format::Podcast => BookFormat::Podcast,
         }
     }
 }

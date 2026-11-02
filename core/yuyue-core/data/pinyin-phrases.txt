@@ -1,0 +1,3438 @@
+# From pypinyin (MIT License, Copyright (c) 2016 mozillazg, 闲耘): phrases read otherwise than their characters.
+一丘之貉	yi1 qiu1 zhi1 he2
+一了	yi1 liao3
+一了百了	yi1 liao3 bai3 liao3
+一了百当	yi1 liao3 bai3 dang4
+一似	yi1 si4
+一佛出世	yi1 fo2 chu1 shi4
+一刹那	yi1 cha4 na4
+一口两匙	yi1 kou3 liang3 chi2
+一叶扁舟	yi2 ye4 pian1 zhou1
+一夕一朝	yi1 xi1 yi1 zhao1
+一字长城	yi1 zi4 chang2 cheng2
+一字长蛇阵	yi1 zi4 chang2 she2 zhen4
+一宿	yi1 xiu3
+一弹指顷	yi1 tan2 zhi3 qing3
+一扎	yi1 za1
+一技之长	yi1 ji4 zhi1 chang2
+一报还一报	yi1 bao4 huan2 yi1 bao4
+一撮	yi1 zuo3
+一无所长	yi1 wu2 suo3 chang2
+一无长物	yi1 wu2 chang2 wu4
+一日三省	yi1 ri4 san1 xing3
+一日之长	yi1 ri4 zhi1 chang2
+一暴十寒	yi1 pu4 shi2 han2
+一朝	yi1 zhao1
+一朝一夕	yi1 zhao1 yi1 xi1
+一朝之忿	yi1 zhao1 zhi1 fen4
+一朝之患	yi1 zhao1 zhi1 huan4
+一朝千里	yi1 zhao1 qian1 li3
+一模一样	yi1 mu2 yi1 yang4
+一步步地	yi2 bu4 bu4 de5
+一死了之	yi1 si3 liao3 zhi1
+一物降一物	yi1 wu4 xiang2 yi1 wu4
+一百二十行	yi1 bai3 er4 shi2 hang2
+一目了然	yi1 mu4 liao3 ran2
+一目五行	yi1 mu4 wu3 hang2
+一目十行	yi1 mu4 shi2 hang2
+一目数行	yi1 mu4 shu4 hang2
+一笑了之	yi1 xiao4 liao3 zhi1
+一见了然	yi1 jian4 liao3 ran2
+一觉	yi1 jiao4
+一言中的	yi4 yan2 zhong4 di4
+一语中的	yi1 yu3 zhong4 di4
+一语破的	yi1 yu3 po4 di4
+一走了之	yi1 zou3 liao3 zhi1
+一还一报	yi1 huan2 yi1 bao4
+一邱之貉	yi1 qiu1 zhi1 he2
+一重一掩	yi1 chong2 yi1 yan3
+一针见血	yi1 zhen1 jian4 xie3
+一长一短	yi1 chang2 yi1 duan3
+一长两短	yi1 chang2 liang3 duan3
+一长串	yi1 chang2 chuan4
+一长二短	yi1 chang2 er4 duan3
+一长半短	yi1 chang2 ban4 duan3
+一鞭先著	yi1 bian1 xian1 zhuo2
+一驮粮	yi2 duo4 liang2
+七十二行	qi1 shi2 er4 hang2
+七行俱下	qi1 hang2 ju4 xia4
+七返还丹	qi1 fan3 huan2 dan1
+七长八短	qi1 chang2 ba1 duan3
+万俟	mo4 qi2
+万古长存	wan4 gu3 chang2 cun2
+万古长春	wan4 gu3 chang2 chun1
+万古长青	wan4 gu3 chang2 qing1
+万头攒动	wan4 tou2 cuan2 dong4
+万家生佛	wan4 jia1 sheng1 fo2
+万箭攒心	wan4 jian4 cuan2 xin1
+万里长城	wan4 li3 chang2 cheng2
+万里长征	wan4 li3 chang2 zheng1
+三不拗六	san1 bu4 niu4 liu4
+三十六行	san1 shi2 liu4 hang2
+三句不离本行	san1 ju4 bu4 li2 ben3 hang2
+三句话不离本行	san1 ju4 hua4 bu4 li2 ben3 hang2
+三天两宿	san1 tian1 liang3 xiu3
+三百六十行	san1 bai3 liu4 shi2 hang2
+三省吾身	san1 xing3 wu2 shen1
+三臡八菹	san1 ni2 ba1 zu1
+三藏	san1 zang4
+三重	san1 chong2
+三重唱	san1 chong2 chang4
+三长两短	san1 chang2 liang3 duan3
+三长四短	san1 chang2 si4 duan3
+上行	shang4 hang2
+下不了台	xia4 bu4 liao3 tai2
+下乘	xia4 sheng4
+下调	xia4 tiao2
+不了	bu4 liao3
+不了不当	bu4 liao3 bu4 dang4
+不了了之	bu4 liao3 liao3 zhi1
+不了而了	bu4 liao3 er2 liao3
+不亦说乎	bu4 yi4 yue4 hu1
+不到长城非好汉	bu2 dao4 chang2 cheng2 fei1 hao3 han4
+不可揆度	bu4 ke3 kui2 duo2
+不可究诘	bu4 ke3 jiu1 jie2
+不念僧面念佛面	bu4 nian4 seng1 mian4 nian4 fo2 mian4
+不战而降	bu2 zhan4 er2 xiang2
+不犯着	bu4 fan4 zhao2
+不甚了了	bu4 shen4 liao3 liao3
+不相称	bu4 xiang1 chen4
+不省人事	bu4 xing3 ren2 shi4
+不看僧面看佛面	bu4 kan4 seng1 mian4 kan4 fo2 mian4
+不着疼热	bu4 zhuo2 teng2 re4
+不着边际	bu4 zhuo2 bian1 ji4
+不粘锅	bu4 nian2 guo1
+不胜杯杓	bu4 sheng4 bei1 shao2
+不胜桮杓	bu4 sheng4 bei1 shao2
+不见经传	bu4 jian4 jing1 zhuan4
+不辟斧钺	bu4 bi4 fu3 yue4
+不遗寸长	bu4 yi2 cun4 chang2
+与世长辞	yu3 shi4 chang2 ci2
+丑角	chou3 jue2
+专业银行	zhuan1 ye4 yin2 hang2
+专差	zhuan1 chai1
+专长	zhuan1 chang2
+东量西折	dong1 liang4 xi1 she2
+东阿	dong1 e1
+东飘西泊	dong1 piao1 xi1 bo2
+丢三落四	diu1 san1 la4 si4
+丢下耙儿弄扫帚	diu1 xia4 pa2 er5 nong4 sao4 zhou3
+丢卒保车	diu1 zu2 bao3 ju1
+两肋插刀	liang3 lei4 cha1 dao1
+两重天	liang3 chong2 tian1
+严肃音乐	yan2 su4 yin1 yue4
+中国农业银行	zhong1 guo2 nong2 ye4 yin2 hang2
+中牟	zhong1 mu4
+中行	zhong1 hang2
+中都	zhong1 du1
+中长	zhong1 chang2
+中长期	zhong1 chang2 qi1
+中长跑	zhong1 chang2 pao3
+丰草长林	feng1 cao3 chang2 lin2
+临了	lin2 liao3
+临崖勒马	lin2 ya2 le4 ma3
+临时抱佛脚	lin2 shi2 bao4 fo2 jiao3
+临深履薄	lin2 shen1 lv3 bo2
+丹参	dan1 shen1
+为之语塞	wei2 zhi1 yu3 se4
+主角	zhu3 jue2
+丽都	li4 du1
+久别重逢	jiu3 bie2 chong2 feng2
+久安长治	jiu3 an1 chang2 zhi4
+久长	jiu3 chang2
+义薄云天	yi4 bo2 yun2 tian1
+乍暖还寒	zha4 nuan3 huan2 han2
+乐亭	lao4 ting2
+乐亭县	lao4 ting2 xian4
+乐器	yue4 qi4
+乐团	yue4 tuan2
+乐坛	yue4 tan2
+乐官	yue4 guan1
+乐工	yue4 gong1
+乐师	yue4 shi1
+乐府	yue4 fu3
+乐府诗	yue4 fu3 shi1
+乐律	yue4 lv4
+乐感	yue4 gan3
+乐户	yue4 hu4
+乐手	yue4 shou3
+乐曲	yue4 qu3
+乐歌	yue4 ge1
+乐毅	yue4 yi4
+乐池	yue4 chi2
+乐清	yue4 qing1
+乐理	yue4 li3
+乐章	yue4 zhang1
+乐舞	yue4 wu3
+乐谱	yue4 pu3
+乐迷	yue4 mi2
+乐都	le4 du1
+乐队	yue4 dui4
+乐音	yue4 yin1
+乘舆	sheng4 yu2
+乘间伺隙	cheng2 jian1 si4 xi4
+乜斜缠帐	nie4 xie2 chan2 zhang4
+九垓八埏	jiu3 gai1 ba1 yan2
+九行八业	jiu3 hang2 ba1 ye4
+九重	jiu3 chong2
+九重关	jiu3 chong2 guan1
+九重城	jiu3 chong2 cheng2
+九重墙	jiu3 chong2 qiang2
+九重天	jiu3 chong2 tian1
+九重宫	jiu3 chong2 gong1
+九重泉	jiu3 chong2 quan2
+九重锁	jiu3 chong2 suo3
+九重闺	jiu3 chong2 gui1
+九重阁	jiu3 chong2 ge2
+九重霄	jiu3 chong2 xiao1
+乞降	qi3 xiang2
+乡长	xiang1 chang2
+书归正传	shu1 gui1 zheng4 zhuan4
+买椟还珠	mai3 du2 huan2 zhu1
+乱弹	luan4 tan2
+乱弹琴	luan4 tan2 qin2
+乱箭攒心	luan4 jian4 cuan2 xin1
+乳臭	ru3 xiu4
+乳臭未干	ru3 xiu4 wei4 gan1
+了不可见	liao3 bu4 ke3 jian4
+了不得	liao3 bu4 de2
+了不起	liao3 bu4 qi3
+了不长进	liao3 bu4 zhang3 jin4
+了了	liao3 liao3
+了了可见	liao3 liao3 ke3 jian4
+了事	liao3 shi4
+了却	liao3 que4
+了如指掌	liao3 ru2 zhi3 zhang3
+了局	liao3 ju2
+了当	liao3 dang4
+了得	liao3 de5
+了悟	liao3 wu4
+了断	liao3 duan4
+了无	liao3 wu2
+了无惧色	liao3 wu2 ju4 se4
+了望台	liao4 wang4 tai2
+了然	liao3 ran2
+了然于胸	liao3 ran2 yu2 xiong1
+了然无闻	liao3 ran2 wu2 wen2
+了结	liao3 jie2
+了若指掌	liao3 ruo4 zhi3 zhang3
+了解	liao3 jie3
+了账	liao3 zhang4
+了身脱命	liao3 shen1 tuo1 ming4
+了身达命	liao3 shen1 da2 ming4
+争短论长	zheng1 duan3 lun4 chang2
+争长竞短	zheng1 chang2 jing4 duan3
+争长论短	zheng1 chang2 lun4 duan3
+二万五千里长征	er4 wan4 wu3 qian1 li3 chang2 zheng1
+二十八宿	er4 shi2 ba1 xiu4
+二重	er4 chong2
+二重唱	er4 chong2 chang4
+二重奏	er4 chong2 zou4
+二重性	er4 chong2 xing4
+二重根	er4 chong2 gen1
+于思	yu2 sai1
+云朝雨暮	yun2 zhao1 yu3 mu4
+云窗雾槛	yun2 chuang1 wu4 jian4
+五藏六府	wu3 zang4 liu4 fu3
+五行八作	wu3 hang2 ba1 zuo1
+五行并下	wu3 hang2 bing4 xia4
+五言长城	wu3 yan2 chang2 cheng2
+五金行	wu3 jin1 hang2
+交响乐	jiao1 xiang3 yue4
+交差	jiao1 chai1
+交恶	jiao1 wu4
+交行	jiao1 hang2
+交还	jiao1 huan2
+交通梗塞	jiao1 tong1 geng3 se4
+京都	jing1 du1
+亲家	qing4 jia5
+亲家公	qing4 jia5 gong1
+亲家母	qing4 jia5 mu3
+人事不省	ren2 shi4 bu4 xing3
+人参	ren2 shen1
+人参果	ren2 shen1 guo3
+人模狗样	ren2 mu2 gou3 yang4
+人生如朝露	ren2 sheng1 ru2 zhao1 lu4
+人生自古谁无死	ren2 sheng1 zi4 gu3 shei2 wu2 si3
+人给家足	ren2 ji3 jia1 zu2
+人足家给	ren2 zu2 jia1 ji3
+人轧人	ren2 ga2 ren2
+什件儿	shi2 jian4 er2
+什伍东西	shi2 wu3 dong1 xi1
+什围伍攻	shi2 wei2 wu3 gong1
+什物	shi2 wu4
+什袭以藏	shi2 xi2 yi3 cang2
+什袭珍藏	shi2 xi2 zhen1 cang2
+什袭而藏	shi2 xi2 er2 cang2
+什锦	shi2 jin3
+仇姓	qiu2 xing4
+今朝	jin1 zhao1
+今朝有酒今朝醉	jin1 zhao1 you3 jiu3 jin1 zhao1 zui4
+从长商议	cong2 chang2 shang1 yi4
+从长计议	cong2 chang2 ji4 yi4
+从长计较	cong2 chang2 ji4 jiao4
+仓卒	cang1 cu4
+仓卒主人	cang1 cu4 zhu3 ren2
+仓卒之际	cang1 cu4 zhi1 ji4
+仔密	zi3 mi4
+仔猪	zi3 zhu1
+仔畜	zi3 chu4
+仔细	zi3 xi4
+仔肩	zi1 jian1
+仔鱼	zi3 yu2
+仔鸡	zi3 ji1
+以不济可	yi3 fou3 ji4 ke3
+以升量石	yi3 sheng1 liang2 dan4
+以夜继朝	yi3 ye4 ji4 zhao1
+以大恶细	yi3 da4 wu4 xi4
+以宫笑角	yi3 gong1 xiao4 jue2
+以己度人	yi3 ji3 duo2 ren2
+以微知着	yi3 wei1 zhi1 zhuo2
+以牙还牙	yi3 ya2 huan2 ya2
+以珠弹雀	yi3 zhu1 tan2 que4
+以眼还眼	yi3 yan3 huan2 yan3
+以规为瑱	yi3 gui1 wei2 tian4
+以还	yi3 huan2
+以郄视文	yi3 xi4 shi4 wen2
+仰事俯畜	yang3 shi4 fu3 xu4
+仰屋着书	yang3 wu1 zhuo2 shu1
+仰给	yang3 ji3
+仿徨失措	pang2 huang2 shi1 cuo4
+伎俩	ji4 liang3
+伏而咶天	fu2 er2 shi4 tian1
+伏虎降龙	fu2 hu3 xiang2 long2
+众口难调	zhong4 kou3 nan2 tiao2
+众好众恶	zhong4 hao4 zhong4 wu4
+众星攒月	zhong4 xing1 cuan2 yue4
+众毛攒裘	zhong4 mao2 cuan2 qiu2
+众矢之的	zhong4 shi3 zhi1 di4
+会计	kuai4 ji4
+会计制度	kuai4 ji4 zhi4 du4
+会计师	kuai4 ji4 shi1
+伛偻	yu3 lv3
+传柄移藉	chuan2 bing3 yi2 jie4
+传略	zhuan4 lve4
+传神阿堵	chuan2 shen2 e1 du3
+传记	zhuan4 ji4
+传记片	zhuan4 ji4 pian4
+伸长	shen1 chang2
+伺弄	si4 nong4
+伺机	si4 ji1
+伺瑕导蠙	si4 xia2 dao3 pin2
+伺瑕导隙	si4 xia2 dao3 xi4
+伺瑕抵蠙	si4 xia2 di3 pin2
+伺瑕抵隙	si4 xia2 di3 xi4
+伺隙	si4 xi4
+似乎	si4 hu1
+似懂非懂	si4 dong3 fei1 dong3
+似是而非	si4 shi4 er2 fei1
+似曾	si4 ceng2
+似曾相识	si4 ceng2 xiang1 shi2
+似有如无	si4 you3 ru2 wu2
+似水如鱼	si4 shui3 ru2 yu2
+似水流年	si4 shui3 liu2 nian2
+似漆如胶	si4 qi1 ru2 jiao1
+似笑非笑	si4 xiao4 fei1 xiao4
+似箭在弦	si4 jian4 zai4 xian2
+似醉如痴	si4 zui4 ru2 chi1
+似非而是	si4 fei1 er2 shi4
+伽利略	jia1 li4 lve4
+伽蓝	qie2 lan2
+住一宿	zhu4 yi4 xiu3
+何其相似乃尔	he2 qi2 xiang1 si4 nai3 er3
+何曾	he2 zeng1
+余勇可贾	yu2 yong3 ke3 gu3
+佛事	fo2 shi4
+佛会	fo2 hui4
+佛像	fo2 xiang4
+佛光	fo2 guang1
+佛光寺	fo2 guang1 si4
+佛典	fo2 dian3
+佛口蛇心	fo2 kou3 she2 xin1
+佛号	fo2 hao4
+佛堂	fo2 tang2
+佛塔	fo2 ta3
+佛头加秽	fo2 tou2 jia1 hui4
+佛头着粪	fo2 tou2 zhuo2 fen4
+佛头著粪	fo2 tou2 zhuo2 fen4
+佛学	fo2 xue2
+佛家	fo2 jia1
+佛寺	fo2 si4
+佛山	fo2 shan1
+佛山市	fo2 shan1 shi4
+佛心蛇口	fo2 xin1 she2 kou3
+佛性	fo2 xing4
+佛性禅心	fo2 xing4 chan2 xin1
+佛手	fo2 shou3
+佛手柑	fo2 shou3 gan1
+佛教	fo2 jiao4
+佛教徒	fo2 jiao4 tu2
+佛殿	fo2 dian4
+佛法	fo2 fa3
+佛爷	fo2 ye2
+佛牙	fo2 ya2
+佛珠	fo2 zhu1
+佛甲草	fo2 jia3 cao3
+佛眼佛心	fo2 yan3 fo2 xin1
+佛眼相看	fo2 yan3 xiang1 kan4
+佛祖	fo2 zu3
+佛系	fo2 xi4
+佛经	fo2 jing1
+佛罗伦萨	fo2 luo2 lun2 sa4
+佛门	fo2 men2
+佛门弟子	fo2 men2 di4 zi3
+佛陀	fo2 tuo2
+佛龛	fo2 kan1
+佳人薄命	jia1 ren2 bo2 ming4
+佹形僪状	gui3 xing2 yu4 zhuang4
+佻薄	tiao1 bo2
+使出浑身解数	shi3 chu1 hun2 shen1 xie4 shu4
+例行差事	li4 xing2 chai1 shi4
+侔色揣称	mou2 se4 chuai3 chen4
+供佛	gong4 fo2
+供给	gong1 ji3
+供给制	gong1 ji3 zhi4
+依丱附木	yi1 kuang4 fu4 mu4
+依阿取容	yi1 e1 qu3 rong2
+侧歪	zhai1 wai1
+侯门似海	hou2 men2 si4 hai3
+侯门深似海	hou2 men2 shen1 si4 hai3
+便了	bian4 liao3
+便佞	pian2 ning4
+便嬖	pian2 bi4
+便宜	pian2 yi5
+便宜货	pian2 yi2 huo4
+便溺	bian4 niao4
+便血	bian4 xie3
+俟河之清	si4 he2 zhi1 qing1
+信差	xin4 chai1
+修长	xiu1 chang2
+倒嚼	dao3 jiao4
+倒圈	dao3 juan4
+倒打一耙	dao4 da3 yi1 pa2
+倒持泰阿	dao4 chi2 tai4 e1
+倒裳索领	dao4 chang2 suo3 ling3
+倔头强脑	jue4 tou2 jiang4 nao3
+倔強	jue2 jiang4
+倔强	jue2 jiang4
+倔强倨傲	jue2 jiang4 ju4 ao4
+倘佯	chang2 yang2
+借尸还阳	jie4 shi1 huan2 yang2
+借尸还魂	jie4 shi1 huan2 hun2
+借花献佛	jie4 hua1 xian4 fo2
+倥侗	kong1 tong2
+倦鸟知还	juan4 niao3 zhi1 huan2
+债务重组	zhai4 wu4 chong2 zu3
+偏裨	pian1 pi2
+停泊	ting2 bo2
+偿还	chang2 huan2
+傀儡	kui3 lei3
+傍若无人	pang2 ruo4 wu2 ren2
+储蓄银行	chu3 xu4 yin2 hang2
+像模像样	xiang4 mu2 xiang4 yang4
+僬侥	jiao1 yao2
+儿女亲家	er2 nv3 qing4 jia1
+儿女情长	er2 nv3 qing2 chang2
+儿女成行	er2 nv3 cheng2 hang2
+充塞	chong1 se4
+先我着鞭	xian1 wo3 zhuo2 bian1
+先自隗始	xian1 zi4 wei3 shi3
+光栅	guang1 shan1
+光阴似箭	guang1 yin1 si4 jian4
+克什米尔	ke4 shi2 mi3 er3
+免不了	mian3 bu4 liao3
+免麻	wen4 ma2
+兔起鹘落	tu4 qi3 hu2 luo4
+党参	dang3 shen1
+入孝出弟	ru4 xiao4 chu1 ti4
+入行	ru4 hang2
+全军覆没	quan2 jun1 fu4 mo4
+八竿子打不着	ba1 gan1 zi3 da3 bu4 zhao2
+八行书	ba1 hang2 shu1
+公了	gong1 liao3
+公差	gong1 chai1
+公正不阿	gong1 zheng4 bu4 e1
+六安	lu4 an1
+兰若	lan2 re3
+关卡	guan1 qia3
+兴如嚼蜡	xing4 ru2 jiao2 la4
+兵差	bing1 chai1
+养精畜锐	yang3 jing1 xu4 rui4
+兼差	jian1 chai1
+内传	nei4 zhuan4
+内省	nei4 xing3
+内省不疚	nei4 xing3 bu4 jiu4
+内行	nei4 hang2
+冒顿	mo4 du2
+冗长	rong3 chang2
+军乐	jun1 yue4
+军乐团	jun1 yue4 tuan2
+军乐队	jun1 yue4 dui4
+农行	nong2 hang2
+冠状动脉阻塞	guan1 zhuang4 dong4 mai4 zu3 se4
+冠盖相属	guan1 gai4 xiang1 zhu3
+冥行擿埴	ming2 xing2 zhi4 zhi2
+冯河	ping2 he2
+冰解的破	bing1 jie3 di4 po4
+冲模	chong4 mu2
+冷颤	leng3 zhan4
+几曾	ji3 zeng1
+凤泊鸾漂	feng4 bo2 luan2 piao1
+凤泊鸾飘	feng4 bo2 luan2 piao1
+凤鸣朝阳	feng4 ming2 zhao1 yang2
+凫短鹤长	fu2 duan3 he4 chang2
+凭藉	ping2 jie4
+出乖露丑	chu1 guai1 lou4 chou3
+出头露面	chu1 tou2 lou4 mian4
+出差	chu1 chai1
+出没	chu1 mo4
+出没不常	chu1 mo4 bu4 chang2
+出没无常	chu1 mo4 wu2 chang2
+出落	chu1 la4
+出血	chu1 xie3
+击排冒没	ji1 pai2 mao4 mo4
+击石弹丝	ji1 shi2 tan2 si1
+凿坏以遁	zao2 pi1 yi3 dun4
+凿坏而遁	zao2 pi1 er2 dun4
+刀刀见血	dao1 dao1 jian4 xie3
+刀削	dao1 xiao1
+刀削面	dao1 xiao1 mian4
+刁钻刻薄	diao1 zuan1 ke4 bo2
+分星擘两	fen1 xing1 bo4 liang3
+分行	fen1 hang2
+切削	qie1 xiao1
+切瑳琢磨	qie1 cuo1 zhuo2 mo2
+切磋琢磨	qie1 cuo1 zhuo2 mo2
+列传	lie4 zhuan4
+刚劲	gang1 jing4
+刚正不阿	gang1 zheng4 bu4 e1
+刚直不阿	gang1 zhi2 bu4 e1
+刨冰	bao4 bing1
+刨刀	bao4 dao1
+刨子	bao4 zi3
+刨平	bao4 ping2
+刨床	bao4 chuang2
+刨木板	bao4 mu4 ban3
+刨花	bao4 hua1
+刨花板	bao4 hua1 ban3
+利口捷给	li4 kou3 jie2 ji3
+利爪	li4 zhua3
+别传	bie2 zhuan4
+别开蹊径	bie2 kai1 xi1 jing4
+别无长物	bie2 wu2 chang2 wu4
+刮削	gua1 xiao1
+刹时	cha4 shi2
+刹那	cha4 na4
+刻木为鹄	ke4 mu4 wei2 hu2
+刻章琢句	ke4 zhang1 zhuo2 ju4
+刻薄	ke4 bo2
+刻薄寡思	ke4 bo2 gua3 si1
+削球	xiao1 qiu2
+削皮	xiao1 pi2
+削铅笔	xiao1 qian1 bi3
+削面	xiao1 mian4
+剥剥	bao1 bao1
+剥取	bao1 qu3
+剥壳	bao1 ke2
+剥皮	bao1 pi2
+剥脱	bao1 tuo1
+剥花生	bao1 hua1 sheng1
+剥苹果	bao1 ping2 guo3
+剥除	bao1 chu2
+副行长	fu4 hang2 zhang3
+剿袭	chao1 xi2
+剿说	chao1 shuo1
+力能扛鼎	li4 neng2 gang1 ding3
+劝降	quan4 xiang2
+办差	ban4 chai1
+功薄蝉翼	gong1 bo2 chan2 yi4
+加勒比海	jia1 le4 bi3 hai3
+动如参商	dong4 ru2 shen1 shang1
+动弹	dong4 tan2
+劲兵	jing4 bing1
+劲吹	jing4 chui1
+劲射	jing4 she4
+劲敌	jing4 di2
+劲旅	jing4 lv3
+劲松	jing4 song1
+劲直	jing4 zhi2
+劲草	jing4 cao3
+劲风	jing4 feng1
+劲骨丰肌	jing4 gu3 feng1 ji1
+劳什子	lao2 shi2 zi5
+勒令	le4 ling4
+勒派	le4 pai4
+勒索	le4 suo3
+勒逼	le4 bi1
+勘校	kan1 jiao4
+勤朴	qin2 piao2
+勾勒	gou1 le4
+匀称	yun2 chen4
+包扎	bao1 za1
+北门管钥	bei3 men2 guan3 yue4
+北门锁钥	bei3 men2 suo3 yue4
+匙子	chi2 zi5
+匪伊朝夕	fei3 yi1 zhao1 xi1
+区域网路	qu1 yu4 wang3 luo4
+十四行诗	shi2 si4 hang2 shi1
+十夫桡椎	shi2 fu1 rao2 zhui1
+十夫楺椎	shi2 fu1 rou2 zhui1
+十指有长短	shi2 zhi3 you3 chang2 duan3
+十行俱下	shi2 hang2 ju4 xia4
+十里堡	shi2 li3 pu4
+十里长亭	shi2 li3 chang2 ting2
+千乘之国	qian1 sheng4 zhi1 guo2
+千了百了	qian1 liao3 bai3 liao3
+千了百当	qian1 liao3 bai3 dang4
+千磨百折	qian1 mo2 bai3 she2
+午觉	wu3 jiao4
+半宿	ban4 xiu3
+华达呢	hua2 da2 ni2
+协调	xie2 tiao2
+单于	chan2 yu2
+单姓	shan4 xing4
+单薄	dan1 bo2
+单鹄寡凫	dan1 hu2 gua3 fu2
+南乐	nan2 yue4
+南无	na1 mo2
+南贩北贾	nan2 fan4 bei3 gu3
+博采众长	bo2 cai3 zhong4 chang2
+博闻强识	bo2 wen2 qiang2 zhi4
+卜卦	bu3 gua4
+卜夜卜昼	bu3 ye4 bu3 zhou4
+卜居	bu3 ju1
+卜昼卜夜	bu3 zhou4 bu3 ye4
+卜筮	bu3 shi4
+卜辞	bu3 ci2
+卜骨	bu3 gu3
+占便宜	zhan4 pian2 yi2
+占卜	zhan1 bu3
+卡具	qia3 ju4
+卡壳	qia3 ke2
+卡子	qia3 zi5
+卡脖子	qia3 bo2 zi5
+卬首信眉	ang2 shou3 shen1 mei2
+危如朝露	wei1 ru2 zhao1 lu4
+危机重重	wei1 ji1 chong2 chong2
+危若朝露	wei1 ruo4 zhao1 lu4
+却老还童	que4 lao3 huan2 tong2
+卷土重来	juan3 tu3 chong2 lai2
+压蔓	ya1 wan4
+厌恶	yan4 wu4
+厚今薄古	hou4 jin1 bo2 gu3
+厚古薄今	hou4 gu3 bo2 jin1
+厚味腊毒	hou4 wei4 xi1 du2
+厚朴	hou4 po4
+厚此薄彼	hou4 ci3 bo2 bi3
+厚积薄发	hou4 ji1 bo2 fa1
+厚薄	hou4 bo2
+厦门	xia4 men2
+参伍错综	cen1 wu3 cuo4 zong1
+参商	shen1 shang1
+参商之虞	shen1 shang1 zhi1 yu2
+参回斗转	shen1 hui2 dou3 zhuan3
+参差	cen1 ci1
+参差不一	cen1 ci1 bu4 yi1
+参差不齐	cen1 ci1 bu4 qi2
+参差错落	cen1 ci1 cuo4 luo4
+参校	can1 jiao4
+参横斗转	shen1 heng2 dou3 zhuan3
+参茸	shen1 rong2
+参辰卯酉	shen1 chen2 mao3 you3
+参辰日月	shen1 chen2 ri4 yue4
+参错	cen1 cuo4
+又细又长	you4 xi4 you4 chang2
+双足重茧	shuang1 zu2 chong2 jian3
+双重	shuang1 chong2
+双重人格	shuang1 chong2 ren2 ge2
+双重国籍	shuang1 chong2 guo2 ji2
+反弹	fan3 tan2
+反扒	fan3 pa2
+反朴还淳	fan3 pu3 huan2 chun2
+反正还淳	fan3 zheng4 huan2 chun2
+反省	fan3 xing3
+反老还童	fan3 lao3 huan2 tong2
+反诘	fan3 jie2
+反躬自省	fan3 gong1 zi4 xing3
+发人深省	fa1 ren2 shen1 xing3
+发卡	fa4 qia3
+发嗲	fa1 dia3
+发疟子	fa1 yao4 zi3
+发短心长	fa4 duan3 xin1 chang2
+发还	fa1 huan2
+取给	qu3 ji3
+取长弃短	qu3 chang2 qi4 duan3
+取长补短	qu3 chang2 bu3 duan3
+受不了	shou4 bu4 liao3
+受降	shou4 xiang2
+变贪厉薄	bian4 tan1 li4 bo2
+叠矩重规	die2 ju3 chong2 gui1
+口似悬河	kou3 si4 xuan2 he2
+口尚乳臭	kou3 shang4 ru3 xiu4
+口角炎	kou3 jue2 yan2
+口轻舌薄	kou3 qing1 she2 bo2
+古典音乐	gu3 dian3 yin1 yue4
+古刹	gu3 cha4
+古朴	gu3 piao2
+古调不弹	gu3 diao4 bu4 tan2
+古调单弹	gu3 diao4 dan1 tan2
+古都	gu3 du1
+句读	ju4 dou4
+另辟蹊径	ling4 pi4 xi1 jing4
+叨光	tao1 guang1
+叨在知己	tao1 zai4 zhi1 ji3
+叨扰	tao1 rao3
+叨拢	tao1 long3
+叨陪	tao1 pei2
+叨陪末座	tao1 pei2 mo4 zuo4
+只争朝夕	zhi3 zheng1 zhao1 xi1
+可恶	ke3 wu4
+可曾	ke3 zeng1
+可的松	ke3 di4 song1
+史乘	shi3 sheng4
+叶韵	xie2 yun4
+叽里呱啦	ji1 li3 gua1 la1
+吁咈都俞	xu1 fu2 du1 yu2
+吁天呼地	yu4 tian1 hu1 di4
+吁求	yu4 qiu2
+吁请	yu4 qing3
+吃不了	chi1 bu4 liao3
+吃不了兜着走	chi1 bu4 liao3 dou1 zhe5 zou3
+吃着不尽	chi1 zhuo2 bu4 jin4
+吃里扒外	chi1 li3 pa2 wai4
+各取所长	ge4 qu3 suo3 chang2
+各有所长	ge4 you3 suo3 chang2
+各行各业	ge4 hang2 ge4 ye4
+合从连衡	he2 zong4 lian2 heng2
+合浦珠还	he2 pu3 zhu1 huan2
+合浦还珠	he2 pu3 huan2 zhu1
+吉凶未卜	ji2 xiong1 wei4 bu3
+吉卜赛	ji2 bu3 sai4
+同恶相助	tong2 wu4 xiang1 zhu4
+同恶相恤	tong2 wu4 xiang1 xu4
+同行	tong2 hang2
+名不见经传	ming2 bu2 jian4 jing1 zhuan4
+名刹	ming2 cha4
+名角	ming2 jue2
+后爪	hou4 zhua3
+吐蕃	tu3 bo1
+吐血	tu4 xie3
+吐谷浑	tu3 yu4 hun2
+吖啶	a1 ding4
+吞没	tun1 mo4
+吟哦	yin2 e2
+否去泰来	pi3 qu4 tai4 lai2
+否往泰来	pi3 wang3 tai4 lai2
+否极泰回	pi3 ji2 tai4 hui2
+否极泰来	pi3 ji2 tai4 lai2
+否极阳回	pi3 ji2 yang2 hui2
+否终则泰	pi3 zhong1 ze2 tai4
+否终复泰	pi3 zhong1 fu4 tai4
+含情脉脉	han2 qing2 mo4 mo4
+听差	ting1 chai1
+吱扭	zi1 niu3
+吴堡	wu2 bu3
+吸着	xi1 zhuo2
+吹叶嚼蕊	chui1 ye4 jiao2 rui3
+吹弹	chui1 tan2
+吹弹得破	chui1 tan2 de2 po4
+吹弹歌舞	chui1 tan2 ge1 wu3
+吹拉弹唱	chui1 la1 tan2 chang4
+吹竹弹丝	chui1 zhu2 tan2 si1
+吹花嚼蕊	chui1 hua1 jiao2 rui3
+呆似木鸡	dai1 si4 mu4 ji1
+告朔饩羊	gu4 shuo4 xi4 yang2
+告老还乡	gao4 lao3 huan2 xiang1
+告老还家	gao4 lao3 huan2 jia1
+呗唱	bai4 chang4
+呜呜咽咽	wu1 wu1 ye4 ye4
+呜咽	wu1 ye4
+呢喃	ni2 nan2
+呢喃细语	ni2 nan2 xi4 yu3
+呢子	ni2 zi5
+呢绒	ni2 rong2
+周长	zhou1 chang2
+呱呱叫	gua1 gua1 jiao4
+呱唧	gua1 ji1
+呱嗒	gua1 da1
+呱嗒板儿	gua1 da1 ban3 er2
+呲牙	zi1 ya2
+味同嚼蜡	wei4 tong2 jiao2 la4
+味如嚼蜡	wei4 ru2 jiao2 la4
+味如鸡肋	wei4 ru2 ji1 lei4
+呵佛骂祖	he1 fo2 ma4 zu3
+呵叻	ke1 le4
+呷醋节帅	xia1 cu4 jie2 shuai4
+呼不给吸	hu1 bu4 ji3 xi1
+呼吁	hu1 yu4
+呼吁书	hu1 yu4 shu1
+呼天吁地	hu1 tian1 yu4 di4
+命薄	ming4 bo2
+咋呼	zha1 hu1
+咋舌	ze2 she2
+和了	hu2 le5
+和弄	huo4 nong4
+和泥	huo2 ni2
+和稀泥	huo4 xi1 ni2
+和药	huo4 yao4
+和面	huo2 mian4
+和颜说色	he2 yan2 yue4 se4
+咔嚓	ka1 cha1
+咖喱	ga1 li2
+咬人狗儿不露齿	yao3 ren2 gou3 er2 bu4 lou4 chi3
+咬文嚼字	yao3 wen2 jiao2 zi4
+咬钉嚼铁	yao3 ding1 jiao2 tie3
+咯血	ka3 xie3
+咱家	za2 jia1
+咳咳	hai1 hai1
+咳声叹气	hai1 sheng1 tan4 qi4
+咳血	ke2 xie3
+哀的美敦书	ai1 di4 mei3 dun1 shu1
+品竹弹丝	pin3 zhu2 tan2 si1
+品竹调丝	pin3 zhu2 tiao2 si1
+哈什蚂	ha4 shi2 ma3
+哧哧地笑	chi1 chi1 de5 xiao4
+哨卡	shao4 qia3
+哪会儿	nei3 hui4 er5
+哪吒	ne2 zha1
+哺糟啜醨	bu3 zao1 chuo4 li2
+哽咽	geng3 ye4
+哽塞	geng3 se4
+唯邻是卜	wei2 lin2 shi4 bu3
+唱主角	chang4 zhu3 jue2
+啁啾	zhou1 jiu1
+商行	shang1 hang2
+商贾	shang1 gu3
+啛啛喳喳	cui4 cui4 cha1 cha1
+啜泣	chuo4 qi4
+啜英咀华	chuo4 ying1 ju3 hua2
+啜菽饮水	chuo4 shu1 yin3 shui3
+啜食吐哺	chuo4 shi2 tu3 bu3
+喀什	ka1 shi2
+喀嚓	ka1 cha1
+善善从长	shan4 shan4 cong2 chang2
+善善恶恶	shan4 shan4 wu4 e4
+善贾而沽	shan4 gu3 er2 gu1
+喉长气短	hou2 chang2 qi4 duan3
+喔喔	wo1 wo1
+喙长三尺	hui4 chang2 san1 chi3
+喟然长叹	kui4 ran2 chang2 tan4
+喷薄	pen1 bo2
+喷薄欲出	pen1 bo2 yu4 chu1
+嗒丧	ta4 sang4
+嗒然	ta4 ran2
+嗒然若丧	ta4 ran2 ruo4 sang4
+嘁哩喀喳	qi1 li3 ka1 cha1
+嘲哳	zhao1 zha1
+嘴快舌长	zui3 kuai4 she2 chang2
+器乐	qi4 yue4
+噱头	xue2 tou5
+噶厦	ga2 xia4
+嚼子	jiao2 zi5
+嚼穿龈血	jiao2 chuan1 yin2 xue4
+嚼腭搥床	jiao2 e4 chui2 chuang2
+嚼舌	jiao2 she2
+嚼舌头	jiao2 she2 tou5
+嚼舌根	jiao2 she2 gen1
+嚼铁咀金	jiao2 tie3 ju3 jin1
+嚼齿穿龈	jiao2 chi3 chuan1 yin2
+四不拗六	si4 bu4 niu4 liu4
+四重唱	si4 chong2 chang4
+四马攒蹄	si4 ma3 cuan2 ti2
+回弹	hui2 tan2
+回纥	hui2 he2
+回还	hui2 huan2
+囤积	tun2 ji1
+囤积居奇	tun2 ji1 ju1 qi2
+囤聚	tun2 ju4
+困觉	kun4 jiao4
+困难重重	kun4 nan2 chong2 chong2
+固着	gu4 zhuo2
+国乐	guo2 yue4
+国都	guo2 du1
+国际复兴开发银行	guo2 ji4 fu4 xing1 kai1 fa1 yin2 hang2
+图穷匕见	tu2 qiong2 bi3 xian4
+图穷匕首见	tu2 qiong2 bi3 shou3 xian4
+圈牢养物	juan4 lao2 yang3 wu4
+土堡	tu3 pu4
+圣经贤传	sheng4 jing1 xian2 zhuan4
+在行	zai4 hang2
+圩场	xu1 chang2
+地久天长	di4 jiu3 tian1 chang2
+地壳	di4 qiao4
+地壳运动	di4 qiao4 yun4 dong4
+地暴十寒	di4 pu4 shi2 han2
+地窨子	di4 yin4 zi5
+地藏	di4 zang4
+地藏寺	di4 zang4 si4
+坐不重席	zuo4 bu4 chong2 xi2
+坤角儿	kun1 jue2 er2
+坦率	tan3 shuai4
+垫圈	dian4 juan4
+埋三怨四	man2 san1 yuan4 si4
+埋天怨地	man2 tian1 yuan4 di4
+埋怨	man2 yuan4
+埋没	mai2 mo4
+埒才角妙	lie4 cai2 jue2 miao4
+堙没	yin1 mo4
+堡子	bu3 zi5
+堰塞湖	yan4 se4 hu2
+堵塞	du3 se4
+塔什干	ta3 shi2 gan4
+塞擦音	se4 ca1 yin1
+塞责	se4 ze2
+塞音	se4 yin1
+填塞	tian2 se4
+壅塞	yong1 se4
+声乐	sheng1 yue4
+复辟	fu4 bi4
+夏虫朝菌	xia4 chong2 zhao1 jun1
+夕惕朝乾	xi1 ti4 zhao1 qian2
+外传	wai4 zhuan4
+外行	wai4 hang2
+外行人	wai4 hang2 ren2
+外行话	wai4 hang2 hua4
+多咱	duo1 za2
+多普勒效应	duo1 pu3 le4 xiao4 ying4
+多言数穷	duo1 yan2 shuo4 qiong2
+多财善贾	duo1 cai2 shan4 gu3
+多钱善贾	duo1 qian2 shan4 gu3
+夜如何其	ye4 ru2 he2 ji1
+夜长梦多	ye4 chang2 meng4 duo1
+夜长梦短	ye4 chang2 meng4 duan3
+大不了	da4 bu4 liao3
+大伯子	da4 bai3 zi3
+大埔	da4 bu4
+大堡礁	da4 pu4 jiao1
+大处着墨	da4 chu4 zhuo2 mo4
+大处着眼	da4 chu4 zhuo2 yan3
+大换血	da4 huan4 xie3
+大排行	da4 pai2 hang2
+大模大样	da4 mu2 da4 yang4
+大气磅礴	da4 qi4 pang2 bo2
+大率	da4 shuai4
+大璞不完	tai4 pu2 bu4 wan2
+大缪不然	da4 miu4 bu4 ran2
+大腹便便	da4 fu4 pian2 pian2
+大藏	da4 zang4
+大藏经	da4 zang4 jing1
+大行大市	da4 hang2 da4 shi4
+大路椎轮	da4 lu4 zhui1 lun2
+大辂椎轮	da4 lu4 zhui1 lun2
+大都	da4 du1
+大都会	da4 du1 hui4
+大黄鱼	dai4 huang2 yu2
+天地长久	tian1 di4 chang2 jiu3
+天姥山	tian1 mu3 shan1
+天道好还	tian1 dao4 hao3 huan2
+天长地久	tian1 chang2 di4 jiu3
+天长地老	tian1 chang2 di4 lao3
+天长日久	tian1 chang2 ri4 jiu3
+太子参	tai4 zi5 shen1
+太行山	tai4 hang2 shan1
+太阿	tai4 e1
+太阿倒持	tai4 e1 dao4 chi2
+太阿在握	tai4 e1 zai4 wo4
+央行	yang1 hang2
+失着	shi1 zhao1
+失调	shi1 tiao2
+头上著头	tou2 shang4 zhuo2 tou2
+头会箕敛	tou2 kuai4 ji1 lian3
+头会箕赋	tou2 kuai4 ji1 fu4
+头出头没	tou2 chu1 tou2 mo4
+头没杯案	tou2 mo4 bei1 an4
+奇偶	ji1 ou3
+奇函数	ji1 han2 shu4
+奇数	ji1 shu4
+奇零	ji1 ling2
+奉公不阿	feng4 gong1 bu4 e1
+奉还	feng4 huan2
+奏乐	zou4 yue4
+奠都	dian4 du1
+女主角	nv3 zhu3 jue2
+女红	nv3 gong1
+女角	nv3 jue2
+好似	hao3 si4
+好佚恶劳	hao4 yi4 wu4 lao2
+好善恶恶	hao3 shan4 wu4 e4
+好恶	hao4 wu4
+好景不长	hao3 jing3 bu4 chang2
+好梦不长	hao3 meng4 bu4 chang2
+好语似珠	hao3 yu3 si4 zhu1
+好逸恶劳	hao4 yi4 wu4 lao2
+如履薄冰	ru2 lv3 bo2 bing1
+如来佛	ru2 lai2 fo2
+如狼似虎	ru2 lang2 si4 hu3
+如痴似醉	ru2 chi1 si4 zui4
+如胶似漆	ru2 jiao1 si4 qi1
+如花似月	ru2 hua1 si4 yue4
+如花似朵	ru2 hua1 si4 duo3
+如花似玉	ru2 hua1 si4 yu4
+如花似锦	ru2 hua1 si4 jin3
+如饥似渴	ru2 ji1 si4 ke3
+如鱼似水	ru2 yu2 si4 shui3
+如龙似虎	ru2 long2 si4 hu3
+妄自菲薄	wang4 zi4 fei3 bo2
+妙着	miao4 zhao1
+姑射神人	gu1 ye4 shen2 ren2
+姓仇	xing4 qiu2
+姓解	xing4 xie4
+委肉虎蹊	wei3 rou4 hu3 xi1
+委蛇	wei1 yi2
+威吓	wei1 he4
+娉婷婀娜	ping1 ting2 e1 nuo2
+娉婷袅娜	ping1 ting2 niao3 nuo2
+婀娜	e1 nuo2
+婀娜多姿	e1 nuo2 duo1 zi1
+嫌恶	xian2 wu4
+嫌长道短	xian2 chang2 dao4 duan3
+字模	zi4 mu2
+字里行间	zi4 li3 hang2 jian1
+存亡未卜	cun2 wang2 wei4 bu3
+孟什维克	meng4 shi2 wei2 ke4
+孤独矜寡	gu1 du2 guan1 gua3
+学有专长	xue2 you3 zhuan1 chang2
+孱弱	chan2 ruo4
+守正不阿	shou3 zheng4 bu4 e1
+官差	guan1 chai1
+定都	ding4 du1
+宛似	wan3 si4
+宝刹	bao3 cha4
+宝坻	bao3 di3
+宝藏	bao3 zang4
+审己度人	shen3 ji3 duo2 ren2
+审度	shen3 duo2
+审时度势	shen3 shi2 duo2 shi4
+审曲面埶	shen3 qu3 mian4 shi4
+审校	shen3 jiao4
+宴安酖毒	yan4 an1 dan1 du2
+家什	jia1 shi2
+家给人足	jia1 ji3 ren2 zu2
+家给户足	jia1 ji3 hu4 zu2
+家给民足	jia1 ji3 min2 zu2
+家长礼短	jia1 chang2 li3 duan3
+家长里短	jia1 chang2 li3 duan3
+家雀	jia1 qiao3
+家雀儿	jia1 qiao3 er2
+宿水飡风	xiu3 shui3 can1 feng1
+宿水餐风	xiu3 shui3 can1 feng1
+宿雨餐风	xiu3 yu3 can1 feng1
+富商大贾	fu4 shang1 da4 gu3
+富商巨贾	fu4 shang1 ju4 gu3
+富国彊兵	fu4 guo2 qiang2 bing1
+富贾	fu4 gu3
+寒伧	han2 chen5
+寒颤	han2 zhan4
+寓意深长	yu4 yi4 shen1 chang2
+寡凫单鹄	gua3 fu2 dan1 hu2
+寸善片长	cun4 shan4 pian4 chang2
+寸有所长	cun4 you3 suo3 chang2
+寸长尺技	cun4 chang2 chi3 ji4
+寸长尺短	cun4 chang2 chi3 duan3
+寸长片善	cun4 chang2 pian4 shan4
+对牛弹琴	dui4 niu2 tan2 qin2
+对称	dui4 chen4
+对称性	dui4 chen4 xing4
+对称轴	dui4 chen4 zhou2
+对薄公堂	dui4 bu4 gong1 tang2
+寻思	xin2 si1
+寻瑕伺隙	xun2 xia2 si4 xi4
+寻行数墨	xun2 hang2 shu3 mo4
+封禅	feng1 shan4
+封豕长蛇	feng1 shi3 chang2 she2
+射干	ye4 gan4
+将伯之助	qiang1 bo2 zhi1 zhu4
+将伯之呼	qiang1 bo2 zhi1 hu1
+将功折过	jiang1 gong1 she2 guo4
+将将	qiang1 qiang1
+将进酒	qiang1 jin4 jiu3
+尉犁	yu4 li2
+尉迟	yu4 chi2
+小传	xiao3 zhuan4
+小便宜	xiao3 pian2 yi2
+小时了了	xiao3 shi2 liao3 liao3
+小眼薄皮	xiao3 yan3 bo2 pi2
+少不了	shao4 bu4 liao3
+尖削	jian1 xiao1
+尖嘴薄舌	jian1 zui3 bo2 she2
+尖酸刻薄	jian1 suan1 ke4 bo2
+尸居龙见	shi1 ju1 long2 xian4
+尺短寸长	chi3 duan3 cun4 chang2
+尽其所长	jin4 qi2 suo3 chang2
+尿泡	sui1 pao4
+尿脬	sui1 pao1
+尿血	niao4 xie3
+层见迭出	ceng2 xian4 die2 chu1
+居不重席	ju1 bu4 chong2 xi2
+居不重茵	ju1 bu4 chong2 yin1
+屈折	qu1 she2
+屏住	bing3 zhu4
+屏声息气	bing3 sheng1 xi1 qi4
+屏声敛息	bing3 sheng1 lian3 xi1
+屏声静气	bing3 sheng1 jing4 qi4
+屏弃	bing3 qi4
+屏息	bing3 xi1
+屏气	bing3 qi4
+屏气凝神	bing3 qi4 ning2 shen2
+屏气吞声	bing3 qi4 tun1 sheng1
+屏气慑息	bing3 qi4 she4 xi1
+屏气敛息	bing3 qi4 lian3 xi1
+屏迹	bing3 ji4
+屏退	bing3 tui4
+屏除	bing3 chu2
+屙金溺银	e1 jin1 niao4 yin2
+属垣有耳	zhu3 yuan2 you3 er3
+属意	zhu3 yi4
+属文	zhu3 wen2
+属望	zhu3 wang4
+属毛离里	zhu3 mao2 li2 li3
+属词比事	zhu3 ci2 bi3 shi4
+属辞比事	zhu3 ci2 bi3 shi4
+屠门大嚼	tu2 men2 da4 jiao2
+履薄临深	lv3 bo2 lin2 shen1
+山大王	shan1 dai4 wang2
+山殽野湋	shan1 yao2 ye3 wei2
+山行海宿	shan1 xing2 hai3 xiu3
+山重水复	shan1 chong2 shui3 fu4
+山长水远	shan1 chang2 shui3 yuan3
+山长水阔	shan1 chang2 shui3 kuo4
+山高水长	shan1 gao1 shui3 chang2
+岁聿其莫	sui4 yu4 qi2 mu4
+岂弟君子	kai3 ti4 jun1 zi3
+峨峨汤汤	e2 e2 shang1 shang1
+工尺	gong1 che3
+工行	gong1 hang2
+左传	zuo3 zhuan4
+左支右调	zuo3 zhi1 you4 tiao2
+巨擘	ju4 bo4
+巨贾	ju4 gu3
+差事	chai1 shi4
+差人去	chai1 ren2 qu4
+差人去请医生	chai1 ren2 qu4 qing3 yi1 sheng1
+差使	chai1 shi3
+差役	chai1 yi4
+差拨	chai1 bo1
+差旅费	chai1 lv3 fei4
+差缺	chai1 que1
+差遣	chai1 qian3
+差饷	chai1 xiang3
+巴勒斯坦	ba1 le4 si1 tan3
+巴尔喀什湖	ba1 er3 ka1 shi2 hu2
+巷道	hang4 dao4
+市场调节	shi4 chang3 tiao2 jie2
+布尔什维克	bu4 er3 shi2 wei2 ke4
+帝都	di4 du1
+帷薄不修	wei2 bo2 bu4 xiu1
+干哕	gan1 yue3
+干将莫邪	gan1 jiang1 mo4 ye2
+干着急	gan1 zhao2 ji2
+平巷	ping2 hang4
+幽咽	you1 ye4
+广东音乐	guang3 dong1 yin1 yue4
+广种薄收	guang3 zhong4 bo2 shou1
+应徵	ying4 zhi3
+度人之心	duo2 ren2 zhi1 xin1
+度人之腹	duo2 ren2 zhi1 fu4
+度己以绳	duo2 ji3 yi3 sheng2
+度德量力	duo2 de2 liang4 li4
+度长絜大	du4 chang2 xie2 da4
+度长絜短	du4 chang2 xie2 duan3
+延长	yan2 chang2
+建行	jian4 hang2
+建都	jian4 du1
+开小差	kai1 xiao3 chai1
+开户行	kai1 hu4 hang2
+弃短就长	qi4 duan3 jiu4 chang2
+弃短用长	qi4 duan3 yong4 chang2
+弄口	long4 kou3
+弄堂	long4 tang2
+弄管调弦	nong4 guan3 tiao2 xian2
+引吭悲歌	yin3 hang2 bei1 ge1
+引吭高唱	yin3 hang2 gao1 chang4
+引吭高声	yin3 hang2 gao1 sheng1
+引吭高歌	yin3 hang2 gao1 ge1
+引短推长	yin3 duan3 tui1 chang2
+张靓颖	zhang1 liang4 ying3
+弥勒	mi2 le4
+弥勒佛	mi2 le4 fo2
+弦乐	xian2 yue4
+弦乐器	xian2 yue4 qi4
+弹丝品竹	tan2 si1 pin3 zhu2
+弹丸脱手	tan2 wan2 tuo1 shou3
+弹冠振衣	tan2 guan1 zhen4 yi1
+弹冠振衿	tan2 guan1 zhen4 jin1
+弹冠相庆	tan2 guan1 xiang1 qing4
+弹冠结绶	tan2 guan1 jie2 shou4
+弹剑作歌	tan2 jian4 zuo4 ge1
+弹力	tan2 li4
+弹劾	tan2 he2
+弹劾案	tan2 he2 an4
+弹射	tan2 she4
+弹性	tan2 xing4
+弹性体	tan2 xing4 ti3
+弹指之间	tan2 zhi3 zhi1 jian1
+弹斤估两	tan2 jin1 gu1 liang3
+弹琴	tan2 qin2
+弹空说嘴	tan2 kong1 shuo1 zui3
+弹簧	tan2 huang2
+弹簧床	tan2 huang2 chuang2
+弹簧钢	tan2 huang2 gang1
+弹腿	tan2 tui3
+弹词	tan2 ci2
+弹跳力	tan2 tiao4 li4
+弹钢琴	tan2 gang1 qin2
+强似	qiang2 si4
+强劲	qiang2 jing4
+强嘴	jiang4 zui3
+强嘴拗舌	jiang4 zui3 niu4 she2
+强嘴硬牙	jiang4 zui3 ying4 ya2
+强弓劲弩	qiang2 gong1 jing4 nu3
+强聒不舍	qiang3 guo1 bu4 she3
+强自取折	qiang2 zi4 qu3 she2
+归心似箭	gui1 xin1 si4 jian4
+归省	gui1 xing3
+归还	gui1 huan2
+归降	gui1 xiang2
+当差	dang1 chai1
+当着不着	dang1 zhuo2 bu4 zhuo2
+当行出色	dang1 hang2 chu1 se4
+当行本色	dang1 hang2 ben3 se4
+形似	xing2 si4
+彫肝琢肾	diao1 gan1 zhuo2 shen4
+彰明较着	zhang1 ming2 jiao4 zhu4
+彷佛	pang2 fo2
+往渚还汀	wang3 zhu3 huan2 ting1
+往还	wang3 huan2
+得亏	dei3 kui1
+得喝水了	dei3 he1 shui3 le5
+得薄能鲜	de2 bo2 neng2 xian1
+得马折足	de2 ma3 she2 zu2
+微薄	wei1 bo2
+德州扒鸡	de2 zhou1 pa2 ji1
+德薄才疏	de2 bo2 cai2 shu1
+德薄能鲜	de2 bo2 neng2 xian3
+心事重重	xin1 shi4 chong2 chong2
+心宽体胖	xin1 kuan1 ti3 pan2
+心广体胖	xin1 guang3 ti3 pan2
+心惊胆颤	xin1 jing1 dan3 zhan4
+心拙口夯	xin1 zhuo1 kou3 ben4
+心痒难挝	xin1 yang3 nan2 zhua1
+心肌梗塞	xin1 ji1 geng3 se4
+心长力短	xin1 chang2 li4 duan3
+心长发短	xin1 chang2 fa4 duan3
+心长绠短	xin1 chang2 geng3 duan3
+必得	bi4 dei3
+忖度	cun3 duo2
+忘啜废枕	wang4 chuo4 fei4 zhen3
+念佛	nian4 fo2
+怔忪	zheng1 zhong1
+急景凋年	ji2 ying3 diao1 nian2
+急来报佛脚	ji2 lai2 bao4 fo2 jiao3
+急来抱佛脚	ji2 lai2 bao4 fo2 jiao3
+总得	zong3 dei3
+恐吓	kong3 he4
+恫吓	dong4 he4
+恫疑虚猲	dong4 yi2 xu1 ge2
+恰似	qia4 si4
+恶不去善	wu4 bu4 qu4 shan4
+恶噷噷	e4 hen3 hen3
+恶居下流	wu4 ju1 xia4 liu2
+恶恶从短	wu4 wu4 cong2 duan3
+恶湿居下	wu4 shi1 ju1 xia4
+恶紫夺朱	wu4 zi3 duo2 zhu1
+恶醉强酒	wu4 zui4 qiang3 jiu3
+悉索薄赋	xi1 suo3 bo2 fu4
+悬崖勒马	xuan2 ya2 le4 ma3
+悬石程书	xuan2 dan4 cheng2 shu1
+悬鼓待椎	xuan2 gu3 dai4 zhui1
+悲咽	bei1 ye4
+情深似海	qing2 shen1 si4 hai3
+情深意长	qing2 shen1 yi4 chang2
+情见乎辞	qing2 xian4 hu1 ci2
+情见力屈	qing2 xian4 li4 qu1
+情见势屈	qing2 xian4 shi4 qu1
+情见埶竭	qing2 jian4 shi4 jie2
+情长纸短	qing2 chang2 zhi3 duan3
+惩艾	cheng2 yi4
+愁多夜长	chou2 duo1 ye4 chang2
+愁长殢酒	chou2 chang2 ti4 jiu3
+意义深长	yi4 yi4 shen1 chang2
+意味深长	yi4 wei4 shen1 chang2
+愚氓	yu2 meng2
+慕古薄今	mu4 gu3 bo2 jin1
+慰藉	wei4 jie4
+憎恶	zeng1 wu4
+懂行	dong3 hang2
+懒觉	lan3 jiao4
+戎行	rong2 hang2
+成佛作祖	cheng2 fo2 zuo4 zu3
+成宿	cheng2 xiu3
+成行	cheng2 hang2
+成都	cheng2 du1
+成都市	cheng2 du1 shi4
+成都平原	cheng2 du1 ping2 yuan2
+戟指嚼舌	ji3 zhi3 jiao2 she2
+截长补短	jie2 chang2 bu3 duan3
+扁舟	pian1 zhou1
+手足重茧	shou3 zu2 chong2 jian3
+才疏德薄	cai2 shu1 de2 bo2
+才薄智浅	cai2 bo2 zhi4 qian3
+才轻德薄	cai2 qing1 de2 bo2
+扎染	za1 ran3
+扒手	pa2 shou3
+扒灰	pa2 hui1
+扒窃	pa2 qie4
+扒粪	pa2 fen4
+扒糕	pa2 gao1
+扒耳搔腮	pa2 er3 sao1 sai1
+扒草	pa2 cao3
+扒鸡	pa2 ji1
+打击乐	da3 ji1 yue4
+打击乐器	da3 ji1 yue4 qi4
+打的	da3 di1
+打颤	da3 zhan4
+扛长工	kang2 chang2 gong1
+扛鼎	gang1 ding3
+扛鼎抃牛	gang1 ding3 bian4 niu2
+扛鼎拔山	gang1 ding3 ba2 shan1
+扞格不入	han4 ge2 bu4 ru4
+扣壶长吟	kou4 hu2 chang2 yin2
+执拗	zhi2 niu4
+执着	zhi2 zhuo2
+执著	zhi2 zhuo2
+扪参历井	men2 shen1 li4 jing3
+扬眉眴目	yang2 mei2 shun4 mu4
+扬长	yang2 chang2
+扬长而去	yang2 chang2 er2 qu4
+扬长避短	yang2 chang2 bi4 duan3
+扬风扢雅	yang2 feng1 jie2 ya3
+扯篷拉纤	che3 peng2 la1 qian4
+扯纤拉烟	che3 qian4 la1 yan1
+批吭捣虚	pi1 hang2 dao3 xu1
+批砉导窾	pi1 hua1 dao3 kuan3
+扼吭夺食	e4 hang2 duo2 shi2
+扼吭拊背	e4 hang2 fu3 bei4
+扼腕长叹	e4 wan4 chang2 tan4
+找着	zhao3 zhao2
+抄没	chao1 mo4
+抑塞磊落	yi4 se4 lei3 luo4
+抓差	zhua1 chai1
+投传而去	tou2 zhuan4 er2 qu4
+投降	tou2 xiang2
+折堕	she2 duo4
+折本	she2 ben3
+折秤	she2 cheng4
+折箭为誓	she2 jian4 wei2 shi4
+折耗	she2 hao4
+折腰五斗	she2 yao1 wu3 dou4
+折长补短	zhe2 chang2 bu3 duan3
+抟沙嚼蜡	tuan2 sha1 jiao2 la4
+报销差旅费	bao4 xiao1 chai1 lv3 fei4
+抨弹	peng1 tan2
+抱佛脚	bao4 fo2 jiao3
+抱关执钥	bao4 guan1 zhi2 yue4
+抱蔓摘瓜	bao4 wan4 zhai1 gua1
+抹下来	ma1 xia4 lai2
+抹布	ma1 bu4
+抹桌子	ma1 zhuo1 zi5
+抽咽	chou1 ye4
+抽祕骋妍	chou1 bi4 cheng3 yan2
+抽筋剥皮	chou1 jin1 bao1 pi2
+拉枯折朽	la1 ku1 she2 xiu3
+拉纤	la1 qian4
+拉长	la1 chang2
+拌和	ban4 huo4
+拍卖行	pai1 mai4 hang2
+拓印	ta4 yin4
+拓本	ta4 ben3
+拓片	ta4 pian4
+拔山扛鼎	ba2 shan1 gang1 ding3
+拔本塞原	ba2 ben3 se4 yuan2
+拔本塞源	ba2 ben3 se4 yuan2
+拖沓	tuo1 ta4
+拖长	tuo1 chang2
+拗不过	niu4 bu4 guo4
+拙朴	zhuo1 piao2
+招行	zhao1 hang2
+招降	zhao1 xiang2
+招降纳叛	zhao1 xiang2 na4 pan4
+拜佛	bai4 fo2
+拣佛烧香	jian3 fo2 shao1 xiang1
+拥塞	yong1 se4
+择不开	zhai2 bu4 kai1
+择席	zhai2 xi2
+择菜	zhai2 cai4
+拭目以俟	shi4 mu4 yi3 si4
+拱券	gong3 xuan4
+拱手而降	gong3 shou3 er2 xiang2
+拶子	zan3 zi5
+拶指	zan3 zhi3
+拽耙扶犁	zhuai1 pa2 fu2 li2
+拾带重还	shi2 dai4 zhong4 huan2
+拾级而上	she4 ji2 er2 shang4
+持人长短	chi2 ren2 chang2 duan3
+指不胜偻	zhi3 bu4 sheng4 lv3
+按章给付	an4 zhang1 ji3 fu4
+挑么挑六	tiao1 yao1 tiao1 liu4
+挟主行令	jia1 zhu3 xing2 ling4
+挨山塞海	ai1 shan1 se4 hai3
+挺括	ting3 gua1
+挼好长发	ruo2 hao3 chang2 fa4
+捆扎	kun3 za1
+捋虎须	luo1 hu3 xu1
+捋袖子	luo1 xiu4 zi5
+捋袖揎拳	luo1 xiu4 xuan1 quan2
+捡便宜	jian3 pian2 yi2
+换血	huan4 xie3
+换行	huan4 hang2
+捣虚批吭	dao3 xu1 pi1 hang2
+捰袖揎拳	luo4 xiu4 xuan1 quan2
+捱风缉缝	ai1 feng1 qi1 feng4
+掂梢折本	dian1 shao1 she2 ben3
+掌掴	zhang3 guo2
+掎挈伺诈	ji3 qie4 si4 zha4
+掎裳连袂	ji3 chang2 lian2 mei4
+排行	pai2 hang2
+排行榜	pai2 hang2 bang3
+推枯折腐	tui1 ku1 she2 fu3
+掴手	guo2 shou3
+掺和	chan1 huo5
+揆情度理	kui2 qing2 duo2 li3
+揆理度情	kui2 li3 duo2 qing2
+揎拳捋袖	xuan1 quan2 luo1 xiu4
+揎拳捰袖	xuan1 quan2 luo3 xiu4
+提溜	di1 liu1
+提防	di1 fang2
+揣度	chuai3 duo2
+揣时度力	chuai3 shi2 duo2 li4
+揭衣涉水	qi4 yi1 she4 shui3
+援藏	yuan2 zang4
+搀和	chan1 huo5
+搀行夺市	chan1 hang2 duo2 shi4
+搅和	jiao3 huo5
+搅混	jiao3 gun3
+搪塞	tang2 se4
+搪差使	tang2 chai1 shi3
+摇滚乐	yao2 gun3 yue4
+摩挲	ma1 sa1
+摸不着	mo1 bu4 zhao2
+摸不着头脑	mo1 bu4 zhao2 tou2 nao3
+摸不着边	mo1 bu4 zhuo2 bian1
+摸头不着	mo1 tou2 bu4 zhao2
+摸门不着	mo1 men2 bu4 zhao2
+撤差	che4 chai1
+擅长	shan4 chang2
+擘两分星	bo4 liang3 fen1 xing1
+擘划	bo4 hua4
+擘画	bo4 hua4
+擘肌分理	bo4 ji1 fen1 li3
+擿埴索涂	zhai1 zhi2 suo3 tu2
+擿埴索途	zhai1 zhi2 suo3 tu2
+擿植索涂	zhai1 zhi2 suo3 tu2
+攀蟾折桂	pan1 chan2 she2 gui4
+攒三聚五	cuan2 san1 ju4 wu3
+攒三集五	cuan2 san1 ji2 wu3
+攒动	cuan2 dong4
+攒射	cuan2 she4
+攒盒	cuan2 he2
+攒眉	cuan2 mei2
+攒眉蹙额	cuan2 mei2 cu4 e2
+攒聚	cuan2 ju4
+攒锋聚镝	cuan2 feng1 ju4 di2
+攒集	cuan2 ji2
+攒零合整	cuan2 ling2 he2 zheng3
+支差	zhi1 chai1
+支着	zhi1 zhao1
+支着儿	zhi1 zhao1 er2
+改口沓舌	gai3 kou3 ta4 she2
+改行	gai3 hang2
+攻心扼吭	gong1 xin1 e4 hang2
+放血	fang4 xie3
+放还	fang4 huan2
+放长线钓大鱼	fang4 chang2 xian4 diao4 da4 yu2
+故伎重演	gu4 ji4 chong2 yan3
+故态复还	gu4 tai4 fu4 huan2
+故技重演	gu4 ji4 chong2 yan3
+故都	gu4 du1
+救寒莫如重裘	jiu4 han2 mo4 ru2 chong2 qiu2
+教音乐	jiao1 yin1 yue4
+敛声屏息	lian3 sheng1 bing3 xi1
+敛声屏气	lian3 sheng1 bing3 qi4
+敛容屏气	lian3 rong2 bing3 qi4
+敛色屏气	lian3 se4 bing3 qi4
+敦朴	dun1 piao2
+敩学相长	xiao4 xue2 xiang1 chang2
+数不着	shu3 bu4 zhao2
+数得着	shu3 de5 zhao2
+数短论长	shu3 duan3 lun4 chang2
+数见不鲜	shuo4 jian4 bu4 xian1
+敲榨勒索	qiao1 zha4 le4 suo3
+敲诈勒索	qiao1 zha4 le4 suo3
+敲骨剥髓	qiao1 gu3 bao1 sui3
+整躬率物	zheng3 gong1 shuai4 wu4
+敷衍了事	fu1 yan3 liao3 shi4
+敷衍塞责	fu1 yan3 se4 ze2
+敷衍搪塞	fu1 yan3 tang2 se4
+文似其人	wen2 si4 qi2 ren2
+文蛤	wen2 ge2
+斗转参横	dou3 zhuan3 shen1 heng2
+断还归宗	duan4 huan2 gui1 zong1
+断长续短	duan4 chang2 xu4 duan3
+断长补短	duan4 chang2 bu3 duan3
+新长征	xin1 chang2 zheng1
+方寸万重	fang1 cun4 wan4 chong2
+方正不阿	fang1 zheng4 bu4 e1
+於菟	wu1 tu2
+旋干转坤	xuan2 qian2 zhuan3 kun1
+无以塞责	wu2 yi3 se4 ze2
+无伤无臭	wu2 shang1 wu2 xiu4
+无佛处称尊	wu2 fo2 chu4 cheng1 zun1
+无声无臭	wu2 sheng1 wu2 xiu4
+无的放矢	wu2 di4 fang4 shi3
+无着	wu2 zhuo2
+无臭	wu2 xiu4
+无色无臭	wu2 se4 wu2 xiu4
+无適无莫	wu2 di2 wu2 mo4
+无间可伺	wu2 jian1 ke3 si4
+日不暇给	ri4 bu4 xia2 ji3
+日久天长	ri4 jiu3 tian1 chang2
+日久岁长	ri4 jiu3 sui4 chang2
+日削月朘	ri4 xue1 yue4 juan1
+日引月长	ri4 yin3 yue4 chang2
+日月参辰	ri4 yue4 shen1 chen2
+日月重光	ri4 yue4 chong2 guang1
+日朘月减	ri4 juan1 yue4 jian3
+日朘月削	ri4 juan1 yue4 xue1
+日没	ri4 mo4
+日省月修	ri4 xing3 yue4 xiu1
+日省月试	ri4 xing3 yue4 shi4
+日省月课	ri4 xing3 yue4 ke4
+日短心长	ri4 duan3 xin1 chang2
+日薄西山	ri4 bo2 xi1 shan1
+日近长安远	ri4 jin4 chang2 an1 yuan3
+日长一线	ri4 chang2 yi1 xian4
+日长似岁	ri4 chang2 si4 sui4
+旦角	dan4 jue2
+旦角儿	dan4 jue2 er2
+旧事重提	jiu4 shi4 chong2 ti2
+旧地重游	jiu4 di4 chong2 you2
+旧话重提	jiu4 hua4 chong2 ti2
+旧调重弹	jiu4 diao4 chong2 tan2
+旧都	jiu4 du1
+旧雨重逢	jiu4 yu3 chong2 feng2
+时运不齐	shi2 yun4 bu4 ji4
+时长	shi2 chang2
+旷日长久	kuang4 ri4 chang2 jiu3
+明了	ming2 liao3
+明珠弹雀	ming2 zhu1 tan2 que4
+明白了当	ming2 bai2 liao3 dang4
+昏定晨省	hun1 ding4 chen2 xing3
+昏迷不省	hun1 mi2 bu4 xing3
+昏镜重明	hun1 jing4 chong2 ming2
+昏镜重磨	hun1 jing4 chong2 mo2
+星宿	xing1 xiu4
+春深似海	chun1 shen1 si4 hai3
+昭德塞违	zhao1 de2 se4 wei2
+昼度夜思	zhou4 duo2 ye4 si1
+晏安酖毒	yan4 an1 dan1 du2
+晦盲否塞	hui4 mang2 pi3 se4
+晨昏定省	chen2 hun1 ding4 xing3
+普天率土	pu3 tian1 shuai4 tu3
+暖和	nuan3 huo5
+暮去朝来	mu4 qu4 zhao1 lai2
+暮四朝三	mu4 si4 zhao1 san1
+暮想朝思	mu4 xiang3 zhao1 si1
+暮暮朝朝	mu4 mu4 zhao1 zhao1
+暮爨朝舂	mu4 cuan4 zhao1 chong1
+暮翠朝红	mu4 cui4 zhao1 hong2
+暮虢朝虞	mu4 guo2 zhao1 yu2
+暮雨朝云	mu4 yu3 zhao1 yun2
+暴晒	pu4 shai4
+暴腮龙门	pu4 sai1 long2 men2
+暴虎冯河	bao4 hu3 ping2 he2
+暴衣露冠	pu4 yi1 lu4 guan4
+暴衣露盖	pu4 yi1 lu4 gai4
+暴露文学	bao4 lou4 wen2 xue2
+曝光	bao4 guang1
+曝光表	bao4 guang1 biao3
+更长梦短	geng1 chang2 meng4 duan3
+曾不惨然	zeng1 bu4 can3 ran2
+曾参杀人	zeng1 shen1 sha1 ren2
+曾孙	zeng1 sun1
+曾母投杼	zeng1 mu3 tou2 zhu4
+曾祖	zeng1 zu3
+曾祖母	zeng1 zu3 mu3
+曾祖父	zeng1 zu3 fu4
+月中折桂	yue4 zhong1 she2 gui4
+月夕花朝	yue4 xi1 hua1 zhao1
+月夜花朝	yue4 ye4 hua1 zhao1
+月氏	yue4 zhi1
+月没参横	yue4 mo4 shen1 heng2
+月落参横	yue4 luo4 shen1 heng2
+有三有俩	you3 san1 you3 liang3
+有中国特色的社会主义	you3 zhong1 guo2 te4 shai3 de5 she4 hui4 zhu3 yi4
+有借无还	you3 jie4 wu2 huan2
+有冯有翼	you3 ping2 you3 yi4
+有朝一日	you3 zhao1 yi1 ri4
+有模有样	you3 mu2 you3 yang4
+有的放矢	you3 di4 fang4 shi3
+服务行业	fu2 wu4 hang2 ye4
+服差役	fu2 chai1 yi4
+朝三暮二	zhao1 san1 mu4 er4
+朝三暮四	zhao1 san1 mu4 si4
+朝不保夕	zhao1 bu4 bao3 xi1
+朝不保暮	zhao1 bu4 bao3 mu4
+朝不及夕	zhao1 bu4 ji2 xi1
+朝不虑夕	zhao1 bu4 lv4 xi1
+朝不谋夕	zhao1 bu4 mou2 xi1
+朝乾夕惕	zhao1 qian2 xi1 ti4
+朝乾夕愓	zhao1 qian2 xi1 dang4
+朝云暮雨	zhao1 yun2 mu4 yu3
+朝令夕改	zhao1 ling4 xi1 gai3
+朝令暮改	zhao1 ling4 mu4 gai3
+朝会	zhao1 hui4
+朝前夕惕	zhao1 qian2 xi1 ti4
+朝升暮合	zhao1 sheng1 mu4 ge3
+朝华夕秀	zhao1 hua2 xi1 xiu4
+朝发夕至	zhao1 fa1 xi1 zhi4
+朝发暮至	zhao1 fa1 mu4 zhi4
+朝夕	zhao1 xi1
+朝夕相处	zhao1 xi1 xiang1 chu3
+朝夷暮跖	zhao1 yi2 mu4 zhi2
+朝奏夕召	zhao1 zou4 xi1 zhao4
+朝奏暮召	zhao1 zou4 mu4 zhao4
+朝思暮想	zhao1 si1 mu4 xiang3
+朝成夕毁	zhao1 cheng2 xi1 hui3
+朝成暮徧	zhao1 cheng2 mu4 bian4
+朝成暮毁	zhao1 cheng2 mu4 hui3
+朝成暮遍	zhao1 cheng2 mu4 bian4
+朝折暮折	zhao1 she2 mu4 she2
+朝攀暮折	zhao1 pan1 mu4 she2
+朝斯夕斯	zhao1 si1 xi1 si1
+朝日	zhao1 ri4
+朝晖	zhao1 hui1
+朝暮	zhao1 mu4
+朝更暮改	zhao1 geng4 mu4 gai3
+朝朝暮暮	zhao1 zhao1 mu4 mu4
+朝梁暮周	zhao1 liang2 mu4 zhou1
+朝梁暮晋	zhao1 liang2 mu4 jin4
+朝梁暮陈	zhao1 liang2 mu4 chen2
+朝欢暮乐	zhao1 huan1 mu4 le4
+朝歌夜弦	zhao1 ge1 ye4 xian2
+朝歌暮弦	zhao1 ge1 mu4 xian2
+朝气	zhao1 qi4
+朝气蓬勃	zhao1 qi4 peng2 bo2
+朝生夕死	zhao1 sheng1 xi1 si3
+朝生暮死	zhao1 sheng1 mu4 si3
+朝种暮获	zhao1 zhong4 mu4 huo4
+朝秦暮楚	zhao1 qin2 mu4 chu3
+朝穿暮塞	zhao1 chuan1 mu4 sai1
+朝经暮史	zhao1 jing1 mu4 shi3
+朝荣夕灭	zhao1 rong2 xi1 mie4
+朝衣东市	zhao1 yi1 dong1 shi4
+朝趁暮食	zhao1 chen4 mu4 shi2
+朝过夕改	zhao1 guo4 xi1 gai3
+朝钟暮鼓	zhao1 zhong1 mu4 gu3
+朝锺暮鼓	zhao1 zhong1 mu4 gu3
+朝闻夕改	zhao1 wen2 xi1 gai3
+朝闻夕死	zhao1 wen2 xi1 si3
+朝闻道夕死可矣	zhao1 wen2 dao4 xi1 si3 ke3 yi3
+朝阳	zhao1 yang2
+朝阳鸣凤	zhao1 yang2 ming2 feng4
+朝霞	zhao1 xia2
+朝露	zhao1 lu4
+朝露溘至	zhao1 lu4 ke4 zhi4
+朝饔夕飧	zhao1 yong1 xi1 sun1
+朝齑夕盐	zhao1 ji1 xi1 yan2
+朝齑暮盐	zhao1 ji1 mu4 yan2
+期年	ji1 nian2
+木栅	mu4 shan1
+木模	mu4 mu2
+未了	wei4 liao3
+未了公案	wei4 liao3 gong1 an4
+未卜	wei4 bu3
+未卜先知	wei4 bu3 xian1 zhi1
+末了	mo4 liao3
+本行	ben3 hang2
+朱槃玉敦	zhu1 pan2 yu4 dui4
+朱盘玉敦	zhu1 pan2 yu4 dui4
+朴刀	po1 dao1
+朴硝	po4 xiao1
+朵颐大嚼	duo3 yi2 da4 jiao2
+杀出重围	sha1 chu1 chong2 wei2
+杂沓	za2 ta4
+杉木	sha1 mu4
+李卜克内西	li3 bu3 ke4 nei4 xi1
+材薄质衰	cai2 bo2 zhi4 shuai1
+材轻德薄	cai2 qing1 de2 bo2
+村生泊长	cun1 sheng1 bo2 chang2
+束缊还妇	shu4 yun1 huan2 fu4
+来日方长	lai2 ri4 fang1 chang2
+杼柚之空	zhu4 zhou2 zhi1 kong1
+杼柚其空	zhu4 zhou2 qi2 kong1
+杼柚空虚	zhu4 zhou2 kong1 xu1
+枉口嚼舌	wang3 kou3 jiao2 she2
+枕席还师	zhen3 xi2 huan2 shi1
+枕曲藉糟	zhen3 qu1 jie4 zao1
+枕石嗽流	zhen3 shi2 shu4 liu2
+枕藉	zhen3 jie4
+枕麹藉糟	zhen3 qu1 jie4 zao1
+枝附叶着	zhi1 fu4 ye4 zhuo2
+枝附叶著	zhi1 fu4 ye4 zhuo2
+枞阳	zong1 yang2
+枸橼	ju3 yuan2
+柏拉图	bo2 la1 tu2
+柏林	bo2 lin2
+柏油纸	bo2 you2 zhi3
+柞丝绸	zuo4 si1 chou2
+柞木	zuo4 mu4
+柞树	zuo4 shu4
+柞绸	zuo4 chou2
+柞蚕	zuo4 can2
+查查	zha1 zha1
+柴沟堡	chai2 gou1 bu3
+柴立不阿	chai2 li4 bu4 e1
+栅极	shan1 ji2
+标的	biao1 di4
+标题音乐	biao1 ti2 yin1 yue4
+栉风酾雨	zhi4 feng1 shi1 yu3
+栋折榱坏	dong4 she2 cui1 huai4
+栏栅	lan2 shan1
+树碑立传	shu4 bei1 li4 zhuan4
+树行子	shu4 hang4 zi5
+栓塞	shuan1 se4
+栖栖	xi1 xi1
+栖风宿雨	qi1 feng1 xiu3 yu3
+校准	jiao4 zhun3
+校勘	jiao4 kan1
+校场	jiao4 chang3
+校对	jiao4 dui4
+校对员	jiao4 dui4 yuan2
+校改	jiao4 gai3
+校本	jiao4 ben3
+校样	jiao4 yang4
+校核	jiao4 he2
+校正	jiao4 zheng4
+校注	jiao4 zhu4
+校点	jiao4 dian3
+校短推长	xiao4 duan3 tui1 chang2
+校短量长	jiao4 duan3 liang2 chang2
+校订	jiao4 ding4
+校阅	jiao4 yue4
+校验	jiao4 yan4
+核儿	hu2 er2
+核桃凹	he2 tao2 wa1
+桂折一枝	gui4 she2 yi1 zhi1
+桂折兰摧	gui4 she2 lan2 cui1
+桑土绸缪	sang1 tu3 chou2 miu4
+桑户棬枢	sang1 hu4 juan4 shu1
+桑葚	sang1 shen4
+桔梗	jie2 geng3
+桔槔	jie2 gao1
+梗塞	geng3 se4
+梵刹	fan4 cha4
+梵呗	fan4 bai4
+棋输先着	qi2 shu1 xian1 zhao1
+棋输先著	qi2 shu1 xian1 zhuo2
+棋高一着	qi2 gao1 yi1 zhao1
+棚圈	peng2 juan4
+椎髻布衣	zhui1 ji4 bu4 yi1
+楛耘伤岁	ku3 yun2 shang1 sui4
+楞伽	leng2 qie2
+榱崩栋折	cui1 beng1 dong4 she2
+榱栋崩折	cui1 dong4 beng1 she2
+槁项没齿	gao3 xiang4 mo4 chi3
+槛花笼鹤	jian4 hua1 long2 he4
+槟榔	bing1 lang2
+模具	mu2 ju4
+模子	mu2 zi5
+模板	mu2 ban3
+模样	mu2 yang4
+欹嵚历落	qi1 qin1 li4 luo4
+欺行霸市	qi1 hang2 ba4 shi4
+款识	kuan3 zhi4
+歌仔戏	ge1 zi3 xi4
+歙漆阿胶	she4 qi1 e1 jiao1
+正传	zheng4 zhuan4
+正身率下	zheng4 shen1 shuai4 xia4
+武行	wu3 hang2
+歪打正着	wai1 da3 zheng4 zhao2
+死亡枕藉	si3 wang2 zhen3 jie4
+死劲儿	si3 jing4 er5
+殊功劲节	shu1 gong1 jing4 jie2
+殷红	yan1 hong2
+毁冠裂裳	hui3 guan1 lie4 chang2
+毁舟为杕	hui3 zhou1 wei2 duo4
+比勒陀利亚	bi3 le4 tuo2 li4 ya4
+比物属事	bi3 wu4 zhu3 shi4
+毕剥	bi4 bao1
+毛呢	mao2 ni2
+民乐	min2 yue4
+气势磅礴	qi4 shi4 pang2 bo2
+气贯长虹	qi4 guan4 chang2 hong2
+水中著盐	shui3 zhong1 zhuo2 yan2
+水栅	shui3 shan1
+水浒传	shui3 hu3 zhuan4
+水远山长	shui3 yuan3 shan1 chang2
+求神拜佛	qiu2 shen2 bai4 fo2
+求神问卜	qiu2 shen2 wen4 bu3
+求降	qiu2 xiang2
+汇丰银行	hui4 feng1 yin2 hang2
+江都	jiang1 du1
+汤匙	tang1 chi2
+汩没	gu3 mo4
+汹涌淜湃	xiong1 yong3 peng2 pai4
+沅江九肋	yuan2 jiang1 jiu3 lei4
+沈博绝丽	chen2 bo2 jue2 li4
+沉没	chen2 mo4
+沉着	chen2 zhuo2
+沉着痛快	chen2 zhuo2 tong4 kuai4
+沉谋重虑	chen2 mou2 chong2 lv4
+沓冈复岭	ta4 gang1 fu4 ling3
+沓子	ta4 zi3
+沓来踵至	ta4 lai2 zhong3 zhi4
+沓来麕至	ta4 lai2 jun1 zhi4
+沙参	sha1 shen1
+没世	mo4 shi4
+没世不忘	mo4 shi4 bu4 wang4
+没世不渝	mo4 shi4 bu4 yu2
+没世无称	mo4 shi4 wu2 cheng1
+没世无闻	mo4 shi4 wu2 wen2
+没世穷年	mo4 shi4 qiong2 nian2
+没世难忘	mo4 shi4 nan2 wang4
+没入	mo4 ru4
+没头没尾	mei2 tou2 mo4 wei3
+没奈何	mo4 nai4 he2
+没完没了	mei2 wan2 mei2 liao3
+没收	mo4 shou1
+没没无闻	mo4 mo4 wu2 wen2
+没着落	mei2 zhuo2 luo4
+没药	mo4 yao4
+没落	mo4 luo4
+没衷一是	mo4 zhong1 yi1 shi4
+没过	mo4 guo4
+没金饮羽	mo4 jin1 yin3 yu3
+没齿	mo4 chi3
+没齿不忘	mo4 chi3 bu4 wang4
+没齿无怨	mo4 chi3 wu2 yuan4
+没齿难忘	mo4 chi3 nan2 wang4
+沦没	lun2 mo4
+河清难俟	he2 qing1 nan2 si4
+沸沸汤汤	fei4 fei4 shang1 shang1
+泄沓	xie4 ta4
+泄露	xie4 lou4
+泄露天机	xie4 lou4 tian1 ji1
+泊位	bo2 wei4
+泊车	bo2 che1
+泌阳	bi4 yang2
+法不阿贵	fa3 bu4 e1 gui4
+法家拂士	fa3 jia1 bi4 shi4
+波属云委	bo1 zhu3 yun2 wei3
+波罗的海	bo1 luo2 di4 hai3
+波长	bo1 chang2
+波骇云属	bo1 hai4 yun2 zhu3
+泣数行下	qi4 shu4 hang2 xia4
+泥多佛大	ni2 duo1 fo2 da4
+泥而不滓	nie4 er2 bu4 zi3
+泯没	min3 mo4
+泰来否往	tai4 lai2 pi3 wang3
+泰来否极	tai4 lai2 pi3 ji2
+泰极而否	tai4 ji2 er2 pi3
+洋洋纚纚	yang2 yang2 sa3 sa3
+洋行	yang2 hang2
+洒狗血	sa3 gou3 xie3
+洞中肯綮	dong4 zhong1 ken3 qing4
+活似	huo2 si4
+活佛	huo2 fo2
+流年似水	liu2 nian2 si4 shui3
+流血	liu2 xie3
+浅薄	qian3 bo2
+浇薄	jiao1 bo2
+浇风薄俗	jiao1 feng1 bo2 su2
+测度	ce4 duo2
+浑似	hun2 si4
+浑朴	hun2 piao2
+浑身解数	hun2 shen1 xie4 shu4
+浒墅关	xu3 shu4 guan1
+浩气长存	hao4 qi4 chang2 cun2
+浩浩汤汤	hao4 hao4 shang1 shang1
+浮云朝露	fu2 yun2 zhao1 lu4
+浮名薄利	fu2 ming2 bo2 li4
+浮收勒折	fu2 shou1 le4 she2
+浮收勒索	fu2 shou1 le4 suo3
+浮皮潦草	fu2 pi2 liao2 cao3
+浴佛	yu4 fo2
+海参	hai3 shen1
+海参崴	hai3 shen1 wei1
+浸没	jin4 mo4
+涡河	guo1 he2
+淡泊	dan4 bo2
+淡泊明志	dan4 bo2 ming2 zhi4
+淡薄	dan4 bo2
+淤塞	yu1 se4
+深中肯綮	shen1 zhong1 ken3 qing4
+深仇宿怨	shen1 chou2 xiu3 yuan4
+深厉浅揭	shen1 li4 qian3 qi4
+深山长谷	shen1 shan1 chang2 gu3
+深恶痛嫉	shen1 wu4 tong4 ji2
+深恶痛疾	shen1 wu4 tong4 ji2
+深恶痛绝	shen1 wu4 tong4 jue2
+深文周内	shen1 wen2 zhou1 na4
+深文曲折	shen1 wen2 qu3 she2
+深省	shen1 xing3
+深长	shen1 chang2
+淹没	yan1 mo4
+清风劲节	qing1 feng1 jing4 jie2
+渊涓蠖濩	yuan1 juan1 huo4 hu4
+渔阳鞞鼓	yu2 yang2 pi2 gu3
+温凊定省	wen1 qing4 ding4 xing3
+温情脉脉	wen1 qing2 mo4 mo4
+游说	you2 shui4
+湮没	yan1 mo4
+湮没无闻	yan1 mo4 wu2 wen2
+湾泊	wan1 bo2
+溃脓	hui4 nong2
+源远流长	yuan2 yuan3 liu2 chang2
+溘先朝露	ke4 xian1 zhao1 lu4
+溘然长往	ke4 ran2 chang2 wang3
+溘然长逝	ke4 ran2 chang2 shi4
+溢美溢恶	yi4 mei3 yi4 wu4
+溥天率土	pu3 tian1 shuai4 tu3
+漂泊	piao1 bo2
+漂泊无定	piao1 bo2 wu2 ding4
+漢藏	han4 zang4
+漫长	man4 chang2
+漯河	ta4 he2
+潦倒	liao2 dao3
+潦草	liao2 cao3
+澄沙	deng4 sha1
+澄沙汰砾	deng4 sha1 tai4 li4
+澄结	deng4 jie2
+澹台	tan2 tai2
+澹泊寡欲	dan4 bo2 gua3 yu4
+激薄停浇	ji1 bo2 ting2 jiao1
+火燵	huo3 ta1
+灭景追风	mie4 ying3 zhui1 feng1
+灭此朝食	mie4 ci3 zhao1 shi2
+炫玉贾石	xuan4 yu4 gu3 shi2
+炮烙	pao2 luo4
+炰鳖脍鲤	fou3 bie1 kuai4 li3
+点着	dian3 zhao2
+热和	re4 huo5
+烹调	peng1 tiao2
+煤核儿	mei2 hu2 er2
+熊爪子	xiong2 zhua3 zi5
+熏着	xun4 zhao2
+熨帖	yu4 tie1
+熬姜呷醋	ao2 jiang1 xia1 cu4
+燕安酖毒	yan4 an1 dan1 du2
+燕跃鹄踊	yan4 yue4 hu2 yong3
+燕雀安知鸿鹄之志	yan4 que4 an1 zhi1 hong2 hu2 zhi1 zhi4
+燕雀安知鸿鹄志	yan4 que4 an1 zhi1 hong2 hu2 zhi4
+爪儿	zhua3 er2
+爪子	zhua3 zi5
+爪尖儿	zhua3 jian1 er5
+爱生恶死	ai4 sheng1 wu4 si3
+爵士乐	jue2 shi4 yue4
+爵士音乐	jue2 shi4 yin1 yue4
+父债子还	fu4 zhai4 zi3 huan2
+片甲不还	pian4 jia3 bu4 huan2
+片长末技	pian4 chang2 mo4 ji4
+片长薄技	pian4 chang2 bo2 ji4
+牙龈	ya2 yin2
+牛听弹琴	niu2 ting1 tan2 qin2
+牛圈	niu2 juan4
+牛头刨	niu2 tou2 bao4
+牟平	mu4 ping2
+牢什古子	lao2 shi2 gu3 zi5
+牧畜	mu4 xu4
+特徵	te4 zhi3
+特长	te4 chang2
+特长生	te4 chang2 sheng1
+犍为	qian2 wei2
+犯不着	fan4 bu4 zhao2
+犯得上	fan4 dei3 shang4
+犯得着	fan4 de5 zhao2
+犯而不校	fan4 er2 bu4 jiao4
+狐藉虎威	hu2 jie4 hu3 wei1
+狐裘尨茸	hu2 qiu2 meng2 rong2
+狧穅及米	shi4 kang1 ji2 mi3
+独辟蹊径	du2 pi4 xi1 jing4
+狭长	xia2 chang2
+猜度	cai1 duo2
+猜着	cai1 zhao2
+猫爪子	mao1 zhua3 zi5
+献血	xian4 xie3
+率以为常	shuai4 yi3 wei2 chang2
+率先	shuai4 xian1
+率兽食人	shuai4 shou4 shi2 ren2
+率军	shuai4 jun1
+率土同庆	shuai4 tu3 tong2 qing4
+率土宅心	shuai4 tu3 zhai2 xin1
+率土归心	shuai4 tu3 gui1 xin1
+率尔	shuai4 er3
+率尔成章	shuai4 er3 cheng2 zhang1
+率尔操觚	shuai4 er3 cao1 gu1
+率性	shuai4 xing4
+率然	shuai4 ran2
+率由旧则	shuai4 you2 jiu4 ze2
+率由旧章	shuai4 you2 jiu4 zhang1
+率直	shuai4 zhi2
+率真	shuai4 zhen1
+率队	shuai4 dui4
+率领	shuai4 ling3
+率马以骥	shuai4 ma3 yi3 ji4
+玉佛	yu4 fo2
+环伺	huan2 si4
+珠还合浦	zhu1 huan2 he2 pu3
+琢磨	zhuo2 mo2
+琴瑟不调	qin2 se4 bu4 tiao2
+琴瑟失调	qin2 se4 shi1 tiao2
+琴瑟调和	qin2 se4 tiao2 he2
+瑜伽	yu2 jia1
+瑟弄琴调	se4 nong4 qin2 tiao2
+瑟调琴弄	se4 tiao2 qin2 nong4
+璧还	bi4 huan2
+瓜蔓	gua1 wan4
+瓦窑堡	wa3 yao2 bu3
+生死未卜	sheng1 si3 wei4 bu3
+生角	sheng1 jue2
+生还	sheng1 huan2
+生还者	sheng1 huan2 zhe3
+用其所长	yong4 qi2 suo3 chang2
+用水和面	yong4 shui3 huo4 mian4
+甲壳	jia3 qiao4
+电光朝露	dian4 guang1 zhao1 lu4
+电刨	dian4 bao4
+电声乐队	dian4 sheng1 yue4 dui4
+电子乐器	dian4 zi3 yue4 qi4
+电子音乐	dian4 zi3 yin1 yue4
+男儿有泪不轻弹	nan2 er2 you3 lei4 bu4 qing1 tan2
+画荻和丸	hua4 di2 huo4 wan2
+画蛇著足	hua4 she2 zhuo2 zu2
+畜产	xu4 chan3
+畜养	xu4 yang3
+畜圈	chu4 juan4
+畜妻养子	xu4 qi1 yang3 zi3
+畜牧	xu4 mu4
+畜牧业	xu4 mu4 ye4
+畜牧场	xu4 mu4 chang3
+番禺	pan1 yu2
+番茄	fan1 qie2
+疏勒	shu1 le4
+疑似	yi2 si4
+疑似之间	yi2 si4 zhi1 jian1
+疟子	yao4 zi3
+疲沓	pi2 ta4
+疲疲沓沓	pi2 pi2 ta4 ta4
+疾风劲草	ji2 feng1 jing4 cao3
+疾风彰劲草	ji2 feng1 zhang1 jing4 cao3
+疾风知劲草	ji2 feng1 zhi1 jing4 cao3
+病革	bing4 ji2
+痛恶	tong4 wu4
+痛深恶绝	tong4 shen1 wu4 jue2
+痛自创艾	tong4 zi4 chuang1 yi4
+瘠薄	ji2 bo2
+瘦长	shou4 chang2
+白术	bai2 zhu2
+百下百着	bai3 xia4 bai3 zhao2
+百了千当	bai3 liao3 qian1 dang1
+百兽率舞	bai3 shou4 shuai4 wu3
+百堕俱举	bai3 hui1 ju4 ju3
+百舍重茧	bai3 she4 chong2 jian3
+百舍重趼	bai3 she4 chong2 jian3
+的一确二	di2 yi1 que4 er4
+的哥	di1 ge1
+的士	di1 shi4
+的当	di2 dang4
+的确	di2 que4
+的确良	di2 que4 liang2
+盛器	cheng2 qi4
+盛水不漏	cheng2 shui3 bu4 lou4
+盛菜	cheng2 cai4
+盛饭	cheng2 fan4
+目下十行	mu4 xia4 shi2 hang2
+目不暇给	mu4 bu4 xia2 ji3
+目的	mu4 di4
+目的地	mu4 di4 di4
+目的性	mu4 di4 xing4
+目的论	mu4 di4 lun4
+直截了当	zhi2 jie2 liao3 dang4
+直捷了当	zhi2 jie2 liao3 dang4
+直接了当	zhi2 jie1 liao3 dang4
+直率	zhi2 shuai4
+直言贾祸	zhi2 yan2 gu3 huo4
+相似	xiang1 si4
+相率	xiang1 shuai4
+相称	xiang1 chen4
+相遗以水	xiang1 wei4 yi3 shui3
+省亲	xing3 qin1
+省墓	xing3 mu4
+省察	xing3 cha2
+省悟	xing3 wu4
+省视	xing3 shi4
+真人不露相	zhen1 ren2 bu4 lou4 xiang4
+真率	zhen1 shuai4
+眠花藉柳	mian2 hua1 jie4 liu3
+着三不着两	zhao2 san1 bu4 zhao2 liang3
+着书立说	zhuo2 shu1 li4 shuo1
+着人先鞭	zhuo2 ren2 xian1 bian1
+着人办理	zhuo2 ren2 ban4 li3
+着凉	zhao2 liang2
+着力	zhuo2 li4
+着力于	zhuo2 li4 yu2
+着墨	zhuo2 mo4
+着忙	zhao2 mang2
+着急	zhao2 ji2
+着想	zhuo2 xiang3
+着意	zhuo2 yi4
+着慌	zhao2 huang1
+着手	zhuo2 shou3
+着手成春	zhuo2 shou3 cheng2 chun1
+着数	zhao1 shu4
+着法	zhao1 fa3
+着火	zhao2 huo3
+着眼	zhuo2 yan3
+着眼于	zhuo2 yan3 yu2
+着眼点	zhuo2 yan3 dian3
+着笔	zhuo2 bi3
+着色	zhuo2 se4
+着落	zhuo2 luo4
+着装	zhuo2 zhuang1
+着边	zhuo2 bian1
+着迷	zhao2 mi2
+着重	zhuo2 zhong4
+着重号	zhuo2 zhong4 hao4
+着重点	zhuo2 zhong4 dian3
+着陆	zhuo2 lu4
+着风	zhao2 feng1
+着魔	zhao2 mo2
+睡懒觉	shui4 lan3 jiao4
+睡着	shui4 zhao2
+睡觉	shui4 jiao4
+督率	du1 shuai4
+瞪眼咋舌	deng4 yan3 ze2 she2
+瞰瑕伺隙	kan4 xia2 si4 xi4
+瞿然	ju4 ran2
+知了	zhi1 liao3
+知疼着热	zhi1 teng2 zhao2 re4
+知疼着痒	zhi1 teng2 zhao2 yang3
+短不了	duan3 bu4 liao3
+短中取长	duan3 zhong1 qu3 chang2
+短叹长吁	duan3 tan4 chang2 xu1
+短见薄识	duan3 jian4 bo2 shi2
+短长	duan3 chang2
+石室金匮	shi2 shi4 jin1 gui4
+石室金鐀	shi2 shi4 jin1 gui4
+砥砺琢磨	di3 li4 zhuo2 mo2
+破觚为圜	po4 gu1 wei2 yuan2
+破镜重合	po4 jing4 chong2 he2
+破镜重圆	po4 jing4 chong2 yuan2
+硕望宿德	shuo4 wang4 xiu3 de2
+硬着陆	ying4 zhuo2 lu4
+碇泊	ding4 bo2
+碌碡	liu4 zhou2
+碑拓	bei1 ta4
+磅礴	pang2 bo2
+礼乐	li3 yue4
+礼佛	li3 fo2
+礼坏乐崩	li3 huai4 yue4 beng1
+礼崩乐坏	li3 beng1 yue4 huai4
+神似	shen2 si4
+神佛	shen2 fo2
+神出鬼没	shen2 chu1 gui3 mo4
+神差鬼使	shen2 chai1 gui3 shi3
+神龙失埶	shen2 long2 shi1 shi4
+禅让	shan4 rang4
+离本徼末	li2 ben3 yao1 mo4
+离鸾别鹄	li2 luan2 bie2 hu2
+秀出班行	xiu4 chu1 ban1 hang2
+私了	si1 liao3
+秘鲁	bi4 lu3
+积谗糜骨	ji1 chan2 mei2 gu3
+称体裁衣	chen4 ti3 cai2 yi1
+称体载衣	chen4 ti3 zai4 yi1
+称家有无	chen4 jia1 you3 wu2
+称德度功	cheng1 de2 duo2 gong1
+称心	chen4 xin1
+称心如意	chen4 xin1 ru2 yi4
+称心快意	chen4 xin1 kuai4 yi4
+称心满意	chen4 xin1 man3 yi4
+称愿	chen4 yuan4
+称手	chen4 shou3
+称职	chen4 zhi2
+称身	chen4 shen1
+移日卜夜	yi2 ri4 bu3 ye4
+移的就箭	yi2 di4 jiu4 jian4
+稀薄	xi1 bo2
+税卡	shui4 qia3
+稚齿婑媠	zhi4 chi3 wo3 tuo3
+稽首	qi3 shou3
+究诘	jiu1 jie2
+穷困潦倒	qiong2 kun4 liao2 dao3
+穷愁潦倒	qiong2 chou2 liao2 dao3
+穷途潦倒	qiong2 tu2 liao2 dao3
+空腹便便	kong1 fu4 pian2 pian2
+空调	kong1 tiao2
+空调病	kong1 tiao2 bing4
+穿着打扮	chuan1 zhuo2 da3 ban4
+穿红着绿	chuan1 hong2 zhuo2 lv4
+窗口行业	chuang1 kou3 hang2 ye4
+窥伺	kui1 si4
+窥度	kui1 duo2
+窥间伺隙	kui1 jian4 si4 xi4
+立传	li4 zhuan4
+立地成佛	li4 di4 cheng2 fo2
+竞短争长	jing4 duan3 zheng1 chang2
+笼鸟槛猿	long2 niao3 jian4 yuan2
+简切了当	jian3 qie4 liao3 dang4
+简截了当	jian3 jie2 liao3 dang4
+简捷了当	jian3 jie2 liao3 dang4
+简朴	jian3 piao2
+管乐	guan3 yue4
+管乐器	guan3 yue4 qi4
+管乐队	guan3 yue4 dui4
+管弦乐	guan3 xian2 yue4
+箪食壶浆	dan1 si4 hu2 jiang1
+箪食壶酒	dan1 si4 hu2 jiu3
+箪食瓢饮	dan1 si4 piao2 yin3
+箸长碗短	zhu4 chang2 wan3 duan3
+篇什	pian1 shi2
+籍没	ji2 mo4
+籍茅	jie4 mao2
+类似	lei4 si4
+粉妆玉琢	fen3 zhuang1 yu4 zhuo2
+粉装玉琢	fen3 zhuang1 yu4 zhuo2
+粉雕玉琢	fen3 diao1 yu4 zhuo2
+粗花呢	cu1 hua1 ni2
+粘合剂	nian2 he2 ji4
+粘土	nian2 tu3
+粘液	nian2 ye4
+粘稠	nian2 chou2
+粘结	nian2 jie2
+粮行	liang2 hang2
+糜子	mei2 zi3
+系好	ji4 hao3
+系带	ji4 dai4
+系泊	ji4 bo2
+系紧	ji4 jin3
+系绳	ji4 sheng2
+系绳子	ji4 sheng2 zi3
+系鞋带	ji4 xie2 dai4
+素朴	su4 piao2
+索还	suo3 huan2
+累屋重架	lei3 wu1 chong2 jia4
+繁花似锦	fan2 hua1 si4 jin3
+红参	hong2 shen1
+红模子	hong2 mu2 zi3
+红绳系足	hong2 sheng2 ji4 zu2
+红颜薄命	hong2 yan2 bo2 ming4
+纤夫	qian4 fu1
+纤手	qian4 shou3
+纤绳	qian4 sheng2
+纤长	xian1 chang2
+纪传体	ji4 zhuan4 ti3
+纯朴	chun2 piao2
+纰缪	pi1 miu4
+纳降	na4 xiang2
+纶巾	guan1 jin1
+纶巾羽扇	guan1 jin1 yu3 shan4
+纶音佛语	lun2 yin1 fo2 yu3
+纷纭杂沓	fen1 yun2 za2 ta4
+纷至沓来	fen1 zhi4 ta4 lai2
+纸短情长	zhi3 duan3 qing2 chang2
+细嚼慢咽	xi4 jiao2 man4 yan4
+细水长流	xi4 shui3 chang2 liu2
+细长	xi4 chang2
+终了	zhong1 liao3
+经传	jing1 zhuan4
+结扎	jie2 za1
+给与	ji3 yu3
+给予	ji3 yu3
+给付	ji3 fu4
+给体	ji3 ti3
+给养	ji3 yang3
+给水	ji3 shui3
+给水器	ji3 shui3 qi4
+给水工程	ji3 shui3 gong1 cheng2
+给水站	ji3 shui3 zhan4
+给水管	ji3 shui3 guan3
+给水箱	ji3 shui3 xiang1
+络子	lao4 zi5
+绝着	jue2 zhao1
+绝长继短	jue2 chang2 ji4 duan3
+绝长续短	jue2 chang2 xu4 duan3
+绝长补短	jue2 chang2 bu3 duan3
+统率	tong3 shuai4
+绳愆纠缪	sheng2 qian1 jiu1 miu4
+绵力薄材	mian2 li4 bo2 cai2
+绵里薄材	mian2 li3 bo2 cai2
+绿林	lu4 lin2
+绿林好汉	lu4 lin2 hao3 han4
+绿林强盗	lu4 lin2 qiang2 dao4
+绿林豪士	lu4 lin2 hao2 shi4
+绿林豪客	lu4 lin2 hao2 ke4
+绿林豪杰	lu4 lin2 hao2 jie2
+编校	bian1 jiao4
+缠绵蕴藉	chan2 mian2 yun4 jie4
+缩砂	su4 sha1
+缩砂密	su4 sha1 mi4
+缪种流传	miu4 zhong3 liu2 chuan2
+罗刹	luo2 cha4
+罗勒	luo2 le4
+罚没	fa2 mo4
+罚没款	fa2 mo4 kuan3
+羊圈	yang2 juan4
+美差	mei3 chai1
+羞恶	xiu1 wu4
+群氓	qun2 meng2
+群雌粥粥	qun2 ci2 yu4 yu4
+羹匙	geng1 chi2
+羽扇纶巾	yu3 shan4 guan1 jin1
+老佛爷	lao3 fo2 ye2
+老师宿儒	lao3 shi1 xiu3 ru2
+老本行	lao3 ben3 hang2
+老调重弹	lao3 diao4 chong2 tan2
+老调重谈	lao3 diao4 chong2 tan2
+耙子	pa2 zi5
+聊以塞责	liao2 yi3 se4 ze2
+聱牙诘屈	ao2 ya2 jie2 qu1
+聱牙诘曲	ao2 ya2 jie2 qu1
+肉薄骨并	rou4 bo2 gu3 bing4
+肋木	lei4 mu4
+肋条	lei4 tiao2
+肋骨	lei4 gu3
+肤皮潦草	fu1 pi2 liao2 cao3
+肯綮	ken3 qing4
+胜似	sheng4 si4
+胳臂	ge1 bei5
+胶柱调瑟	jiao1 zhu4 tiao2 se4
+胶着	jiao1 zhuo2
+胸椎	xiong1 zhui1
+能不称官	neng2 bu4 chen4 guan1
+脉脉	mo4 mo4
+脉脉含情	mo4 mo4 han2 qing2
+脊椎	ji3 zhui1
+脊椎动物	ji3 zhui1 dong4 wu4
+脊椎骨	ji3 zhui1 gu3
+脖颈	bo2 geng3
+脖颈子	bo2 geng3 zi5
+脾气很拗	pi2 qi4 hen3 niu4
+腌臜	a1 za1
+腌臢	a1 za1
+腰椎	yao1 zhui1
+膀胱	pang2 guang1
+膏场绣浍	gao1 chang2 xiu4 kuai4
+膻中	dan4 zhong1
+臆度	yi4 duo2
+臧否	zang1 pi3
+臧否人物	zang1 pi3 ren2 wu4
+自传	zi4 zhuan4
+自坏长城	zi4 huai4 chang2 cheng2
+自怨自艾	zi4 yuan4 zi4 yi4
+自省	zi4 xing3
+自筹给养	zi4 chou2 ji3 yang3
+自给	zi4 ji3
+自给自足	zi4 ji3 zi4 zu2
+臭味相投	xiu4 wei4 xiang1 tou2
+舍短取长	she3 duan3 qu3 chang2
+舍车保帅	she4 ju1 bao3 shuai4
+般桓	pan2 huan2
+般若	bo1 re3
+良贾深藏	liang2 gu3 shen1 cang2
+色厉胆薄	se4 li4 dan3 bo2
+色子	shai3 zi3
+芜荑	wu2 yi2
+芥蓝菜	gai4 lan2 cai4
+芫花	yuan2 hua1
+花呢	hua1 ni2
+花攒锦簇	hua1 cuan2 jin3 cu4
+花攒锦聚	hua1 cuan2 jin3 ju4
+花朝月夕	hua1 zhao1 yue4 xi1
+花朝月夜	hua1 zhao1 yue4 ye4
+花簇锦攒	hua1 cu4 jin3 cuan2
+苌弘碧血	chang2 hong2 bi4 xie3
+苍劲	cang1 jing4
+苍术	cang1 zhu2
+苍蝇见血	cang1 ying2 jian4 xie3
+苕帚	tiao2 zhou3
+苣卖菜	qu3 mai4 cai4
+苣荬菜	qu3 mai3 cai4
+苦参	ku3 shen1
+苦差	ku3 chai1
+苦差事	ku3 chai1 shi4
+英雄传	ying1 xiong2 zhuan4
+茄子	qie2 zi5
+茅塞顿开	mao2 se4 dun4 kai1
+茜茜公主	xi1 xi1 gong1 zhu3
+茶匙	cha2 chi2
+茶铛	cha2 cheng1
+荆棘塞途	jing1 ji2 se4 tu2
+草率	cao3 shuai4
+草率从事	cao3 shuai4 cong2 shi4
+草率收兵	cao3 shuai4 shou1 bing1
+草草了事	cao3 cao3 liao3 shi4
+荤粥	xun1 zhou1
+荸荠	bi2 qi2
+莎草	suo1 cao3
+莘庄	xin1 zhuang1
+莞尔	wan3 er3
+莞尔一笑	wan3 er3 yi2 xiao4
+莞尔而笑	wan3 er3 er2 xiao4
+莞莞	wan3 wan3
+莨绸	liang2 chou2
+莫可究诘	mo4 ke3 jiu1 jie2
+莲花落	lian2 hua1 lao4
+获隽公车	huo4 jun4 gong1 che1
+菲薄	fei3 bo2
+菲食薄衣	fei3 shi2 bo2 yi1
+落下	la4 xia4
+落了	la4 le5
+落价	lao4 jia4
+落子	lao4 zi5
+落枕	lao4 zhen3
+落泊	luo4 bo2
+落炕	lao4 kang4
+落色	lao4 shai3
+蒙古大夫	meng3 gu3 dai4 fu1
+蒙着	meng1 zhao2
+蔚县	yu4 xian4
+蔽塞	bi4 se4
+蔽明塞聪	bi4 ming2 se4 cong1
+蔽聪塞明	bi4 cong1 se4 ming2
+蕃茄	fan1 qie2
+蕴藉	yun4 jie4
+薄产	bo2 chan3
+薄利	bo2 li4
+薄利多销	bo2 li4 duo1 xiao1
+薄命	bo2 ming4
+薄命佳人	bo2 ming4 jia1 ren2
+薄寒中人	bo2 han2 zhong4 ren2
+薄幸	bo2 xing4
+薄弱	bo2 ruo4
+薄待	bo2 dai4
+薄情	bo2 qing2
+薄情无义	bo2 qing2 wu2 yi4
+薄技	bo2 ji4
+薄技在身	bo2 ji4 zai4 shen1
+薄晓	bo2 xiao3
+薄暮	bo2 mu4
+薄暮冥冥	bo2 mu4 ming2 ming2
+薄物细故	bo2 wu4 xi4 gu4
+薄田	bo2 tian2
+薄荷	bo4 he2
+薄荷脑	bo4 he2 nao3
+薄葬	bo2 zang4
+薄酒	bo2 jiu3
+薄酬	bo2 chou2
+薄雾	bo2 wu4
+薄面	bo2 mian4
+薯莨	shu3 liang2
+薯莨绸	shu3 liang2 chou2
+藉以	jie4 yi3
+藉口	jie4 kou3
+藉草枕块	jie4 cao3 zhen3 kuai4
+藏人	zang4 ren2
+藏历	zang4 li4
+藏府	zang4 fu3
+藏戏	zang4 xi4
+藏族	zang4 zu2
+藏獒	zang4 ao2
+藏红花	zang4 hong2 hua1
+藏药	zang4 yao4
+藏蓝	zang4 lan2
+藏青	zang4 qing1
+藏香	zang4 xiang1
+藤蔓	teng2 wan4
+虚与委蛇	xu1 yu3 wei1 yi2
+虾蟆	ha2 ma2
+蚁拥蜂攒	yi3 yong1 feng1 cuan2
+蚁聚蜂攒	yi3 ju4 feng1 cuan2
+蚁集蜂攒	yi3 ji2 feng1 cuan2
+蚌埠	beng4 bu4
+蚌埠市	beng4 bu4 shi4
+蛇心佛口	she2 xin1 fo2 kou3
+蛤粉	ge2 fen3
+蛤蚌	ge2 bang4
+蛤蚧	ge2 jie4
+蛤蜊	ge2 li2
+蜂攒蚁聚	feng1 cuan2 yi3 ju4
+蜂攒蚁集	feng1 cuan2 yi3 ji2
+蜚短流长	fei1 duan3 liu2 chang2
+蜜里调油	mi4 li3 tiao2 you2
+蝇攒蚁聚	ying2 cuan2 yi3 ju4
+蝇攒蚁附	ying2 cuan2 yi3 fu4
+蝍蛆	ji2 qu1
+蝎蝎螫螫	xie1 xie1 zhe1 zhe1
+血晕	xie3 yun4
+血栓栓塞	xue4 shuan1 shuan1 se4
+血淋淋	xie3 lin2 lin2
+血糊糊	xie3 hu1 hu1
+血豆腐	xie3 dou4 fu3
+血道子	xie3 dao4 zi5
+行业	hang2 ye4
+行东	hang2 dong1
+行伍	hang2 wu3
+行会	hang2 hui4
+行列	hang2 lie4
+行列式	hang2 lie4 shi4
+行号	hang2 hao2
+行家	hang2 jia5
+行家里手	hang2 jia1 li3 shou3
+行市	hang2 shi4
+行帮	hang2 bang1
+行当	hang2 dang1
+行情	hang2 qing2
+行栈	hang2 zhan4
+行款	hang2 kuan3
+行行出状元	hang2 hang2 chu1 zhuang4 yuan2
+行行蛇蚓	hang2 hang2 she2 yin3
+行规	hang2 gui1
+行话	hang2 hua4
+行货	hang2 huo4
+行贾	xing2 gu3
+行距	hang2 ju4
+行辈	hang2 bei4
+行道	hang2 dao4
+行都	xing2 du1
+行长	hang2 zhang3
+行间	hang2 jian1
+行间字里	hang2 jian1 zi4 li3
+衒玉贾石	xuan4 yu4 gu3 shi2
+衡短论长	heng2 duan3 lun4 chang2
+衣单食薄	yi1 dan1 shi2 bo2
+衣着	yi1 zhuo2
+衣锦还乡	yi4 jin3 huan2 xiang1
+补给	bu3 ji3
+补给线	bu3 ji3 xian4
+表率	biao3 shuai4
+袅娜	niao3 nuo2
+袅娜娉婷	niao3 nuo2 ping1 ting2
+袅袅娜娜	niao3 niao3 nuo2 nuo2
+袒裼裸裎	tan3 xi1 luo3 cheng2
+被发左衽	pi1 fa4 zuo3 ren4
+被发文身	pi1 fa4 wen2 shen1
+被发缨冠	pi1 fa4 ying1 guan4
+被山带河	pi1 shan1 dai4 he2
+被甲执兵	pi1 jia3 zhi2 bing1
+被甲持兵	pi1 jia3 chi2 bing1
+被甲据鞍	pi1 jia3 ju4 an1
+被甲枕戈	pi1 jia3 zhen3 ge1
+被褐怀玉	pi1 he4 huai2 yu4
+被褐怀珠	pi1 he4 huai2 zhu1
+袷袢	qia1 pan4
+裁度	cai2 duo2
+裁长补短	cai2 chang2 bu3 duan3
+裂眦嚼齿	lie4 zi4 jiao2 chi3
+裂裳裹足	lie4 chang2 guo3 zu2
+装模作样	zhuang1 mu2 zuo4 yang4
+裨将	pi2 jiang4
+裳裳	chang2 chang2
+裸裎袒裼	luo3 cheng2 tan3 xi1
+褎然冠首	you4 ran2 guan4 shou3
+褚小怀大	zhu3 xiao3 huai2 da4
+褚小杯大	zhu3 xiao3 bei1 da4
+褪去	tun4 qu4
+褪色	tui4 shai3
+西乐	xi1 yue4
+西洋参	xi1 yang2 shen1
+西藏	xi1 zang4
+要价还价	yao4 jia4 huan2 jia4
+覆没	fu4 mo4
+见性成佛	jian4 xing4 cheng2 fo2
+见素抱朴	xian4 su4 bao4 pu3
+规旋矩折	gui1 xuan2 ju3 she2
+规重矩叠	gui1 chong2 ju3 die2
+视微知著	shi4 wei1 zhi1 zhuo2
+角力	jue2 li4
+角斗	jue2 dou4
+角色	jue2 se4
+角逐	jue2 zhu2
+解差	jie4 chai1
+解数	xie4 shu4
+解池	xie4 chi2
+解法	xie4 fa3
+解衣槃磅	jie3 yi1 pan2 pang2
+解衣盘磅	jie3 yi1 pan2 pang2
+解衣磅礴	jie3 yi1 pang2 bo2
+解调	jie3 tiao2
+触类而长	chu4 lei4 er2 chang2
+言归正传	yan2 gui1 zheng4 zhuan4
+謷牙诘屈	ao2 ya2 jie2 qu1
+计日以俟	ji4 ri4 yi3 si4
+计日而俟	ji4 ri4 er2 si4
+讥弹	ji1 tan2
+讨价还价	tao3 jia4 huan2 jia4
+讨便宜	tao3 pian2 yi2
+讨还	tao3 huan2
+论短道长	lun4 duan3 dao4 chang2
+论长说短	lun4 chang2 shuo1 duan3
+论长道短	lun4 chang2 dao4 duan3
+诃佛诋巫	he1 fo2 di3 wu1
+评传	ping2 zhuan4
+评弹	ping2 tan2
+识微知著	shi2 wei1 zhi1 zhuo2
+诈降	zha4 xiang2
+诗行	shi1 hang2
+诘屈磝碻	ji2 qu1 ao2 qiao1
+诘屈謷牙	jie2 qu1 ao2 ya2
+诘戎治兵	jie2 rong2 zhi4 bing1
+诘曲聱牙	jie2 qu3 ao2 ya2
+诘诎聱牙	jie2 qu1 ao2 ya2
+诘责	jie2 ze2
+诘问	jie2 wen4
+诘难	jie2 nan2
+诚朴	cheng2 piao2
+话长说短	hua4 chang2 shuo1 duan3
+该着	gai1 zhao2
+语塞	yu3 se4
+语短情长	yu3 duan3 qing2 chang2
+语重心长	yu3 zhong4 xin1 chang2
+语长心重	yu3 chang2 xin1 zhong4
+诱降	you4 xiang2
+诲人不惓	hui4 ren2 bu4 juan4
+说不着	shuo1 bu4 zhao2
+说来话长	shuo1 lai2 hua4 chang2
+说短论长	shuo1 duan3 lun4 chang2
+说短道长	shuo1 duan3 dao4 chang2
+说长论短	shuo1 chang2 lun4 duan3
+说长话短	shuo1 chang2 hua4 duan3
+说长说短	shuo1 chang2 shuo1 duan3
+说长道短	shuo1 chang2 dao4 duan3
+请自隗始	qing3 zi4 wei3 shi3
+请降	qing3 xiang2
+谁的	shei2 de5
+谁都	shei2 dou1
+调三惑四	tiao2 san1 huo4 si4
+调三斡四	tiao2 san1 wo4 si4
+调三窝四	tiao2 san1 wo1 si4
+调丝品竹	tiao2 si1 pin3 zhu2
+调人	tiao2 ren2
+调价	tiao2 jia4
+调侃	tiao2 kan3
+调停	tiao2 ting2
+调停两用	tiao2 ting2 liang3 yong4
+调光	tiao2 guang1
+调养	tiao2 yang3
+调准	tiao2 zhun3
+调制	tiao2 zhi4
+调剂	tiao2 ji4
+调匀	tiao2 yun2
+调协	tiao2 xie2
+调合	tiao2 he2
+调味	tiao2 wei4
+调味品	tiao2 wei4 pin3
+调和	tiao2 he2
+调和阴阳	tiao2 he2 yin1 yang2
+调和鼎鼐	tiao2 he2 ding3 nai4
+调唆	tiao2 suo1
+调唇弄舌	tiao2 chun2 nong4 she2
+调嘴学舌	tiao2 zui3 xue2 she2
+调嘴弄舌	tiao2 zui3 nong4 she2
+调嘴调舌	tiao2 zui3 diao4 she2
+调墨弄笔	tiao2 mo4 nong4 bi3
+调处	tiao2 chu3
+调幅	tiao2 fu2
+调弄	tiao2 nong4
+调息	tiao2 xi1
+调情	tiao2 qing2
+调戏	tiao2 xi4
+调护	tiao2 hu4
+调控	tiao2 kong4
+调摄	tiao2 she4
+调教	tiao2 jiao4
+调整	tiao2 zheng3
+调料	tiao2 liao4
+调朱傅粉	tiao2 zhu1 fu4 fen3
+调朱弄粉	tiao2 zhu1 nong4 fen3
+调档	tiao2 dang4
+调正	tiao2 zheng4
+调治	tiao2 zhi4
+调温	tiao2 wen1
+调焦	tiao2 jiao1
+调理	tiao2 li3
+调理阴阳	tiao2 li3 yin1 yang2
+调皮	tiao2 pi2
+调皮鬼	tiao2 pi2 gui3
+调神畅情	tiao2 shen2 chang4 qing2
+调笑	tiao2 xiao4
+调级	tiao2 ji2
+调经	tiao2 jing1
+调羹	tiao2 geng1
+调脂弄粉	tiao2 zhi1 nong4 fen3
+调舌弄唇	tiao2 she2 nong4 chun2
+调良稳泛	tiao2 liang2 wen3 fan4
+调色	tiao2 se4
+调色板	tiao2 se4 ban3
+调节	tiao2 jie2
+调节税	tiao2 jie2 shui4
+调解	tiao2 jie3
+调词架讼	tiao2 ci2 jia4 song4
+调试	tiao2 shi4
+调调	tiao2 diao4
+调谐	tiao2 xie2
+调谑	tiao2 xue4
+调资	tiao2 zi1
+调适	tiao2 shi4
+调音	tiao2 yin1
+调频	tiao2 pin2
+调风变俗	tiao2 feng1 bian4 su2
+调风弄月	tiao2 feng1 nong4 yue4
+豁拳	hua2 quan2
+豁然省悟	huo4 ran2 xing3 wu4
+豆角儿	dou4 jue2 er2
+豆豉	dou4 chi3
+豆重榆瞑	dou4 chong2 yu2 ming2
+豪商巨贾	hao2 shang1 ju4 gu3
+貌似	mao4 si4
+貌似强大	mao4 si4 qiang2 da4
+贝勒	bei4 le4
+贞松劲柏	zhen1 song1 jing4 bai3
+贡禹弹冠	gong4 yu3 tan2 guan1
+财会	cai2 kuai4
+财殚力痡	cai2 dan1 li4 pu1
+质朴	zhi4 piao2
+质的	zhi4 di4
+贪便宜	tan1 pian2 yi2
+贪多嚼不烂	tan1 duo1 jiao2 bu4 lan4
+贪惏无餍	tan1 lin2 wu2 yan4
+贪生恶死	tan1 sheng1 wu4 si3
+贫嘴薄舌	pin2 zui3 bo2 she2
+贫困潦倒	pin2 kun4 liao2 dao3
+贲临	bi4 lin2
+贾人	gu3 ren2
+贾用	gu3 yong4
+贾祸	gu3 huo4
+贾贸	gu3 mao4
+贾马	gu3 ma3
+赌长较短	du3 chang2 jiao4 duan3
+赍志而没	ji1 zhi4 er2 mo4
+赍粮藉寇	ji1 liang2 jie4 kou4
+赔还	pei2 huan2
+赚得	zuan4 de5
+赛似	sai4 si4
+赛璐玢	sai4 lu4 fen1
+赤绳系足	chi4 sheng2 ji4 zu2
+赭衣塞路	zhe3 yi1 se4 lu4
+走为上着	zou3 wei2 shang4 zhao1
+趁水和泥	chen4 shui3 huo4 ni2
+超长	chao1 chang2
+趔趄	lie4 qie4
+跑马卖解	pao3 ma3 mai4 xie4
+跟差	gen1 chai1
+跨行业	kua4 hang2 ye4
+路卡	lu4 qia3
+跳行	tiao4 hang2
+蹄閒三寻	ti2 jian4 san1 xun2
+身先朝露	shen1 xian1 zhao1 lu4
+身单力薄	shen1 dan1 li4 bo2
+身无长处	shen1 wu2 chang2 chu4
+身无长物	shen1 wu2 chang2 wu4
+身长	shen1 chang2
+躬自菲薄	gong1 zi4 fei3 bo2
+躯壳	qu1 qiao4
+车削	che1 xiao1
+车行	che1 hang2
+车马炮	ju1 ma3 pao4
+轧机	zha2 ji1
+轧账	ga2 zhang4
+轧辊	zha2 gun3
+轧钢	zha2 gang1
+轧钢厂	zha2 gang1 chang3
+轧钢机	zha2 gang1 ji1
+转文	zhuai3 wen2
+转行	zhuan3 hang2
+转辗反侧	zhuan3 zhan3 fan3 ce4
+软和	ruan3 huo5
+软着陆	ruan3 zhuo2 lu4
+软肋	ruan3 lei4
+轴对称	zhou2 dui4 chen4
+轸宿	zhen3 xiu4
+轻傜薄赋	qing1 yao2 bo2 fu4
+轻口薄舌	qing1 kou3 bo2 she2
+轻嘴薄舌	qing1 zui3 bo2 she2
+轻率	qing1 shuai4
+轻薄	qing1 bo2
+轻音乐	qing1 yin1 yue4
+较德焯勤	jiao4 de2 zhuo1 qin2
+较短比长	jiao4 duan3 bi3 chang2
+较短絜长	jiao4 duan3 xie2 chang2
+较短量长	jiao4 duan3 liang2 chang2
+较长絜短	jiao4 chang2 xie2 duan3
+辗转	zhan3 zhuan3
+辗转反侧	zhan3 zhuan3 fan3 ce4
+辟举	bi4 ju3
+辟书	bi4 shu1
+辟召	bi4 zhao4
+辟引	bi4 yin3
+辟谷	bi4 gu3
+辟邪	bi4 xie2
+辱没	ru3 mo4
+边卡	bian1 qia3
+迁都	qian1 du1
+过都历块	guo4 du1 li4 kuai4
+过长	guo4 chang2
+近似	jin4 si4
+近似值	jin4 si4 zhi2
+返本还元	fan3 ben3 huan2 yuan2
+返本还原	fan3 ben3 huan2 yuan2
+返本还源	fan3 ben3 huan2 yuan2
+返朴还淳	fan3 pu3 huan2 chun2
+返朴还真	fan3 pu3 huan2 zhen1
+返老还童	fan3 lao3 huan2 tong2
+返还	fan3 huan2
+还乡	huan2 xiang1
+还乡团	huan2 xiang1 tuan2
+还乡昼锦	huan2 xiang1 zhou4 jin3
+还书	huan2 shu1
+还价	huan2 jia4
+还俗	huan2 su2
+还债	huan2 zhai4
+还元返本	huan2 yuan2 fan3 ben3
+还击	huan2 ji1
+还原	huan2 yuan2
+还原反本	huan2 yuan2 fan3 ben3
+还原染料	huan2 yuan2 ran3 liao4
+还口	huan2 kou3
+还君明珠	huan2 jun1 ming2 zhu1
+还嘴	huan2 zui3
+还席	huan2 xi2
+还年却老	huan2 nian2 que4 lao3
+还年卻老	huan2 nian2 que4 lao3
+还年驻色	huan2 nian2 zhu4 se4
+还情	huan2 qing2
+还愿	huan2 yuan4
+还我河山	huan2 wo3 he2 shan1
+还手	huan2 shou3
+还报	huan2 bao4
+还本	huan2 ben3
+还朴反古	huan2 pu3 fan3 gu3
+还淳反古	huan2 chun2 fan3 gu3
+还淳反朴	huan2 chun2 fan3 pu3
+还淳反素	huan2 chun2 fan3 su4
+还淳返朴	huan2 chun2 fan3 pu3
+还清	huan2 qing1
+还珠	huan2 zhu1
+还珠买椟	huan2 zhu1 mai3 du2
+还珠合浦	huan2 zhu1 he2 pu3
+还珠返璧	huan2 zhu1 fan3 bi4
+还礼	huan2 li3
+还童	huan2 tong2
+还给	huan2 gei3
+还账	huan2 zhang4
+还贷	huan2 dai4
+还醇返朴	huan2 chun2 fan3 pu3
+还钱	huan2 qian2
+还阳	huan2 yang2
+还魂	huan2 hun2
+进给	jin4 ji3
+进给量	jin4 ji3 liang4
+进退消长	jin4 tui4 xiao1 chang2
+远水救不了近火	yuan3 shui3 jiu4 bu4 liao3 jin4 huo3
+远水解不了近渴	yuan3 shui3 jie3 bu4 liao3 jin4 ke3
+远涉重洋	yuan3 she4 chong2 yang2
+迫击	pai3 ji1
+迫击炮	pai3 ji1 pao4
+迫击炮弹	pai3 ji1 pao4 dan4
+迭矩重规	die2 ju3 chong2 gui1
+追趋逐耆	zhui1 qu1 zhu2 shi4
+追还	zhui1 huan2
+退还	tui4 huan2
+送佛送到西天	song4 fo2 song4 dao4 xi1 tian1
+送还	song4 huan2
+适情率意	shi4 qing2 shuai4 yi4
+逐物不还	zhu2 wu4 bu4 huan2
+通都大邑	tong1 du1 da4 yi4
+遁世长往	dun4 shi4 chang2 wang3
+遒劲	qiu2 jing4
+道藏	dao4 zang4
+道行	dao4 heng2
+道长争短	dao4 chang2 zheng1 duan3
+道长论短	dao4 chang2 lun4 duan3
+遗使	wei4 shi3
+遗劳	wei4 lao2
+那不勒斯	na4 bu4 le4 si1
+邮差	you2 chai1
+郦食其	li4 yi4 ji1
+都中纸贵	du1 zhong1 zhi3 gui4
+都会	du1 hui4
+都俞吁咈	du1 yu2 xu1 fu2
+都城	du1 cheng2
+都头异姓	du1 tou2 yi4 xing4
+都察院	du1 cha2 yuan4
+都尉	du1 wei4
+都市	du1 shi4
+都柏林	dou1 bo2 lin2
+都江堰	du1 jiang1 yan4
+都督	du1 du1
+都统	du1 tong3
+鄙薄	bi3 bo2
+配乐	pei4 yue4
+配称	pei4 chen4
+配给	pei4 ji3
+配给制	pei4 ji3 zhi4
+配角	pei4 jue2
+酒铛	jiu3 cheng1
+酷似	ku4 si4
+醇朴	chun2 piao2
+采血	cai3 xie3
+释迦牟尼	shi4 jia1 mu4 ni2
+里弄	li3 long4
+重三叠四	chong2 san1 die2 si4
+重三迭四	chong2 san1 die2 si4
+重九	chong2 jiu3
+重九登高	chong2 jiu3 deng1 gao1
+重作冯妇	chong2 zuo4 feng2 fu4
+重修	chong2 xiu1
+重修旧好	chong2 xiu1 jiu4 hao3
+重光	chong2 guang1
+重光累洽	chong2 guang1 lei4 qia4
+重关击柝	chong2 guan1 ji1 tuo4
+重兴旗鼓	chong2 xing1 qi2 gu3
+重出	chong2 chu1
+重印	chong2 yin4
+重叠	chong2 die2
+重合	chong2 he2
+重启	chong2 qi3
+重唱	chong2 chang4
+重围	chong2 wei2
+重圆	chong2 yuan2
+重圭叠组	chong2 gui1 die2 zu3
+重垣叠锁	chong2 yuan2 die2 suo3
+重垣迭锁	chong2 yuan2 die2 suo3
+重复	chong2 fu4
+重头	chong2 tou2
+重奏	chong2 zou4
+重婚	chong2 hun1
+重孙	chong2 sun1
+重孙女	chong2 sun1 nv3
+重审	chong2 shen3
+重山复岭	chong2 shan1 fu4 ling3
+重山复水	chong2 shan1 fu4 shui3
+重山峻岭	chong2 shan1 jun4 ling3
+重岩叠嶂	chong2 yan2 die2 zhang4
+重岩迭障	chong2 yan2 die2 zhang4
+重峦叠嶂	chong2 luan2 die2 zhang4
+重峦叠巘	chong2 luan2 die2 yan3
+重峦复嶂	chong2 luan2 fu4 zhang4
+重峦迭嶂	chong2 luan2 die2 zhang4
+重峦迭巘	chong2 luan2 die2 yan3
+重庆	chong2 qing4
+重床叠屋	chong2 chuang2 die2 wu1
+重床叠架	chong2 chuang2 die2 jia4
+重床迭屋	chong2 chuang2 die2 wu1
+重床迭架	chong2 chuang2 die2 jia4
+重建	chong2 jian4
+重张	chong2 zhang1
+重弹	chong2 tan2
+重影	chong2 ying3
+重手累足	chong2 shou3 lei3 zu2
+重拍	chong2 pai1
+重振旗鼓	chong2 zhen4 qi2 gu3
+重提	chong2 ti2
+重播	chong2 bo1
+重操旧业	chong2 cao1 jiu4 ye4
+重数	chong2 shu4
+重整旗鼓	chong2 zheng3 qi2 gu3
+重新	chong2 xin1
+重明继焰	chong2 ming2 ji4 yan4
+重映	chong2 ying4
+重沓	chong2 ta4
+重洋	chong2 yang2
+重温	chong2 wen1
+重温旧业	chong2 wen1 jiu4 ye4
+重温旧梦	chong2 wen1 jiu4 meng4
+重演	chong2 yan3
+重熙累叶	chong2 xi1 lei3 ye4
+重熙累洽	chong2 xi1 lei3 qia4
+重熙累盛	chong2 xi1 lei3 sheng4
+重熙累绩	chong2 xi1 lei3 ji4
+重版	chong2 ban3
+重犯	chong2 fan4
+重现	chong2 xian4
+重珪叠组	chong2 gui1 die2 zu3
+重珪迭组	chong2 gui1 die2 zu3
+重理旧业	chong2 li3 jiu4 ye4
+重生	chong2 sheng1
+重生父母	chong2 sheng1 fu4 mu3
+重生爷娘	chong2 sheng1 ye2 niang2
+重申	chong2 shen1
+重睹天日	chong2 du3 tian1 ri4
+重纰貤缪	chong2 pi1 yi2 miu4
+重纸累札	chong2 zhi3 lei3 zha2
+重组	chong2 zu3
+重聚	chong2 ju4
+重获	chong2 huo4
+重葩累藻	chong2 pa1 lei4 zao3
+重行	chong2 xing2
+重裀列鼎	chong2 yin1 lie4 ding3
+重见天日	chong2 jian4 tian1 ri4
+重规叠矩	chong2 gui1 die2 ju3
+重规沓矩	chong2 gui1 ta4 ju3
+重规累矩	chong2 gui1 lei4 ju3
+重规袭矩	chong2 gui1 xi2 ju3
+重规迭矩	chong2 gui1 die2 ju3
+重译	chong2 yi4
+重读	chong2 du2
+重起炉灶	chong2 qi3 lu2 zao4
+重足一迹	chong2 zu2 yi1 ji4
+重足屏息	chong2 zu2 bing3 xi1
+重足屏气	chong2 zu2 bing3 qi4
+重足累息	chong2 zu2 lei4 xi1
+重足而立	chong2 zu2 er2 li4
+重蹈覆辙	chong2 dao3 fu4 zhe2
+重返	chong2 fan3
+重迭	chong2 die2
+重述	chong2 shu4
+重迹屏气	chong2 ji4 bing3 qi4
+重选	chong2 xuan3
+重逢	chong2 feng2
+重重	chong2 chong2
+重金袭汤	chong2 jin1 xi2 tang1
+重铬酸钾	chong2 ge4 suan1 jia3
+重门击柝	chong2 men2 ji1 tuo4
+重阳	chong2 yang2
+重霄	chong2 xiao1
+野乘	ye3 sheng4
+量力度德	liang4 li4 duo2 de2
+金匮石室	jin1 gui4 shi2 shi4
+金蝉脱壳	jin1 chan2 tuo1 qiao4
+金鳷擘海	jin1 zhi1 bo4 hai3
+鉴影度形	jian4 ying3 duo2 xing2
+钉耙	ding1 pa2
+钜人长德	ju4 ren2 chang2 de2
+钦差	qin1 chai1
+钦差大臣	qin1 chai1 da4 chen2
+钧天广乐	jun1 tian1 guang3 yue4
+铁绰铜琶	tie3 chao1 tong2 pa2
+铁耙	tie3 pa2
+铅山	yan2 shan1
+铜模	tong2 mu2
+铜筋铁肋	tong2 jin1 tie3 lei4
+铜臭	tong2 xiu4
+铢两悉称	zhu1 liang3 xi1 chen4
+铢两相称	zhu1 liang3 xiang1 chen4
+铢量寸度	zhu1 liang2 cun4 duo2
+铤而走险	ting3 er2 zou3 xian3
+银行	yin2 hang2
+银行行员	yin2 hang2 hang2 yuan2
+锁匙	suo3 chi2
+锁钥	suo3 yue4
+锅炉给水	guo1 lu2 ji3 shui3
+锚泊	mao2 bo2
+锦囊还矢	jin3 nang2 huan2 shi3
+键盘乐器	jian4 pan2 yue4 qi4
+锻模	duan4 mu2
+镌脾琢肾	juan1 pi2 zhuo2 shen4
+镐京	hao4 jing1
+长七短八	chang2 qi1 duan3 ba1
+长久	chang2 jiu3
+长久之计	chang2 jiu3 zhi1 ji4
+长乐	chang2 le4
+长乐未央	chang2 le4 wei4 yang1
+长于	chang2 yu2
+长亭	chang2 ting2
+长假	chang2 jia4
+长兴	chang2 xing1
+长剑	chang2 jian4
+长卷	chang2 juan4
+长发	chang2 fa4
+长句	chang2 ju4
+长号	chang2 hao4
+长叹	chang2 tan4
+长吁短叹	chang2 xu1 duan3 tan4
+长吁短气	chang2 xu1 duan3 qi4
+长吟	chang2 yin2
+长命	chang2 ming4
+长命富贵	chang2 ming4 fu4 gui4
+长命百岁	chang2 ming4 bai3 sui4
+长命锁	chang2 ming4 suo3
+长啸	chang2 xiao4
+长嘘短叹	chang2 xu1 duan3 tan4
+长圆	chang2 yuan2
+长坂	chang2 ban3
+长城	chang2 cheng2
+长处	chang2 chu4
+长夏	chang2 xia4
+长夜	chang2 ye4
+长夜漫漫	chang2 ye4 man4 man4
+长夜难明	chang2 ye4 nan2 ming2
+长天	chang2 tian1
+长存	chang2 cun2
+长安	chang2 an1
+长安少年	chang2 an1 shao4 nian2
+长安棋局	chang2 an1 qi2 ju2
+长安道上	chang2 an1 dao4 shang4
+长寿	chang2 shou4
+长局	chang2 ju2
+长崎	chang2 qi2
+长川	chang2 chuan1
+长工	chang2 gong1
+长年	chang2 nian2
+长年累月	chang2 nian2 lei3 yue4
+长庚	chang2 geng1
+长度	chang2 du4
+长廊	chang2 lang2
+长往远引	chang2 wang3 yuan3 yin3
+长征	chang2 zheng1
+长念却虑	chang2 nian4 que4 lv4
+长性	chang2 xing4
+长恨歌	chang2 hen4 ge1
+长恶不悛	chang2 e4 bu4 quan1
+长恶靡悛	chang2 e4 mi3 quan1
+长戟高门	chang2 ji3 gao1 men2
+长才广度	chang2 cai2 guang3 du4
+长才短驭	chang2 cai2 duan3 yu4
+长拳	chang2 quan2
+长揖	chang2 yi1
+长揖不拜	chang2 yi1 bu4 bai4
+长斋	chang2 zhai1
+长斋绣佛	chang2 zhai1 xiu4 fo2
+长方	chang2 fang1
+长方体	chang2 fang1 ti3
+长方形	chang2 fang1 xing2
+长方脸	chang2 fang1 lian3
+长明灯	chang2 ming2 deng1
+长春	chang2 chun1
+长春不老	chang2 chun1 bu4 lao3
+长春市	chang2 chun1 shi4
+长期	chang2 qi1
+长机	chang2 ji1
+长材小试	chang2 cai2 xiao3 shi4
+长材茂学	chang2 cai2 mao4 xue2
+长条	chang2 tiao2
+长枕大衾	chang2 zhen3 da4 qin1
+长枕大被	chang2 zhen3 da4 bei4
+长林丰草	chang2 lin2 feng1 cao3
+长枪	chang2 qiang1
+长款	chang2 kuan3
+长歌当哭	chang2 ge1 dang4 ku1
+长此以往	chang2 ci3 yi3 wang3
+长毛	chang2 mao2
+长毛兔	chang2 mao2 tu4
+长毛绒	chang2 mao2 rong2
+长汀	chang2 ting1
+长江	chang2 jiang1
+长江三峡	chang2 jiang1 san1 xia2
+长江三角洲	chang2 jiang1 san1 jiao3 zhou1
+长江后浪推前浪	chang2 jiang1 hou4 lang4 tui1 qian2 lang4
+长江天堑	chang2 jiang1 tian1 qian4
+长沙	chang2 sha1
+长沙市	chang2 sha1 shi4
+长河	chang2 he2
+长治久安	chang2 zhi4 jiu3 an1
+长法	chang2 fa3
+长波	chang2 bo1
+长活	chang2 huo2
+长流	chang2 liu2
+长物	chang2 wu4
+长生	chang2 sheng1
+长生不死	chang2 sheng1 bu4 si3
+长生不老	chang2 sheng1 bu4 lao3
+长生久视	chang2 sheng1 jiu3 shi4
+长生果	chang2 sheng1 guo3
+长白山	chang2 bai2 shan1
+长目飞耳	chang2 mu4 fei1 er3
+长眠	chang2 mian2
+长眠不起	chang2 mian2 bu4 qi3
+长矛	chang2 mao2
+长短	chang2 duan3
+长短句	chang2 duan3 ju4
+长石	chang2 shi2
+长程	chang2 cheng2
+长空	chang2 kong1
+长笛	chang2 di2
+长策	chang2 ce4
+长算远略	chang2 suan4 yuan3 lve4
+长篇	chang2 pian1
+长篇大套	chang2 pian1 da4 tao4
+长篇大论	chang2 pian1 da4 lun4
+长篇小说	chang2 pian1 xiao3 shuo1
+长篇累牍	chang2 pian1 lei3 du2
+长线	chang2 xian4
+长线产品	chang2 xian4 chan3 pin3
+长绒棉	chang2 rong2 mian2
+长统	chang2 tong3
+长统靴	chang2 tong3 xue1
+长绳系日	chang2 sheng2 ji4 ri4
+长绳系景	chang2 sheng2 xi4 jing3
+长编	chang2 bian1
+长缨	chang2 ying1
+长臂猿	chang2 bi4 yuan2
+长舌	chang2 she2
+长舌之妇	chang2 she2 zhi1 fu4
+长舌妇	chang2 she2 fu4
+长虑却顾	chang2 lv4 que4 gu4
+长虑后顾	chang2 lv4 hou4 gu4
+长虑顾后	chang2 lv4 gu4 hou4
+长虫	chang2 chong2
+长虹	chang2 hong2
+长蛇封豕	chang2 she2 feng1 shi3
+长蛇阵	chang2 she2 zhen4
+长街	chang2 jie1
+长街短巷	chang2 jie1 duan3 xiang4
+长衣	chang2 yi1
+长衫	chang2 shan1
+长袍	chang2 pao2
+长袖	chang2 xiu4
+长袖善舞	chang2 xiu4 shan4 wu3
+长袜	chang2 wa4
+长裤	chang2 ku4
+长褂	chang2 gua4
+长计远虑	chang2 ji4 yuan3 lv4
+长诗	chang2 shi1
+长话	chang2 hua4
+长话短说	chang2 hua4 duan3 shuo1
+长调	chang2 diao4
+长谈	chang2 tan2
+长谈阔论	chang2 tan2 kuo4 lun4
+长足	chang2 zu2
+长跑	chang2 pao3
+长跪	chang2 gui4
+长辔远御	chang2 pei4 yuan3 yu4
+长辔远驭	chang2 pei4 yuan3 yu4
+长辞	chang2 ci2
+长远	chang2 yuan3
+长途	chang2 tu2
+长途电话	chang2 tu2 dian4 hua4
+长途跋涉	chang2 tu2 ba2 she4
+长逝	chang2 shi4
+长镜头	chang2 jing4 tou2
+长长	chang2 chang2
+长长短短	chang2 chang2 duan3 duan3
+长门	chang2 men2
+长队	chang2 dui4
+长随	chang2 sui2
+长青	chang2 qing1
+长音	chang2 yin1
+长项	chang2 xiang4
+长颈鸟喙	chang2 jing3 niao3 hui4
+长颈鹿	chang2 jing3 lu4
+长风破浪	chang2 feng1 po4 lang4
+长驱	chang2 qu1
+长驱深入	chang2 qu1 shen1 ru4
+长驱直入	chang2 qu1 zhi2 ru4
+长驱直进	chang2 qu1 zhi2 jin4
+长驾远驭	chang2 jia4 yuan3 yu4
+长鸣	chang2 ming2
+长鸣都尉	chang2 ming2 du1 wei4
+长鼓	chang2 gu3
+长龙	chang2 long2
+门单户薄	men2 dan1 hu4 bo2
+闭塞	bi4 se4
+闭塞眼睛捉麻雀	bi4 se4 yan3 jing1 zhuo1 ma2 que4
+闭明塞聪	bi4 ming2 se4 cong1
+闭目塞听	bi4 mu4 se4 ting1
+闭目塞耳	bi4 mu4 se4 er3
+闭门塞户	bi4 men2 se4 hu4
+闭门塞窦	bi4 men2 se4 dou4
+问卜	wen4 bu3
+问长问短	wen4 chang2 wen4 duan3
+闲言长语	xian2 yan2 chang2 yu3
+间见层出	jian4 xian4 ceng2 chu1
+阑风长雨	lan2 feng1 chang2 yu3
+阴着儿	yin1 zhao1 er2
+阻塞	zu3 se4
+阿世取容	e1 shi4 qu3 rong2
+阿世媚俗	e1 shi4 mei4 su2
+阿世盗名	e1 shi4 dao4 ming2
+阿党比周	e1 dang3 bi3 zhou1
+阿党相为	e1 dang3 xiang1 wei2
+阿其所好	e1 qi2 suo3 hao4
+阿弥陀佛	e1 mi2 tuo2 fo2
+阿意取容	e1 yi4 qu3 rong2
+阿房宫	e1 pang2 gong1
+阿时趋俗	e1 shi2 qu1 su2
+阿的平	a1 di4 ping2
+阿胶	e1 jiao1
+阿谀	e1 yu2
+阿谀取容	e1 yu2 qu3 rong2
+阿谀奉承	e1 yu2 feng4 cheng2
+阿谀谄媚	e1 yu2 chan3 mei4
+阿谀逢迎	e1 yu2 feng2 ying2
+阿附	e1 fu4
+陂艿	bei1 reng4
+陂陀	po1 tuo2
+附着	fu4 zhuo2
+附着力	fu4 zhuo2 li4
+附识	fu4 zhi4
+陆万	liu4 wan4
+陆佰	liu4 bai3
+陆圆	liu4 yuan2
+陆拾	liu4 shi2
+降伏	xiang2 fu2
+降妖捉怪	xiang2 yao1 zhuo1 guai4
+降服	xiang2 fu2
+降顺	xiang2 shun4
+降龙	xiang2 long2
+降龙伏虎	xiang2 long2 fu2 hu3
+陟罚臧否	zhi4 fa2 zang1 pi3
+陪都	pei2 du1
+陵劲淬砺	ling2 jing4 cui4 li4
+隋珠弹雀	sui2 zhu1 tan2 que4
+随珠弹雀	sui2 zhu1 tan2 que4
+随行就市	sui2 hang2 jiu4 shi4
+隔行	ge2 hang2
+隔行如隔山	ge2 hang2 ru2 ge2 shan1
+雀子	qiao1 zi3
+雁泊人户	yan4 bo2 ren2 hu4
+雁行	yan4 hang2
+雄劲	xiong2 jing4
+雅乐	ya3 yue4
+雅鲁藏布江	ya3 lu3 zang4 bu4 jiang1
+雕琢	diao1 zhuo2
+雕章琢句	diao1 zhang1 zhuo2 ju4
+雕肝琢肾	diao1 gan1 zhuo2 shen4
+雕肝琢膂	diao1 gan1 zhuo2 lv3
+雕蚶镂蛤	diao1 han1 lou4 ge2
+雨顺风调	yu3 shun4 feng1 tiao2
+霓裳	ni2 chang2
+霜行草宿	shuang1 xing2 cao3 xiu3
+露一手	lou4 yi1 shou3
+露丑	lou4 chou3
+露刃	lou4 ren4
+露头	lou4 tou2
+露富	lou4 fu4
+露底	lou4 di3
+露怯	lou4 qie4
+露白	lou4 bai2
+露相	lou4 xiang4
+露脸	lou4 lian3
+露苗	lou4 miao2
+露面	lou4 mian4
+露风	lou4 feng1
+露馅	lou4 xian4
+露馅儿	lou4 xian4 er2
+露马脚	lou4 ma3 jiao3
+青灯古佛	qing1 deng1 gu3 fo2
+青紫被体	qing1 zi3 pi1 ti3
+青藏高原	qing1 zang4 gao1 yuan2
+靓丽	liang4 li4
+靓仔	liang4 zai3
+靓女	liang4 nv3
+非得	fei1 dei3
+靠泊	kao4 bo2
+靡靡之乐	mi3 mi3 zhi1 yue4
+面似靴皮	mian4 si4 xue1 pi2
+面折庭争	mian4 she2 ting2 zheng1
+面折廷诤	mian4 she2 ting2 zheng4
+鞠躬屏气	ju1 gong1 bing3 qi4
+鞭辟向里	bian1 bi4 xiang4 li3
+鞭辟着里	bian1 bi4 zhuo2 li3
+鞭长不及	bian1 chang2 bu4 ji2
+鞭长不及马腹	bian1 chang2 bu4 ji2 ma3 fu4
+鞭长莫及	bian1 chang2 mo4 ji2
+鞭长驾远	bian1 chang2 jia4 yuan3
+鞭鞘	bian1 shao1
+韬光俟奋	tao1 guang1 si4 fen4
+音乐	yin1 yue4
+音乐剧	yin1 yue4 ju4
+音乐喷泉	yin1 yue4 pen1 quan2
+音乐片	yin1 yue4 pian4
+音乐界	yin1 yue4 jie4
+音乐老师	yin1 yue4 lao3 shi1
+音乐茶座	yin1 yue4 cha2 zuo4
+音乐频道	yin1 yue4 pin2 dao4
+顶呱呱	ding3 gua1 gua1
+顾景惭形	gu4 ying3 can2 xing2
+顾虑重重	gu4 lv4 chong2 chong2
+顿开茅塞	dun4 kai1 mao2 se4
+顿足椎胸	dun4 zu2 zhui1 xiong1
+颀长	qi2 chang2
+预卜	yu4 bu3
+颉颃	xie2 hang2
+频数	pin2 shuo4
+颠倒衣裳	dian1 dao3 yi1 chang2
+颠衣到裳	dian1 yi1 dao4 chang2
+颤栗	zhan4 li4
+风流蕴藉	feng1 liu2 yun4 jie4
+风调雨顺	feng1 tiao2 yu3 shun4
+风镐	feng1 hao4
+飘泊	piao1 bo2
+飘泊无定	piao1 bo2 wu2 ding4
+飞将数奇	fei1 jiang4 shu4 ji1
+飞流短长	fei1 liu2 duan3 chang2
+飞短流长	fei1 duan3 liu2 chang2
+食不重味	shi2 bu4 chong2 wei4
+食不重肉	shi2 bu4 chong2 rou4
+食母	si4 mu3
+餐松啖柏	can1 song1 dan4 bo2
+餔糟啜漓	bu1 zao1 chuo4 li2
+餔糟啜醨	bu1 zao1 chuo4 li2
+饔飧不给	yong1 sun1 bu4 ji3
+饮水啜菽	yin3 shui3 chuo4 shu1
+饮马长江	yin4 ma3 chang2 jiang1
+饱和点	bao3 huo2 dian3
+饶舌调唇	rao2 she2 tiao2 chun2
+饼铛	bing3 cheng1
+饿莩载道	e4 piao3 zai3 dao4
+饿莩遍野	e4 piao3 bian4 ye3
+首都	shou3 du1
+香培玉琢	xiang1 pei2 yu4 zhuo2
+马勒	ma3 le4
+马圈	ma3 juan4
+马尾	ma3 yi3
+马尾巴	ma3 yi3 ba1
+马瘦毛长	ma3 shou4 mao2 chang2
+骄儿騃女	jiao1 er2 si4 nv3
+骠勇	piao4 yong3
+骠骑	piao4 qi2
+骨殖	gu3 shi5
+骶椎	di3 zhui1
+高丽参	gao1 li2 shen1
+高义薄云	gao1 yi4 bo2 yun2
+高句骊	gao1 gou1 li2
+高着	gao1 zhao1
+高风劲节	gao1 feng1 jing4 jie2
+鬼使神差	gui3 shi3 shen2 chai1
+鬼蜮伎俩	gui3 yu4 ji4 liang3
+鬼魅伎俩	gui3 mei4 ji4 liang3
+魂不着体	hun2 bu4 zhuo2 ti3
+魂不著体	hun2 bu4 zhuo2 ti3
+鱼游燋釜	yu2 you2 zhuo2 fu3
+鸟闹	diao3 nao4
+鸡爪子	ji1 zhua3 zi5
+鸡肋	ji1 lei4
+鸡血石	ji1 xie3 shi2
+鸢肩鹄颈	yuan1 jian1 hu2 jing3
+鸣凤朝阳	ming2 feng4 zhao1 yang2
+鸭绿江	ya1 lu4 jiang1
+鸾停鹄峙	luan2 ting2 hu2 zhi4
+鸾漂凤泊	luan2 piao1 feng4 bo2
+鸾飘凤泊	luan2 piao1 feng4 bo2
+鸾鹄停峙	luan2 hu2 ting2 zhi4
+鸿商富贾	hong2 shang1 fu4 gu3
+鸿衣羽裳	hong2 yi1 yu3 chang2
+鸿鹄将至	hong2 hu2 jiang1 zhi4
+鹄峙鸾停	hu2 zhi4 luan2 ting2
+鹄峙鸾翔	hu2 zhi4 luan2 xiang2
+鹄的	gu3 di4
+鹤短凫长	he4 duan3 fu2 chang2
+鹤长凫短	he4 chang2 fu2 duan3
+鹰击长空	ying1 ji1 chang2 kong1
+鹰爪子	ying1 zhua3 zi5
+鹰觑鹘望	ying1 qu4 hu2 wang4
+鹿死谁手	lu4 si3 shei2 shou3
+麇至沓来	qun2 zhi4 ta4 lai2
+麟角凤觜	lin2 jiao3 feng4 zui3
+黄钟长弃	huang2 zhong1 chang2 qi4
+黄陂	huang2 pi2
+黄雀伺蝉	huang2 que4 si4 chan2
+黏皮着骨	nian2 pi2 zhuo2 gu3
+黏着	nian2 zhuo2
+黾穴鸲巢	meng3 xue2 qu2 chao2
+鼎折覆餗	ding3 she2 fu4 su4
+鼎折餗覆	ding3 she2 su4 fu4
+鼎铛有耳	ding3 cheng1 you3 er3
+鼎铛玉石	ding3 cheng1 yu4 shi2
+鼎鼐调和	ding3 nai4 tiao2 he2
+鼓乐	gu3 yue4
+鼓乐喧天	gu3 yue4 xuan1 tian1
+鼓乐齐鸣	gu3 yue4 qi2 ming2
+鼻塞	bi2 se4
+齿龈	chi3 yin2
+龈齿弹舌	yin2 chi3 dan4 she2
+龈龈计较	yin2 yin2 ji4 jiao4
+龙门刨	long2 men2 bao4
+龟兹	qiu1 ci2
+龟裂	jun1 lie4

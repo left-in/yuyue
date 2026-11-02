@@ -190,7 +190,7 @@ impl YuyueCore {
             .filter(|(_, f)| live(f))
             .filter_map(|(e, f)| mark_from(e.strip_prefix(&prefix)?, &f))
             .collect();
-        out.sort_by(|a, b| (a.section, a.start, a.at).cmp(&(b.section, b.start, b.at)));
+        out.sort_by_key(|a| (a.section, a.start, a.at));
         Ok(out)
     }
 
@@ -311,16 +311,17 @@ impl YuyueCore {
                 })
             })
             .collect();
-        out.sort_by(|a, b| (a.section, a.sentence, a.at).cmp(&(b.section, b.sentence, b.at)));
+        out.sort_by_key(|a| (a.section, a.sentence, a.at));
         Ok(out)
     }
 
     /// Puts a bookmark on a sentence, with the sentence's opening words to show for it.
     pub fn add_bookmark(&self, book: String, section: u32, sentence: u32) -> Result<Bookmark> {
         let dir = self.book_dir(&book)?;
-        let text: String = crate::book::sentences(&dir, section)?
-            .get(sentence as usize)
-            .map(|s| s.trim().chars().take(60).collect())
+        // An audiobook has no sentences: the app shows its bookmarks by the time.
+        let text: String = crate::book::sentences(&dir, section)
+            .ok()
+            .and_then(|all| all.get(sentence as usize).map(|s| s.trim().chars().take(60).collect()))
             .unwrap_or_default();
         let id = new_id();
         let at = now_ms();

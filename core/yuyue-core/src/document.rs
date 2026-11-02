@@ -247,6 +247,7 @@ mod tests {
             sentences: 1,
             units: 1,
             pages: 0,
+            ms: 0,
         };
         Manifest {
             version: 1,

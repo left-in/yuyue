@@ -6,6 +6,7 @@
 //! yuyue toc <library> <book>
 //! yuyue doc <library> <book> <section> [--native]
 //! yuyue sentences <library> <book> <section>
+//! yuyue align <library> <book> <heard>
 //! yuyue site <library> <out> [--app <reader build>] [--native]
 //! ```
 //!
@@ -20,7 +21,7 @@ use std::process::ExitCode;
 use std::sync::Arc;
 
 use yuyue_core::document::Paging;
-use yuyue_core::{BookSummary, CoreError, MarkStyle, PageGeometry, Position, SectionKind, TextPoint, YuyueCore};
+use yuyue_core::{BookSummary, CoreError, HeardWord, MarkStyle, PageGeometry, Position, SectionKind, TextPoint, YuyueCore};
 
 const USAGE: &str = "usage:
   yuyue import <library> <file>...
@@ -28,6 +29,7 @@ const USAGE: &str = "usage:
   yuyue toc <library> <book>
   yuyue doc <library> <book> <section> [--native]
   yuyue sentences <library> <book> <section>
+  yuyue align <library> <book> <heard>   (heard: start, end, word per line, tab-separated)
   yuyue site <library> <out> [--app <reader build>] [--native]
   yuyue progress <library> <book> <section> <sentence>
   yuyue heard <library> <book> <section> <sentence>
@@ -35,7 +37,14 @@ const USAGE: &str = "usage:
   yuyue words <library>
   yuyue export <library>          (every change, as a device puts it in the sync folder)
   yuyue import-changes <library> <file>
-  yuyue devices <library>";
+  yuyue devices <library>
+  yuyue lines <library> <book> <section>    (剧本: each quote and who says it, ? when unsure)
+  yuyue pinyin <text file>          (读音: each line's pinyin, toneless)
+  yuyue fa <tsv> <zh|en> <emissions.f32> <seconds> [<emissions.f32> <seconds>]…
+                                   (强制对齐 sentences first–last of a section against the
+                                    model's output, raw little-endian f32, 28 a frame)
+  yuyue digest <file>              (BLAKE3, as the apps check a downloaded model)
+  yuyue marks <m4b>                (an M4B's chapter marks: start in seconds, title)";
 
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().skip(1).collect();
@@ -150,6 +159,23 @@ fn run(args: &[String]) -> Result<(), String> {
             }
             Ok(())
         }
+        // 听读对齐 from a transcript: one heard word per line, `start<TAB>end<TAB>text`.
+        ["align", library, book, heard] => {
+            let core = open(library)?;
+            let id = find(&core, book)?.id;
+            let mut words = Vec::new();
+            for line in fs::read_to_string(heard).map_err(|e| e.to_string())?.lines() {
+                let mut f = line.splitn(3, '\t');
+                let (Some(start), Some(end), Some(text)) = (f.next(), f.next(), f.next()) else { continue };
+                let (Ok(start), Ok(end)) = (start.parse(), end.parse()) else { continue };
+                words.push(HeardWord { text: text.to_string(), start, end });
+            }
+            let a = core.align_recording(id, words).map_err(err)?;
+            for s in a.sentences {
+                println!("{}\t{}\t{:.2}\t{:.2}\t{:.2}", s.section, s.sentence, s.start, s.end, s.heard);
+            }
+            Ok(())
+        }
         ["progress", library, book, section, sentence] => {
             let core = open(library)?;
             let id = find(&core, book)?.id;
@@ -197,6 +223,68 @@ fn run(args: &[String]) -> Result<(), String> {
             for d in open(library)?.devices().map_err(err)? {
                 let this = if d.this_device { " (this)" } else { "" };
                 println!("{}  {} [{}]{this}  last: {:?} {:?} at {:?}", d.id, d.name, d.platform, d.last_book, d.last_fraction, d.last_at);
+            }
+            Ok(())
+        }
+        ["lines", library, book, section] => {
+            let core = open(library)?;
+            let id = find(&core, book)?.id;
+            let n = number(section)?;
+            let sentences = core.sentences(id.clone(), n).map_err(err)?;
+            for l in core.section_script(id, n).map_err(err)?.lines {
+                let quote: String = sentences[l.first as usize].chars().skip(l.start as usize).take((l.end - l.start) as usize).take(30).collect();
+                println!("{}\t{}\t{:?}\t{quote}", l.first, l.who.as_deref().unwrap_or("?"), l.how);
+            }
+            Ok(())
+        }
+        ["pinyin", file] => {
+            for line in fs::read_to_string(file).map_err(|e| e.to_string())?.lines() {
+                println!("{}", yuyue_core::reading::for_alignment(line).into_iter().map(|s| s.pinyin).collect::<Vec<_>>().join(" "));
+            }
+            Ok(())
+        }
+        ["fa", tsv, lang, rest @ ..] if rest.len() >= 2 && rest.len() % 2 == 0 => {
+            // Sentences as `yuyue sentences` prints them; a line starting a chapter (Chapter I.)
+            // starts a new section, so its title gets the wildcard around it.
+            let mut book: Vec<(u32, Vec<String>)> = Vec::new();
+            let mut keys = Vec::new();
+            for line in fs::read_to_string(tsv).map_err(|e| e.to_string())?.lines() {
+                let Some((k, text)) = line.split_once('\t') else { continue };
+                // A title: Chapter I., or a short Chinese line with no punctuation (孔乙己).
+                let short = text.chars().count() <= 6 && !text.contains(['，', '。', '？', '！', '︰', '：', '“', '”']) && text.chars().any(|c| ('\u{4e00}'..='\u{9fff}').contains(&c));
+                let chapter = text.to_lowercase().starts_with("chapter ") || short;
+                if book.is_empty() || chapter {
+                    book.push((book.len() as u32, Vec::new()));
+                }
+                book.last_mut().unwrap().1.push(text.to_string());
+                keys.push(k.to_string());
+            }
+            // One or more files, each `<emissions.f32> <seconds>`.
+            let classes = yuyue_core::forced::LETTERS.chars().count();
+            let mut files = Vec::new();
+            for pair in rest.chunks(2) {
+                let bytes = fs::read(pair[0]).map_err(|e| e.to_string())?;
+                let em: Vec<f32> = bytes.chunks_exact(4).map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]])).collect();
+                let frames = em.len() / classes;
+                let seconds: f64 = pair[1].parse().map_err(|_| "seconds".to_string())?;
+                files.push(yuyue_core::forced::FileEmissions { em, frames, seconds });
+            }
+            let frames: usize = files.iter().map(|f| f.frames).sum();
+            let started = std::time::Instant::now();
+            let out = yuyue_core::forced::align_files(&book, *lang == "zh", &files);
+            eprintln!("{} frames, {:.1} s", frames, started.elapsed().as_secs_f64());
+            for (k, t) in keys.iter().zip(out.sentences) {
+                println!("{k}\t{:.2}\t{:.2}\t{:.2}", t.start, t.end, t.heard);
+            }
+            Ok(())
+        }
+        ["digest", file] => {
+            println!("{}", yuyue_core::forced::file_digest(file.to_string()).map_err(err)?);
+            Ok(())
+        }
+        ["marks", file] => {
+            for m in yuyue_core::m4b::chapter_marks(Path::new(file)).map_err(err)? {
+                println!("{:.2}\t{}", m.start, m.title.unwrap_or_default());
             }
             Ok(())
         }

@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en-US">
+  <id>tag:github.com,2008:https://github.com/rust-lang/rust/releases</id>
+  <link type="text/html" rel="alternate" href="https://github.com/rust-lang/rust/releases"/>
+  <link type="application/atom+xml" rel="self" href="https://github.com/rust-lang/rust/releases.atom"/>
+  <title>Release notes from rust</title>
+  <updated>2026-10-15T17:41:01Z</updated>
+  <entry>
+    <id>tag:github.com,2008:Repository/724712/1.99.1</id>
+    <updated>2026-10-16T04:47:44Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rust-lang/rust/releases/tag/1.99.1"/>
+    <title>Rust 1.99.1</title>
+    <content type="html">&lt;p&gt;&lt;a id=&quot;user-content-1.99.1&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/issues/163614&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/163614/hovercard&quot;&gt;library: fix missing symbol &lt;code&gt;wcslen&lt;/code&gt; on UEFI and embedded targets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/issues/163911&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/163911/hovercard&quot;&gt;rustc: fix miscompilation of FFI &lt;code&gt;bool&lt;/code&gt; return values on x86_64&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/issues/163947&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/163947/hovercard&quot;&gt;rust-lld: add the rpath for &lt;code&gt;libLLVM&lt;/code&gt; on macOS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>rustbot</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/47979223?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/724712/1.99.0</id>
+    <updated>2026-10-24T20:21:25Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rust-lang/rust/releases/tag/1.99.0"/>
+    <title>Rust 1.99.0</title>
+    <content type="html">&lt;p&gt;&lt;a id=&quot;user-content-1.99.0-Language&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Language&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/138230&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/138230/hovercard&quot;&gt;Add allow-by-default &lt;code&gt;raw_borrows_via_references&lt;/code&gt; lint that checks for references that decay immediately into raw borrows&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153563&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153563/hovercard&quot;&gt;Extend &lt;code&gt;unconditional_panic&lt;/code&gt; lint to function calls that panic when the chunks/windows size is zero&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155697&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155697/hovercard&quot;&gt;Stabilize C-variadic function definitions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159746&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159746/hovercard&quot;&gt;Stabilize the ability to use &lt;code&gt;#[unsafe(naked)]&lt;/code&gt; functions to define C-variadic functions (&lt;code&gt;#![feature(c_variadic_naked_functions)]&lt;/code&gt;).&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/156047&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/156047/hovercard&quot;&gt;Trait methods are now resolved on an adjusted never type (producing a FCW)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/157820&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/157820/hovercard&quot;&gt;Coerce from inference variables to trait objects if the inference variable is related via subtyping to a type that is known to be &lt;code&gt;Sized&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/157857&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/157857/hovercard&quot;&gt;Stabilize &lt;code&gt;#[my_macro] mod foo;&lt;/code&gt;&lt;/a&gt;. This allows outlined modules (&lt;code&gt;mod foo;&lt;/code&gt;) anywhere in the body of a custom attribute or derive macro.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158302&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158302/hovercard&quot;&gt;Fix the &lt;code&gt;overflowing_literals&lt;/code&gt; lint with repeated negation&lt;/a&gt;. For instance, it will now no longer lint on &lt;code&gt;--128_i8&lt;/code&gt;, which is already detected by the &lt;code&gt;arithmetic_overflow&lt;/code&gt; lint.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158522&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158522/hovercard&quot;&gt;Add POSIX symbols to the &lt;code&gt;invalid_runtime_symbol_definitions&lt;/code&gt; and &lt;code&gt;suspicious_runtime_symbol_definitions&lt;/code&gt; lints&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158835&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158835/hovercard&quot;&gt;Lint unused &lt;code&gt;#[path]&lt;/code&gt; attributes on inline modules&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159179&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159179/hovercard&quot;&gt;Enable &lt;code&gt;unreachable_cfg_select_predicates&lt;/code&gt; lint as part of &lt;code&gt;unused&lt;/code&gt; lint group&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159525&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159525/hovercard&quot;&gt;Stabilize passing 128-bit integers via vector registers with &lt;code&gt;asm!&lt;/code&gt; on x86&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159729&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159729/hovercard&quot;&gt;Explicitly document that some allocations are allowed to grow in-place (but none are allowed to shrink)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;We now &lt;a href=&quot;https://github.com/rust-lang/rust/pull/159730&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159730/hovercard&quot;&gt;guarantee&lt;/a&gt; that the contents of an &lt;code&gt;UnsafeCell&lt;/code&gt; can be accessed without going through &lt;code&gt;get&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159960&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159960/hovercard&quot;&gt;The &lt;code&gt;invalid_reference_casting&lt;/code&gt; lint was adjusted accordingly&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/160594&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/160594/hovercard&quot;&gt;Account for globally enabled target features in &lt;code&gt;global_asm!&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/161003&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/161003/hovercard&quot;&gt;Warn if an invalid &lt;code&gt;doc&lt;/code&gt; attribute is used on a macro invocation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.99.0-Compiler&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Compiler&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/150732&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/150732/hovercard&quot;&gt;Convert &lt;code&gt;-Ctarget-cpu&lt;/code&gt; into a target-modifier for AVR, AMDGCN and NVPTX&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158510&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158510/hovercard&quot;&gt;Enable &lt;code&gt;static_position_independent_executables&lt;/code&gt; on all gnu targets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;When providing a suggestion about a missing method, rustc now prefers an exactly matching name from a &lt;a href=&quot;https://doc.rust-lang.org/rustdoc/advanced-features.html#add-aliases-for-an-item-in-documentation-search&quot; rel=&quot;nofollow&quot;&gt;doc alias attribute&lt;/a&gt; over a similarity search from other method names. If your new users sometimes expect a method under a different name, adding a doc alias will now help them find it via rustc suggestions, in addition to helping them find it via rustdoc search: &lt;a href=&quot;https://github.com/rust-lang/rust/pull/160369&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/160369/hovercard&quot;&gt;When suggesting method names, prefer &lt;em&gt;exact&lt;/em&gt; doc aliases over similar names&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.99.0-Platform-Support&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Platform Support&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158766&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158766/hovercard&quot;&gt;Promote &lt;code&gt;riscv64-unknown-linux-musl&lt;/code&gt; to Tier 2 with host tools&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Refer to Rust&#39;s &lt;a href=&quot;https://doc.rust-lang.org/rustc/platform-support.html&quot; rel=&quot;nofollow&quot;&gt;platform support page&lt;/a&gt; for more information on Rust&#39;s tiered platform support.&lt;/p&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.99.0-Libraries&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Libraries&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Iteration on &lt;code&gt;RangeInclusive&lt;/code&gt; (&lt;code&gt;a..=b&lt;/code&gt; ranges) is now &lt;a href=&quot;https://github.com/rust-lang/rust/pull/155114&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155114/hovercard&quot;&gt;optimized better in some circumstances&lt;/a&gt;. As a side effect of this, the behavior of &lt;code&gt;RangeInclusive&lt;/code&gt; values that has already been exhausted (as an iterator) has changed. For example, the return values of &lt;code&gt;start()&lt;/code&gt; and &lt;code&gt;end()&lt;/code&gt; on such ranges may return different values, and using such ranges as slice indexes may have different behavior. These behaviors were not guaranteed to be stable, so these changes are considered to not be breaking changes.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155989&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155989/hovercard&quot;&gt;Relax &lt;code&gt;transmute_copy&lt;/code&gt; to accept &lt;code&gt;?Sized&lt;/code&gt; types&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155989&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155989/hovercard&quot;&gt;Update &lt;code&gt;transmute_copy&lt;/code&gt; to use a non-unwinding panic&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158057&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158057/hovercard&quot;&gt;Don&#39;t escape U+FF9E and U+FF9F in &lt;code&gt;escape_debug_ext&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/161430&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/161430/hovercard&quot;&gt;Re-export &lt;code&gt;core::fmt::NumBuffer&lt;/code&gt; in &lt;code&gt;alloc&lt;/code&gt; (and &lt;code&gt;std&lt;/code&gt;)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.99.0-Stabilized-APIs&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Stabilized APIs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/iter/trait.IntoIterator.html#impl-IntoIterator-for-Box%3C%5BT;+N%5D,+A%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;IntoIterator&lt;/code&gt; for &lt;code&gt;Box&amp;lt;[T; N]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/iter/trait.IntoIterator.html#impl-IntoIterator-for-%26Box%3C%5BT;+N%5D,+A%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;IntoIterator&lt;/code&gt; for &lt;code&gt;&amp;amp;Box&amp;lt;[T; N]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/iter/trait.IntoIterator.html#impl-IntoIterator-for-%26mut+Box%3C%5BT;+N%5D,+A%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;IntoIterator&lt;/code&gt; for &lt;code&gt;&amp;amp;mut Box&amp;lt;[T; N]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/collections/struct.VecDeque.html#method.retain_back&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;VecDeque::retain_back&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/ffi/struct.VaList.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::ffi::VaList&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/boxed/struct.Box.html#method.into_non_null&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Box::into_non_null&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/boxed/struct.Box.html#method.from_non_null&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Box::from_non_null&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/vec/struct.Vec.html#method.into_parts&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Vec::into_parts&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/vec/struct.Vec.html#method.from_parts&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Vec::from_parts&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/mem/fn.size_of_val_raw.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::mem::size_of_val_raw&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/mem/fn.align_of_val_raw.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::mem::align_of_val_raw&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/alloc/struct.Layout.html#method.for_value_raw&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::alloc::Layout::for_value_raw&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/string/struct.String.html#method.from_utf8_lossy_owned&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;String::from_utf8_lossy_owned&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/string/struct.FromUtf8Error.html#method.into_utf8_lossy&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;string::FromUtf8Error::into_utf8_lossy&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/iter/struct.StepBy.html#impl-FusedIterator-for-StepBy%3CI%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;FusedIterator for StepBy&amp;lt;I&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/fs/fn.set_times.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;std::fs::set_times&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/fs/fn.set_times_nofollow.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;std::fs::set_times_nofollow&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/thread/struct.LocalKey.html#method.update&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;&amp;lt;LocalKey&amp;lt;Cell&amp;lt;T&amp;gt;&amp;gt;&amp;gt;::update&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.99.0-Cargo&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Cargo&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Add a new built-in profile &lt;code&gt;debug&lt;/code&gt;. This is a preparation for transitioning the &lt;code&gt;dev&lt;/code&gt; profile away from debugging to give a saner default for faster development iterations. Currently there is no difference between &lt;code&gt;dev&lt;/code&gt; and &lt;code&gt;debug&lt;/code&gt; profiles. &lt;a href=&quot;https://doc.rust-lang.org/nightly/cargo/reference/profiles.html#debug-1&quot; rel=&quot;nofollow&quot;&gt;docs&lt;/a&gt; &lt;a href=&quot;https://github.com/rust-lang/cargo/pull/17214&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/17214/hovercard&quot;&gt;#17214&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Workspace members on edition 2024 or later can now override an inherited workspace dependency&#39;s &lt;code&gt;default-features&lt;/code&gt; field. For example, &lt;code&gt;serde = { workspace = true, default-features = false }&lt;/code&gt; now turns off default features even when the workspace definition enables them. On earlier editions, &lt;code&gt;default-features = false&lt;/code&gt; is ignored with a warning. (&lt;a href=&quot;https://github.com/rust-lang/rfcs/pull/3945&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rfcs/pull/3945/hovercard&quot;&gt;RFC 3945&lt;/a&gt;) &lt;a href=&quot;https://github.com/rust-lang/cargo/pull/17126&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/17126/hovercard&quot;&gt;#17126&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;See also the &lt;a href=&quot;https://doc.rust-lang.org/nightly/cargo/CHANGELOG.html#cargo-199-2026-10-01&quot; rel=&quot;nofollow&quot;&gt;full Cargo changelog&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.99.0-Rustdoc&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Rustdoc&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/137858&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/137858/hovercard&quot;&gt;Add new &lt;code&gt;unused_footnote_definition&lt;/code&gt; rustdoc lint&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Smarter filtering of trait impls yields performance improvements of 20% on average and up to 40% on some real-world crates. (&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159623&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159623/hovercard&quot;&gt;1&lt;/a&gt;, &lt;a href=&quot;https://github.com/rust-lang/rust/pull/159721&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159721/hovercard&quot;&gt;2&lt;/a&gt;, &lt;a href=&quot;https://github.com/rust-lang/rust/pull/159779&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159779/hovercard&quot;&gt;3&lt;/a&gt;, &lt;a href=&quot;https://github.com/rust-lang/rust/pull/159854&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159854/hovercard&quot;&gt;4&lt;/a&gt;, &lt;a href=&quot;https://github.com/rust-lang/rust/pull/159091&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159091/hovercard&quot;&gt;5&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.99.0-Compatibility-Notes&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Compatibility Notes&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/146882&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/146882/hovercard&quot;&gt;Fully deprecate the legacy integral modules&lt;/a&gt;. For example, &lt;code&gt;std::i32::MAX&lt;/code&gt; should be accessed via &lt;code&gt;i32::MAX&lt;/code&gt; instead.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/154585&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/154585/hovercard&quot;&gt;Upgrade &lt;code&gt;no_mangle_generic_items&lt;/code&gt; into hard error&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/156935&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/156935/hovercard&quot;&gt;The &lt;code&gt;Pin::new_unchecked&lt;/code&gt; has had its safety invariants changed slightly&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/157641&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/157641/hovercard&quot;&gt;Do not promote references to extern statics&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/157841&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/157841/hovercard&quot;&gt;Ensure that the inferred types of &lt;code&gt;let&lt;/code&gt; patterns typecheck&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158247&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158247/hovercard&quot;&gt;hermit/fs: Return &lt;code&gt;unsupported()&lt;/code&gt; instead of &lt;code&gt;from_raw_os_error(22)&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158523&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158523/hovercard&quot;&gt;Fixed a bug where &lt;code&gt;#[repr(simd)]&lt;/code&gt; was accidentally allowed on macro invocations on stable Rust&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159504&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159504/hovercard&quot;&gt;Abort const-eval when there are generics in the type of the value being produced&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159849&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159849/hovercard&quot;&gt;Attributes not applying to anything are now an error in code blocks in doc comments&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/160323&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/160323/hovercard&quot;&gt;&lt;code&gt;Box::leak&lt;/code&gt;: tell people to avoid unleaking&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/160441&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/160441/hovercard&quot;&gt;PowerPC inline ASM: Fix scalar floats being in the wrong vector lane on little endian&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159014&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159014/hovercard&quot;&gt;Do not take &lt;code&gt;doc(cfg())&lt;/code&gt; into account when filtering doctests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/156508&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/156508/hovercard&quot;&gt;Infer anonymous lifetimes in the types of associated consts as &lt;code&gt;&#39;static&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Macros that expand to a semicolon now produce a warning lint (&lt;code&gt;semicolon_in_expressions_from_non_local_macros&lt;/code&gt;) even when the macro comes from another crate. Previously, such warnings only appeared for macros from the same crate, to avoid showing warnings that can&#39;t be fixed locally; however, this masked problems, as integration tests from the crate providing the macro get compiled as a separate crate, so tests often wouldn&#39;t reveal this issue. If you encounter a lint like this, please make sure to report it to the crate providing the macro so they can fix it; don&#39;t just silence it in your own crate.
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159222&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159222/hovercard&quot;&gt;&lt;code&gt;semicolon_in_expressions_from_macros&lt;/code&gt;: Lint on non-local macros too&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/159700&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/159700/hovercard&quot;&gt;Split non-local &lt;code&gt;semicolon_in_expressions_from_macros&lt;/code&gt; into a separate lint&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;In Cargo, incremental compilation is now disabled by default when running in CI. CI is detected via the &lt;code&gt;CI&lt;/code&gt; environment variable. &lt;a href=&quot;https://github.com/rust-lang/cargo/pull/17220&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/17220/hovercard&quot;&gt;#17220&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/reference/pull/2303&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/reference/pull/2303/hovercard&quot;&gt;The Rust Reference no longer recommends using a single pattern to match a union alongside another value, such as in a manually-written tagged union&lt;/a&gt;. This was because it was found that such code would, in some circumstances, result in the compiler reading the contents of the union before checking if the rest of the scrutinee matches the rest of the pattern. This can cause undefined behavior in code similar to what the reference previously recommended.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.99.0-Internal-Changes&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Internal Changes&lt;/h2&gt;
+&lt;p&gt;These changes do not affect any public interfaces of Rust, but they represent significant improvements to the performance or internals of rustc and related tools.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158734&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158734/hovercard&quot;&gt;Update to LLVM 23&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>rustbot</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/47979223?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/724712/1.98.1</id>
+    <updated>2026-09-03T13:14:07Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rust-lang/rust/releases/tag/1.98.1"/>
+    <title>Rust 1.98.1</title>
+    <content type="html">&lt;p&gt;&lt;a id=&quot;user-content-1.98.1&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/issues/161441&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/161441/hovercard&quot;&gt;rustc: fix miscompilation in generating vtables&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>rustbot</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/47979223?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/724712/1.98.0</id>
+    <updated>2026-10-24T20:21:24Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rust-lang/rust/releases/tag/1.98.0"/>
+    <title>Rust 1.98.0</title>
+    <content type="html">&lt;p&gt;&lt;a id=&quot;user-content-1.98.0-Language&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Language&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149219&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149219/hovercard&quot;&gt;Allow shortening lifetime of &lt;code&gt;&amp;amp;mut&lt;/code&gt; when unsize-coercing, even in an invariant position.&lt;/a&gt; For example, you can now coerce a &lt;code&gt;Cell&amp;lt;&amp;amp;&#39;long mut i32&amp;gt;&lt;/code&gt; to a &lt;code&gt;Cell&amp;lt;&amp;amp;&#39;short mut dyn Send&amp;gt;&lt;/code&gt;. Such shortenings were already previously allowed when coercing a &lt;code&gt;&amp;amp;mut&lt;/code&gt; to a &lt;code&gt;&amp;amp;&lt;/code&gt;, or coercing a &lt;code&gt;&amp;amp;&lt;/code&gt; to a &lt;code&gt;&amp;amp;&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155521&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155521/hovercard&quot;&gt;Add deny-by-default &lt;code&gt;invalid_runtime_symbol_definitions&lt;/code&gt; lint and warn-by-default &lt;code&gt;suspicious_runtime_symbol_definitions&lt;/code&gt; lint&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;The lints currently specifically targets &lt;code&gt;core&lt;/code&gt; runtime symbols like &lt;code&gt;memcmp&lt;/code&gt;, &lt;code&gt;memset&lt;/code&gt;, &lt;code&gt;strlen&lt;/code&gt;, ... and is planned to be expanded in the next few releases.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/156379&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/156379/hovercard&quot;&gt;Add warn-by-default &lt;code&gt;c_void_returns&lt;/code&gt; lint to check &lt;code&gt;core::ffi::c_void&lt;/code&gt; as a return type&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.98.0-Platform-Support&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Platform Support&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/144220&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/144220/hovercard&quot;&gt;Add &lt;code&gt;powerpc64-unknown-linux-gnuelfv2&lt;/code&gt; as Tier 3&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155722&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155722/hovercard&quot;&gt;Add &lt;code&gt;aarch64-unknown-linux-pauthtest&lt;/code&gt; as Tier 3 target&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155763&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155763/hovercard&quot;&gt;Promote &lt;code&gt;thumbv7a-none-eabi&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155763&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155763/hovercard&quot;&gt;Promote &lt;code&gt;thumbv7a-none-eabihf&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155763&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155763/hovercard&quot;&gt;Promote &lt;code&gt;thumbv7r-none-eabi&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155763&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155763/hovercard&quot;&gt;Promote &lt;code&gt;thumbv7r-none-eabihf&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155763&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155763/hovercard&quot;&gt;Promote &lt;code&gt;thumbv8r-none-eabihf&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Refer to Rust&#39;s &lt;a href=&quot;https://doc.rust-lang.org/rustc/platform-support.html&quot; rel=&quot;nofollow&quot;&gt;platform support page&lt;/a&gt; for more information on Rust&#39;s tiered platform support.&lt;/p&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.98.0-Libraries&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Libraries&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/146561&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/146561/hovercard&quot;&gt;Change &lt;code&gt;Location&amp;lt;&#39;_&amp;gt;&lt;/code&gt; lifetime to &lt;code&gt;&#39;static&lt;/code&gt; in &lt;code&gt;Panic[Hook]Info&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155421&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155421/hovercard&quot;&gt;Document panic in &lt;code&gt;RangeInclusive::from(legacy::RangeInclusive)&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155750&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155750/hovercard&quot;&gt;Document that &lt;code&gt;ManuallyDrop&lt;/code&gt;&#39;s &lt;code&gt;Box&lt;/code&gt; interaction has been fixed&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/issues/156908&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/156908/hovercard&quot;&gt;Stabilize LoongArch CRC Intrinsics&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/issues/154645&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/154645/hovercard&quot;&gt;The &lt;code&gt;derive&lt;/code&gt; macro is available at &lt;code&gt;{core,std}::derive&lt;/code&gt;.&lt;/a&gt; This was previously &lt;a href=&quot;https://github.com/rust-lang/rust/issues/159856&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/159856/hovercard&quot;&gt;unintentionally stabilized in 1.96&lt;/a&gt;, but is now &lt;a href=&quot;https://github.com/rust-lang/rust/issues/154645&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/154645/hovercard&quot;&gt;explicitly accepted&lt;/a&gt; as a stabilized API.
+&lt;ul&gt;
+&lt;li&gt;Please note that the MSRV for &lt;code&gt;{core,std}::derive&lt;/code&gt; will be 1.96, and not 1.98.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.98.0-Stabilized-APIs&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Stabilized APIs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.str.html#method.substr_range&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;str::substr_range&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.slice.html#method.subslice_range&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;[T]::subslice_range&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/fmt/struct.NumBuffer.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::fmt::NumBuffer&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/primitive.usize.html#method.format_into&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;&amp;lt;{integer}&amp;gt;::format_into&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/process/struct.CommandArgs.html#impl-Send-for-CommandArgs%3C&#39;a%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Send/Sync for std::process::CommandArgs&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/primitive.f32.html#method.algebraic_add&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;{fN}::algebraic_add&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/primitive.f32.html#method.algebraic_sub&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;{fN}::algebraic_sub&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/primitive.f32.html#method.algebraic_mul&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;{fN}::algebraic_mul&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/primitive.f32.html#method.algebraic_div&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;{fN}::algebraic_div&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/primitive.f32.html#method.algebraic_rem&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;{fN}::algebraic_rem&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/num/struct.NonZero.html#method.from_str_radix-4&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;NonZero&amp;lt;{integer}&amp;gt;::from_str_radix&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/string/struct.String.html#method.from_utf16le&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;String::from_utf16le&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/string/struct.String.html#method.from_utf16le_lossy&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;String::from_utf16le_lossy&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/string/struct.String.html#method.from_utf16be&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;String::from_utf16be&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/string/struct.String.html#method.from_utf16be_lossy&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;String::from_utf16be_lossy&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/primitive.slice.html#method.strip_circumfix&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;[T]::strip_circumfix&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/primitive.str.html#method.strip_circumfix&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;str::strip_circumfix&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/sync/atomic/struct.Atomic.html#method.from_mut&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Atomic&amp;lt;T&amp;gt;::from_mut&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/sync/atomic/struct.Atomic.html#method.get_mut_slice&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Atomic&amp;lt;T&amp;gt;::get_mut_slice&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/sync/atomic/struct.Atomic.html#method.from_mut_slice&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Atomic&amp;lt;T&amp;gt;::from_mut_slice&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/range/legacy/index.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;std::range::legacy&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.bool.html#method.ok_or&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;bool::ok_or&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.bool.html#method.ok_or_else&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;bool::ok_or_else&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/option/enum.Option.html#method.map_or_default&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Option::map_or_default&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/result/enum.Result.html#method.map_or_default&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Result::map_or_default&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/boxed/struct.Box.html#method.as_ptr&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Box::as_ptr&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/boxed/struct.Box.html#method.as_mut_ptr&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Box::as_mut_ptr&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/path/struct.Path.html#method.is_empty&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Path::is_empty&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/path/struct.PathBuf.html#method.into_string&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;PathBuf::into_string&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/issues/117224&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/117224/hovercard&quot;&gt;&lt;code&gt;arch::{arm,aarch64}::vdot*&lt;/code&gt;: NEON dot product intrinsics&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.98.0-Compatibility-Notes&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Compatibility Notes&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/129543&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/129543/hovercard&quot;&gt;If fully elided, lifetime bounds of trait object types may now resolve differently or even get rejected in very specific niche scenarios&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/145108&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/145108/hovercard&quot;&gt;Error in more cases of ambiguous imports&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/148799&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/148799/hovercard&quot;&gt;Switch the destructors implementation for thread locals on Windows to use Fiber Local Storage (FLS)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149195&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149195/hovercard&quot;&gt;Convert some cases of the &lt;code&gt;ambiguous_glob_imports&lt;/code&gt; lint into a hard error&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153513&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153513/hovercard&quot;&gt;Where-bounds of the form &lt;code&gt;Type = Type&lt;/code&gt; and &lt;code&gt;Type == Type&lt;/code&gt; are no longer syntactically allowed&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155153&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155153/hovercard&quot;&gt;Ensure Send/Sync is not implemented for std::env::Vars{,Os}&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155193&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155193/hovercard&quot;&gt;Fix that in some attributes, arguments were not properly rejected&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155299&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155299/hovercard&quot;&gt;&lt;code&gt;repr(transparent)&lt;/code&gt; is now more strict about which fields have &quot;trivial&quot; layout and hence can be ignored: &lt;code&gt;repr(C)&lt;/code&gt; types, types with private fields, and &lt;code&gt;#[non_exhaustive]&lt;/code&gt; types are no longer considered &quot;trivial&quot;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155418&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155418/hovercard&quot;&gt;Correctly check whether types have equal size in &lt;code&gt;transmute()&lt;/code&gt; when some &lt;code&gt;repr&lt;/code&gt; attributes are involved.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155527&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155527/hovercard&quot;&gt;More characters are escaped when printing strings and chars&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155598&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155598/hovercard&quot;&gt;Implement fast path for &lt;code&gt;derive(PartialOrd)&lt;/code&gt; when deriving &lt;code&gt;Ord&lt;/code&gt;&lt;/a&gt; This can break crates in practice where a type&#39;s PartialOrd and Ord impls were inconsistent with each other.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155739&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155739/hovercard&quot;&gt;Add temporary scope to &lt;code&gt;assert_eq&lt;/code&gt; and &lt;code&gt;assert_ne&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Closed a hole in the pattern matching &lt;a href=&quot;https://doc.rust-lang.org/reference/patterns.html#constant-patterns&quot; rel=&quot;nofollow&quot;&gt;structural equality&lt;/a&gt; check, preventing cases where a match of a constant would be allowed, despite disagreeing with a manually written &lt;code&gt;PartialEq&lt;/code&gt; implementation, when a &lt;code&gt;derive(PartialEq)&lt;/code&gt; implementation for that type also exists.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/156928&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/156928/hovercard&quot;&gt;On Emscripten the WASM exception handling ABI is now unconditionally used&lt;/a&gt; The &lt;code&gt;-Zemscripten-wasm-eh=false&lt;/code&gt; flag to switch back to JS exceptions has been removed.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/157201&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/157201/hovercard&quot;&gt;The UNSAFE_CODE lint is now consistently emitted for all unsafe attributes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/157509&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/157509/hovercard&quot;&gt;Solaris: remove &lt;code&gt;File::lock&lt;/code&gt; implementation, it has the wrong semantics (return &quot;unsupported&quot; instead)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158020&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158020/hovercard&quot;&gt;Windows-gnu targets now specify baseline tools versions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158372&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158372/hovercard&quot;&gt;rustfmt now discovers module files that are defined in &lt;code&gt;cfg_select!&lt;/code&gt;&lt;/a&gt; This may cause more code to be formatted which was previously ignored.&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>rustbot</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/47979223?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/724712/1.97.1</id>
+    <updated>2026-07-16T12:29:15Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rust-lang/rust/releases/tag/1.97.1"/>
+    <title>Rust 1.97.1</title>
+    <content type="html">&lt;p&gt;&lt;a id=&quot;user-content-1.97.1&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/issues/159035&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/159035/hovercard&quot;&gt;rustc: Fix miscompilation in LLVM optimization&lt;/a&gt; This backports an LLVM submodule bump to include the LLVM-side fix and a revert of the rustc change that is one known trigger for the bug. The rustc side revert should not be strictly necessary but is done out of abundance of caution.&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>rustbot</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/47979223?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/724712/1.97.0</id>
+    <updated>2026-07-09T12:25:16Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rust-lang/rust/releases/tag/1.97.0"/>
+    <title>Rust 1.97.0</title>
+    <content type="html">&lt;p&gt;&lt;a id=&quot;user-content-1.97.0-Language&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Language&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/148214&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/148214/hovercard&quot;&gt;Consider &lt;code&gt;Result&amp;lt;T, Uninhabited&amp;gt;&lt;/code&gt; and &lt;code&gt;ControlFlow&amp;lt;Uninhabited, T&amp;gt;&lt;/code&gt; to be equivalent to &lt;code&gt;T&lt;/code&gt; for must use lint&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149509&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149509/hovercard&quot;&gt;Add allow-by-default &lt;code&gt;dead_code_pub_in_binary&lt;/code&gt; lint for unused pub items in binary crates&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/154510&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/154510/hovercard&quot;&gt;Stabilize the &lt;code&gt;div32&lt;/code&gt;, &lt;code&gt;lam-bh&lt;/code&gt;, &lt;code&gt;lamcas&lt;/code&gt;, &lt;code&gt;ld-seq-sa&lt;/code&gt; and &lt;code&gt;scq&lt;/code&gt; target features&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155006&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155006/hovercard&quot;&gt;Stabilize &lt;code&gt;cfg(target_has_atomic_primitive_alignment)&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155137&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155137/hovercard&quot;&gt;Allow trailing &lt;code&gt;self&lt;/code&gt; in imports in more cases&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.97.0-Platform-Support&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Platform Support&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152443&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152443/hovercard&quot;&gt;nvptx64-nvidia-cuda: drop support for old architectures and old ISAs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Refer to Rust&#39;s &lt;a href=&quot;https://doc.rust-lang.org/rustc/platform-support.html&quot; rel=&quot;nofollow&quot;&gt;platform support page&lt;/a&gt; for more information on Rust&#39;s tiered platform support.&lt;/p&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.97.0-Stabilized-APIs&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Stabilized APIs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/iter/struct.RepeatN.html#impl-Default-for-RepeatN%3CA%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Default for RepeatN&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/ffi/struct.FromBytesUntilNulError.html#impl-Copy-for-FromBytesUntilNulError&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Copy for ffi::FromBytesUntilNulError&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/154003&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/154003/hovercard&quot;&gt;&lt;code&gt;Send for std::fs::File&lt;/code&gt; on UEFI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.u32.html#method.isolate_highest_one&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;&amp;lt;{integer}&amp;gt;::isolate_highest_one&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.u32.html#method.isolate_lowest_one&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;&amp;lt;{integer}&amp;gt;::isolate_lowest_one&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.u32.html#method.highest_one&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;&amp;lt;{integer}&amp;gt;::highest_one&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.u32.html#method.lowest_one&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;&amp;lt;{integer}&amp;gt;::lowest_one&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.u32.html#method.bit_width&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;&amp;lt;{integer}&amp;gt;::bit_width&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/num/struct.NonZero.html#method.isolate_highest_one&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;NonZero&amp;lt;{integer}&amp;gt;::isolate_highest_one&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/num/struct.NonZero.html#method.isolate_lowest_one&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;NonZero&amp;lt;{integer}&amp;gt;::isolate_lowest_one&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/num/struct.NonZero.html#method.highest_one&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;NonZero&amp;lt;{integer}&amp;gt;::highest_one&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/num/struct.NonZero.html#method.lowest_one&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;NonZero&amp;lt;{integer}&amp;gt;::lowest_one&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/num/struct.NonZero.html#method.bit_width&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;NonZero&amp;lt;{integer}&amp;gt;::bit_width&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These previously stable APIs are now stable in const contexts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.char.html#method.is_control&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;char::is_control&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.97.0-Cargo&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Cargo&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/cargo/pull/16796&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/16796/hovercard&quot;&gt;Stabilize &lt;code&gt;build.warnings&lt;/code&gt; config.&lt;/a&gt; This controls how lint warnings from local packages are treated. Useful for enforcing a warning-free build in CI, replacing &lt;code&gt;-Dwarnings&lt;/code&gt;. &lt;a href=&quot;https://doc.rust-lang.org/nightly/cargo/reference/config.html#buildwarnings&quot; rel=&quot;nofollow&quot;&gt;docs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/cargo/pull/16694&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/16694/hovercard&quot;&gt;Stabilize &lt;code&gt;resolver.lockfile-path&lt;/code&gt; config.&lt;/a&gt; This allows specifying the path to the lockfile to use when resolving dependencies. Useful when working with read-only source directories. &lt;a href=&quot;https://doc.rust-lang.org/nightly/cargo/reference/config.html#resolverlockfile-path&quot; rel=&quot;nofollow&quot;&gt;docs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/cargo/pull/16712&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/16712/hovercard&quot;&gt;cargo-clean: Error when &lt;code&gt;--target-dir&lt;/code&gt; doesn&#39;t look like a Cargo target directory.&lt;/a&gt; This prevents accidental deletion of non-target directories.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/cargo/pull/16858&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/16858/hovercard&quot;&gt;Add &lt;code&gt;-m&lt;/code&gt; shorthand for &lt;code&gt;--manifest-path&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/cargo/pull/16936&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/16936/hovercard&quot;&gt;Remove &lt;code&gt;curl&lt;/code&gt; dependency from &lt;code&gt;crates-io&lt;/code&gt; crate&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.97.0-Rustdoc&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Rustdoc&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/146220&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/146220/hovercard&quot;&gt;Stabilize &lt;code&gt;--emit&lt;/code&gt; flag&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155307&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155307/hovercard&quot;&gt;Stabilize &lt;code&gt;--remap-path-prefix&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.97.0-Compatibility-Notes&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Compatibility Notes&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/139087&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/139087/hovercard&quot;&gt;Emit a future-compatibility warning when relying on &lt;code&gt;f32: From&amp;lt;{float}&amp;gt;&lt;/code&gt; to constrain &lt;code&gt;{float}&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/151994&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/151994/hovercard&quot;&gt;Rust will use the v0 symbol mangling scheme by default.&lt;/a&gt; This may cause some tools (such as debuggers or profilers, especially with old versions) to fail to demangle symbols emitted by Rust. It may also cause the formatting of text in backtraces to change.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153457&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153457/hovercard&quot;&gt;Prevent deref coercions in &lt;code&gt;pin!&lt;/code&gt;, in order to prevent unsoundness.&lt;/a&gt; The most likely case where this might impact users is: writing &lt;code&gt;pin!(x)&lt;/code&gt; where &lt;code&gt;x&lt;/code&gt; has type &lt;code&gt;&amp;amp;mut T&lt;/code&gt; will now always correctly produce a value of type &lt;code&gt;Pin&amp;lt;&amp;amp;mut &amp;amp;mut T&amp;gt;&lt;/code&gt;, instead of sometimes allowing a coercion that produces a value of type &lt;code&gt;Pin&amp;lt;&amp;amp;mut T&amp;gt;&lt;/code&gt;. This coercion was previously incorrectly allowed since Rust 1.88.0.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153873&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153873/hovercard&quot;&gt;Deprecate &lt;code&gt;std::char&lt;/code&gt; constants and functions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153968&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153968/hovercard&quot;&gt;Warn on linker output by default&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153975&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153975/hovercard&quot;&gt;Remove hidden &lt;code&gt;f64&lt;/code&gt; methods which have been deprecated since 1.0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/154599&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/154599/hovercard&quot;&gt;report the &lt;code&gt;varargs_without_pattern&lt;/code&gt; lint in deps&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/154971&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/154971/hovercard&quot;&gt;Forbid passing generic arguments to module path segments even if the module reexports a generic enum variant&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155065&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155065/hovercard&quot;&gt;Error on invalid macho &lt;code&gt;link_section&lt;/code&gt; specifier&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The encoding of certain &lt;code&gt;enum&lt;/code&gt;s &lt;a href=&quot;https://github.com/rust-lang/rust/pull/155473&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155473/hovercard&quot;&gt;have changed&lt;/a&gt;. This is not a breaking change, as it only applies to &lt;code&gt;enum&lt;/code&gt;s without layout guarantees, but is noted here as we&#39;ve seen people impacted from having made assumptions about the layout algorithm.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155515&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155515/hovercard&quot;&gt;Error on &lt;code&gt;#[export_name = &quot;...&quot;]&lt;/code&gt; where the name is empty&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155698&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155698/hovercard&quot;&gt;Syntactically reject tuple index shorthands in struct patterns&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155817&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155817/hovercard&quot;&gt;validate &lt;code&gt;#[link_name = &quot;...&quot;]&lt;/code&gt; &amp;amp; &lt;code&gt;#[link(name = &quot;...&quot;)]&lt;/code&gt; parameters&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;On Windows, after calling &lt;code&gt;shutdown&lt;/code&gt; on a socket to shut down the write side, attempting to write to the socket will now produce a &lt;code&gt;BrokenPipe&lt;/code&gt; error rather than &lt;code&gt;Other&lt;/code&gt;. &lt;a href=&quot;https://github.com/rust-lang/rust/pull/156063&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/156063/hovercard&quot;&gt;Map &lt;code&gt;WSAESHUTDOWN&lt;/code&gt; to &lt;code&gt;io::ErrorKind::BrokenPipe&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>rustbot</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/47979223?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/724712/1.96.1</id>
+    <updated>2026-07-05T23:50:27Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rust-lang/rust/releases/tag/1.96.1"/>
+    <title>Rust 1.96.1</title>
+    <content type="html">&lt;p&gt;&lt;a id=&quot;user-content-1.96.1&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/cargo/pull/17131&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/17131/hovercard&quot;&gt;Cargo: fix timeout/retry behavior&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/cargo/pull/17140&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/17140/hovercard&quot;&gt;Cargo: apply patches for CVE-2025-15661, CVE-2026-55199, and CVE-2026-55200 to libssh2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/158214&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/158214/hovercard&quot;&gt;rustc: fix miscompilation in MIR optimization&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>rustbot</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/47979223?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/724712/1.96.0</id>
+    <updated>2026-06-07T09:14:01Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rust-lang/rust/releases/tag/1.96.0"/>
+    <title>Rust 1.96.0</title>
+    <content type="html">&lt;p&gt;&lt;a id=&quot;user-content-1.96.0-Language&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Language&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/146961&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/146961/hovercard&quot;&gt;Allow passing &lt;code&gt;expr&lt;/code&gt; metavariable to &lt;code&gt;cfg&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/147834&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/147834/hovercard&quot;&gt;Always coerce never types in tuple expressions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/150316&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/150316/hovercard&quot;&gt;Avoid incorrect inference guidance of function arguments in rare cases&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/154184&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/154184/hovercard&quot;&gt;Support s390x vector registers in inline assembly&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/154891&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/154891/hovercard&quot;&gt;Allow using constants of type &lt;code&gt;ManuallyDrop&lt;/code&gt; as patterns (fixing a regression introduced in 1.94.0)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.96.0-Compiler&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Compiler&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153427&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153427/hovercard&quot;&gt;Enable link relaxation feature for LoongArch Linux targets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155072&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155072/hovercard&quot;&gt;Update &lt;code&gt;riscv64gc-unknown-fuchsia&lt;/code&gt; baseline to RVA22 + vector&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.96.0-Libraries&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Libraries&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/127534&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/127534/hovercard&quot;&gt;Support iterating over ranges of &lt;code&gt;NonZero&lt;/code&gt; integers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152615&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152615/hovercard&quot;&gt;refactor &#39;valid for read/write&#39; definition: exclude null; add that as an exception on individual methods instead&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152851&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152851/hovercard&quot;&gt;Fix SGX delayed host lookup via ToSocketAddr&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.96.0-Stabilized-APIs&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Stabilized APIs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/macro.assert_matches.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;assert_matches!&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/macro.debug_assert_matches.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;debug_assert_matches!&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/panic/struct.AssertUnwindSafe.html#impl-From%3CT%3E-for-AssertUnwindSafe%3CT%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;From&amp;lt;T&amp;gt; for AssertUnwindSafe&amp;lt;T&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/cell/struct.LazyCell.html#impl-From%3CT%3E-for-LazyCell%3CT,+F%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;From&amp;lt;T&amp;gt; for LazyCell&amp;lt;T, F&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/sync/struct.LazyLock.html#impl-From%3CT%3E-for-LazyLock%3CT,+F%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;From&amp;lt;T&amp;gt; for LazyLock&amp;lt;T, F&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/range/struct.RangeToInclusive.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::range::RangeToInclusive&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/range/struct.RangeToInclusiveIter.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::range::RangeToInclusiveIter&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/ops/struct.RangeFrom.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::range::RangeFrom&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/ops/struct.RangeFromIter.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::range::RangeFromIter&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/range/struct.Range.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::range::Range&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/range/struct.RangeIter.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::range::RangeIter&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.96.0-Cargo&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Cargo&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/cargo/pull/16810/&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/16810/hovercard&quot;&gt;Allow a dependency to specify both a git repository and an alternate registry.&lt;/a&gt; Just like with crates.io, the git repository will be used locally, but the registry version will be used when published.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/cargo/pull/16846&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/16846/hovercard&quot;&gt;Added &lt;code&gt;target.&#39;cfg(..)&#39;.rustdocflags&lt;/code&gt; support in configuration.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Fixed &lt;a href=&quot;https://blog.rust-lang.org/2026/05/25/cve-2026-5222/&quot; rel=&quot;nofollow&quot;&gt;CVE-2026-5222&lt;/a&gt; and &lt;a href=&quot;https://blog.rust-lang.org/2026/05/25/cve-2026-5223/&quot; rel=&quot;nofollow&quot;&gt;CVE-2026-5223&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.96-Rustdoc&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Rustdoc&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149931&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149931/hovercard&quot;&gt;Deprecation notes are now rendered like any other documentation&lt;/a&gt;. Previously they used the css &lt;code&gt;white-space: pre-wrap;&lt;/code&gt; property and stripped any &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt; elements from the rendered html, however this caused issues and unintuitive behavior. The new behavior should be more predictable, however some multi-line deprecation notes will now be rendered as as single lines. If this is undesirable, you can use the standard markdown method of forcing a linebreak, which is two spaces followed by a newline (&lt;code&gt;&quot;\n&quot;&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/154048&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/154048/hovercard&quot;&gt;Don&#39;t emit rustdoc &lt;code&gt;missing_doc_code_examples&lt;/code&gt; lint on impl items&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/154644&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/154644/hovercard&quot;&gt;Separate methods and associated functions in sidebar&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.96.0-Compatibility-Notes&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Compatibility Notes&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/146989&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/146989/hovercard&quot;&gt;Fix layout of &lt;code&gt;#[repr(Int)]&lt;/code&gt; enums in some edge cases involving fields of uninhabited zero-sized types&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149218&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149218/hovercard&quot;&gt;Prevent unsize-coercing into &lt;code&gt;Pin&amp;lt;Foo&amp;gt;&lt;/code&gt; where &lt;code&gt;Foo&lt;/code&gt; doesn&#39;t implement &lt;code&gt;Deref&lt;/code&gt;. Some such coercions were previously allowed, but produce a type with no useful public API.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149868&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149868/hovercard&quot;&gt;rustc: Stop passing &lt;code&gt;--allow-undefined&lt;/code&gt; on wasm targets&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152210&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152210/hovercard&quot;&gt;Gate the accidentally stabilized &lt;code&gt;#![reexport_test_harness_main]&lt;/code&gt; attribute&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152543&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152543/hovercard&quot;&gt;Error on return-position-impl-trait-in-traits whose types are too private&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152853&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152853/hovercard&quot;&gt;Report the &lt;code&gt;uninhabited_static&lt;/code&gt; lint in dependencies and make it deny-by-default&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152870&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152870/hovercard&quot;&gt;Distributed builds now contain non-split debuginfo for windows-gnu&lt;/a&gt; This appears to improve the quality of backtraces. This change has no effect on the defaults for the output of rustc/cargo on these targets.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152931&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152931/hovercard&quot;&gt;Check const generic arguments are correctly typed in more positions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152973&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152973/hovercard&quot;&gt;Remove &lt;code&gt;-Csoft-float&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152996&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152996/hovercard&quot;&gt;Importing structs with &lt;code&gt;::{self [as name]}&lt;/code&gt;, e.g., &lt;code&gt;struct S {}; use S::{self as Other};&lt;/code&gt;, is now no longer permitted because &lt;code&gt;{self}&lt;/code&gt; imports require a module parent.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153041&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153041/hovercard&quot;&gt;For &lt;code&gt;export_name&lt;/code&gt;, &lt;code&gt;link_name&lt;/code&gt;, and &lt;code&gt;link_section&lt;/code&gt; attributes, if multiple of the same attribute is present, the first one now takes precedence.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153684&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153684/hovercard&quot;&gt;Update the minimum external LLVM to 21&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;On &lt;code&gt;avr&lt;/code&gt; targets, C&#39;s &lt;code&gt;double&lt;/code&gt; type is 32-bit by default, so &lt;a href=&quot;https://github.com/rust-lang/rust/pull/154647&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/154647/hovercard&quot;&gt;change &lt;code&gt;c_double&lt;/code&gt; to &lt;code&gt;f32&lt;/code&gt; on &lt;code&gt;avr&lt;/code&gt; targets to match&lt;/a&gt;. This is a breaking change, but necessary to make &lt;code&gt;c_double&lt;/code&gt; match C&#39;s double.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153107&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153107/hovercard&quot;&gt;&lt;code&gt;BTreeMap::append()&lt;/code&gt; was optimized, which may now cause panics for types with incorrect &lt;code&gt;Ord&lt;/code&gt; impls&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.96.0-Internal-Changes&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Internal Changes&lt;/h2&gt;
+&lt;p&gt;These changes do not affect any public interfaces of Rust, but they represent significant improvements to the performance or internals of rustc and related tools.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152941&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152941/hovercard&quot;&gt;JSON targets: &lt;code&gt;aarch64&lt;/code&gt; softfloat targets now have to have &lt;code&gt;rustc_abi&lt;/code&gt; set to &lt;code&gt;&quot;softfloat&quot;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153769&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153769/hovercard&quot;&gt;target specs: stricter checks for LLVM ABI values, and correlate that with &lt;code&gt;cfg(target_abi)&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>rustbot</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/47979223?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/724712/1.95.0</id>
+    <updated>2026-10-24T20:21:27Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rust-lang/rust/releases/tag/1.95.0"/>
+    <title>Rust 1.95.0</title>
+    <content type="html">&lt;p&gt;&lt;a id=&quot;user-content-1.95-Language&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Language&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/141295&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/141295/hovercard&quot;&gt;Stabilize &lt;code&gt;if let&lt;/code&gt; guards on match arms&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/146832&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/146832/hovercard&quot;&gt;&lt;code&gt;irrefutable_let_patterns&lt;/code&gt; lint no longer lints on let chains&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/146972&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/146972/hovercard&quot;&gt;Support importing path-segment keywords with renaming&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/147996&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/147996/hovercard&quot;&gt;Stabilize inline assembly for PowerPC and PowerPC64&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/148967&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/148967/hovercard&quot;&gt;const-eval: be more consistent in the behavior of padding during typed copies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/150557&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/150557/hovercard&quot;&gt;Const blocks are no longer evaluated to determine if expressions involving fallible operations can implicitly be constant-promoted.&lt;/a&gt;. Expressions whose ability to implicitly be promoted would depend on the result of a const block are no longer implicitly promoted.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/150681&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/150681/hovercard&quot;&gt;Make operational semantics of pattern matching independent of crate and module&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.95-Compiler&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Compiler&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/147611&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/147611/hovercard&quot;&gt;Stabilize &lt;code&gt;--remap-path-scope&lt;/code&gt; for controlling the scoping of how paths get remapped in the resulting binary&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/155171&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/155171/hovercard&quot;&gt;Apply patches for CVE-2026-6042 and CVE-2026-40200 to vendored musl&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.95-Platform-Support&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Platform Support&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149962&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149962/hovercard&quot;&gt;Promote &lt;code&gt;powerpc64-unknown-linux-musl&lt;/code&gt; to Tier 2 with host tools&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152021&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152021/hovercard&quot;&gt;Promote &lt;code&gt;aarch64-apple-tvos&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152021&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152021/hovercard&quot;&gt;Promote &lt;code&gt;aarch64-apple-tvos-sim&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152021&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152021/hovercard&quot;&gt;Promote &lt;code&gt;aarch64-apple-watchos&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152021&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152021/hovercard&quot;&gt;Promote &lt;code&gt;aarch64-apple-watchos-sim&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152021&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152021/hovercard&quot;&gt;Promote &lt;code&gt;aarch64-apple-visionos&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152021&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152021/hovercard&quot;&gt;Promote &lt;code&gt;aarch64-apple-visionos-sim&lt;/code&gt; to Tier 2&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Refer to Rust&#39;s &lt;a href=&quot;https://doc.rust-lang.org/rustc/platform-support.html&quot; rel=&quot;nofollow&quot;&gt;platform support page&lt;/a&gt; for more information on Rust&#39;s tiered platform support.&lt;/p&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.95-Libraries&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Libraries&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149482&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149482/hovercard&quot;&gt;&lt;code&gt;thread::scope&lt;/code&gt;: document how join interacts with TLS destructors&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/152176&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/152176/hovercard&quot;&gt;Speed up &lt;code&gt;str::contains&lt;/code&gt; on aarch64 targets with &lt;code&gt;neon&lt;/code&gt; target feature enabled by default&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.95-Stabilized-APIs&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Stabilized APIs&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/mem/union.MaybeUninit.html#impl-From%3CMaybeUninit%3C%5BT;+N%5D%3E%3E-for-%5BMaybeUninit%3CT%3E;+N%5D&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;MaybeUninit&amp;lt;[T; N]&amp;gt;: From&amp;lt;[MaybeUninit&amp;lt;T&amp;gt;; N]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/mem/union.MaybeUninit.html#impl-AsRef%3C%5BMaybeUninit%3CT%3E;+N%5D%3E-for-MaybeUninit%3C%5BT;+N%5D%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;MaybeUninit&amp;lt;[T; N]&amp;gt;: AsRef&amp;lt;[MaybeUninit&amp;lt;T&amp;gt;; N]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/mem/union.MaybeUninit.html#impl-AsRef%3C%5BMaybeUninit%3CT%3E%5D%3E-for-MaybeUninit%3C%5BT;+N%5D%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;MaybeUninit&amp;lt;[T; N]&amp;gt;: AsRef&amp;lt;[MaybeUninit&amp;lt;T&amp;gt;]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/beta/std/mem/union.MaybeUninit.html#impl-AsMut%3C%5BMaybeUninit%3CT%3E;+N%5D%3E-for-MaybeUninit%3C%5BT;+N%5D%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;MaybeUninit&amp;lt;[T; N]&amp;gt;: AsMut&amp;lt;[MaybeUninit&amp;lt;T&amp;gt;; N]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/mem/union.MaybeUninit.html#impl-AsMut%3C%5BMaybeUninit%3CT%3E%5D%3E-for-MaybeUninit%3C%5BT;+N%5D%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;MaybeUninit&amp;lt;[T; N]&amp;gt;: AsMut&amp;lt;[MaybeUninit&amp;lt;T&amp;gt;]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/mem/union.MaybeUninit.html#impl-From%3C%5BMaybeUninit%3CT%3E;+N%5D%3E-for-MaybeUninit%3C%5BT;+N%5D%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;[MaybeUninit&amp;lt;T&amp;gt;; N]: From&amp;lt;MaybeUninit&amp;lt;[T; N]&amp;gt;&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/cell/struct.Cell.html#impl-AsRef%3C%5BCell%3CT%3E;+N%5D%3E-for-Cell%3C%5BT;+N%5D%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Cell&amp;lt;[T; N]&amp;gt;: AsRef&amp;lt;[Cell&amp;lt;T&amp;gt;; N]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/cell/struct.Cell.html#impl-AsRef%3C%5BCell%3CT%3E%5D%3E-for-Cell%3C%5BT;+N%5D%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Cell&amp;lt;[T; N]&amp;gt;: AsRef&amp;lt;[Cell&amp;lt;T&amp;gt;]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/cell/struct.Cell.html#impl-AsRef%3C%5BCell%3CT%3E%5D%3E-for-Cell%3C%5BT%5D%3E&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Cell&amp;lt;[T]&amp;gt;: AsRef&amp;lt;[Cell&amp;lt;T&amp;gt;]&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.bool.html#impl-TryFrom%3Cu128%3E-for-bool&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;bool: TryFrom&amp;lt;{integer}&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/sync/atomic/struct.AtomicPtr.html#method.update&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;AtomicPtr::update&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/sync/atomic/struct.AtomicPtr.html#method.try_update&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;AtomicPtr::try_update&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/sync/atomic/struct.AtomicBool.html#method.update&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;AtomicBool::update&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/sync/atomic/struct.AtomicBool.html#method.try_update&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;AtomicBool::try_update&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/sync/atomic/struct.AtomicIsize.html#method.update&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;AtomicIn::update&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/sync/atomic/struct.AtomicIsize.html#method.try_update&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;AtomicIn::try_update&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/sync/atomic/struct.AtomicUsize.html#method.update&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;AtomicUn::update&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/sync/atomic/struct.AtomicUsize.html#method.try_update&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;AtomicUn::try_update&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/macro.cfg_select.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;cfg_select!&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/range/index.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;mod core::range&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/range/struct.RangeInclusive.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::range::RangeInclusive&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/range/struct.RangeInclusiveIter.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::range::RangeInclusiveIter&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/hint/fn.cold_path.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::hint::cold_path&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.pointer.html#method.as_ref_unchecked&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;&amp;lt;*const T&amp;gt;::as_ref_unchecked&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.pointer.html#method.as_ref_unchecked-1&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;&amp;lt;*mut T&amp;gt;::as_ref_unchecked&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/primitive.pointer.html#method.as_mut_unchecked&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;&amp;lt;*mut T&amp;gt;::as_mut_unchecked&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/vec/struct.Vec.html#method.push_mut&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Vec::push_mut&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/vec/struct.Vec.html#method.insert_mut&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Vec::insert_mut&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/collections/struct.VecDeque.html#method.push_front_mut&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;VecDeque::push_front_mut&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/collections/struct.VecDeque.html#method.push_back_mut&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;VecDeque::push_back_mut&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/collections/struct.VecDeque.html#method.insert_mut&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;VecDeque::insert_mut&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/collections/struct.LinkedList.html#method.push_front_mut&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;LinkedList::push_front_mut&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/collections/struct.LinkedList.html#method.push_back_mut&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;LinkedList::push_back_mut&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/alloc/struct.Layout.html#method.dangling_ptr&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Layout::dangling_ptr&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/alloc/struct.Layout.html#method.repeat&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Layout::repeat&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/alloc/struct.Layout.html#method.repeat_packed&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Layout::repeat_packed&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/alloc/struct.Layout.html#method.extend_packed&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;Layout::extend_packed&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/arch/aarch64/fn.__jcvt.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;core::arch::aarch64::__jcvt&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These previously stable APIs are now stable in const contexts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/std/fmt/fn.from_fn.html&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;fmt::from_fn&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/ops/enum.ControlFlow.html#method.is_break&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;ControlFlow::is_break&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/stable/core/ops/enum.ControlFlow.html#method.is_continue&quot; rel=&quot;nofollow&quot;&gt;&lt;code&gt;ControlFlow::is_continue&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.95-Rustdoc&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Rustdoc&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149460&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149460/hovercard&quot;&gt;In search results, rank unstable items lower&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/151091&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/151091/hovercard&quot;&gt;Add new &quot;hide deprecated items&quot; setting in rustdoc&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.95-Compatibility-Notes&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Compatibility Notes&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/140283&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/140283/hovercard&quot;&gt;Array coercions may now result in less inference constraints than before&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Importing &lt;code&gt;$crate&lt;/code&gt; without renaming, i.e. &lt;code&gt;use $crate::{self};&lt;/code&gt;, is now no longer permitted due to stricter error checking for &lt;code&gt;self&lt;/code&gt; imports.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/148967&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/148967/hovercard&quot;&gt;const-eval: be more consistent in the behavior of padding during typed copies.&lt;/a&gt; In very rare cases, this may cause compilation errors due to bytes from parts of a pointer ending up in the padding bytes of a &lt;code&gt;const&lt;/code&gt; or &lt;code&gt;static&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149058&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149058/hovercard&quot;&gt;A future-incompatibility warning lint &lt;code&gt;ambiguous_glob_imported_traits&lt;/code&gt; is now reported when using an ambiguously glob imported trait&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149389&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149389/hovercard&quot;&gt;Check lifetime bounds of types mentioning only type parameters&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149596&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149596/hovercard&quot;&gt;Report more visibility-related ambiguous import errors&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/149978&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/149978/hovercard&quot;&gt;Deprecate &lt;code&gt;Eq::assert_receiver_is_total_eq&lt;/code&gt; and emit future compatibility warnings on manual impls&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/150468&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/150468/hovercard&quot;&gt;powerpc64: Use the ELF ABI version set in target spec instead of guessing&lt;/a&gt; (fixes the ELF ABI used by the OpenBSD target)&lt;/li&gt;
+&lt;li&gt;Matching on a &lt;code&gt;#[non_exhaustive]&lt;/code&gt; enum &lt;a href=&quot;https://github.com/rust-lang/rust/pull/150681&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/150681/hovercard&quot;&gt;now reads the discriminant, even if the enum has only one variant&lt;/a&gt;. This can cause closures to capture values that they previously wouldn&#39;t.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mut ref&lt;/code&gt; and &lt;code&gt;mut ref mut&lt;/code&gt; patterns, part of the unstable &lt;a href=&quot;https://github.com/rust-lang/rust/issues/123076&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/123076/hovercard&quot;&gt;Match Ergonomics 2024 RFC&lt;/a&gt;, were accidentally allowed on stable within struct pattern field shorthand. These patterns are now correctly feature-gated as unstable in this position.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/151152&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/151152/hovercard&quot;&gt;Add future-compatibility warning for derive helper attributes which conflict with built-in attributes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://doc.rust-lang.org/rustc/targets/custom.html&quot; rel=&quot;nofollow&quot;&gt;JSON target specs&lt;/a&gt; have been destabilized and now require &lt;code&gt;-Z unstable-options&lt;/code&gt; to use. Previously, they could not be used without the standard library, which has no stable build mechanism. In preparation for the &lt;code&gt;build-std&lt;/code&gt; project adding that support, JSON target specs are being proactively gated to ensure they remain unstable even if &lt;code&gt;build-std&lt;/code&gt; is stabilized. Cargo now includes the &lt;code&gt;-Z json-target-spec&lt;/code&gt; CLI flag to automatically pass &lt;code&gt;-Z unstable-options&lt;/code&gt; to the compiler when needed. See &lt;a href=&quot;https://github.com/rust-lang/rust/pull/150151&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/150151/hovercard&quot;&gt;#150151&lt;/a&gt;, &lt;a href=&quot;https://github.com/rust-lang/rust/pull/150151&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/150151/hovercard&quot;&gt;#151534&lt;/a&gt;, and &lt;a href=&quot;https://github.com/rust-lang/cargo/pull/16557&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/16557/hovercard&quot;&gt;rust-lang/cargo#16557&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/issues/153764&quot; data-hovercard-type=&quot;issue&quot; data-hovercard-url=&quot;/rust-lang/rust/issues/153764/hovercard&quot;&gt;The arguments of &lt;code&gt;#[feature]&lt;/code&gt; attributes on invalid targets are now checked&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a id=&quot;user-content-1.95-Internal-Changes&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Internal Changes&lt;/h2&gt;
+&lt;p&gt;These changes do not affect any public interfaces of Rust, but they represent significant improvements to the performance or internals of rustc and related tools.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/150722&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/150722/hovercard&quot;&gt;Update to LLVM 22&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>rustbot</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/47979223?s=60&amp;v=4"/>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/724712/1.94.1</id>
+    <updated>2026-03-26T13:03:20Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rust-lang/rust/releases/tag/1.94.1"/>
+    <title>Rust 1.94.1</title>
+    <content type="html">&lt;p&gt;&lt;a id=&quot;user-content-1.94.1&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153634&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153634/hovercard&quot;&gt;Fix &lt;code&gt;std::thread::spawn&lt;/code&gt; on wasm32-wasip1-threads&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust/pull/153491&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust/pull/153491/hovercard&quot;&gt;Remove new methods added to &lt;code&gt;std::os::windows::fs::OpenOptionsExt&lt;/code&gt;&lt;/a&gt; The new methods were unstable, but the trait itself is not sealed and so cannot be extended with non-default methods.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/rust-clippy/pull/16685&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/rust-clippy/pull/16685/hovercard&quot;&gt;Clippy: fix ICE in &lt;code&gt;match_same_arms&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rust-lang/cargo/pull/16769&quot; data-hovercard-type=&quot;pull_request&quot; data-hovercard-url=&quot;/rust-lang/cargo/pull/16769/hovercard&quot;&gt;Cargo: update tar to 0.4.45&lt;/a&gt; This resolves &lt;a title=&quot;CVE-2026-33055&quot; data-hovercard-type=&quot;advisory&quot; data-hovercard-url=&quot;/advisories/GHSA-gchp-q4r4-x4ff/hovercard&quot; href=&quot;https://github.com/advisories/GHSA-gchp-q4r4-x4ff&quot;&gt;CVE-2026-33055&lt;/a&gt; and &lt;a title=&quot;CVE-2026-33056&quot; data-hovercard-type=&quot;advisory&quot; data-hovercard-url=&quot;/advisories/GHSA-j4xf-2g29-59ph/hovercard&quot; href=&quot;https://github.com/advisories/GHSA-j4xf-2g29-59ph&quot;&gt;CVE-2026-33056&lt;/a&gt;. Users of crates.io are not affected. See &lt;a href=&quot;https://blog.rust-lang.org/2026/03/21/cve-2026-33056/&quot; rel=&quot;nofollow&quot;&gt;blog&lt;/a&gt; for more details.&lt;/li&gt;
+&lt;/ul&gt;</content>
+    <author>
+      <name>rustbot</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars.githubusercontent.com/u/47979223?s=60&amp;v=4"/>
+  </entry>
+</feed>

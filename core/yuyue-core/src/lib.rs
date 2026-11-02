@@ -6,6 +6,7 @@
 
 pub mod align;
 pub mod api;
+pub mod audio;
 pub mod book;
 pub mod conflicts;
 pub mod document;
@@ -13,16 +14,22 @@ pub mod dom;
 pub mod epub;
 pub mod error;
 pub mod export;
+pub mod feed;
 pub mod footnote;
+pub mod forced;
 pub mod hard;
 pub mod i18n;
+pub mod m4b;
 pub mod mobi;
 pub mod normalize;
 pub mod notes;
 pub mod paper;
+pub mod podcast;
 pub mod punct;
+pub mod reading;
 pub mod records;
 pub mod rules;
+pub mod script;
 pub mod mdict;
 pub mod segment;
 pub mod shelf;
@@ -35,6 +42,7 @@ pub mod words;
 
 pub use api::*;
 pub use align::*;
+pub use audio::*;
 pub use shelf::*;
 pub use notes::*;
 pub use rules::*;
@@ -42,6 +50,8 @@ pub use mdict::*;
 pub use paper::*;
 pub use footnote::*;
 pub use txtlayout::*;
+pub use feed::*;
+pub use podcast::*;
 pub use error::CoreError;
 
 uniffi::setup_scaffolding!();

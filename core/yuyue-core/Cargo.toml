@@ -20,6 +20,8 @@ html5ever = "0.39"
 markup5ever_rcdom = "0.39.0"
 icu_segmenter = "2.3.0"
 percent-encoding = "2.3.2"
+# 读音: each character's readings (MIT); data/pinyin-phrases.txt says which a phrase takes.
+pinyin = { version = "0.11.0", default-features = false, features = ["plain", "with_tone_num_end", "heteronym"] }
 regex = "1.13.1"
 roxmltree = "0.21.1"
 rusqlite = { version = "0.40.2", features = ["bundled"] }

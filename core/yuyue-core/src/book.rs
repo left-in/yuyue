@@ -41,6 +41,10 @@ pub enum Format {
     Pdf,
     /// MOBI and AZW3, turned into an EPUB to read.
     Mobi,
+    /// 有声书: a recording on its own (`audio`); its chapters' positions are milliseconds.
+    Audio,
+    /// 播客: an episode's script, written here (`podcast`), read like a TXT.
+    Podcast,
 }
 
 impl Format {
@@ -50,6 +54,9 @@ impl Format {
             Format::Txt => "txt",
             Format::Pdf => "pdf",
             Format::Mobi => "mobi",
+            // No one file it came from: the recording is its files under `a/`.
+            Format::Audio => "audio",
+            Format::Podcast => "podcast",
         }
     }
 }
@@ -119,6 +126,9 @@ pub struct SectionInfo {
     /// A PDF's pages; its positions count pages instead of sentences.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub pages: u32,
+    /// An audiobook chapter's length in milliseconds; its positions count milliseconds.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub ms: u32,
 }
 
 fn is_zero(n: &u32) -> bool {
@@ -141,11 +151,10 @@ pub fn import(books_dir: &Path, source: &Path) -> Result<Manifest> {
     let bytes = fs::read(source)?;
     let id = book_id(&bytes);
     let dir = books_dir.join(&id);
-    if let Ok(existing) = load(&dir) {
-        if existing.version == FORMAT_VERSION {
+    if let Ok(existing) = load(&dir)
+        && existing.version == FORMAT_VERSION {
             return Ok(existing);
         }
-    }
     let format = detect(&bytes)?;
     let fallback_title = source.file_stem().and_then(|s| s.to_str()).unwrap_or("").trim().to_string();
     build_into(books_dir, &id, |tmp| {
@@ -156,6 +165,7 @@ pub fn import(books_dir: &Path, source: &Path) -> Result<Manifest> {
             Format::Mobi => build_mobi(tmp, &id, &bytes, &fallback_title),
             Format::Txt => build_txt(tmp, &id, &bytes, &fallback_title, &TxtOptions::default()),
             Format::Pdf => build_pdf(tmp, &id, &fallback_title),
+            Format::Audio | Format::Podcast => Err(CoreError::bad_book("not a book file")),
         }
     })
 }
@@ -185,6 +195,8 @@ pub fn reimport(books_dir: &Path, id: &str, txt: Option<&TxtOptions>) -> Result<
                 fs::write(tmp.join("book.json"), serde_json::to_string_pretty(&m)?)?;
                 Ok(m)
             }
+            // A recording or an episode isn't rebuilt (see `YuyueCore::manifest`).
+            Format::Audio | Format::Podcast => Err(CoreError::bad_book("not a book file")),
         };
         // A cover the user picked (换封面) outlives the rebuild.
         match (built, manifest.cover.as_deref().filter(|c| c.starts_with("cover-own-"))) {
@@ -288,11 +300,12 @@ pub(crate) fn pdf_section(pages: u32) -> SectionInfo {
         sentences: 0,
         units: pages,
         pages,
+        ms: 0,
     }
 }
 
 /// Builds a book folder in a temporary folder next to its final place, then swaps it in.
-fn build_into(books_dir: &Path, id: &str, build: impl FnOnce(&Path) -> Result<Manifest>) -> Result<Manifest> {
+pub(crate) fn build_into(books_dir: &Path, id: &str, build: impl FnOnce(&Path) -> Result<Manifest>) -> Result<Manifest> {
     let nonce = format!("{:016x}", getrandom::u64().unwrap_or_else(|_| std::process::id() as u64));
     let tmp = books_dir.join(format!(".import-{id}-{nonce}"));
     fs::create_dir_all(tmp.join("s"))?;
@@ -362,6 +375,7 @@ fn build_epub(tmp: &Path, id: &str, original: &Path, fallback_title: &str, forma
                 sentences: normalized.sentences.len() as u32,
                 units: stats.units(),
                 pages: 0,
+                ms: 0,
             },
             normalized,
             stats,
@@ -423,6 +437,7 @@ fn build_txt(tmp: &Path, id: &str, bytes: &[u8], fallback_title: &str, options: 
                 sentences: normalized.sentences.len() as u32,
                 units: stats.units(),
                 pages: 0,
+                ms: 0,
             },
             normalized,
             stats,
