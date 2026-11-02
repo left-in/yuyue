@@ -559,6 +559,7 @@ struct ShelfChooser: View {
                                 }
                                 .tint(.gray)
                             }
+                            .contextMenu { CollectionIconMenu(collection: c, library: library) }
                     }
                     .onMove { from, to in
                         var ids = library.collections.map(\.id)

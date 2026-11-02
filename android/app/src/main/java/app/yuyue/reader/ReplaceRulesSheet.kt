@@ -65,6 +65,9 @@ fun ReplaceRulesSheet(core: YuyueCore, bookID: String, changed: () -> Unit, dism
     var version by remember { mutableIntStateOf(0) }
     var editing by remember { mutableStateOf<ReplaceRule?>(null) }
     var picking by remember { mutableStateOf(false) }
+    /** U3: the rule just deleted, for 撤销 a few seconds. */
+    var removed by remember { mutableStateOf<ReplaceRule?>(null) }
+    LaunchedEffect(removed) { if (removed != null) { delay(5000); removed = null } }
     val rules = remember(forBook, version) {
         runCatching { core.replaceRules(bookID) }.getOrDefault(emptyList()).filter { (it.book != null) == forBook }.sortedBy { it.order }
     }
@@ -96,19 +99,28 @@ fun ReplaceRulesSheet(core: YuyueCore, bookID: String, changed: () -> Unit, dism
                             colors = SwitchDefaults.colors(checkedTrackColor = YY.tint.fill, checkedThumbColor = YY.c.card, uncheckedTrackColor = YY.c.inset, uncheckedBorderColor = YY.c.line))
                     }
                 }
+                removed?.let { gone ->
+                    row {
+                        Row(Modifier.fillMaxWidth().padding(vertical = YY.s(9)), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(YY.s(8))) {
+                            Text(t("删掉了“%@ → %@”", gone.find, gone.replace), style = YY.font(11.5f), color = YY.c.t2, maxLines = 1, modifier = Modifier.weight(1f))
+                            Text(t("撤销"), style = YY.font(11.5f, FontWeight.SemiBold), color = YY.tint.accent,
+                                modifier = Modifier.clickable { runCatching { core.restoreReplaceRule(gone.id) }; removed = null; touched() }.padding(4.dp))
+                        }
+                    }
+                }
                 row { YYRow(t("添加一条规则"), Icons.add, chevron = true) { editing = ReplaceRule("", if (forBook) bookID else null, "", "", false, false, true, 0.0) } }
                 row { YYRow(t("从常用规则里挑"), Icons.list, t("网址水印、多余空行…"), chevron = true) { picking = true } }
             }
             YYNote(t("规则从上往下依次执行。只改朗读的规则不动屏幕上的字，只改读出来的音。"))
         }
     }
-    editing?.let { r -> RuleEditor(core, bookID, r, { editing = null; touched() }) { editing = null } }
+    editing?.let { r -> RuleEditor(core, bookID, r, { editing = null; touched() }, deleted = { editing = null; removed = r; touched() }) { editing = null } }
     if (picking) CommonRules(core, if (forBook) bookID else null, { touched() }) { picking = false }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun RuleEditor(core: YuyueCore, bookID: String, initial: ReplaceRule, saved: () -> Unit, dismiss: () -> Unit) {
+private fun RuleEditor(core: YuyueCore, bookID: String, initial: ReplaceRule, saved: () -> Unit, deleted: () -> Unit = saved, dismiss: () -> Unit) {
     var rule by remember { mutableStateOf(initial) }
     var preview by remember { mutableStateOf<RulePreview?>(null) }
     val isNew = initial.id.isEmpty()
@@ -161,7 +173,7 @@ private fun RuleEditor(core: YuyueCore, bookID: String, initial: ReplaceRule, sa
                 Spacer(Modifier.height(8.dp))
                 YYButton(t("删除"), ButtonKind.Danger, ButtonSize.Large, wide = true) {
                     runCatching { core.deleteReplaceRule(rule.id) }
-                    saved()
+                    deleted()
                 }
             }
         }

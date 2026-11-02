@@ -17125,6 +17125,236 @@
           }
         }
       }
+    },
+    "重写这一集" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rewrite This Episode"
+          }
+        }
+      }
+    },
+    "这一集已经在写稿了，你说的赶不上这一稿。要按你说的重写吗？只重写稿子，摘要都留着，多花一两分钟。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This episode's script is already being written, so your change missed it. Rewrite it your way? Only the script is redone and the summaries are kept; it takes a minute or two more."
+          }
+        }
+      }
+    },
+    "好，按新的顺序重写。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK, rewriting it in the new order."
+          }
+        }
+      }
+    },
+    "听过的节目一直保留" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep Played Episodes"
+          }
+        }
+      }
+    },
+    "听过的节目都留着" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Played episodes are all kept"
+          }
+        }
+      }
+    },
+    "关着时，听完 30 天的节目自动清掉；划过线、加过书签的留着" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When off, episodes played more than 30 days ago are cleared; ones with highlights or bookmarks stay"
+          }
+        }
+      }
+    },
+    "删掉了“%@ → %@”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removed “%1$@ → %2$@”"
+          }
+        }
+      }
+    },
+    "删掉了 %lld 条规则" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removed %lld rules"
+          }
+        }
+      }
+    },
+    "换图标" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Icon"
+          }
+        }
+      }
+    },
+    "按名字自动选" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick by Name"
+          }
+        }
+      }
+    },
+    "睡前" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedtime"
+          }
+        }
+      }
+    },
+    "科幻" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sci-fi"
+          }
+        }
+      }
+    },
+    "闲读" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leisure"
+          }
+        }
+      }
+    },
+    "推理" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mystery"
+          }
+        }
+      }
+    },
+    "诗词" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poetry"
+          }
+        }
+      }
+    },
+    "孩子" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kids"
+          }
+        }
+      }
+    },
+    "最爱" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorites"
+          }
+        }
+      }
+    },
+    "历史" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "History"
+          }
+        }
+      }
+    },
+    "科普" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Science"
+          }
+        }
+      }
+    },
+    "写作" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Writing"
+          }
+        }
+      }
+    },
+    "往上挪" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move Up"
+          }
+        }
+      }
+    },
+    "往下挪" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move Down"
+          }
+        }
+      }
+    },
+    "选 .mdx 文件。点词时从上往下查这里的词典，查不到再用系统的；右键一本可以挪先后、移除" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose .mdx files. Words are looked up in these dictionaries from the top down, then in the system's. Right-click one to move or remove it."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

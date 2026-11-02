@@ -41,7 +41,10 @@ object PdfInfoReader {
                 // Without the text, a page of a book is about six hundred characters.
                 characters = r.pageCount * 600L
             }
-            return PdfInfo(r.pageCount.toUInt(), null, emptyList(), characters.toULong(), cover(r))
+            // I2: a first page full of text shrunk down is a grey smudge; such a PDF gets the
+            // paper cover with its title. (Before Android 15 the text can't be read: the page it is.)
+            val wordy = Build.VERSION.SDK_INT >= 35 && r.openPage(0).use { p -> p.textContents.sumOf { c -> c.text.count { !it.isWhitespace() } } } > 400
+            return PdfInfo(r.pageCount.toUInt(), null, emptyList(), characters.toULong(), if (wordy) null else cover(r))
         }
     }
 

@@ -184,6 +184,11 @@ final class Library {
         run { try core.renameCollection(id: id, name: name) }
     }
 
+    /// 换图标: nil goes back to the icon its name brings.
+    func setCollectionIcon(_ id: String, _ symbol: String?) {
+        run { try core.setCollectionIcon(id: id, icon: symbol) }
+    }
+
     func deleteCollection(_ collection: BookCollection) {
         run { try core.deleteCollection(id: collection.id) }
         show(Toast(icon: "trash", danger: true, title: String(localized: "已删除合集「\(collection.name)」"), detail: String(localized: "里面的书都还在")) { [weak self] in

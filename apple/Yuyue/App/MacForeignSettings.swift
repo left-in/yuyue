@@ -150,6 +150,11 @@ private struct MDictList: View {
                     }))
                 }
                 .contextMenu {
+                    if list.count > 1 {
+                        Button("往上挪") { move(d, by: -1) }.disabled(list.first?.id == d.id)
+                        Button("往下挪") { move(d, by: 1) }.disabled(list.last?.id == d.id)
+                        Divider()
+                    }
                     Button("移除", role: .destructive) {
                         try? core.removeDictionary(id: d.id)
                         reload()
@@ -157,7 +162,7 @@ private struct MDictList: View {
                 }
             }
             SettingsRow(importing.map { String(localized: "正在导入 \($0)…") } ?? String(localized: "导入 MDict 词典"),
-                        detail: failed ?? String(localized: "选 .mdx 文件。点词时先查这里的词典，查不到再用系统的；右键一本可以移除")) {
+                        detail: failed ?? String(localized: "选 .mdx 文件。点词时从上往下查这里的词典，查不到再用系统的；右键一本可以挪先后、移除")) {
                 if importing != nil {
                     ProgressView().controlSize(.small)
                 } else {
@@ -173,6 +178,16 @@ private struct MDictList: View {
     }
 
     private func reload() { list = (try? core.dictionaries()) ?? [] }
+
+    /// U3: 往上挪 / 往下挪 — a word is looked up in this order.
+    private func move(_ d: DictionaryInfo, by step: Int) {
+        var ids = list.map(\.id)
+        guard let i = ids.firstIndex(of: d.id), ids.indices.contains(i + step) else { return }
+        ids.swapAt(i, i + step)
+        try? core.orderDictionaries(ids: ids)
+        withAnimation(YYMotion.layout) { reload() }
+    }
+
 
     private func add(_ urls: [URL]) async {
         failed = nil

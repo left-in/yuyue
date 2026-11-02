@@ -217,6 +217,7 @@ impl YuyueCore {
         let mut out: Vec<Episode> = all
             .into_iter()
             .filter(|(_, f)| f.get("show").and_then(Value::as_str) == Some(show.as_str()))
+            .filter(|(_, f)| !gone(f))
             .filter_map(|(e, f)| episode_from(e.strip_prefix("episode/")?, &f))
             .collect();
         out.sort_by(|a, b| b.date.cmp(&a.date).then(b.at.cmp(&a.at)));
@@ -229,12 +230,40 @@ impl YuyueCore {
         let all = lock(&self.store).entities("episode/")?;
         let mut out: Vec<Episode> = all
             .into_iter()
+            .filter(|(_, f)| !gone(f))
             .filter_map(|(e, f)| episode_from(e.strip_prefix("episode/")?, &f))
             .filter(|e| live.contains(&e.show))
             .collect();
         out.sort_by_key(|e| std::cmp::Reverse(e.at));
         out.truncate(limit as usize);
         Ok(out)
+    }
+
+    /// 听过的节目保留 30 天 (U6): episodes heard and written at least `older_than_ms` ago go —
+    /// off the list and off the shelf, as 删书 does, so the files follow once `purge_deleted`
+    /// runs. One with a highlight, a thought or a bookmark in it stays: the reader kept something.
+    /// Returns how many went.
+    pub fn prune_heard_episodes(&self, older_than_ms: i64) -> Result<u32> {
+        let cutoff = now_ms() - older_than_ms;
+        let all = lock(&self.store).entities("episode/")?;
+        let mut gone_now = 0;
+        for (e, f) in all {
+            if gone(&f) {
+                continue;
+            }
+            let Some(ep) = e.strip_prefix("episode/").and_then(|id| episode_from(id, &f)) else { continue };
+            if !ep.heard || ep.at > cutoff {
+                continue;
+            }
+            if !self.marks(ep.book.clone())?.is_empty() || !self.bookmarks(ep.book.clone())?.is_empty() {
+                continue;
+            }
+            // The book may be gone already (removed by hand); the episode goes all the same.
+            let _ = self.delete_book(ep.book.clone());
+            lock(&self.store).set(&e, "deleted", json!(true))?;
+            gone_now += 1;
+        }
+        Ok(gone_now)
     }
 
     /// The episode a book is, if it is one: the player asks, to give each host their voice.
@@ -838,6 +867,11 @@ impl YuyueCore {
             Err(_) => Ok(Vec::new()),
         }
     }
+}
+
+/// An episode taken off the list (`prune_heard_episodes`).
+fn gone(f: &std::collections::BTreeMap<String, Value>) -> bool {
+    f.get("deleted") == Some(&json!(true))
 }
 
 #[cfg(test)]

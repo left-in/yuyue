@@ -18,6 +18,9 @@ struct ReplaceRulesView: View {
     @State private var editing: Editing?
     @State private var commonShown = false
     @State private var failure: String?
+    /// U3: the rules just deleted, for 撤销 a few seconds.
+    @State private var removed: [ReplaceRule] = []
+    @State private var removedToken = UUID()
 
     struct Editing: Identifiable {
         var rule: ReplaceRule
@@ -50,6 +53,7 @@ struct ReplaceRulesView: View {
                         return true
                     }
                 }
+                if !removed.isEmpty { undoRow.transition(.opacity) }
                 #if os(macOS)
                 // No bar over a sheet on the Mac to put + in.
                 Button { editing = Editing(rule: blank) } label: {
@@ -107,7 +111,11 @@ struct ReplaceRulesView: View {
         .sheet(item: $editing) { e in
             ReplaceRuleEditor(core: core, bookID: bookID, bookTitle: bookTitle, rule: e.rule) { saved in
                 editing = nil
-                if let saved { changed(saved.book) }
+                if let saved {
+                    changed(saved.book)
+                    // 删掉这条规则 in the editor: gone from the lists now, so it can be brought back.
+                    if !saved.id.isEmpty, !(mine + shared).contains(where: { $0.id == saved.id }) { justRemoved([saved]) }
+                }
             }
         }
         .sheet(isPresented: $commonShown) { common }
@@ -149,9 +157,52 @@ struct ReplaceRulesView: View {
 
     private func delete(_ offsets: IndexSet) {
         let gone = offsets.map { rules[$0] }
-        run(scope == .book ? bookID : nil) {
-            for rule in gone { try core.deleteReplaceRule(id: rule.id) }
+        withAnimation(YYMotion.layout) {
+            run(scope == .book ? bookID : nil) {
+                for rule in gone { try core.deleteReplaceRule(id: rule.id) }
+            }
         }
+        justRemoved(gone)
+    }
+
+    private func justRemoved(_ gone: [ReplaceRule]) {
+        withAnimation(YYMotion.standard) { removed = gone }
+        let token = UUID()
+        removedToken = token
+        Task {
+            try? await Task.sleep(for: .seconds(5))
+            if removedToken == token { withAnimation(YYMotion.standard) { removed = [] } }
+        }
+    }
+
+    /// 删掉了“A → B” · 撤销, for five seconds after a rule goes.
+    private var undoRow: some View {
+        HStack(spacing: YYUI.s(8)) {
+            Image(systemName: "trash").foregroundStyle(YYColor.t3)
+            Text(removed.count == 1
+                 ? String(localized: "删掉了“\(removed[0].find) → \(removed[0].replace)”")
+                 : String(localized: "删掉了 \(removed.count) 条规则"))
+                .foregroundStyle(YYColor.t2)
+                .lineLimit(1)
+            Spacer(minLength: YYUI.s(8))
+            Button("撤销") {
+                let back = removed
+                withAnimation(YYMotion.layout) {
+                    run(back.first?.book) {
+                        for rule in back { try core.restoreReplaceRule(id: rule.id) }
+                    }
+                    removed = []
+                }
+            }
+            .font(YYUI.font(11.5, .semibold))
+            .foregroundStyle(YYTint.standard.accent)
+            .buttonStyle(.plain)
+            #if os(macOS)
+            .keyboardShortcut("z", modifiers: .command)
+            #endif
+        }
+        .font(YYUI.font(11.5))
+        .frame(minHeight: YYUI.s(38))
     }
 
     /// Gives the moved rule an order between its new neighbours.

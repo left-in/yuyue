@@ -464,6 +464,7 @@ struct MacShelfView: View {
                 renaming = c.id
                 nameFocused = true
             }
+            CollectionIconMenu(collection: c, library: library)
             Button("删除合集", role: .destructive) {
                 if filter == .collection(c.id) { filter = .all }
                 pinnedRaw = PinnedCollections.raw(PinnedCollections.ids(pinnedRaw).filter { $0 != c.id })

@@ -351,8 +351,16 @@ fn an_episode_is_a_book_with_speakers() {
     assert_eq!(core.episodes(s.id.clone()).unwrap().len(), 1);
     assert_eq!(core.latest_episodes(10).unwrap()[0].book, e.book);
 
+    // Not heard: kept, however old.
+    assert_eq!(core.prune_heard_episodes(-1).unwrap(), 0);
     core.set_episode_heard(e.book.clone(), true).unwrap();
     assert!(core.episodes(s.id.clone()).unwrap()[0].heard);
+    // Heard, but written just now: kept for the 30 days.
+    assert_eq!(core.prune_heard_episodes(30 * 86_400_000).unwrap(), 0);
+    // A bookmark in it: kept.
+    let mark = core.add_bookmark(e.book.clone(), 0, 1).unwrap();
+    assert_eq!(core.prune_heard_episodes(-1).unwrap(), 0);
+    core.delete_bookmark(e.book.clone(), mark.id).unwrap();
     // A book has no speakers.
     assert!(core.section_speakers("0".repeat(32), 0).is_err() || core.section_speakers("0".repeat(32), 0).unwrap().is_empty());
 
@@ -360,8 +368,12 @@ fn an_episode_is_a_book_with_speakers() {
     drop(core);
     let core = YuyueCore::open(dir.clone(), "Mac".into(), "macos".into()).unwrap();
     assert_eq!(core.sentences(e.book.clone(), 0).unwrap(), sentences);
-    core.remove_show(s.id).unwrap();
+    // Heard, old enough, nothing kept in it: it goes, from the list and the shelf.
+    assert_eq!(core.prune_heard_episodes(-1).unwrap(), 1);
+    assert!(core.episodes(s.id.clone()).unwrap().is_empty());
     assert!(core.latest_episodes(10).unwrap().is_empty());
+    assert!(core.books().unwrap().iter().all(|b| b.id != e.book));
+    core.remove_show(s.id).unwrap();
     let _ = fs::remove_dir_all(&dir);
 }
 

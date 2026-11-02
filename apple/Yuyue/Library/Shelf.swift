@@ -97,6 +97,44 @@ enum CollectionIcon {
         let name = name.lowercased()
         return guesses.first { keys, _ in keys.contains { name.contains($0) } }?.1
     }
+
+    /// 换图标 (U3): the same icons a name can bring, each with what it's for.
+    static let choices: [(symbol: String, name: String)] = [
+        (fallback, String(localized: "书")),
+        ("moon", String(localized: "睡前")),
+        ("headphones", String(localized: "听")),
+        ("sparkle", String(localized: "科幻")),
+        ("globe", String(localized: "外文")),
+        ("cup.and.saucer", String(localized: "闲读")),
+        ("key", String(localized: "推理")),
+        ("quote.opening", String(localized: "诗词")),
+        ("sun.max", String(localized: "孩子")),
+        ("arrow.trianglehead.2.clockwise", String(localized: "重读")),
+        ("heart", String(localized: "最爱")),
+        ("clock", String(localized: "历史")),
+        ("eye", String(localized: "科普")),
+        ("pencil", String(localized: "写作")),
+    ]
+}
+
+/// 换图标 in a collection's menu: one of `CollectionIcon.choices`, or back to the one its name brings.
+struct CollectionIconMenu: View {
+    let collection: BookCollection
+    let library: Library
+
+    var body: some View {
+        Menu {
+            ForEach(CollectionIcon.choices, id: \.symbol) { c in
+                Button { library.setCollectionIcon(collection.id, c.symbol) } label: {
+                    Label(c.name, systemImage: c.symbol)
+                }
+            }
+            Divider()
+            Button("按名字自动选") { library.setCollectionIcon(collection.id, nil) }
+        } label: {
+            Label("换图标", systemImage: CollectionIcon.symbol(for: collection))
+        }
+    }
 }
 
 /// Finds names by what was typed: the characters themselves, their pinyin, or the first

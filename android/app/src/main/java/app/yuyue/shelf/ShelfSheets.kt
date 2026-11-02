@@ -33,6 +33,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +64,8 @@ fun ShelfChooser(library: Library, filter: ShelfFilter, choose: (ShelfFilter) ->
     var naming by remember { mutableStateOf(false) }
     var renaming by remember { mutableStateOf<uniffi.yuyue_core.BookCollection?>(null) }
     var menuFor by remember { mutableStateOf<String?>(null) }
+    /** U3: the collection whose icon is being picked. */
+    var iconFor by remember { mutableStateOf<uniffi.yuyue_core.BookCollection?>(null) }
     ModalBottomSheet(dismiss, sheetState = rememberModalBottomSheetState(), containerColor = YY.c.bg) {
         Column(Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 28.dp)) {
             Text(t("看哪些书"), style = YY.font(14f, FontWeight.Bold), color = YY.c.t1, modifier = Modifier.padding(start = 4.dp, bottom = 8.dp))
@@ -81,9 +86,10 @@ fun ShelfChooser(library: Library, filter: ShelfFilter, choose: (ShelfFilter) ->
             YYGroup {
                 for (c in library.collections) {
                     row {
-                        ChoiceRow(c.name, Icons.collection, c.count.toInt(), filter == ShelfFilter.Collection(c.id), onLong = { menuFor = c.id }) { pick(ShelfFilter.Collection(c.id)) }
+                        ChoiceRow(c.name, app.yuyue.library.CollectionIcon.of(c), c.count.toInt(), filter == ShelfFilter.Collection(c.id), onLong = { menuFor = c.id }) { pick(ShelfFilter.Collection(c.id)) }
                         androidx.compose.material3.DropdownMenu(menuFor == c.id, { menuFor = null }, containerColor = YY.c.card) {
                             Item(t("重命名"), Icons.edit) { menuFor = null; renaming = c }
+                            Item(t("换图标"), app.yuyue.library.CollectionIcon.of(c)) { menuFor = null; iconFor = c }
                             Item(t("删除"), Icons.delete, danger = true) {
                                 menuFor = null
                                 if (filter == ShelfFilter.Collection(c.id)) choose(ShelfFilter.All)
@@ -114,6 +120,40 @@ fun ShelfChooser(library: Library, filter: ShelfFilter, choose: (ShelfFilter) ->
             if (name != null && name != c.name) library.renameCollection(c.id, name)
         }
     }
+    iconFor?.let { c -> IconPicker(c, { iconFor = null }) { symbol -> iconFor = null; library.setCollectionIcon(c.id, symbol) } }
+}
+
+/** 换图标: the icons a collection can have, four to a row, and 按名字自动选. */
+@Composable
+private fun IconPicker(c: uniffi.yuyue_core.BookCollection, dismiss: () -> Unit, pick: (String?) -> Unit) {
+    val current = c.icon
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = dismiss,
+        containerColor = YY.c.card,
+        title = { Text(t("换图标"), color = YY.c.t1) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(YY.s(8))) {
+                for (line in app.yuyue.library.CollectionIcon.choices.chunked(4)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(YY.s(8))) {
+                        for ((symbol, name) in line) {
+                            val on = symbol == current
+                            Column(
+                                Modifier.weight(1f).clip(RoundedCornerShape(YY.s(10)))
+                                    .background(if (on) YY.tint.accentSoft else YY.c.inset).clickable { pick(symbol) }.padding(vertical = YY.s(8)),
+                                horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(YY.s(3)),
+                            ) {
+                                Icon(app.yuyue.library.CollectionIcon.vector(symbol), null, tint = if (on) YY.tint.accent else YY.c.t1, modifier = Modifier.size(YY.s(18)))
+                                Text(t(name), style = YY.font(10f), color = YY.c.t2, maxLines = 1)
+                            }
+                        }
+                        repeat(4 - line.size) { Spacer(Modifier.weight(1f)) }
+                    }
+                }
+            }
+        },
+        confirmButton = { androidx.compose.material3.TextButton({ pick(null) }) { Text(t("按名字自动选"), color = YY.tint.accent) } },
+        dismissButton = { androidx.compose.material3.TextButton(dismiss) { Text(t("取消"), color = YY.c.t2) } },
+    )
 }
 
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)

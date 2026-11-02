@@ -63,6 +63,10 @@ struct MacEditorDesk: View {
         if m.fromEditor {
             editor(VStack(alignment: .leading, spacing: 6) {
                 Text(m.text)
+                if m.offersRewrite, m.id == messages.last(where: \.offersRewrite)?.id, podcasts.isWriting(show.id) {
+                    PodcastGlassButton(title: String(localized: "重写这一集"), symbol: "arrow.clockwise") { podcasts.rewrite(show) }
+                        .padding(.top, 2)
+                }
                 if !m.list.isEmpty {
                     VStack(alignment: .leading, spacing: 3) {
                         ForEach(Array(m.list.enumerated()), id: \.offset) { i, title in

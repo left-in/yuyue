@@ -105,7 +105,13 @@ struct PhoneMDictList: View {
                     }), label: d.title)
                 }
                 .swipeActions { Button("移除", role: .destructive) { try? core.removeDictionary(id: d.id); reload() } }
-                .contextMenu { Button("移除", role: .destructive) { try? core.removeDictionary(id: d.id); reload() } }
+                .contextMenu {
+                    if list.count > 1 {
+                        Button("往上挪", systemImage: "arrow.up") { move(d, by: -1) }.disabled(list.first?.id == d.id)
+                        Button("往下挪", systemImage: "arrow.down") { move(d, by: 1) }.disabled(list.last?.id == d.id)
+                    }
+                    Button("移除", systemImage: "trash", role: .destructive) { try? core.removeDictionary(id: d.id); reload() }
+                }
             }
             Button { picking = true } label: {
                 HStack(spacing: YYUI.s(6)) {
@@ -132,6 +138,16 @@ struct PhoneMDictList: View {
     }
 
     private func reload() { list = (try? core.dictionaries()) ?? [] }
+
+    /// U3: 往上挪 / 往下挪 — a word is looked up in this order.
+    private func move(_ d: DictionaryInfo, by step: Int) {
+        var ids = list.map(\.id)
+        guard let i = ids.firstIndex(of: d.id), ids.indices.contains(i + step) else { return }
+        ids.swapAt(i, i + step)
+        try? core.orderDictionaries(ids: ids)
+        withAnimation(YYMotion.layout) { reload() }
+    }
+
 
     private func add(_ urls: [URL]) async {
         failed = nil

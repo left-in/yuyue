@@ -319,13 +319,29 @@ private fun MDictList(core: uniffi.yuyue_core.YuyueCore) {
             importing = null
         }
     }
+    var menuFor by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }
+    /** U3: 往上挪 / 往下挪 — a word is looked up in this order. */
+    fun move(id: String, step: Int) {
+        val ids = list.map { it.id }.toMutableList()
+        val i = ids.indexOf(id)
+        if (i < 0 || i + step !in ids.indices) return
+        java.util.Collections.swap(ids, i, i + step)
+        runCatching { core.orderDictionaries(ids) }
+        reload()
+    }
     YYGroup {
-        for (d in list) {
+        for ((n, d) in list.withIndex()) {
             row {
-                Box(Modifier.combinedClickable(onClick = {}, onLongClick = { runCatching { core.removeDictionary(d.id) }; reload() })) {
+                // A long press opens a menu: removing one isn't a single slip of the finger away.
+                Box(Modifier.combinedClickable(onClick = {}, onLongClick = { menuFor = d.id })) {
                     YYRow(d.title, value = t("%lld 个词条", d.entries.toLong()), trailing = {
                         Toggle(d.enabled, { on -> runCatching { core.setDictionary(d.id, on) }; reload() })
                     })
+                    androidx.compose.material3.DropdownMenu(menuFor == d.id, { menuFor = null }, containerColor = YY.c.card) {
+                        if (n > 0) app.yuyue.shelf.Item(t("往上挪"), Icons.chevronUp) { menuFor = null; move(d.id, -1) }
+                        if (n < list.size - 1) app.yuyue.shelf.Item(t("往下挪"), Icons.chevronDown) { menuFor = null; move(d.id, 1) }
+                        app.yuyue.shelf.Item(t("移除"), Icons.delete, danger = true) { menuFor = null; runCatching { core.removeDictionary(d.id) }; reload() }
+                    }
                 }
             }
         }

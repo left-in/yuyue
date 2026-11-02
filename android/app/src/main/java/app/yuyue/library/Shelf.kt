@@ -1,5 +1,20 @@
 package app.yuyue.library
 
+import androidx.compose.material.icons.Icons.Rounded
+import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.Bedtime
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.FavoriteBorder
+import androidx.compose.material.icons.rounded.FormatQuote
+import androidx.compose.material.icons.rounded.Headphones
+import androidx.compose.material.icons.rounded.Key
+import androidx.compose.material.icons.rounded.Language
+import androidx.compose.material.icons.rounded.LightMode
+import androidx.compose.material.icons.rounded.LocalCafe
+import androidx.compose.material.icons.rounded.Replay
+import androidx.compose.material.icons.rounded.Schedule
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.ui.graphics.vector.ImageVector
 import app.yuyue.t
 import uniffi.yuyue_core.BookFormat
 import uniffi.yuyue_core.BookSummary
@@ -108,5 +123,34 @@ object CollectionIcon {
     fun guess(name: String): String? {
         val lower = name.lowercase()
         return guesses.firstOrNull { (keys, _) -> keys.any { lower.contains(it) } }?.second
+    }
+
+    /** The icon a collection shows: the one picked, or the one its name brings. The names are
+     *  Apple's symbol names, kept the same so a pick follows the collection to every device. */
+    fun of(c: uniffi.yuyue_core.BookCollection): ImageVector =
+        vector(c.icon ?: guess(c.name))
+
+    /** 换图标 (U3): the same icons a name can bring, each with what it's for. */
+    val choices: List<Pair<String, String>> = listOf(
+        "books.vertical" to "书", "moon" to "睡前", "headphones" to "听", "sparkle" to "科幻", "globe" to "外文",
+        "cup.and.saucer" to "闲读", "key" to "推理", "quote.opening" to "诗词", "sun.max" to "孩子",
+        "arrow.trianglehead.2.clockwise" to "重读", "heart" to "最爱", "clock" to "历史", "eye" to "科普", "pencil" to "写作",
+    )
+
+    fun vector(symbol: String?): ImageVector = when (symbol) {
+        "moon" -> Rounded.Bedtime
+        "headphones" -> Rounded.Headphones
+        "sparkle" -> Rounded.AutoAwesome
+        "globe" -> Rounded.Language
+        "cup.and.saucer" -> Rounded.LocalCafe
+        "key" -> Rounded.Key
+        "quote.opening" -> Rounded.FormatQuote
+        "sun.max" -> Rounded.LightMode
+        "arrow.trianglehead.2.clockwise" -> Rounded.Replay
+        "heart" -> Rounded.FavoriteBorder
+        "clock" -> Rounded.Schedule
+        "eye" -> Rounded.Visibility
+        "pencil" -> Rounded.Edit
+        else -> app.yuyue.design.Icons.collection
     }
 }

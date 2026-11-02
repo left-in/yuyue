@@ -271,12 +271,20 @@ extension ShowSchedule {
 
 /// 设置 · 播客: the shows are on their own page now.
 struct MacPodcastSettingsNote: View {
+    /// U6: heard episodes are cleared after 30 days unless this is on.
+    @AppStorage(Podcasts.keepHeardKey) private var keepHeard = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             SettingsCard {
                 SettingsRow(String(localized: "节目"), detail: String(localized: "在书架窗口左边的“播客”里配节目、写新一集")) { EmptyView() }
                 SettingsRow(String(localized: "写稿用的模型"), detail: String(localized: "和书伴用同一个：设置 › 书伴")) { EmptyView() }
                 SettingsRow(String(localized: "主持人的声音"), detail: String(localized: "每台设备自己选，在配节目的“谁来讲”里试听")) { EmptyView() }
+                SettingsRow(String(localized: "听过的节目一直保留"),
+                            detail: keepHeard ? String(localized: "听过的节目都留着")
+                                              : String(localized: "关着时，听完 30 天的节目自动清掉；划过线、加过书签的留着")) {
+                    SettingsSwitch(isOn: $keepHeard)
+                }
             }
         }
     }

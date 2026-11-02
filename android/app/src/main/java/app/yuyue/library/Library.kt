@@ -125,6 +125,8 @@ class Library(private val context: Context) {
     }
 
     fun renameCollection(id: String, name: String) = run { core.renameCollection(id, name) }
+    /** 换图标: null goes back to the icon its name brings. */
+    fun setCollectionIcon(id: String, icon: String?) = run { core.setCollectionIcon(id, icon) }
 
     fun deleteCollection(c: BookCollection) {
         run { core.deleteCollection(c.id) }

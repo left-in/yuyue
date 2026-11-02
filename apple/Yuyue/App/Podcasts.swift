@@ -53,6 +53,8 @@ final class Podcasts {
         var text: String
         /// The editor's list, under its first message.
         var list: [String] = []
+        /// The script was already being written: 重写这一集 under it (U2).
+        var offersRewrite = false
     }
 
     init(core: YuyueCore, dataDir: URL) {
@@ -63,9 +65,16 @@ final class Podcasts {
     }
 
     func reload() {
+        // 听过的节目保留 30 天 (U6), unless they're to be kept.
+        if !UserDefaults.standard.bool(forKey: Self.keepHeardKey) {
+            _ = try? core.pruneHeardEpisodes(olderThanMs: 30 * 86_400_000)
+        }
         shows = (try? core.shows()) ?? []
         latest = (try? core.latestEpisodes(limit: 60)) ?? []
     }
+
+    static let keepHeardKey = "podcast.keepHeard"
+
 
     func episodes(of show: String) -> [Episode] {
         latest.filter { $0.show == show }
@@ -142,6 +151,23 @@ final class Podcasts {
         }
     }
 
+    /// 重写这一集: the pick 编辑部 asked for once the script was under way; the run stops and
+    /// starts again from it, keeping every summary already written.
+    func rewrite(_ show: Show) {
+        let order = repick[show.id]
+        cancel(show.id)
+        // The offer's been taken.
+        talk[show.id] = talk[show.id]?.map { var m = $0; m.offersRewrite = false; return m }
+        if let order {
+            var work = load(show.id)
+            work.picked = order
+            work.script = nil
+            save(show.id, work)
+        }
+        talk[show.id, default: []].append(Message(fromEditor: true, text: String(localized: "好，按新的顺序重写。")))
+        write(show)
+    }
+
     func cancel(_ show: String) {
         tasks[show]?.cancel()
         tasks[show] = nil
@@ -170,6 +196,17 @@ final class Podcasts {
                 // Answers count from 1 in the list it was shown; anything past it is one it left out.
                 let all = picked + work.items.indices.filter { !picked.contains($0) }
                 let order = pick.pick.compactMap { n in all.indices.contains(Int(n) - 1) ? all[Int(n) - 1] : nil }
+                let late = (self.writing[show.id]?.step ?? .fetch) >= .write
+                if !order.isEmpty, late {
+                    // The script is being written already: too late for this run. Say so, and
+                    // offer to write it again from the new pick (the summaries are kept).
+                    self.repick[show.id] = order
+                    self.talk[show.id, default: []].append(Message(
+                        fromEditor: true,
+                        text: String(localized: "这一集已经在写稿了，你说的赶不上这一稿。要按你说的重写吗？只重写稿子，摘要都留着，多花一两分钟。"),
+                        offersRewrite: true))
+                    return
+                }
                 if !order.isEmpty {
                     if self.tasks[show.id] != nil {
                         // Being written: the run takes it up at its next step.

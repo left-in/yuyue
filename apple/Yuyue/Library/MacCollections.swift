@@ -199,6 +199,7 @@ struct CollectionWall: View {
                 name = c.name
                 naming = Naming(collection: c.id)
             }
+            CollectionIconMenu(collection: c, library: library)
             if sort == .own {
                 Button("往前挪") { move(c.id, by: -1) }
                 Button("往后挪") { move(c.id, by: 1) }

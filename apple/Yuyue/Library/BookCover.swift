@@ -60,6 +60,15 @@ struct BookCover: View {
                     }
                 }
                 .padding(11 * unit)
+                // I2: a PDF with no cover of its own says what it is, small, at the bottom.
+                if book.format == .pdf {
+                    Text(verbatim: "PDF")
+                        .font(.system(size: 8.5 * unit, weight: .medium))
+                        .tracking(0.6 * unit)
+                        .foregroundStyle(YYPaper.kami.ink2)
+                        .padding(11 * unit)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                }
             }
         }
         // The title and author are read out below the cover already.

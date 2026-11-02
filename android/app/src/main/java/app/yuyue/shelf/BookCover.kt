@@ -100,6 +100,13 @@ private fun Placeholder(book: BookSummary) {
                 Text(it, maxLines = 1, fontFamily = YY.serif, fontSize = (9.5 * unit).sp, color = YYPapers.Kami.ink2, modifier = Modifier.padding(top = (5 * unit).dp))
             }
         }
+        // I2: a PDF with no cover of its own says what it is, small, at the bottom.
+        if (book.format == uniffi.yuyue_core.BookFormat.PDF) {
+            Text(
+                "PDF", fontSize = (8.5 * unit).sp, fontWeight = FontWeight.Medium, letterSpacing = (0.6 * unit).sp, color = YYPapers.Kami.ink2,
+                modifier = Modifier.align(Alignment.BottomStart).padding((11 * unit).dp),
+            )
+        }
     }
 }
 
