@@ -58,6 +58,8 @@ final class Player {
         var language: (UInt32) -> String
         /// What the lock screen calls the section.
         var title: (UInt32) -> String?
+        /// 播客: the voice for one sentence (its host's); none reads the whole book in one voice.
+        var voice: ((UInt32, Int, String) -> (any Voice)?)? = nil
 
         static func book(_ core: YuyueCore, _ detail: BookDetail) -> Script {
             let id = detail.summary.id
@@ -275,8 +277,9 @@ final class Player {
                     speech = await Self.narrate(recording, spot)
                 }
                 if speech == nil {
-                    guard let voice = self.voice(for: language) else {
-                        self.failed(String(localized: "没有能读这种语言的声音（\(language)）"))
+                    guard let voice = self.script.voice?(spot.section, spot.sentence, language) ?? self.voice(for: language) else {
+                        let name = Locale.current.localizedString(forLanguageCode: language) ?? language
+                        self.failed(String(localized: "这台设备还没有\(name)声音。在设置的“辅助功能 › 朗读内容”里可以下载一个。"))
                         return
                     }
                     if let cloud = voice as? CloudVoice { self.fetchAhead(cloud, from: spot, language: language) }

@@ -36,7 +36,7 @@ struct PhoneShelf: View {
                     if !reading.isEmpty, !selecting {
                         readingRow.padding(.top, 18)
                     }
-                    if library.books.isEmpty, filter == .all {
+                    if library.shelfBooks.isEmpty, filter == .all {
                         welcome
                     } else {
                         kinds
@@ -44,7 +44,7 @@ struct PhoneShelf: View {
                             .padding(.top, 22)
                             .padding(.bottom, 14)
                     }
-                    if library.books.isEmpty, filter == .all {
+                    if library.shelfBooks.isEmpty, filter == .all {
                     } else if shown.isEmpty {
                         empty
                     } else {
@@ -63,7 +63,7 @@ struct PhoneShelf: View {
                 if selecting { selectionBar }
             }
             .overlay(alignment: .top) { toast }
-            .animation(.spring(duration: 0.4, bounce: 0.3), value: library.toast?.id)
+            .yyToastMotion(value: library.toast?.id)
             .navigationDestination(isPresented: $wifiShown) { PhoneWifi(library: library) }
             .navigationDestination(isPresented: $remoteShown) { PhoneRemoteStart(library: library) }
             .navigationDestination(isPresented: $watchShown) { PhoneWatchedFolder(library: library) }
@@ -126,7 +126,7 @@ struct PhoneShelf: View {
     }
 
     private var shown: [BookSummary] {
-        var books = library.books
+        var books = library.shelfBooks
         switch filter {
         case .status(let s): books = books.filter { $0.status == s }
         case .collection(let id): books = books.filter { $0.collections.contains(id) }
@@ -142,7 +142,7 @@ struct PhoneShelf: View {
 
     private var reading: [BookSummary] {
         guard filter == .all else { return [] }
-        return library.books.filter { b in
+        return library.shelfBooks.filter { b in
             guard b.status == .reading else { return false }
             return switch kind {
             case .all: true

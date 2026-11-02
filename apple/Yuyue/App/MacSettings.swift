@@ -50,7 +50,7 @@ struct MacSettings: View {
             case .general: GeneralSettings()
             case .appearance: AppearanceSettings()
             case .reading: ReadingSettings(library: library)
-            case .podcasts: MacPodcastView().frame(minHeight: 200)
+            case .podcasts: MacPodcastSettingsNote().frame(minHeight: 200)
             case .listening: ListeningSettings()
             case .foreign: ForeignSettings(library: library)
             case .companion: CompanionSettings(library: library)

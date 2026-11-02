@@ -314,12 +314,13 @@ enum Companion {
         (Bundle.main.preferredLocalizations.first ?? "zh").hasPrefix("zh") ? "简体中文" : "英文（English）"
     }
 
-    static func answer(_ config: CompanionConfig, system: String, prompt: String) async throws -> String {
+    /// `maxTokens`: how long the answer may be; 播客's script is longer than 书伴's answers.
+    static func answer(_ config: CompanionConfig, system: String, prompt: String, maxTokens: Int = 1024) async throws -> String {
         let text: String
         switch config.provider.kind {
         case .apple: text = try await apple(system: system, prompt: prompt)
-        case .anthropic: text = try await claude(config, system: system, prompt: prompt)
-        case .openAI: text = try await openAI(config, system: system, prompt: prompt)
+        case .anthropic: text = try await claude(config, system: system, prompt: prompt, maxTokens: maxTokens)
+        case .openAI: text = try await openAI(config, system: system, prompt: prompt, maxTokens: maxTokens)
         }
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { throw CompanionError.empty }
@@ -345,31 +346,44 @@ enum Companion {
         return url
     }
 
-    private static func claude(_ config: CompanionConfig, system: String, prompt: String) async throws -> String {
-        var r = URLRequest(url: try base(config).appending(path: "messages"), timeoutInterval: 90)
+    private static func claude(_ config: CompanionConfig, system: String, prompt: String, maxTokens: Int) async throws -> String {
+        var r = URLRequest(url: try base(config).appending(path: "messages"), timeoutInterval: maxTokens > 1024 ? 240 : 90)
         r.httpMethod = "POST"
         r.setValue("application/json", forHTTPHeaderField: "content-type")
         r.setValue(config.sentKey, forHTTPHeaderField: "x-api-key")
         r.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
+        let long = maxTokens > 2048
         r.httpBody = try JSONSerialization.data(withJSONObject: [
-            "model": config.model, "max_tokens": 1024, "system": system,
-            "messages": [["role": "user", "content": prompt]],
+            "model": config.model, "max_tokens": maxTokens, "system": system,
+            "messages": [["role": "user", "content": prompt]], "stream": long,
         ])
+        // A long answer (播客's script) takes minutes; streamed, the line stays busy and isn't dropped.
+        if long {
+            return try await stream(r) { event in
+                (event["type"] as? String) == "content_block_delta" ? (event["delta"] as? [String: Any])?["text"] as? String : nil
+            }
+        }
         let json = try await send(r)
         let blocks = json["content"] as? [[String: Any]] ?? []
         return blocks.compactMap { $0["text"] as? String }.joined()
     }
 
     /// OpenAI, DeepSeek, Gemini (its OpenAI-shaped endpoint), Ollama and the rest.
-    private static func openAI(_ config: CompanionConfig, system: String, prompt: String) async throws -> String {
-        var r = URLRequest(url: try base(config).appending(path: "chat/completions"), timeoutInterval: 120)
+    private static func openAI(_ config: CompanionConfig, system: String, prompt: String, maxTokens: Int) async throws -> String {
+        var r = URLRequest(url: try base(config).appending(path: "chat/completions"), timeoutInterval: maxTokens > 1024 ? 240 : 120)
         r.httpMethod = "POST"
         r.setValue("application/json", forHTTPHeaderField: "Content-Type")
         if !config.sentKey.isEmpty { r.setValue("Bearer \(config.sentKey)", forHTTPHeaderField: "Authorization") }
+        let long = maxTokens > 2048
         r.httpBody = try JSONSerialization.data(withJSONObject: [
-            "model": config.model, "temperature": 0.3,
+            "model": config.model, "temperature": 0.3, "max_tokens": maxTokens, "stream": long,
             "messages": [["role": "system", "content": system], ["role": "user", "content": prompt]],
         ])
+        if long {
+            return try await stream(r) { event in
+                ((event["choices"] as? [[String: Any]])?.first?["delta"] as? [String: Any])?["content"] as? String
+            }
+        }
         let json = try await send(r)
         let choices = json["choices"] as? [[String: Any]] ?? []
         return (choices.first?["message"] as? [String: Any])?["content"] as? String ?? ""
@@ -391,9 +405,39 @@ enum Companion {
             .map { $0.hasPrefix("models/") ? String($0.dropFirst(7)) : $0 }
     }
 
+    /// A streamed answer (server-sent events), joined: `text` takes what each event adds.
+    private static func stream(_ request: URLRequest, text: ([String: Any]) -> String?) async throws -> String {
+        var r = request
+        r.timeoutInterval = 120
+        let (bytes, response) = try await URLSession.shared.bytes(for: r)
+        let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+        guard (200 ..< 300).contains(code) else {
+            // Read what it says, and fail the way `send` would.
+            var body = Data()
+            for try await b in bytes { body.append(b) }
+            try check(code, body)
+            throw CompanionError.status(code, nil)
+        }
+        var out = ""
+        for try await line in bytes.lines {
+            guard line.hasPrefix("data:") else { continue }
+            let payload = line.dropFirst(5).trimmingCharacters(in: .whitespaces)
+            if payload == "[DONE]" { break }
+            guard let event = (try? JSONSerialization.jsonObject(with: Data(payload.utf8))) as? [String: Any] else { continue }
+            if let piece = text(event) { out += piece }
+        }
+        return out
+    }
+
     private static func send(_ r: URLRequest) async throws -> [String: Any] {
         let (data, response) = try await URLSession.shared.data(for: r)
         let code = (response as? HTTPURLResponse)?.statusCode ?? 0
+        try check(code, data)
+        return (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
+    }
+
+    /// Throws what an error status means: a wrong key, no credit, busy.
+    private static func check(_ code: Int, _ data: Data) throws {
         let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
         guard (200 ..< 300).contains(code) else {
             let error = json["error"] as? [String: Any]
@@ -408,7 +452,6 @@ enum Companion {
             default: throw CompanionError.status(code, message)
             }
         }
-        return json
     }
 
     static func message(for error: Error) -> String {

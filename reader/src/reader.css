@@ -549,3 +549,59 @@ html[data-yy-paper="plain"], html[data-yy-paper="kami"], html[data-yy-paper="ein
 html[data-yy-paper="dark"], html[data-yy-paper="kaminight"] {
   --yy-mk-y: rgba(251, 231, 160, .26); --yy-mk-b: rgba(196, 227, 244, .22); --yy-mk-p: rgba(246, 199, 192, .24);
 }
+
+/* 播客 (docs/design/播客.html · 文稿 = 气泡): an episode's script as a chat. The first host on the
+   left, the second on the right, each line a bubble; a segment's source line small above it. */
+#yy-content .yy-pod-summary {
+  color: var(--yy-p-ink-2) !important;
+  font-size: calc(var(--yy-fs) * .86) !important;
+  margin: 0 0 1.4em !important;
+  text-indent: 0 !important;
+}
+#yy-content .yy-pod-seg { display: flow-root; margin: 0 0 1.2em; }
+#yy-content .yy-pod-seg > h2 {
+  font-size: calc(var(--yy-fs) * .78) !important;
+  font-weight: 600 !important;
+  color: var(--yy-p-ink-2) !important;
+  text-align: center !important;
+  margin: 1.4em 0 .3em !important;
+}
+#yy-content .yy-pod-src {
+  font-size: calc(var(--yy-fs) * .72) !important;
+  color: var(--yy-p-ink-2) !important;
+  text-align: center !important;
+  margin: 0 0 .9em !important;
+  line-height: 1.5 !important;
+}
+#yy-content .yy-pod-src a { color: inherit !important; text-decoration: underline; text-decoration-color: var(--yy-p-line); text-underline-offset: .2em; }
+#yy-content p.yy-pod-line {
+  position: relative;
+  text-indent: 0 !important;
+  text-align: left !important;
+  max-width: 78%;
+  width: fit-content;
+  margin: 0 0 .55em !important;
+  padding: .5em .85em !important;
+  line-height: 1.65 !important;
+  border-radius: 1.05em 1.05em 1.05em .32em;
+  background: color-mix(in srgb, var(--yy-p-ink) 5%, var(--yy-p-bg));
+  box-shadow: 0 0 0 .5px var(--yy-p-line);
+  break-inside: avoid;
+}
+#yy-content p.yy-pod-line.yy-pod-h1 {
+  margin-left: auto !important;
+  border-radius: 1.05em 1.05em .32em 1.05em;
+  background: color-mix(in srgb, var(--yy-p-accent) 9%, var(--yy-p-bg));
+}
+/* Who it is: a small line at the top of the first of their bubbles in a row, inside the bubble,
+   so a column break never cuts it off. */
+#yy-content p.yy-pod-line.yy-pod-first::before {
+  content: attr(data-who);
+  display: block;
+  font-size: .68em;
+  line-height: 1.5;
+  color: var(--yy-p-ink-2);
+  margin-bottom: .1em;
+}
+#yy-content p.yy-pod-line.yy-pod-first { margin-top: .9em !important; }
+html[data-yy-paper="eink"] #yy-content p.yy-pod-line { background: transparent; box-shadow: 0 0 0 1px #141414; }

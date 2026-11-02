@@ -50,7 +50,7 @@ struct MacShelfView: View {
                 switch filter {
                 case .notes: MacNotesView(library: library)
                 case .words: MacWordsView(library: library)
-                case .podcasts: MacPodcastView()
+                case .podcasts: MacPodcastView(library: library)
                 case .collections:
                     CollectionWall(library: library, pinnedRaw: $pinnedRaw, leading: headerInset) { filter = .collection($0) }
                 default: main
@@ -269,20 +269,16 @@ struct MacShelfView: View {
         VStack(alignment: .leading, spacing: 0) {
             sidebarGroup(String(localized: "资料库"), key: "library")
             if !closedGroups.contains("library") {
-                sidebarRow(.all, String(localized: "全部"), "asset." + PhoneTabIcon.shelf, library.books.count)
-                sidebarRow(.books, String(localized: "书"), ProtoIcon.book.rawValue, library.books.count)
-                // 播客 is only a place held: no count, “即将推出” in its place.
-                Button { filter = .podcasts } label: {
-                    SidebarRow(symbol: "asset.radio", trailing: String(localized: "即将推出"), on: filter == .podcasts) { Text("播客") }
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(filter == .podcasts ? .isSelected : [])
-                sidebarRow(.audio, String(localized: "有声"), ProtoIcon.wave.rawValue, library.books.count(where: library.hasAudio))
+                sidebarRow(.all, String(localized: "全部"), "asset." + PhoneTabIcon.shelf, library.shelfBooks.count)
+                sidebarRow(.books, String(localized: "书"), ProtoIcon.book.rawValue, library.shelfBooks.count)
+                // 播客: how many episodes not heard yet.
+                sidebarRow(.podcasts, String(localized: "播客"), "asset.radio", library.podcasts.latest.count { !$0.heard })
+                sidebarRow(.audio, String(localized: "有声"), ProtoIcon.wave.rawValue, library.shelfBooks.count(where: library.hasAudio))
             }
             sidebarGroup(String(localized: "状态"), key: "status")
             if !closedGroups.contains("status") {
                 ForEach([ReadingStatus.reading, .want, .finished], id: \.self) { status in
-                    sidebarRow(.status(status), status.name, status.symbol, library.books.count { $0.status == status })
+                    sidebarRow(.status(status), status.name, status.symbol, library.shelfBooks.count { $0.status == status })
                 }
             }
             sidebarGroup(String(localized: "笔记"), key: "notes")
@@ -574,7 +570,7 @@ struct MacShelfView: View {
     }
 
     private var shown: [BookSummary] {
-        var books = library.books
+        var books = library.shelfBooks
         switch filter ?? .all {
         case .all: break
         case .books: break
@@ -586,17 +582,22 @@ struct MacShelfView: View {
         return sort.sorted(books)
     }
 
-    private var reading: [BookSummary] {
+    /// Every book being read that this page would card; the cards show the first three.
+    private var allReading: [BookSummary] {
         guard filter == .all || filter == .books || filter == .audio else { return [] }
         let all = filter == .all, audio = filter == .audio
-        return Array(library.books.filter { b in
+        return library.shelfBooks.filter { b in
             b.status == .reading && (all || !audio || library.hasAudio(b))
-        }.prefix(3))
+        }
     }
+
+    private var reading: [BookSummary] { Array(allReading.prefix(3)) }
 
     /// 设置 · 外观 · 书架封面大小 and 封面下面写进度.
     @AppStorage("shelf.coverSize") private var coverSize = 100.0
     @AppStorage("shelf.showProgress") private var showProgress = true
+    /// 墨水屏 has no glass.
+    @AppStorage(EInk.key) private var eink = false
 
     /// `.v-mac-g`: at the default size a 1040-wide window holds eight covers about 80 wide. The
     /// covers are sized from the window, room for a scroller always left: sized from inside the

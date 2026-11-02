@@ -12,6 +12,8 @@ import UIKit
 final class Library {
     let core: YuyueCore
     private(set) var books: [BookSummary] = []
+    /// What the shelf shows: books and 有声书. 播客's episodes live on its own page.
+    var shelfBooks: [BookSummary] { books.filter { $0.format != .podcast } }
     private(set) var collections: [BookCollection] = []
     private(set) var importing = 0
     /// 正在导入 (prototype 38): on the Mac, each file being brought in, one row each, until
@@ -42,6 +44,8 @@ final class Library {
     let watched = WatchedFolder()
     /// 有声书.
     let audiobooks: Audiobooks
+    /// 播客.
+    let podcasts: Podcasts
     @ObservationIgnored private var madeNoteSender: NoteSender?
     /// 笔记 › 导出's sends, told in the library's notes.
     var noteSender: NoteSender {
@@ -71,10 +75,14 @@ final class Library {
         WenKai.shared.attach(fontsDir: core.fontsDir())
         audiobooks = Audiobooks(core: core, dataDir: dir)
         Audiobooks.shared = audiobooks
+        podcasts = Podcasts(core: core, dataDir: dir)
         // Deleted books can be put back for 30 days; after that their files go.
         _ = try? core.purgeDeleted(olderThanMs: 30 * 24 * 3600 * 1000)
         reload()
-        sync.changed = { [weak self] in self?.reload() }
+        sync.changed = { [weak self] in
+            self?.reload()
+            self?.podcasts.reload()
+        }
     }
 
     /// 听书时 Mac 不睡着 (设置 · 通用).
