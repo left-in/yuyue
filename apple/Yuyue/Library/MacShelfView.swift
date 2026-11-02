@@ -9,6 +9,8 @@ import UniformTypeIdentifiers
 struct MacShelfView: View {
     @Bindable var library: Library
     @State private var filter: ShelfFilter? = .all
+    /// M1: the sidebar's white selection slides from row to row.
+    @Namespace private var sidebarSelection
     /// 搜索 · 问 ⌘K, and what to start it with.
     @State private var quick: String?
     @State private var sort = ShelfSort.recent
@@ -56,6 +58,10 @@ struct MacShelfView: View {
                 default: main
                 }
             }
+            // M1: another page fades in a few points lower, rather than replacing this at once.
+            .id(filter)
+            .transition(YYMotion.swap)
+            .animation(YYMotion.standard, value: filter)
             .environment(\.shelfHeaderInset, headerInset)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             // Clipped to the sheet before its shadow goes under, so the shadow isn't clipped too.
@@ -266,6 +272,12 @@ struct MacShelfView: View {
     }
 
     private var sidebarList: some View {
+        sidebarRows
+            .environment(\.sidebarSelection, sidebarSelection)
+            .animation(YYMotion.layout, value: filter)
+    }
+
+    private var sidebarRows: some View {
         VStack(alignment: .leading, spacing: 0) {
             sidebarGroup(String(localized: "资料库"), key: "library")
             if !closedGroups.contains("library") {
@@ -648,8 +660,11 @@ struct MacShelfView: View {
                                 open(book, intent)
                             }
                             .overlay(RightClickCatcher { showMenu(for: book, at: $0) })
+                            .transition(.scale(scale: 0.96).combined(with: .opacity))
                         }
                     }
+                    // M2: a book moving into or out of the cards moves, not jumps.
+                    .animation(YYMotion.layout, value: reading.map(\.id))
                     .padding(.bottom, 28)
                 }
 
@@ -677,8 +692,11 @@ struct MacShelfView: View {
                     LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
                         ForEach(books) { book in
                             cell(book).id(book.id)
+                                .transition(.scale(scale: 0.9).combined(with: .opacity))
                         }
                     }
+                    // M2: sorted another way, a book brought in or taken out, each moves to its place.
+                    .animation(YYMotion.layout, value: books.map(\.id))
                 }
                 }
             }
@@ -739,8 +757,10 @@ struct MacShelfView: View {
                     LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
                         ForEach(list) { book in
                             cell(book).id(book.id)
+                                .transition(.scale(scale: 0.9).combined(with: .opacity))
                         }
                     }
+                    .animation(YYMotion.layout, value: list.map(\.id))
                     .padding(.bottom, 28)
                 }
             }
@@ -831,6 +851,8 @@ struct MacShelfView: View {
             VStack(alignment: .leading, spacing: 0) {
                 BookCover(book: book)
                     .opacity(book.available ? 1 : 0.45)
+                    // M7: the cover lifts under the pointer.
+                    .yyLift()
                     .overlay {
                         if revealed == book.id {
                             RoundedRectangle(cornerRadius: 4).strokeBorder(tint.accent, lineWidth: 2.5).padding(-4)
@@ -862,7 +884,7 @@ struct MacShelfView: View {
             }
             .contentShape(.rect)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(YYPressStyle())
         .overlay(RightClickCatcher { showMenu(for: book, at: $0) })
         .draggable(book.id) {
             BookCover(book: book).frame(width: 60)
@@ -1099,6 +1121,7 @@ private struct SidebarRow<Title: View>: View {
     var tint = YYTint.standard
     var color: Color?
     @ViewBuilder let title: Title
+    @Environment(\.sidebarSelection) private var selection
 
     var body: some View {
         HStack(spacing: 8) {
@@ -1124,6 +1147,9 @@ private struct SidebarRow<Title: View>: View {
                 Text(text)
                     .font(.yy(size: 10.5).monospacedDigit())
                     .foregroundStyle(drop ? tint.accent : YYColor.t3)
+                    // M3: a count rolls when a book comes or goes.
+                    .contentTransition(.numericText(value: Double(count ?? 0)))
+                    .animation(YYMotion.standard, value: count)
             }
         }
         .padding(.horizontal, 8)
@@ -1133,10 +1159,28 @@ private struct SidebarRow<Title: View>: View {
                 RoundedRectangle(cornerRadius: 8).fill(tint.accentSoft)
                     .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(tint.accent, lineWidth: 1.5))
             } else if on {
-                RoundedRectangle(cornerRadius: 8).fill(ShelfDesk.on)
+                // One white shape for the whole sidebar, so a new choice slides it there (M1).
+                if let selection {
+                    RoundedRectangle(cornerRadius: 8).fill(ShelfDesk.on)
+                        .matchedGeometryEffect(id: "selection", in: selection)
+                } else {
+                    RoundedRectangle(cornerRadius: 8).fill(ShelfDesk.on)
+                }
             }
         }
         .contentShape(.rect)
+    }
+}
+
+private struct SidebarSelectionKey: EnvironmentKey {
+    static let defaultValue: Namespace.ID? = nil
+}
+
+extension EnvironmentValues {
+    /// The sidebar's selection, shared by its rows so it slides between them.
+    var sidebarSelection: Namespace.ID? {
+        get { self[SidebarSelectionKey.self] }
+        set { self[SidebarSelectionKey.self] = newValue }
     }
 }
 
@@ -1285,18 +1329,27 @@ struct ReadingCard: View {
                         Text(audio ? (listening ? String(localized: "正在听") : String(localized: "接着听")) : String(localized: "接着读")).font(.yy(size: 11.5, weight: .semibold))
                         Spacer(minLength: 8)
                         Text(book.percent).font(.yy(size: 11.5, weight: .medium)).monospacedDigit().opacity(0.7)
+                            // M3: the number rolls to the next one.
+                            .contentTransition(.numericText(value: book.progress))
                     }
                     .padding(.horizontal, 11)
                     .frame(height: 32)
                     .background(colors.fg.opacity(0.13))
                     .overlay(alignment: .bottomLeading) {
+                        // I1: a faint track the whole length, and the line never shorter than 10, so
+                        // 1% still reads as begun.
                         GeometryReader { g in
-                            UnevenRoundedRectangle(bottomTrailingRadius: 1.5, topTrailingRadius: 1.5)
-                                .fill(colors.fg)
-                                .frame(width: g.size.width * min(1, max(0.03, book.progress)), height: 3)
-                                .frame(maxHeight: .infinity, alignment: .bottom)
+                            ZStack(alignment: .leading) {
+                                Rectangle().fill(colors.fg.opacity(0.08))
+                                UnevenRoundedRectangle(bottomTrailingRadius: 1.5, topTrailingRadius: 1.5)
+                                    .fill(colors.fg)
+                                    .frame(width: min(g.size.width, max(10, g.size.width * book.progress)))
+                            }
+                            .frame(height: 3)
+                            .frame(maxHeight: .infinity, alignment: .bottom)
                         }
                     }
+                    .animation(YYMotion.standard, value: book.progress)
                     .clipShape(.rect(cornerRadius: 9))
                     .contentShape(.rect(cornerRadius: 9))
                 }
@@ -1320,18 +1373,16 @@ struct ReadingCard: View {
 
     private func listenButton(_ colors: (bg: Color, fg: Color)) -> some View {
         Button { open(listening ? nil : .listen) } label: {
-            Group {
-                if listening {
-                    Image(systemName: "waveform").symbolEffect(.variableColor.iterative, options: .repeating)
-                } else {
-                    Image(systemName: "headphones")
-                }
-            }
+            // M4: one image, the headphones turning into the moving wave and back.
+            Image(systemName: listening ? "waveform" : "headphones")
+                .contentTransition(.symbolEffect(.replace))
+                .symbolEffect(.variableColor.iterative, options: .repeating, isActive: listening)
             .font(.yy(size: 13, weight: .medium))
             .foregroundStyle(listening ? colors.bg : colors.fg)
             .frame(width: 32, height: 32)
             .background(listening ? colors.fg : colors.fg.opacity(0.13), in: .rect(cornerRadius: 9))
             .contentShape(.rect(cornerRadius: 9))
+            .animation(YYMotion.quick, value: listening)
         }
         .buttonStyle(CardPress())
         .help(listening ? String(localized: "听中") : String(localized: "听"))
@@ -1434,15 +1485,20 @@ struct CoverHue: Equatable {
     /// In dark mode every card is dark. Greys get a touch of warmth so they don't read as blank.
     func card(dark: Bool, grey: Bool) -> (bg: Color, fg: Color) {
         let s = grey ? 0 : max(saturation, 0.06)
+        // I3: the shelf is warm grey paper; a card may take a cover's hue but never be louder than
+        // the shelf around it. Cool hues (green through violet) stand out more, so they're kept
+        // paler still.
+        let cool = hue > 0.2 && hue < 0.9
+        let k = cool ? 0.6 : 1.0
         if dark {
-            return (Color(hue: hue, saturation: min(s, 0.4), brightness: 0.22),
+            return (Color(hue: hue, saturation: min(s, 0.32 * k), brightness: 0.22),
                     Color(hue: hue, saturation: min(s, 0.12), brightness: 0.94))
         }
         if brightness > 0.55 {
-            return (Color(hue: hue, saturation: min(s, 0.22), brightness: 0.91),
-                    Color(hue: hue, saturation: min(max(s, 0.2), 0.45), brightness: 0.24))
+            return (Color(hue: hue, saturation: min(s, 0.16 * k), brightness: 0.91),
+                    Color(hue: hue, saturation: min(max(s, 0.2), 0.45 * k), brightness: 0.24))
         }
-        return (Color(hue: hue, saturation: min(s, 0.55), brightness: min(max(brightness, 0.22), 0.36)),
+        return (Color(hue: hue, saturation: min(s, 0.45 * k), brightness: min(max(brightness, 0.22), 0.36)),
                 Color(hue: hue, saturation: min(s, 0.15), brightness: 0.96))
     }
 

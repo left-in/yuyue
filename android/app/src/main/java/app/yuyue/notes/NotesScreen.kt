@@ -1,5 +1,6 @@
 package app.yuyue.notes
 
+import androidx.compose.animation.animateContentSize
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -257,7 +258,7 @@ private fun Timeline(
         if (deck != null) item(key = "deck") { Box(Modifier.padding(top = 8.dp)) { DeckCard(deck, library, startReview) } }
         for ((d, list) in days) {
             item(key = "h$d") {
-                Row(Modifier.fillMaxWidth().padding(top = 18.dp, bottom = 8.dp, start = 4.dp, end = 4.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Row(Modifier.animateItem(placementSpec = app.yuyue.design.YYMotion.place).fillMaxWidth().padding(top = 18.dp, bottom = 8.dp, start = 4.dp, end = 4.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(dayName(d), fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = YY.c.t1)
                     Text(Notes.monthDay(d), fontSize = 12.sp, color = YY.c.t3)
                     Spacer(Modifier.weight(1f))
@@ -265,7 +266,8 @@ private fun Timeline(
                 }
             }
             item(key = "c$d") {
-                Column(Modifier.fillMaxWidth().background(YY.c.card, RoundedCornerShape(14.dp)).border(0.5.dp, YY.c.line, RoundedCornerShape(14.dp))) {
+                // M6: a note taken out closes up and the card shrinks around the rest.
+                Column(Modifier.animateItem(placementSpec = app.yuyue.design.YYMotion.place).animateContentSize(app.yuyue.design.YYMotion.layout()).fillMaxWidth().background(YY.c.card, RoundedCornerShape(14.dp)).border(0.5.dp, YY.c.line, RoundedCornerShape(14.dp))) {
                     list.forEachIndexed { i, (n, m) ->
                         if (i > 0) Box(Modifier.padding(horizontal = 16.dp).fillMaxWidth().height(0.5.dp).background(YY.c.line))
                         NoteRow(m, selected?.contains(key(n, m)), { if (selected != null) toggle(key(n, m)) else act(it, n, m) }) {
@@ -365,7 +367,7 @@ private fun BookList(shown: List<NotedBook>, open: (String) -> Unit) {
         }
         items(shown, key = { it.id }) { n ->
             Row(
-                Modifier.fillMaxWidth().padding(bottom = 8.dp).background(YY.c.card, RoundedCornerShape(14.dp)).clickable { open(n.id) }.padding(12.dp),
+                Modifier.animateItem(placementSpec = app.yuyue.design.YYMotion.place).fillMaxWidth().padding(bottom = 8.dp).background(YY.c.card, RoundedCornerShape(14.dp)).clickable { open(n.id) }.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 BookCover(n.book, Modifier.width(38.dp))
@@ -441,7 +443,7 @@ private fun BookNotes(library: Library, n: NotedBook, thoughtsOnly: Boolean, bac
                     }
                 }
                 item(key = "c$chapter") {
-                    Column(Modifier.fillMaxWidth().background(YY.c.card, RoundedCornerShape(14.dp))) {
+                    Column(Modifier.animateItem(placementSpec = app.yuyue.design.YYMotion.place).animateContentSize(app.yuyue.design.YYMotion.layout()).fillMaxWidth().background(YY.c.card, RoundedCornerShape(14.dp))) {
                         list.forEachIndexed { i, m ->
                             if (i > 0) Box(Modifier.padding(horizontal = 16.dp).fillMaxWidth().height(0.5.dp).background(YY.c.line))
                             NoteRow(m, null, { act(it, m) }) {

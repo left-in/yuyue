@@ -212,6 +212,8 @@ struct AudiobookScreen: View {
             Button(player.isPlaying ? String(localized: "暂停") : String(localized: "播放"), systemImage: player.isPlaying ? "pause.fill" : "play.fill") {
                 player.togglePlay()
             }
+            .contentTransition(.symbolEffect(.replace))
+            .animation(YYMotion.quick, value: player.isPlaying)
             .font(.system(size: 20))
             .foregroundStyle(YYColor.bg)
             .frame(width: 60, height: 60)

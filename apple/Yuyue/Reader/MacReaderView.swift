@@ -523,6 +523,9 @@ struct MacReaderView: View {
                     Text(model.sentenceCount > 0 ? String(localized: "第 \(min(model.sentence + 1, model.sentenceCount)) / \(model.sentenceCount) 句") : (model.chapterTitle ?? ""))
                         .font(.yy(size: 12, weight: .semibold))
                         .foregroundStyle(paper.ink)
+                        // M3: the sentence number rolls on as the voice reads.
+                        .contentTransition(.numericText(value: Double(model.sentence)))
+                        .animation(YYMotion.standard, value: model.sentence)
                     Text(model.capsuleNote)
                         .font(.yy(size: 10))
                         .foregroundStyle(paper.ink2)
@@ -547,6 +550,9 @@ struct MacReaderView: View {
             .accessibilityLabel(model.player?.spot != nil ? Text("上一句") : Text("上一页"))
             Button { model.togglePlay() } label: {
                 Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
+                    // M4: ▶ and ❚❚ turn into each other.
+                    .contentTransition(.symbolEffect(.replace))
+                    .animation(YYMotion.quick, value: model.isPlaying)
                     .font(.yy(size: 14, weight: .semibold))
                     .foregroundStyle(paper.onMain)
                     .frame(width: 36, height: 36)
@@ -599,6 +605,7 @@ struct MacReaderView: View {
             GeometryReader { g in
                 SelectionCard(model: model, current: nil, thought: { startThought() }, translate: { translate(selection.text) }, ask: { ask(selection.text) })
                     .fixedSize()
+                    .yyPopOnAppear(from: .bottom)
                     .modifier(Above(rect: selection.rect, in: g.size))
             }
             .transition(.opacity)
@@ -606,6 +613,7 @@ struct MacReaderView: View {
             GeometryReader { g in
                 SelectionCard(model: model, current: open.mark, thought: { thought = open.mark; model.dismissCards() }, translate: { translate(open.mark.text) }, ask: { ask(open.mark.text) })
                     .fixedSize()
+                    .yyPopOnAppear(from: .bottom)
                     .modifier(Above(rect: CGRect(x: open.at.x - 1, y: open.at.y - 12, width: 2, height: 24), in: g.size))
             }
             .transition(.opacity)
@@ -613,6 +621,7 @@ struct MacReaderView: View {
             GeometryReader { g in
                 WordCard(model: model, lookup: lookup)
                     .fixedSize()
+                    .yyPopOnAppear(from: .top)
                     .modifier(Beneath(rect: lookup.rect, in: g.size))
             }
             .transition(.opacity)
@@ -620,6 +629,7 @@ struct MacReaderView: View {
             GeometryReader { g in
                 SentenceCard(model: model, item: item)
                     .fixedSize()
+                    .yyPopOnAppear(from: .top)
                     .modifier(Beneath(rect: CGRect(x: item.at.x, y: item.at.y - 12, width: 2, height: 24), in: g.size))
             }
             .transition(.opacity)

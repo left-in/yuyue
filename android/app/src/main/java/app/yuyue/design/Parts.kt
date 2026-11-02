@@ -292,8 +292,10 @@ fun YYSheetHeader(title: String, subtitle: String? = null, close: () -> Unit) {
 /** A thin progress bar in the tint. */
 @Composable
 fun ProgressLine(value: Double, height: Dp = 3.dp, modifier: Modifier = Modifier) {
+    // M3: a new value grows to its length instead of jumping there.
+    val shown by androidx.compose.animation.core.animateFloatAsState(value.coerceIn(0.0, 1.0).toFloat(), YYMotion.standard(), label = "progress")
     BoxWithConstraints(modifier.fillMaxWidth().height(height).clip(CircleShape).background(YY.c.inset)) {
-        Box(Modifier.width(maxWidth * value.coerceIn(0.0, 1.0).toFloat()).height(height).clip(CircleShape).background(YY.tint.fill))
+        Box(Modifier.width(maxWidth * shown).height(height).clip(CircleShape).background(YY.tint.fill))
     }
 }
 

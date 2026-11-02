@@ -239,7 +239,7 @@ private fun Modifier.glass(paper: YYPaper, shape: androidx.compose.ui.graphics.S
 @Composable
 private fun Chrome(model: ReaderModel, paper: YYPaper, close: () -> Unit) {
     Box(Modifier.fillMaxSize()) {
-        AnimatedVisibility(model.chromeShown || model.searchShown, enter = fadeIn() + slideInVertically { -it }, exit = fadeOut() + slideOutVertically { -it }, modifier = Modifier.align(Alignment.TopCenter)) {
+        AnimatedVisibility(model.chromeShown || model.searchShown, enter = app.yuyue.design.YYMotion.barIn(fromTop = true), exit = app.yuyue.design.YYMotion.barOut(toTop = true), modifier = Modifier.align(Alignment.TopCenter)) {
             // The page fades out under the bar, so a chapter title never shows through the title pill.
             val edge = Brush.verticalGradient(0f to paper.bg, 0.72f to paper.bg, 1f to paper.bg.copy(alpha = 0f))
             Box(Modifier.fillMaxWidth().background(edge).padding(bottom = 20.dp), contentAlignment = Alignment.TopCenter) {
@@ -263,7 +263,7 @@ private fun Chrome(model: ReaderModel, paper: YYPaper, close: () -> Unit) {
             }
             // 沉浸阅读 hides the capsule until the middle is tapped.
             val capsule = !model.immersive || model.chromeShown || model.searchShown
-            AnimatedVisibility(capsule, enter = fadeIn() + slideInVertically { it }, exit = fadeOut() + slideOutVertically { it }) {
+            AnimatedVisibility(capsule, enter = app.yuyue.design.YYMotion.barIn(fromTop = false), exit = app.yuyue.design.YYMotion.barOut(toTop = false)) {
                 if (model.searchShown) SearchCapsule(model, paper) else Capsule(model, paper)
             }
             if (!capsule) {

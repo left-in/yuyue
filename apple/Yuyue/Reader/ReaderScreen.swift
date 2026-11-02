@@ -361,6 +361,7 @@ private struct ReaderContent: View {
                 }, translate: { translate(selection.text) }, ask: { askCompanion(selection.text) },
                 share: { share(selection.text, note: nil, section: selection.section) })
                 .fixedSize()
+                .yyPopOnAppear(from: .bottom)
                 .modifier(Above(rect: selection.rect, in: g.size))
             }
             .transition(.opacity)
@@ -372,6 +373,7 @@ private struct ReaderContent: View {
                 }, translate: { translate(open.mark.text) }, ask: { askCompanion(open.mark.text) },
                 share: { share(open.mark.text, note: open.mark.note, section: open.mark.section) })
                 .fixedSize()
+                .yyPopOnAppear(from: .bottom)
                 .modifier(Above(rect: CGRect(x: open.at.x - 1, y: open.at.y - 12, width: 2, height: 24), in: g.size))
             }
             .transition(.opacity)

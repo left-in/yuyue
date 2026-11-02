@@ -1,4 +1,9 @@
 import SwiftUI
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
 /// The prototype's own pieces (`.grp`, `.v-lb`, `.v-seg`, `.v-btn`…), for the screens it draws
 /// with them instead of a system form. Sizes are the prototype's pixels, scaled up from its
@@ -151,19 +156,108 @@ extension View {
     func yyCard() -> some View { modifier(YYCardBackground()) }
 }
 
-/// How a note (删除 · 撤销 and the rest) comes and goes: a spring that settles without overshoot,
-/// or with 减弱动态效果 on, a short fade.
+/// 动效 (docs/design/动效与体验提案.html · M0): every animation in the app picks one of these.
+/// Short, eased out, no bounce. With 减弱动态效果 on, things that move get there at once and the
+/// rest only fades, quickly.
+enum YYMotion {
+    static var reduce: Bool {
+        #if os(macOS)
+        NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        #else
+        UIAccessibility.isReduceMotionEnabled
+        #endif
+    }
+
+    /// Hover, press, an icon changing, a tick.
+    static var quick: Animation { .easeOut(duration: reduce ? 0.1 : YYDuration.quick) }
+    /// A card or panel coming and going, a colour, a progress line, a number.
+    static var standard: Animation { reduce ? .easeOut(duration: 0.15) : .spring(duration: YYDuration.standard, bounce: 0) }
+    /// Things moving to a new place: re-sorting, the sidebar's selection, opening and closing.
+    /// Nil with 减弱动态效果: they're simply there.
+    static var layout: Animation? { reduce ? nil : .spring(duration: YYDuration.layout, bounce: 0) }
+    /// Going away, a little quicker than coming.
+    static var exit: Animation { .easeIn(duration: YYDuration.exit) }
+
+    /// A card that grows out of what opened it (Aa, the words chosen): 0.94 → 1 and a fade in,
+    /// gone quicker than it came. Only the fade with 减弱动态效果.
+    static func pop(from anchor: UnitPoint) -> AnyTransition {
+        if reduce { return .opacity.animation(.easeOut(duration: 0.15)) }
+        return .asymmetric(
+            insertion: .scale(scale: 0.94, anchor: anchor).combined(with: .opacity).animation(standard),
+            removal: .scale(scale: 0.97, anchor: anchor).combined(with: .opacity).animation(exit))
+    }
+
+    /// A row taken out of a list: it slides a little left as it fades, and the rows below close up.
+    static var rowRemoval: AnyTransition {
+        reduce ? .opacity : .asymmetric(insertion: .opacity.combined(with: .move(edge: .top)),
+                                        removal: .opacity.combined(with: .offset(x: -12)))
+    }
+
+    /// Content that changes in place (another 侧栏 page): fades in a few points lower.
+    static var swap: AnyTransition {
+        reduce ? .opacity : .asymmetric(insertion: .opacity.combined(with: .offset(y: 6)), removal: .opacity)
+    }
+}
+
+/// M5: a card grows out of what it points at as it appears — 0.94 → 1 from `anchor` with a fade —
+/// so it reads as coming from the words chosen, not from nowhere. Its going is the container's
+/// transition (a quick fade).
+private struct YYPopOnAppear: ViewModifier {
+    let anchor: UnitPoint
+    @State private var shown = false
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(shown || YYMotion.reduce ? 1 : 0.94, anchor: anchor)
+            .opacity(shown ? 1 : 0)
+            .onAppear { withAnimation(YYMotion.standard) { shown = true } }
+    }
+}
+
+extension View {
+    func yyPopOnAppear(from anchor: UnitPoint) -> some View { modifier(YYPopOnAppear(anchor: anchor)) }
+}
+
+/// How a note (删除 · 撤销 and the rest) comes and goes.
 struct YYToastMotion<Value: Equatable>: ViewModifier {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let value: Value
 
     func body(content: Content) -> some View {
-        content.animation(reduceMotion ? .easeOut(duration: 0.2) : .spring(duration: 0.4, bounce: 0), value: value)
+        content.animation(YYMotion.reduce ? .easeOut(duration: 0.2) : .spring(duration: 0.4, bounce: 0), value: value)
     }
 }
 
 extension View {
     func yyToastMotion<Value: Equatable>(value: Value) -> some View { modifier(YYToastMotion(value: value)) }
+
+    /// M7: lifted a little under the pointer (Mac). For things that open something: a book, a
+    /// collection, a note. A press is the button's: `YYPressStyle`.
+    func yyLift() -> some View { modifier(YYLift()) }
+}
+
+private struct YYLift: ViewModifier {
+    @State private var hover = false
+
+    func body(content: Content) -> some View {
+        content
+            .offset(y: hover ? -1.5 : 0)
+            .shadow(color: .black.opacity(hover ? 0.10 : 0), radius: hover ? 10 : 0, y: hover ? 6 : 0)
+            .animation(YYMotion.quick, value: hover)
+            #if os(macOS)
+            .onHover { hover = $0 }
+            #endif
+    }
+}
+
+/// A plain button that gives a little when pressed (M7): down to 0.98, back as it's let go.
+struct YYPressStyle: ButtonStyle {
+    var scale: CGFloat = 0.98
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .contentShape(.rect)
+            .scaleEffect(configuration.isPressed && !YYMotion.reduce ? scale : 1)
+            .animation(.easeOut(duration: configuration.isPressed ? 0.08 : YYDuration.quick), value: configuration.isPressed)
+    }
 }
 
 /// `.grp .row`: an icon, what it is, and a grey value with a chevron.

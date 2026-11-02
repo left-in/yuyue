@@ -184,6 +184,9 @@ struct MacPdfView: View {
             .keyboardShortcut("[", modifiers: .command)
             Button { model.togglePlay() } label: {
                 Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
+                    // M4: ▶ and ❚❚ turn into each other.
+                    .contentTransition(.symbolEffect(.replace))
+                    .animation(YYMotion.quick, value: model.isPlaying)
                     .font(.yy(size: 14, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(width: 36, height: 36)

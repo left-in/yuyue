@@ -274,9 +274,12 @@ struct MacNotesView: View {
                             }
                         }
                     }
+                    // M6: a note taken out closes up; the ones under it move up into its place.
+                    .animation(YYMotion.layout, value: day.items.map(\.1.id))
                 }
             }
         }
+        .animation(YYMotion.layout, value: days.map(\.id))
     }
 
     // MARK: 按书
@@ -377,6 +380,7 @@ struct MacNotesView: View {
                             }
                         }
                     }
+                    .animation(YYMotion.layout, value: marks.map(\.id))
                 }
             }
         }

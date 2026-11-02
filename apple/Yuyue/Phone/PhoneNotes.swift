@@ -273,6 +273,8 @@ struct PhoneNotes: View {
                 }
             }
         }
+        // M6: a row taken out closes up; the rest move into its place.
+        .animation(YYMotion.layout, value: days.flatMap { $0.items.map(\.id) })
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .environment(\.editMode, .constant(selecting ? .active : .inactive))
@@ -308,6 +310,8 @@ struct PhoneNotes: View {
                 .textCase(nil)
             }
         }
+        // M6: a row taken out closes up; the rest move into its place.
+        .animation(YYMotion.layout, value: shown.map(\.id))
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
     }
@@ -863,6 +867,8 @@ struct PhoneWords: View {
                         }
                     }
                 }
+                // M6: a row taken out closes up; the rest move into its place.
+                .animation(YYMotion.layout, value: days.flatMap { $0.words.map(\.word) })
                 .listStyle(.insetGrouped)
                 .scrollContentBackground(.hidden)
             }

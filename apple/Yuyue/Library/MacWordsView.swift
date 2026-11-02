@@ -62,6 +62,8 @@ struct MacWordsView: View {
                                     NoteCard {
                                         ForEach(group.words, id: \.word) { row($0) }
                                     }
+                                    // M6: a word taken out closes up.
+                                    .animation(YYMotion.layout, value: group.words.map(\.word))
                                 }
                             }
                         }

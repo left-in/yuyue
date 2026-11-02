@@ -340,6 +340,14 @@ object YYRadius {
     val Chip: Dp = 999.dp
 }
 
+/** 动效 durations in milliseconds; the animation specs themselves are YYMotion (Motion.kt). */
+object YYDuration {
+    const val Quick = 140
+    const val Standard = 240
+    const val Layout = 350
+    const val Exit = 120
+}
+
 /** The reading line (墨线) and reader defaults. */
 object YYReader {
     const val PROTOTYPE_TEXT_PX = 14.0f

@@ -51,6 +51,7 @@ const UI_KEYS = keys(T.color.light);
 const TINT_KEYS = keys(T.tint[TINTS[0]].light);
 const SHADOWS = keys(T.shadow.light);
 const RADII = keys(T.radius);
+const MOTION = keys(T.motion);
 
 // Fine-grain noise used by the e-ink paper (prototype .paper-eink background-image).
 const NOISE =
@@ -73,6 +74,7 @@ function genCss() {
   for (const k of TINT_KEYS) root.push(`--yy-${kebab(k)}:${T.tint[dt].light[k]}`);
   for (const s of SHADOWS) root.push(`--yy-shadow-${kebab(s)}:${cssShadow(T.shadow.light[s])}`);
   for (const r of RADII) root.push(`--yy-radius-${kebab(r)}:${T.radius[r]}px`);
+  for (const m of MOTION) root.push(`--yy-motion-${kebab(m)}:${T.motion[m]}ms`);
   root.push(`--yy-ink-w:${cssNum(T.ink.widthPx)}px`);
   L.push(`:root{${root.join(';')}}`);
   const dark = [];
@@ -364,6 +366,11 @@ public enum YYShadow {`);
   for (const r of RADII) L.push(`    public static let ${r}: CGFloat = ${T.radius[r]}`);
   L.push('}');
   L.push('');
+  L.push('/// 动效 durations in seconds; the animations themselves are YYMotion (Parts.swift).');
+  L.push('public enum YYDuration {');
+  for (const m of MOTION) L.push(`    public static let ${m}: Double = ${swNum(T.motion[m] / 1000)}`);
+  L.push('}');
+  L.push('');
   L.push(`/// The reading line (墨线) and reader defaults.
 public enum YYReader {
     public static let prototypeTextPx: Double = ${swNum(T.prototypeTextPx)}
@@ -571,6 +578,11 @@ data class YYShadowLayer(val x: Float, val y: Float, val blur: Float, val spread
   L.push('');
   L.push('object YYRadius {');
   for (const r of RADII) L.push(`    val ${pascal(r)}: Dp = ${T.radius[r]}.dp`);
+  L.push('}');
+  L.push('');
+  L.push('/** 动效 durations in milliseconds; the animation specs themselves are YYMotion (Motion.kt). */');
+  L.push('object YYDuration {');
+  for (const m of MOTION) L.push(`    const val ${pascal(m)} = ${T.motion[m]}`);
   L.push('}');
   L.push('');
   L.push(`/** The reading line (墨线) and reader defaults. */

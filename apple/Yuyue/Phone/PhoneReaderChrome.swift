@@ -237,6 +237,9 @@ struct PhoneReaderChrome: View {
                 .accessibilityLabel(model.player?.spot != nil ? String(localized: "上一句") : String(localized: "上一页"))
             Button { model.togglePlay() } label: {
                 Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
+                    // M4: ▶ and ❚❚ turn into each other.
+                    .contentTransition(.symbolEffect(.replace))
+                    .animation(YYMotion.quick, value: model.isPlaying)
                     .font(.yy(size: 14, weight: .semibold))
                     .foregroundStyle(paper.onMain)
                     .frame(width: 40, height: 40)

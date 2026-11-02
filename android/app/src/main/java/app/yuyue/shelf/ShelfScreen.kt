@@ -59,6 +59,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.yuyue.design.ButtonKind
+import app.yuyue.design.pressScale
 import app.yuyue.design.Icons
 import app.yuyue.design.ProgressLine
 import app.yuyue.design.YY
@@ -172,6 +173,8 @@ fun ShelfScreen(library: Library, openWifi: () -> Unit, openRemote: () -> Unit, 
                     item(span = { GridItemSpan(maxLineSpan) }) { Empty(library, collection != null) { picker.launch(importTypes) } }
                 } else {
                     items(shown, key = { it.id }) { book ->
+                        // M2: sorted, filtered, brought in or taken out, each book moves to its place.
+                        Box(Modifier.animateItem(fadeInSpec = app.yuyue.design.YYMotion.standard(), placementSpec = app.yuyue.design.YYMotion.place, fadeOutSpec = app.yuyue.design.YYMotion.exit())) {
                         Cell(
                             library, book, showProgress, selecting, book.id in selected,
                             onTap = {
@@ -181,6 +184,7 @@ fun ShelfScreen(library: Library, openWifi: () -> Unit, openRemote: () -> Unit, 
                             onEdit = { editing = book },
                             onPick = { picking = book },
                         )
+                        }
                     }
                 }
             }
@@ -268,7 +272,7 @@ private fun ReadingRow(library: Library, reading: List<BookSummary>, open: (Book
             contentPadding = PaddingValues(vertical = 4.dp),
         ) {
             items(reading, key = { it.id }) { book ->
-                ReadingCard(book, listening = library.listening == book.id, modifier = Modifier.width(268.dp)) { open(book, it) }
+                ReadingCard(book, listening = library.listening == book.id, modifier = Modifier.width(268.dp).animateItem(placementSpec = app.yuyue.design.YYMotion.place)) { open(book, it) }
             }
         }
     }
@@ -331,10 +335,15 @@ private fun Kinds(kind: Kind, onKind: (Kind) -> Unit, sort: ShelfSort, onSort: (
     Row(Modifier.fillMaxWidth().padding(top = 22.dp, bottom = 0.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         for (k in Kind.entries) {
             val on = k == kind
+            // M1: the chosen one darkens over a moment instead of at once.
+            val fill by androidx.compose.animation.animateColorAsState(if (on) tint.black else YY.c.inset, app.yuyue.design.YYMotion.standard(), label = "kind")
+            val ink by androidx.compose.animation.animateColorAsState(if (on) tint.onBlack else YY.c.t1, app.yuyue.design.YYMotion.standard(), label = "kindText")
+            val press = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
             Box(
-                Modifier.height(30.dp).clip(CircleShape).background(if (on) tint.black else YY.c.inset).clickable { onKind(k) }.padding(horizontal = 14.dp),
+                Modifier.pressScale(press, 0.96f).height(30.dp).clip(CircleShape).background(fill)
+                    .clickable(interactionSource = press, indication = androidx.compose.material3.ripple()) { onKind(k) }.padding(horizontal = 14.dp),
                 contentAlignment = Alignment.Center,
-            ) { Text(k.title, fontSize = 13.sp, fontWeight = if (on) FontWeight.SemiBold else FontWeight.Normal, color = if (on) tint.onBlack else YY.c.t1) }
+            ) { Text(k.title, fontSize = 13.sp, fontWeight = if (on) FontWeight.SemiBold else FontWeight.Normal, color = ink) }
         }
         Spacer(Modifier.weight(1f))
         Box {
@@ -413,9 +422,13 @@ private fun Cell(
     var menu by remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
     val tint = YY.tint
+    // M7: the cell gives a little while pressed.
+    val press = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
     Box {
         Column(
-            Modifier.combinedClickable(
+            Modifier.pressScale(press).combinedClickable(
+                interactionSource = press,
+                indication = androidx.compose.material3.ripple(),
                 onClick = onTap,
                 onLongClick = if (selecting) null else ({ haptics.performHapticFeedback(HapticFeedbackType.LongPress); menu = true }),
             ),

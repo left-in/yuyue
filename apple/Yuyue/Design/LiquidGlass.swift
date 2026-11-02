@@ -135,6 +135,9 @@ struct GlassTool: View {
             Group {
                 if let symbol {
                     Image(systemName: symbol).font(.yy(size: 13, weight: .medium))
+                        // M4: a tool whose icon changes (朗读 ⇄ 暂停) turns one into the other.
+                        .contentTransition(.symbolEffect(.replace))
+                        .animation(YYMotion.quick, value: symbol)
                 } else {
                     Text("Aa").font(.yy(size: 12.5, weight: .semibold))
                 }

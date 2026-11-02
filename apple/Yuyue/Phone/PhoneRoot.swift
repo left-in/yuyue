@@ -146,6 +146,8 @@ struct NowPlayingBar: View {
             Button(playing.isPlaying ? String(localized: "暂停") : String(localized: "接着听"), systemImage: playing.isPlaying ? "pause.fill" : "play.fill") {
                 playing.togglePlay()
             }
+            .contentTransition(.symbolEffect(.replace))
+            .animation(YYMotion.quick, value: playing.isPlaying)
             .font(.title3)
             .frame(width: 38, height: 40)
             if let audio {

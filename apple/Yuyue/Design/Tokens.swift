@@ -325,6 +325,14 @@ public enum YYRadius {
     public static let chip: CGFloat = 999
 }
 
+/// 动效 durations in seconds; the animations themselves are YYMotion (Parts.swift).
+public enum YYDuration {
+    public static let quick: Double = 0.14
+    public static let standard: Double = 0.24
+    public static let layout: Double = 0.35
+    public static let exit: Double = 0.12
+}
+
 /// The reading line (墨线) and reader defaults.
 public enum YYReader {
     public static let prototypeTextPx: Double = 14

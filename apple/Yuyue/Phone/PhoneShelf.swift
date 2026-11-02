@@ -8,6 +8,8 @@ import YuyueCore
 struct PhoneShelf: View {
     @Bindable var library: Library
     @State private var filter = ShelfFilter.all
+    /// M1: the chosen kind's dark capsule slides to the next one.
+    @Namespace private var kindSelection
     @AppStorage("shelf.sort") private var sortName = "recent"
     @State private var importerShown = false
     @State private var importShown = false
@@ -43,14 +45,19 @@ struct PhoneShelf: View {
                             .padding(.horizontal, 20)
                             .padding(.top, 22)
                             .padding(.bottom, 14)
+                            .animation(YYMotion.layout, value: kind)
                     }
                     if library.shelfBooks.isEmpty, filter == .all {
                     } else if shown.isEmpty {
                         empty
                     } else {
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 96, maximum: 130), spacing: 18, alignment: .top)], alignment: .leading, spacing: 22) {
-                            ForEach(shown) { book in cell(book) }
+                            ForEach(shown) { book in
+                                cell(book).transition(.scale(scale: 0.9).combined(with: .opacity))
+                            }
                         }
+                        // M2: sorted or filtered another way, each book moves to its new place.
+                        .animation(YYMotion.layout, value: shown.map(\.id))
                         .padding(.horizontal, 20)
                     }
                 }
@@ -235,10 +242,16 @@ struct PhoneShelf: View {
                         .foregroundStyle(kind == k ? tint.onBlack : YYColor.t1)
                         .padding(.horizontal, 14)
                         .frame(height: 30)
-                        .background(kind == k ? tint.black : YYColor.inset, in: .capsule)
+                        .background {
+                            if kind == k {
+                                Capsule().fill(tint.black).matchedGeometryEffect(id: "kind", in: kindSelection)
+                            } else {
+                                Capsule().fill(YYColor.inset)
+                            }
+                        }
                         .contentShape(.capsule)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(YYPressStyle(scale: 0.96))
                 .accessibilityAddTraits(kind == k ? .isSelected : [])
             }
             Spacer(minLength: 8)
@@ -367,7 +380,7 @@ struct PhoneShelf: View {
             }
             .contentShape(.rect)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(YYPressStyle())
         .contextMenu {
             if !selecting { actions(for: book) }
         } preview: {

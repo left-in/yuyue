@@ -45,6 +45,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -60,6 +61,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.IntentCompat
+import app.yuyue.design.pressScale
 import app.yuyue.design.Icons
 import app.yuyue.design.TabIcons
 import app.yuyue.design.YY
@@ -174,11 +176,14 @@ fun Root(library: Library) {
         CompositionLocalProvider(LocalTabBarHeight provides barHeight) {
             Box(Modifier.fillMaxSize().hazeSource(haze)) {
                 when (val page = pages.lastOrNull()) {
-                    null -> when (tab) {
-                        Tab.Shelf -> ShelfScreen(library, openWifi = { pages += Page.Wifi }, openRemote = { pages += Page.Remote }, openWatched = { pages += Page.Watched })
-                        Tab.Notes -> app.yuyue.notes.NotesScreen(library)
-                        Tab.Me -> app.yuyue.me.MeScreen(library)
-                        Tab.Search -> app.yuyue.search.SearchScreen(library)
+                    // M8: one tab fades into the next instead of being swapped at once.
+                    null -> androidx.compose.animation.Crossfade(tab, animationSpec = app.yuyue.design.YYMotion.standard(), label = "tab") { shown ->
+                        when (shown) {
+                            Tab.Shelf -> ShelfScreen(library, openWifi = { pages += Page.Wifi }, openRemote = { pages += Page.Remote }, openWatched = { pages += Page.Watched })
+                            Tab.Notes -> app.yuyue.notes.NotesScreen(library)
+                            Tab.Me -> app.yuyue.me.MeScreen(library)
+                            Tab.Search -> app.yuyue.search.SearchScreen(library)
+                        }
                     }
                     Page.Wifi -> app.yuyue.me.SubPage(t("Wi‑Fi 传书"), { pages.removeAt(pages.lastIndex) }) { app.yuyue.shelf.WifiPage(library) }
                     Page.Remote -> app.yuyue.shelf.RemotePage(library) { pages.removeAt(pages.lastIndex) }
@@ -269,15 +274,19 @@ private fun TabBar(tab: Tab, haze: HazeState, playing: @Composable () -> Unit, s
 
 @Composable
 private fun RowScope.TabItem(icon: ImageVector, iconOn: ImageVector, title: String, on: Boolean, onClick: () -> Unit) {
-    val color = if (on) YY.tint.fill else YY.c.t2
+    // M8: the colour turns over a moment, and the icon gives a little as it's chosen.
+    val color by androidx.compose.animation.animateColorAsState(if (on) YY.tint.fill else YY.c.t2, app.yuyue.design.YYMotion.quick(), label = "tab")
+    val press = remember { MutableInteractionSource() }
     Column(
         Modifier.weight(1f).height(YY.s(44))
-            .selectable(on, interactionSource = remember { MutableInteractionSource() }, indication = null, role = androidx.compose.ui.semantics.Role.Tab, onClick = onClick),
+            .selectable(on, interactionSource = press, indication = null, role = androidx.compose.ui.semantics.Role.Tab, onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
         // 2px in the prototype; Android's line box for the word already adds about 1.6 of it.
         verticalArrangement = Arrangement.spacedBy(YY.s(0.4f), Alignment.CenterVertically),
     ) {
-        Icon(if (on) iconOn else icon, null, tint = color, modifier = Modifier.size(YY.s(24)))
+        androidx.compose.animation.Crossfade(on, animationSpec = app.yuyue.design.YYMotion.quick(), label = "tabIcon") { filled ->
+            Icon(if (filled) iconOn else icon, null, tint = color, modifier = Modifier.pressScale(press, 0.9f).size(YY.s(24)))
+        }
         Text(title, style = YY.font(10f, if (on) FontWeight.SemiBold else FontWeight.Medium).copy(lineHeight = YY.sp(12f)), color = color)
     }
 }
@@ -324,7 +333,13 @@ private fun NowPlayingBar(library: Library) {
             app.yuyue.shelf.BookCover(book, Modifier.padding(end = YY.s(6)).size(width = YY.s(24), height = YY.s(36)))
             Column(Modifier.weight(1f)) {
                 Text(if (chapter != null) t("%@ · %@", book.title, chapter) else book.title, style = YY.font(11.5f, FontWeight.SemiBold), color = YY.c.t1, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(note ?: player.line ?: "", style = YY.font(10f).copy(fontFeatureSettings = "tnum"), color = YY.c.t2, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                // M3: the line rolls up as the voice moves to the next sentence.
+                androidx.compose.animation.AnimatedContent(note ?: player.line ?: "", transitionSpec = {
+                    (androidx.compose.animation.fadeIn(app.yuyue.design.YYMotion.standard()) + androidx.compose.animation.slideInVertically(app.yuyue.design.YYMotion.standard()) { it / 2 }) togetherWith
+                        androidx.compose.animation.fadeOut(app.yuyue.design.YYMotion.exit())
+                }, label = "line") { text ->
+                    Text(text, style = YY.font(10f).copy(fontFeatureSettings = "tnum"), color = YY.c.t2, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
             }
             Box(Modifier.size(YY.s(32)).clip(CircleShape).clickable(onClickLabel = t("上一句")) { player.skip(false) }, contentAlignment = Alignment.Center) {
                 Icon(Icons.chevronLeft, t("上一句"), tint = YY.c.t1, modifier = Modifier.size(YY.s(20)))
