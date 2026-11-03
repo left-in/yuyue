@@ -4992,6 +4992,19 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .v-mac.s21 .kz-toc .s16-list{margin-left:0;padding-left:0}
 .kz-toc .s16-ft{padding:8px 10px 0}
 .kz-toc .s16-ft a{color:var(--accent);text-decoration:none}
+/* 目录：一本书的目录页，印在这张纸上。“目录”二字、章名、页名、点线和页码；选中的那一行墨蓝，点线变成实线 */
+.kz-tt{margin:0 0 14px 10px;font-family:var(--serif);font-size:15px;font-weight:600;letter-spacing:.3em;color:var(--t1)}
+.kz-toc .s19-ch{margin:14px 0 2px;padding-left:10px;font-family:var(--serif);font-size:12.5px;font-weight:600;letter-spacing:.04em;color:var(--t1)}
+.kz-toc .s19-ch i{display:inline;margin-right:.6em;font-style:normal;font-weight:400;color:var(--t3)}
+.v-mac.s21 .kz-toc .s16-e[data-p]{gap:0;height:27px;padding:0 10px 0 22px;border-radius:6px;font-family:var(--serif);font-size:13px;color:var(--t2)}
+.v-mac.s21 .kz-toc .s16-e .kz-n{font-size:13px;line-height:1}
+.v-mac.s21 .kz-toc .s16-e .mk{margin:0 0 0 4px}
+.v-mac.s21 .kz-toc .s16-e .ld{flex:1;min-width:10px;height:1px;margin:3px 6px 0;align-self:center;background:radial-gradient(circle,currentColor .55px,transparent .8px) 0 50%/4px 2px repeat-x;opacity:.45}
+.v-mac.s21 .kz-toc .s16-e[data-p] em{display:block;margin:0;line-height:1;align-self:center;font-family:var(--serif);font-style:normal;font-size:11.5px;font-variant-numeric:oldstyle-nums tabular-nums;color:var(--t3)}
+.v-mac.s21 .kz-toc .s16-e[data-p].on{background:none;color:var(--accent);font-weight:600}
+.v-mac.s21 .kz-toc .s16-e[data-p].on .ld{background:currentColor;height:.5px;opacity:.5}
+.v-mac.s21 .kz-toc .s16-e[data-p].on em{color:var(--accent)}
+@media (hover:hover){.v-mac.s21 .kz-toc .s16-e[data-p]:not(.on):hover{background:none;color:var(--t1)}}
 .kz-about{display:flex;align-items:center;gap:18px;min-height:58px}
 .kz-about img{width:72px;height:72px;border-radius:16px;box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 6px 16px rgba(30,28,24,.12)}
 .kz-about b{display:block;font-size:24px;font-weight:600}
@@ -5726,7 +5739,7 @@ var CLAUDE='<svg viewBox="0 0 24 24"><path fill="#D97757" d="M4.709 15.955l4.72-
   root.innerHTML='<div class="v-mac s13 s14 s21 paper-kami s14-lt" id="s21W">'+
     '<header class="kz-top"><span class="v-lights"><i></i><i></i><i></i></span><b>语阅</b><span>设置</span>'+
     '<label class="kz-sf">'+I('i-search')+'<input id="s21Q" placeholder="搜索设置" autocomplete="off" spellcheck="false" aria-label="搜索设置"><kbd>⌘F</kbd></label><div class="v-ms-menu kz-res" id="kzRes" hidden></div></header>'+
-    '<nav class="kz-toc" aria-label="目录"><div class="s16-list" id="s21L"></div><div class="s16-ft" id="s21Ft"></div></nav>'+
+    '<nav class="kz-toc" aria-label="目录"><p class="kz-tt">目　录</p><div class="s16-list" id="s21L"></div><div class="s16-ft" id="s21Ft"></div></nav>'+
     '<div class="kz-mid" id="s21Mn"></div><div class="kz-hero" id="kzHero"></div></div>';
   var W=document.getElementById('s21W'),$=function(s){return W.querySelector(s);},$$=function(s){return [].slice.call(W.querySelectorAll(s));};
   var cur=null,timer=null,ph=0,q=$('#s21Q'),hits=[],sel=0;
@@ -5735,7 +5748,7 @@ var CLAUDE='<svg viewBox="0 0 24 24"><path fill="#D97757" d="M4.709 15.955l4.72-
   var ICO={page:'i-book',fl:'i-trans',voice:'i-wave',listen:'i-headset',ai:'i-spark',sync:'i-sync',store:'i-disk',gen:'i-sliders',about:'i-info'};
   function side(){var L=$('#s21L');
     if(!W.classList.contains('srch')){
-      if(!L.dataset.toc){L.dataset.toc=1;L.innerHTML=TOC.map(function(c){return '<p class="s19-ch">'+(c[0]?'<i>'+c[0]+'</i>':'')+'<span>'+c[1]+'</span></p>'+c[2].map(function(t){return '<a class="s16-e" data-p="'+t[0]+'">'+I(ICO[t[0]])+'<span class="kz-n">'+t[1]+'</span><i class="mk"></i></a>';}).join('');}).join('');
+      if(!L.dataset.toc){L.dataset.toc=1;L.innerHTML=TOC.map(function(c){return '<p class="s19-ch">'+(c[0]?'<i>第'+c[0]+'章</i>'+c[1]:'<i>附</i>'+c[1])+'</p>'+c[2].map(function(t){return '<a class="s16-e" data-p="'+t[0]+'"><span class="kz-n">'+t[1]+'</span><i class="mk"></i><i class="ld"></i><em>'+PN[t[0]]+'</em></a>';}).join('');}).join('');
         [].forEach.call(L.querySelectorAll('[data-p]'),function(x){x.onclick=function(){if(x.dataset.p!==cur)page(x.dataset.p);};});}
       $$('.s16-e[data-p]').forEach(function(x){x.classList.toggle('on',x.dataset.p===cur);});marks();return;}
     delete L.dataset.toc;var v=q.value.trim().toLowerCase();
