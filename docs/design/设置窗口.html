@@ -5010,6 +5010,37 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .kz-about b{display:block;font-size:24px;font-weight:600}
 .kz-about span{display:block;margin-top:4px;font-size:12.5px;color:var(--t2)}
 @media (prefers-reduced-motion:reduce){.kz-ly{transition:opacity .2s ease}}
+/* ===== 做减法：只留“整扇窗是你选的纸”。三栏同一条顶线；设置做主角；界面全用无衬线、衬线只给书页；控件跟着纸走 ===== */
+.v-mac.s21.s14-lt{--card:color-mix(in srgb,#FFFFFF 62%,var(--p-bg));--inset:rgba(38,37,31,.055)}
+.v-mac.s21.s14-dk{--card:color-mix(in srgb,#FFFFFF 9%,var(--p-bg));--inset:rgba(227,222,208,.07)}
+/* 顶线：搜索框、标题、书页标题都在 60 */
+.v-mac.s21 .kz-sf{left:18px;right:auto;top:60px;width:168px}
+.v-mac.s21 .kz-res{left:18px;right:auto;top:94px}
+.v-mac.s21 .kz-toc{left:18px;top:102px;width:168px}
+.v-mac.s21 .kz-mid{left:206px;top:48px;width:440px;padding-top:12px}
+.v-mac.s21:not(.with) .kz-mid{width:auto;right:36px}
+.v-mac.s21 .kz-hero{left:670px;right:24px;top:60px;bottom:24px}
+.v-mac.s21 .kz-hero .s14-pg.r{padding:0 0 0 24px;border-left:.5px solid var(--line)}
+.v-mac.s21 .kz-hero .s14-lab{display:none}
+.v-mac.s21 .kz-hero .s14-pg h4{margin:4px 0 18px}
+.v-mac.s21 .kz-hero .s14-pg .no{bottom:0}
+.v-mac.s21 .kz-play{left:24px;right:0;bottom:30px}
+/* 标题和说明：和书架窗口一样 */
+.v-mac.s21 .s13-col>.v-ms-box:has(.sv-use)+.v-ms-gl{margin-top:0}
+.kz-h{margin:0;font-size:22px;font-weight:700;line-height:28px;color:var(--t1)}
+.kz-sub{margin:6px 0 24px;font-size:12.5px;line-height:1.6;color:var(--t2)}
+.v-mac.s21 .kz-about{min-height:0;margin-bottom:4px}
+.v-mac.s21 .kz-about+.kz-say{margin:14px 0 24px;font-size:12.5px;color:var(--t2)}
+/* 目录：无衬线小字；章名是灰色小标题，页名，页码靠右；选中的墨蓝 */
+.kz-toc .s19-ch{margin:16px 0 4px;padding-left:10px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0;color:var(--t3)}
+.kz-toc .s19-ch:first-child{margin-top:0}
+.kz-toc .s19-ch i{margin-right:.5em;font-weight:400}
+.v-mac.s21 .kz-toc .s16-e[data-p]{height:28px;padding:0 10px;border-radius:7px;font-family:var(--sans);font-size:13px;color:var(--t1)}
+.v-mac.s21 .kz-toc .s16-e .ld{visibility:hidden}
+.v-mac.s21 .kz-toc .s16-e[data-p] em{font-family:var(--sans);font-size:11px;font-variant-numeric:tabular-nums;color:var(--t3)}
+.v-mac.s21 .kz-toc .s16-e[data-p].on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.v-mac.s21 .kz-toc .s16-e[data-p].on .ld{visibility:hidden}
+@media (hover:hover){.v-mac.s21 .kz-toc .s16-e[data-p]:not(.on):hover{background:var(--inset)}}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -5739,7 +5770,7 @@ var CLAUDE='<svg viewBox="0 0 24 24"><path fill="#D97757" d="M4.709 15.955l4.72-
   root.innerHTML='<div class="v-mac s13 s14 s21 paper-kami s14-lt" id="s21W">'+
     '<header class="kz-top"><span class="v-lights"><i></i><i></i><i></i></span><b>语阅</b><span>设置</span>'+
     '<label class="kz-sf">'+I('i-search')+'<input id="s21Q" placeholder="搜索设置" autocomplete="off" spellcheck="false" aria-label="搜索设置"><kbd>⌘F</kbd></label><div class="v-ms-menu kz-res" id="kzRes" hidden></div></header>'+
-    '<nav class="kz-toc" aria-label="目录"><p class="kz-tt">目　录</p><div class="s16-list" id="s21L"></div><div class="s16-ft" id="s21Ft"></div></nav>'+
+    '<nav class="kz-toc" aria-label="目录"><div class="s16-list" id="s21L"></div><div class="s16-ft" id="s21Ft"></div></nav>'+
     '<div class="kz-mid" id="s21Mn"></div><div class="kz-hero" id="kzHero"></div></div>';
   var W=document.getElementById('s21W'),$=function(s){return W.querySelector(s);},$$=function(s){return [].slice.call(W.querySelectorAll(s));};
   var cur=null,timer=null,ph=0,q=$('#s21Q'),hits=[],sel=0;
@@ -5773,7 +5804,7 @@ var CLAUDE='<svg viewBox="0 0 24 24"><path fill="#D97757" d="M4.709 15.955l4.72-
       gen:[['浅色','深色','跟随系统'][S.look],'','打开语阅时'+(S.open?'接着读上次那本。':'先到书架。')],
       about:['1.0','','']}[p];
     if(p==='about')return '<div class="kz-about"><img src="../../apple/Yuyue/Assets.xcassets/AppIcon.appiconset/icon_256.png" alt="语阅的图标"><div><b>语阅</b><span>版本 1.0 · 2026 年 11 月</span></div></div><p class="kz-say">好好读一本书。书、笔记和 Key 都只在你的设备上。</p>';
-    return '<div class="kz-big'+(/^[\d.]+[×]?$/.test(String(d[0]))?'':' w')+'"><b>'+d[0]+'</b>'+(d[1]?'<small>'+d[1]+'</small>':'')+'<span class="kz-pt">'+PG[p]+'</span></div><p class="kz-say">'+d[2]+'</p>';}
+    return '<h3 class="kz-h">'+PG[p]+'</h3><p class="kz-sub">'+BODY[p].intro+'</p>';}
   /* 目录里每页下面那一行：这一页现在是什么样 */
   function STAT(p){var F=['宋体','黑体','楷体'][S.font];return {page:S.fs+' 号'+F+' · '+PAP[S.paper][1],fl:S.gloss?'比'+['四级','六级','雅思','GRE'][S.lv]+'难的词':'不标难词',voice:(ZH()[S.zh]||'婷婷')+' · '+FMT.x(S.speed),listen:['不定时','15 分钟后停','30 分钟后停','本章完就停'][S.sleep],ai:S.ai==='mac'?'这台 Mac':NAME[S.ai],sync:S.icloud?'3 台 · 2 分钟前':'关着',store:(3.2-(CL.A?1.4:0)-(CL.V?.5:0)).toFixed(1)+' GB',gen:['浅色','深色','跟随系统'][S.look],about:'1.0 · 最新'}[p];}
   var CL={A:0,V:0};
