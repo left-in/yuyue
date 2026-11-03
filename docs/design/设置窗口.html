@@ -4019,6 +4019,155 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .m9-ir{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;min-height:24px;gap:10px}
 .m9-ifoot{padding:12px 18px;border-top:.5px solid var(--line);font-size:12px;color:var(--t2);display:flex;justify-content:space-between}
 .m9-ifoot a{color:var(--accent);cursor:pointer}
+/* ===== 2026-11-03 第十版：照 Loop 的设置（Luminare）做的三栏窗口（lu- 开头） ===== */
+.lu-desk{position:relative;width:1100px;height:720px;border-radius:16px;overflow:hidden;display:grid;place-items:center;
+  background:radial-gradient(60% 70% at 18% 20%,#E9B98F 0,transparent 60%),radial-gradient(55% 60% at 85% 25%,#8FA8C8 0,transparent 60%),radial-gradient(60% 70% at 60% 95%,#9DB58A 0,transparent 65%),#D9CFC2}
+:root[data-theme="dark"] .lu-desk{background:radial-gradient(60% 70% at 18% 20%,#6B4A32 0,transparent 60%),radial-gradient(55% 60% at 85% 25%,#2E4566 0,transparent 60%),radial-gradient(60% 70% at 60% 95%,#3D5232 0,transparent 65%),#1C1A18}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lu-desk{background:radial-gradient(60% 70% at 18% 20%,#6B4A32 0,transparent 60%),radial-gradient(55% 60% at 85% 25%,#2E4566 0,transparent 60%),radial-gradient(60% 70% at 60% 95%,#3D5232 0,transparent 65%),#1C1A18}}
+.lu-win{--lu-bg:rgba(246,245,243,.74);--lu-side:rgba(240,238,235,.5);--lu-sec:rgba(255,255,255,.7);--lu-bd:rgba(0,0,0,.08);--lu-sel:rgba(0,0,0,.075);--lu-hov:rgba(0,0,0,.04);--lu-sh:0 .5px .5px rgba(0,0,0,.1);--e:cubic-bezier(.2,.8,.2,1);
+  position:relative;height:620px;display:grid;grid-template-columns:220px 380px var(--lu-pw,440px);border-radius:16px;overflow:hidden;background:var(--lu-bg);-webkit-backdrop-filter:blur(40px) saturate(1.5);backdrop-filter:blur(40px) saturate(1.5);
+  box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 30px 80px rgba(0,0,0,.28);font-family:var(--sans);font-size:13px;color:var(--t1);transition:grid-template-columns .35s var(--e)}
+:root[data-theme="dark"] .lu-win{--lu-bg:rgba(30,30,32,.72);--lu-side:rgba(40,40,42,.4);--lu-sec:rgba(255,255,255,.05);--lu-bd:rgba(255,255,255,.08);--lu-sel:rgba(255,255,255,.1);--lu-hov:rgba(255,255,255,.05);--lu-sh:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lu-win{--lu-bg:rgba(30,30,32,.72);--lu-side:rgba(40,40,42,.4);--lu-sec:rgba(255,255,255,.05);--lu-bd:rgba(255,255,255,.08);--lu-sel:rgba(255,255,255,.1);--lu-hov:rgba(255,255,255,.05);--lu-sh:none}}
+.lu-win.noprev{--lu-pw:0px}
+/* 侧栏 */
+.lu-side{background:var(--lu-side);border-right:.5px solid var(--lu-bd);padding:52px 12px 12px;display:flex;flex-direction:column;gap:20px;position:relative;overflow:hidden}
+.lu-side .v-lights{position:absolute;left:18px;top:19px}
+.lu-grp{display:flex;flex-direction:column;gap:2px}
+.lu-grp>p{margin:0 0 4px 6px;font-size:11px;font-weight:600;color:var(--t3);display:flex;align-items:baseline;gap:6px}
+.lu-grp>p i{font-style:normal;font-family:var(--serif);font-weight:400;letter-spacing:.06em}
+.lu-tab{position:relative;display:flex;align-items:center;gap:8px;height:32px;padding:0 6px;border-radius:10px;cursor:pointer;z-index:1;transition:background .1s}
+.lu-tab:hover{background:var(--lu-hov)}
+.lu-tab .ic{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;color:#fff;flex:none;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.08)}
+.lu-tab .ic svg{width:13px;height:13px}
+.lu-tab .ic b{font-size:12px;font-weight:600;font-family:var(--serif)}
+.lu-tab em{margin-left:auto;font-style:normal;font-family:var(--serif);font-size:11px;color:var(--t3)}
+.lu-tab .dot{width:6px;height:6px;border-radius:3px;background:var(--accent);box-shadow:0 0 6px var(--accent);margin-left:2px}
+.lu-selbg{position:absolute;left:12px;right:12px;height:32px;border-radius:10px;background:var(--lu-sel);transition:top .3s var(--e);z-index:0}
+/* 中间 */
+.lu-pane{display:flex;flex-direction:column;min-height:0;border-right:.5px solid var(--lu-bd)}
+.lu-head{height:52px;flex:none;display:flex;align-items:center;gap:9px;padding:0 10px 0 16px;border-bottom:.5px solid var(--lu-bd)}
+.lu-head .ic{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;color:#fff}
+.lu-head .ic svg{width:13px;height:13px}
+.lu-head .ic b{font-size:12px;font-family:var(--serif)}
+.lu-head h3{margin:0;font-size:17px;font-weight:600}
+.lu-head button{margin-left:auto;width:28px;height:28px;border:0;border-radius:8px;background:none;color:var(--t2);display:grid;place-items:center;cursor:pointer}
+.lu-head button:hover{background:var(--lu-hov);color:var(--t1)}
+.lu-head button svg{width:15px;height:15px}
+.lu-form{flex:1;overflow:auto;padding:14px 14px 24px;display:flex;flex-direction:column;gap:16px;scrollbar-width:none}
+.lu-form::-webkit-scrollbar{display:none}
+.lu-form.in{animation:luIn .22s var(--e)}
+@keyframes luIn{from{opacity:0;transform:translateY(4px)}}
+.lu-sec>p{margin:0 0 6px 8px;font-size:12px;font-weight:500;color:var(--t2)}
+.lu-box{border-radius:12px;background:var(--lu-sec);box-shadow:0 0 0 .5px var(--lu-bd),var(--lu-sh);overflow:hidden}
+.lu-row{display:flex;align-items:center;gap:10px;min-height:34px;padding:0 8px 0 10px}
+.lu-row+.lu-row,.lu-box>*+*{border-top:.5px solid var(--lu-bd)}
+.lu-row>span:first-child{flex:1;min-width:0}
+.lu-row>span small{display:block;font-size:11px;color:var(--t3);margin-top:-1px}
+.lu-row.tall,.lu-row:has(small){padding-top:7px;padding-bottom:7px}
+.lu-note{margin-top:8px!important}
+.lu-note{margin:6px 8px 0;font-size:11px;color:var(--t3);line-height:1.5}
+/* 开关：照 Luminare 用小号系统开关 */
+.lu-sw{position:relative;width:32px;height:18px;border-radius:9px;background:rgba(0,0,0,.12);cursor:pointer;flex:none;transition:background .2s}
+:root[data-theme="dark"] .lu-sw{background:rgba(255,255,255,.16)}
+.lu-sw::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:7px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .2s var(--e)}
+.lu-sw.on{background:var(--accent)}
+.lu-sw.on::after{left:16px}
+/* 弹出菜单 */
+.lu-pop{position:relative;display:flex;align-items:center;gap:6px;height:24px;padding:0 8px 0 10px;border-radius:7px;background:var(--lu-sec);box-shadow:0 0 0 .5px var(--lu-bd),var(--lu-sh);font-size:12.5px;cursor:pointer;white-space:nowrap}
+.lu-pop svg{width:10px;height:10px;color:var(--t3)}
+.lu-pop:hover{background:var(--lu-hov)}
+.lu-menu{position:absolute;right:0;top:28px;z-index:20;min-width:150px;padding:5px;border-radius:10px;background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 0 0 .5px var(--lu-bd),0 12px 32px rgba(0,0,0,.18);opacity:0;transform:scale(.97) translateY(-3px);transform-origin:100% 0;pointer-events:none;transition:opacity .12s,transform .18s var(--e)}
+.lu-menu.on{opacity:1;transform:none;pointer-events:auto}
+.lu-menu div{display:flex;align-items:center;gap:8px;height:26px;padding:0 10px;border-radius:6px;font-size:12.5px}
+.lu-menu div:hover{background:var(--accent);color:#fff}
+.lu-menu div b{width:12px;font-weight:400}
+.lu-menu div small{margin-left:auto;padding-left:14px;font-size:11px;opacity:.6}
+/* 滑杆：一行写名字和数，下一行是滑杆（Luminare 的 SliderPicker） */
+.lu-sl{display:flex;flex-direction:column;gap:6px;padding:8px 10px 10px}
+.lu-sl>div{display:flex;justify-content:space-between;align-items:center}
+.lu-sl>div code{font-family:var(--mono);font-size:12px;color:var(--t1);padding:2px 7px;border-radius:6px;background:var(--lu-hov);min-width:30px;text-align:center}
+.lu-rng{-webkit-appearance:none;appearance:none;width:100%;height:16px;margin:0;background:transparent;cursor:pointer;--p:50%}
+.lu-rng::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(var(--accent),var(--accent)) 0/var(--p) 100% no-repeat,rgba(127,127,127,.22)}
+.lu-rng::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;margin-top:-5px;border-radius:50%;background:#fff;box-shadow:0 0 0 .5px rgba(0,0,0,.2),0 1px 3px rgba(0,0,0,.25)}
+.lu-ticks{display:flex;justify-content:space-between;font-size:10.5px;color:var(--t3);padding:0 2px}
+.lu-ticks span.on{color:var(--t1);font-weight:600}
+/* 按钮行 */
+.lu-btn{height:24px;padding:0 11px;border:0;border-radius:7px;background:var(--lu-sec);box-shadow:0 0 0 .5px var(--lu-bd),var(--lu-sh);font:inherit;font-size:12.5px;font-weight:500;color:var(--t1);cursor:pointer;white-space:nowrap}
+.lu-btn:hover{background:var(--lu-hov)}
+.lu-btn.k{background:var(--accent);color:#fff;box-shadow:none}
+.lu-btn.r{color:var(--danger)}
+.lu-big{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px;padding:8px}
+.lu-big button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;height:66px;border:0;border-radius:10px;background:var(--lu-hov);font:inherit;font-size:11px;color:var(--t2);cursor:pointer;transition:background .15s,box-shadow .2s}
+.lu-big button:hover{background:var(--lu-sel)}
+.lu-big button.on{background:var(--lu-sec);box-shadow:inset 0 0 0 1.5px var(--accent);color:var(--t1);font-weight:600}
+.lu-big button i{font-style:normal;font-size:20px;color:var(--t1);line-height:1}
+.lu-big button .pc{width:28px;height:28px;border-radius:50%;background:var(--p-bg);box-shadow:inset 0 0 0 .5px rgba(0,0,0,.2)}
+.lu-list>div{display:flex;align-items:center;gap:8px;height:32px;padding:0 10px;font-size:12.5px;cursor:grab}
+.lu-list>div+div{border-top:.5px solid var(--lu-bd)}
+.lu-list>div svg{width:12px;height:12px;color:var(--t3)}
+.lu-list>div em{margin-left:auto;font-style:normal;font-size:11px;color:var(--t3)}
+.lu-list>div.drag{background:var(--lu-sel)}
+/* 右边：会自己动的预览 */
+.lu-prev{position:relative;overflow:hidden;display:grid;place-items:center;transition:opacity .25s}
+.lu-win.noprev .lu-prev{opacity:0}
+.lu-stage{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .3s;pointer-events:none}
+.lu-stage.on{opacity:1;pointer-events:auto}
+.lu-pg{position:relative;width:330px;height:440px;box-sizing:border-box;padding:40px var(--lu-mg,34px) 0;border-radius:6px;background:var(--p-bg);color:var(--p-ink);font-family:var(--lu-font,var(--serif));box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 18px 44px rgba(0,0,0,.18);overflow:hidden;transition:background .5s,color .5s,padding .3s var(--e)}
+.lu-pg h4{margin:0 0 14px;text-align:center;font-size:15px;font-weight:600;letter-spacing:.16em}
+.lu-pg p{margin:0;font-size:var(--lu-fs,15px);line-height:var(--lu-lh,2);text-indent:var(--lu-ind,2em);text-align:justify;transition:font-size .3s var(--e),line-height .3s var(--e)}
+.lu-pg .no{position:absolute;left:0;right:0;bottom:14px;text-align:center;font-family:var(--sans);font-size:10px;color:var(--p-ink-2)}
+.lu-pg .hl{background:var(--p-hl);border-radius:2px;transition:background .25s}
+.lu-pg.en p{font-family:Georgia,serif;text-indent:0;font-size:14px;line-height:2.5;text-align:left}
+.lu-pg.en ruby rt{font-family:var(--sans);font-size:9px;color:var(--p-ink-2);transition:opacity .4s}
+.lu-pg.en ruby.off rt{opacity:0}
+.lu-pg.en ruby.ul{text-decoration:underline;text-underline-offset:4px}
+.lu-pg.en ruby.ul rt{opacity:0}
+.lu-pg.en ruby.ping{background:color-mix(in srgb,var(--accent) 18%,transparent);border-radius:3px}
+.lu-turn{position:absolute;inset:0;background:var(--p-bg);transform-origin:0 50%;box-shadow:-10px 0 30px rgba(0,0,0,.15)}
+.lu-turn.lr{animation:luTurn 1.1s var(--e) forwards}
+.lu-turn.ud{animation:luUp 1s var(--e) forwards;transform-origin:50% 0;box-shadow:0 -10px 30px rgba(0,0,0,.12)}
+@keyframes luTurn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes luUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.lu-chip{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;height:42px;padding:0 6px 0 8px;border-radius:21px;background:color-mix(in srgb,var(--card) 80%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 0 0 .5px var(--lu-bd),0 10px 30px rgba(0,0,0,.15);font-size:12px;white-space:nowrap}
+.lu-chip .av{width:28px;height:28px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:600;font-size:12px}
+.lu-chip .f-bars{margin-left:4px}
+.lu-chip .pp{width:30px;height:30px;border-radius:15px;background:var(--t1);color:var(--bg);display:grid;place-items:center}
+.lu-chip .pp svg{width:11px;height:11px}
+.lu-bub{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:330px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--card) 88%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 0 0 .5px var(--lu-bd),0 12px 32px rgba(0,0,0,.16);font-size:12.5px;line-height:1.7;min-height:60px;box-sizing:border-box}
+.lu-bub header{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);margin-bottom:4px}
+.lu-bub header .x-logo{width:14px;height:14px}
+.lu-bub header .x-logo svg{width:13px;height:13px}
+.lu-cap{position:absolute;left:0;right:0;top:18px;text-align:center;font-size:11px;color:var(--t2);letter-spacing:.04em}
+.lu-cap b{font-weight:600;color:var(--t1)}
+.lu-devs{display:flex;align-items:flex-end;gap:22px}
+.lu-devs>div{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;color:var(--t2)}
+.lu-devs .s{border-radius:9px;background:#1C1C1E;padding:5px;box-shadow:0 12px 26px rgba(0,0,0,.2)}
+.lu-devs .s>i{display:block;width:100%;height:100%;border-radius:5px;background:var(--p-bg);transition:background .4s}
+.lu-devs b{font-variant-numeric:tabular-nums;color:var(--t1);transition:color .3s}
+.lu-devs b.new{color:var(--accent)}
+.lu-ring{position:relative;width:220px;height:220px}
+.lu-ring svg{width:220px;height:220px;transform:rotate(-90deg)}
+.lu-ring circle{fill:none;stroke-width:18;transition:stroke-dasharray .7s var(--e),stroke-dashoffset .7s var(--e)}
+.lu-ring>div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.lu-ring>div b{font-size:40px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.lu-ring>div small{font-size:12px;color:var(--t2)}
+.lu-icon{width:120px;height:120px;border-radius:28px;background:linear-gradient(160deg,#F5F4ED,#E2DFD3);box-shadow:0 0 0 .5px rgba(0,0,0,.1),0 18px 40px rgba(0,0,0,.2);display:grid;place-items:center;font-family:var(--serif);font-size:56px;color:#1B365D}
+/* 窗口里的模态 */
+.lu-modal{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:opacity .2s}
+.lu-modal.on{opacity:1;pointer-events:auto}
+.lu-sheet{width:400px;padding:18px;border-radius:24px;background:color-mix(in srgb,var(--card) 90%,transparent);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);box-shadow:0 0 0 .5px var(--lu-bd),0 30px 80px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:12px;transform:scale(.96);transition:transform .3s var(--e)}
+.lu-modal.on .lu-sheet{transform:none}
+.lu-sheet h4{margin:0;font-size:15px;display:flex;align-items:center;gap:8px}
+.lu-sheet h4 .x-logo svg{width:18px;height:18px}
+.lu-sheet p{margin:0;font-size:12px;color:var(--t2);line-height:1.6}
+.lu-field{display:flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 12px;border-radius:12px;background:var(--lu-sec);box-shadow:0 0 0 .5px var(--lu-bd),0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent);font-family:var(--mono);font-size:13px;color:var(--t3)}
+.lu-field.v{color:var(--t1)}
+.lu-field span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.lu-st{font-size:12px;color:var(--t2);display:flex;align-items:center;gap:6px;min-height:18px}
+.lu-st.ok{color:var(--ok)}
+.lu-sheet .lu-foot{display:flex;justify-content:flex-end;gap:8px}
+.lu-sheet .lu-btn{height:28px;padding:0 14px}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -4617,7 +4766,7 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
   <header class="x-top">
     <p class="eyebrow">语阅 · Mac · 设置窗口</p>
     <h1>设置窗口重新整理</h1>
-    <p><b>11-03 第九版</b>：最上面“五个方案”是新的。<b>11-03 第八版</b>：最上面“海报墙”是新的。<b>11-03 第七版</b>：最上面“一页滚到底，预览跟着你走”是新的，下面有一张表比较几版做常用的事各要几步。<b>11-03 第六版</b>：最上面“设置就是一段话”是新的，先看它。<b>11-03 第五版</b>：最上面“第五版”是新的，只做一个方向、做细了，先看它。<b>11-03 第四版</b>：最上面“发散”五个方向是新的，先看它。<b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
+    <p><b>11-03 第十版</b>：最上面“照 Loop 的设置”是新的。<b>11-03 第九版</b>：最上面“五个方案”是新的。<b>11-03 第八版</b>：最上面“海报墙”是新的。<b>11-03 第七版</b>：最上面“一页滚到底，预览跟着你走”是新的，下面有一张表比较几版做常用的事各要几步。<b>11-03 第六版</b>：最上面“设置就是一段话”是新的，先看它。<b>11-03 第五版</b>：最上面“第五版”是新的，只做一个方向、做细了，先看它。<b>11-03 第四版</b>：最上面“发散”五个方向是新的，先看它。<b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
     <p>十页挨个过了一遍。窗口外框、顶上的分页、开关、分段、滑杆这些控件<b>不动</b>，照 prototype-v0.29；按钮还是系统按钮（上次换成带图标、带下划线的样式被撤回过）。改的是<b>每页里放什么、怎么排、说明怎么写</b>。每页可以在“现在”和“改后”之间切；编号对着右边的说明，红的是问题，蓝的是改法。</p>
   </header>
   <div class="x-bar">
@@ -4627,6 +4776,14 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
     <label><input type="checkbox" id="vNums" checked>显示编号</label>
     <nav class="x-idx" id="idx"></nav>
   </div>
+  <section id="v10">
+    <h2 class="x-h">第十版：照 Loop 的设置 <span class="y-rec">11-03</span></h2>
+    <p class="y-cap2">看了 Loop 的源码（它用作者自己的 Luminare 框架）：三栏、半透明的窗口——左边分组侧栏，每样一个彩色小方块；中间窄窄一列，设置放在圆角的分组里，一行一样，开关、菜单、滑杆都很小很齐；右边一大块是<b>自己会动的预览</b>，每隔一秒演给你看；要填东西（Key）时在窗口里弹一张圆角卡。语阅照这个来，侧栏带一点你觉得有趣的“目录”味道：分组是“一 书页、二 听……”，右边写着页码。</p>
+    <div class="x-stage" style="margin-top:14px"><div id="luRoot"></div></div>
+    <div class="m9-why" style="max-width:1100px"><div><b>右边一直在演</b>纸：白天和夜里自己来回换；翻页：每两秒翻一页，换成“上下滚”就往上推；声音：书在念，亮的那句跟着语速走；外文：标出来的词一个个亮一下，拖级别就少几个；书伴：连上以后它对选中的那句自己打字回答；同步：Mac 上翻一页，另两台跟上。</div>
+      <div><b>中间又小又齐</b>每样只占一行（34 高）：开关在右、菜单在右、滑杆名字和数字一行、滑杆一行。说明只在分组下面一行灰字。右上角的按钮能把预览收起来，窗口变窄。</div>
+      <div><b>可以试</b>点左边每一项；拖字号、行距；纸换“夜间纸本”；翻页换“上下滚”、动画拖到“快”；声音换“美佳”（会真的念）；外文拖级别；书伴点“粘贴 Key…”，弹卡里点“粘贴”、完成；存储点“清掉”，圆环变短；外文的词典能拖着排。</div></div>
+  </section>
   <section id="v9">
     <h2 class="x-h">第九版：五个方案 <span class="y-rec">11-03</span></h2>
     <p class="y-cap2">五个方案，思路各不一样，每个都做到能玩：点上面的卡片切换。A、B、E 是在读书窗口上直接改（书在后面跟着变），C、D 是一个新的设置窗口。下面写着每个的想法、好在哪、代价是什么。选一个，或者说哪个的哪部分要；都不行，就不改了。</p>
@@ -6227,6 +6384,126 @@ PAGES.push({id:'data',name:'数据',
   [].forEach.call(document.querySelectorAll('#m9Gal button'),function(b){b.onclick=function(){show(b.dataset.m);};});
   var hv=(location.hash.match(/^#v9-([a-z]+)/)||[])[1];show(hv&&M[hv]?hv:'cc');var hx=(location.hash.match(/^#v9-\w+-(\w+)/)||[])[1];if(hx)setTimeout(function(){var W=root.querySelector('#m9W');if(hx==='open')W.querySelector('.m9-card').click();if(hx==='go')W.querySelector('[data-go]').click();if(hx==='go2'){W.querySelector('[data-go]').click();}},300);
   var idx=document.getElementById('idx');var a=document.createElement('a');a.href='#v9';a.textContent='第九版 · 五个方案';idx.insertBefore(a,idx.firstChild);
+})();
+/* ===== 2026-11-03 第十版：照 Loop 的设置窗口（Luminare）——左边分组侧栏，中间窄窄一列分组设置，右边一大块自己会动的预览 ===== */
+(function(){
+  var root=document.getElementById('luRoot');if(!root)return;
+  var PAP=[['paper-kami','纸本'],['paper-plain','白纸'],['paper-kaminight','夜间纸本'],['paper-dark','黑底'],['paper-eink','墨水屏']];
+  var FON=[['宋体',"var(--serif)"],['黑体','var(--sans)'],['楷体',"'Kaiti SC',STKaiti,KaiTi,serif"]];
+  var VO={'婷婷':['婷','#B5654A','Tingting','zh-CN'],'美佳':['美','#7A8F5C','Meijia','zh-TW'],'Nova':['N','#2B4C7E','','zh-CN'],'Ava':['A','#3F7D7A','Ava','en-US'],'Zoe':['Z','#A0703C','Zoe','en-US']};
+  var TX=['我与父亲不相见已二年余了，','我最不能忘记的是他的背影。','那年冬天，','祖母死了，','父亲的差使也交卸了，','正是祸不单行的日子。','我从北京到徐州，','打算跟着父亲奔丧回家。','到徐州见着父亲，','看见满院狼藉的东西，','又想起祖母，','不禁簌簌地流下眼泪。'];
+  var EN=[['It is a truth ',0],['universally','普遍地',3],[' ',0],['acknowledged','公认的',2],[', that a single man in ',0],['possession','拥有',1],[' of a good ',0],['fortune','财产',1],[', must be in want of a wife. However little known the feelings of such a man on his first entering a ',0],['neighbourhood','街坊',1],[', he is considered the ',0],['rightful','理所应当的',4],[' ',0],['property','所有物',3],[' of some one or other of their daughters.',0]];
+  var S={font:0,fs:15,lh:2.0,mg:34,ind:true,just:true,paper:0,nightAuto:true,nightAt:'22:00',nightPaper:2,turn:'左右翻',anim:'顺滑',edge:true,zh:'婷婷',en:'Ava',speed:1.2,dlg:true,sleep:'30 分钟',foot:true,awake:true,gloss:true,lv:1,gm:'写中文',ai:'Claude',conn:false,tip:true,quiet:true,azure:false,icloud:true,gb:3.2,cA:false,cV:false,bk:'每天',look:'跟随系统',open:false,menubar:true};
+  var GROUPS=[['一','书页',[['type','字','#4F7FD7','<b>字</b>','3'],['paper','纸','#E9905F','i-sun','5'],['turn','翻页','#76B847','i-pages','7']]],
+    ['二','听',[['voice','声音','#E96761','i-ear','9'],['listen','听书','#D9A94F','i-headset','11']]],
+    ['三','帮手',[['fl','外文','#45A9E6','i-trans','13'],['ai','书伴','#C9825F','i-spark','15']]],
+    ['四','语阅',[['sync','同步','#6F75E8','i-sync','17'],['store','存储与备份','#8F7ED8','i-disk','19'],['gen','通用','#8A8A8A','i-sliders','21'],['about','关于','#9A9A9A','i-info','23']]]];
+  var TAB={};GROUPS.forEach(function(g){g[2].forEach(function(t){TAB[t[0]]=t;});});
+  var IC=function(t){return '<span class="ic" style="background:linear-gradient('+t[2]+','+t[2]+'cc)">'+(t[3].charAt(0)==='<'?t[3]:I(t[3]))+'</span>';};
+
+  /* 小零件：照 Luminare 的 Section / Toggle / PickerMenu / SliderPicker / Button */
+  var SEC=function(title,rows,note){return '<div class="lu-sec">'+(title?'<p>'+title+'</p>':'')+'<div class="lu-box">'+rows+'</div>'+(note?'<p class="lu-note">'+note+'</p>':'')+'</div>';};
+  var TG=function(k,lab,sub){return '<div class="lu-row"><span>'+lab+(sub?'<small>'+sub+'</small>':'')+'</span><span class="lu-sw'+(S[k]?' on':'')+'" data-k="'+k+'"></span></div>';};
+  var PK=function(k,lab,opts,notes){return '<div class="lu-row"><span>'+lab+'</span><span class="lu-pop" data-pop="'+k+'"><b style="font-weight:400" data-v>'+S[k]+'</b>'+I('i-updown')+'<span class="lu-menu">'+opts.map(function(o,i){return '<div data-o="'+o+'"><b>'+(o===S[k]?'✓':'')+'</b>'+o+(notes&&notes[i]?'<small>'+notes[i]+'</small>':'')+'</div>';}).join('')+'</span></span></div>';};
+  var SL=function(k,lab,min,max,step,fmt,ticks){return '<div class="lu-sl"><div><span>'+lab+'</span><code data-o="'+k+'">'+fmt(S[k])+'</code></div><input class="lu-rng" type="range" data-r="'+k+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+S[k]+'">'+(ticks?'<div class="lu-ticks">'+ticks.map(function(t,i){return '<span'+(i===S[k]?' class="on"':'')+'>'+t+'</span>';}).join('')+'</div>':'')+'</div>';};
+  var BT=function(lab,btn,id,sub,cls){return '<div class="lu-row"><span>'+lab+(sub?'<small>'+sub+'</small>':'')+'</span><button class="lu-btn '+(cls||'')+'" id="'+id+'">'+btn+'</button></div>';};
+  var f1=function(v){return (+v).toFixed(1);},fi=function(v){return v;};
+
+  var FORM={
+    type:function(){return SEC('','<div class="lu-big" data-big="font">'+FON.map(function(f,i){return '<button data-i="'+i+'"'+(i===S.font?' class="on"':'')+'><i style="font-family:'+f[1]+'">永</i>'+f[0]+'</button>';}).join('')+'</div>')+
+      SEC('大小',SL('fs','字号',12,22,1,fi)+SL('lh','行距',1.5,2.6,.1,f1)+SL('mg','页边',20,56,2,fi))+
+      SEC('段落',TG('ind','每段开头空两格')+TG('just','两端对齐','中文排得整齐，英文可能有大空格'),'改的是所有书。某一本想不一样，在那本书的 Aa 里改。');},
+    paper:function(){return SEC('','<div class="lu-big" data-big="paper">'+PAP.map(function(p,i){return '<button data-i="'+i+'"'+(i===S.paper?' class="on"':'')+'><span class="pc '+p[0]+'"></span>'+p[1]+'</button>';}).join('')+'</div>')+
+      SEC('夜里',TG('nightAuto','到点自动换夜里的纸')+PK('nightAt','从几点起',['21:00','22:00','23:00','日落']).replace('lu-row','lu-row" data-dep="nightAuto')+PK('nightPaper2','夜里用',['夜间纸本','黑底']).replace('lu-row','lu-row" data-dep="nightAuto'),'右边每隔一会儿在白天和夜里之间换一次，给你看两种样子。');},
+    turn:function(){return SEC('翻页',PK('turn','方式',['左右翻','上下滚'],['像书一样','像网页一样'])+SL('animI','动画','0','2','1',function(v){return ['立即','快','顺滑'][v];},['立即','快','顺滑'])+TG('edge','点屏幕左右两边翻页'))+
+      SEC('键盘',BT('翻页键','空格、方向键','luKeys','也能用 PageDown'),'');},
+    voice:function(){return SEC('谁来念',PK('zh','中文书',['婷婷','美佳','Nova'],['本机 · 高级','本机 · 高级','OpenAI'])+PK('en','英文书',['Ava','Zoe'],['本机 · 高级','本机 · 高级']))+
+      SEC('',SL('speed','语速',.6,2,.1,function(v){return f1(v)+'×';})+TG('dlg','小说里的对话换一个声音念'))+
+      SEC('云端声音',BT('微软 Azure',S.azure?'已连上':'粘贴 Key…','luAz',S.azure?'多了 214 个声音':'中文声音最多，有免费额度'),'Key 只存在这台 Mac 的钥匙串里。');},
+    listen:function(){return SEC('',PK('sleep','睡眠定时',['不定时','15 分钟','30 分钟','这一章完'])+TG('foot','跳过脚注和图注')+TG('awake','听书时 Mac 不睡着','合上盖子照样会停'))+SEC('有声书',TG('skipS','自动跳过开头的片头曲')+BT('听完的有声书','30 天后清掉','luHeard'));},
+    fl:function(){return SEC('难词注释',TG('gloss','在难词上写中文意思')+SL('lv','从哪一级起',0,3,1,function(v){return ['四级','六级','雅思','GRE'][v];},['四级','六级','雅思','GRE'])+PK('gm','怎么标',['写中文','划一道线']),'越往右，标出来的词越少。')+
+      SEC('点词时先查','<div class="lu-list" id="luDict"><div>'+I('i-grip')+'柯林斯双解<em>导入的</em></div><div>'+I('i-grip')+'牛津高阶<em>导入的</em></div><div>'+I('i-grip')+'系统词典<em>自带</em></div></div>'+BT('','导入 MDict…','luMd'),'拖着排先后。');},
+    ai:function(){return SEC('',PK('ai','谁来当书伴',['Claude','OpenAI','只用本机'],['要 Key','要 Key','不联网'])+BT('Key',S.conn?'已连上 · 换一个…':'粘贴 Key…','luKey',S.conn?'sk-ant-••••7Qw':'',S.conn?'':'k'))+
+      SEC('什么时候出来',TG('tip','读到难处时轻轻提一句')+TG('quiet','沉浸阅读时不打扰'));},
+    sync:function(){return SEC('',TG('icloud','用 iCloud 同步','三台都登同一个 Apple ID'))+SEC('同步什么',TG('sA','读到哪')+TG('sB','划线和笔记')+TG('sC','生词本')+TG('sD','这些设置'))+SEC('',BT('上次同步','现在同步','luSync','2 分钟前'));},
+    store:function(){return SEC('可以清掉的',BT('听完的有声书',S.cA?'清掉了':'清掉','luCA','3 本 · 1.4 GB · 划线和书签留着')+BT('念过的句子',S.cV?'清掉了':'清掉','luCV','0.5 GB · 再念时重新生成'))+
+      SEC('备份',PK('bk','自动备份',['每天','每周','不备份'])+BT('以前的备份','打开…','luOld'))+SEC('带走',BT('笔记和生词','导出…','luExp','Markdown、CSV')+BT('书库','在访达里显示','luFind','~/书库'));},
+    gen:function(){return SEC('',PK('look','外观',['浅色','深色','跟随系统'])+TG('open','打开语阅时接着读上次那本')+TG('menubar','菜单栏里放播放按钮'));},
+    about:function(){return SEC('',BT('语阅 1.0','检查更新','luUp','2026-11')+BT('写信给我们','发邮件…','luMail'))+SEC('',BT('隐私','书和 Key 都只在你的设备上','luPriv'));}};
+  S.nightPaper2=PAP[S.nightPaper][1];S.animI=2;S.sA=S.sB=S.sC=true;S.sD=false;S.skipS=true;
+
+  /* 右边的预览：几种舞台，按左边选的切换 */
+  var PARA=function(){return '<p>'+TX.slice(0,2).map(function(s,i){return '<span data-ph="'+i+'">'+s+'</span>';}).join('')+'</p><p>'+TX.slice(2).map(function(s,i){return '<span data-ph="'+(i+2)+'">'+s+'</span>';}).join('')+'</p>';};
+  var STG={page:'<div class="lu-cap" id="luCap"></div><div class="lu-pg" id="luPg"><h4>背　影</h4>'+PARA()+'<span class="no">— 3 —</span></div><div class="lu-chip" id="luChip" style="display:none"><span class="av" id="luAv"></span><span><b id="luVn"></b><br><small style="color:var(--t3)" id="luVs"></small></span><span class="f-bars">'+[10,18,14,20,12].map(function(h,i){return '<i style="height:'+h+'px;animation-delay:'+(i*-0.18)+'s"></i>';}).join('')+'</span><span class="pp">'+I('i-pausef')+'</span></div><div class="lu-bub" id="luBub" style="display:none"><header>'+LOGO(CLAUDE)+'<span id="luBubH"></span></header><div id="luBubT"></div></div>',
+    en:'<div class="lu-cap">比 <b id="luLvC">六级</b> 难的词会这样标</div><div class="lu-pg en" id="luEn"><h4 style="font-family:var(--serif)">Chapter 1</h4><p>'+EN.map(function(w){return w[2]?'<ruby data-d="'+w[2]+'">'+w[0]+'<rt>'+w[1]+'</rt></ruby>':w[0];}).join('')+'</p><span class="no">— 1 —</span></div>',
+    sync:'<div class="lu-cap" id="luSyC">三台停在同一页</div><div class="lu-devs">'+[['iPhone',54,108,14],['这台 Mac',190,124,9],['iPad',92,120,11]].map(function(d){return '<div><span class="s" style="width:'+d[1]+'px;height:'+d[2]+'px;border-radius:'+d[3]+'px"><i class="lu-dp"></i></span>'+d[0]+'<b data-pct>42%</b></div>';}).join('')+'</div>',
+    store:'<div class="lu-ring"><svg viewBox="0 0 220 220"><circle cx="110" cy="110" r="90" stroke="var(--lu-hov)"/><circle id="luR1" cx="110" cy="110" r="90" stroke="#4F7FD7" stroke-dasharray="0 566"/><circle id="luR2" cx="110" cy="110" r="90" stroke="#E96761" stroke-dasharray="0 566"/><circle id="luR3" cx="110" cy="110" r="90" stroke="#76B847" stroke-dasharray="0 566"/></svg><div><b id="luGb">3.2</b><small>GB</small></div></div>',
+    gen:'<div class="f-mini lt" id="luMini" style="--m-acc:var(--accent);transform:scale(.72)"><aside><i class="on"></i><i></i><i></i><i></i></aside><main><b></b>'+['#B5654A','#3B4A6B','#7A8F5C','#6B5B95','#A0703C','#8A8682','#2B4C7E','#3F7D7A'].map(function(c){return '<i style="background:'+c+'"></i>';}).join('')+'</main></div>',
+    about:'<div style="display:flex;flex-direction:column;align-items:center;gap:14px"><div class="lu-icon">阅</div><b style="font-size:20px">语阅</b><small style="color:var(--t3)">好好读一本书</small></div>'};
+  var STAGE_OF={type:'page',paper:'page',turn:'page',voice:'page',listen:'page',ai:'page',fl:'en',sync:'sync',store:'store',gen:'gen',about:'about'};
+
+  root.innerHTML='<div class="lu-desk"><div class="lu-win" id="luW"><aside class="lu-side" id="luSide"><span class="v-lights"><i></i><i></i><i></i></span><i class="lu-selbg" id="luSel"></i>'+
+    GROUPS.map(function(g){return '<div class="lu-grp"><p><i>'+g[0]+'</i>'+g[1]+'</p>'+g[2].map(function(t){return '<div class="lu-tab" data-t="'+t[0]+'">'+IC(t)+t[1]+(t[0]==='ai'?'<span class="dot" id="luDot"></span>':'')+'<em>'+t[4]+'</em></div>';}).join('')+'</div>';}).join('')+'</aside>'+
+    '<div class="lu-pane"><div class="lu-head" id="luHead"></div><div class="lu-form" id="luForm"></div></div>'+
+    '<div class="lu-prev">'+Object.keys(STG).map(function(k){return '<div class="lu-stage" data-s="'+k+'">'+STG[k]+'</div>';}).join('')+'</div>'+
+    '<div class="lu-modal" id="luModal"><div class="lu-sheet" id="luSheet"></div></div></div></div>';
+  var W=document.getElementById('luW'),$=function(s){return W.querySelector(s);},$$=function(s){return [].slice.call(W.querySelectorAll(s));};
+  var cur=null,timer=null;
+
+  function applyPage(){var pg=$('#luPg');pg.style.setProperty('--lu-fs',S.fs+'px');pg.style.setProperty('--lu-lh',S.lh);pg.style.setProperty('--lu-mg',S.mg+'px');pg.style.setProperty('--lu-font',FON[S.font][1]);pg.style.setProperty('--lu-ind',S.ind?'2em':'0');
+    [pg,$('#luEn')].concat($$('.lu-dp')).forEach(function(e){PAP.forEach(function(p){e.classList.remove(p[0]);});e.classList.add(PAP[S.paper][0]);});}
+  function gloss(){$$('#luEn ruby').forEach(function(r){var d=+r.dataset.d;r.classList.toggle('off',!S.gloss||d<S.lv+1);r.classList.toggle('ul',S.gloss&&d>=S.lv+1&&S.gm==='划一道线');});var c=$('#luLvC');if(c)c.textContent=['四级','六级','雅思','GRE'][S.lv];}
+  function ring(){var tot=3.2,used=[1.1,S.cA?0:1.4,S.cV?0:.5],C=2*Math.PI*90,off=0;['#luR1','#luR2','#luR3'].forEach(function(id,i){var len=used[i]/4*C;$(id).setAttribute('stroke-dasharray',len+' '+C);$(id).setAttribute('stroke-dashoffset',-off);off+=len+(len?3:0);});
+    var gb=used.reduce(function(a,b){return a+b;},0)+.2;$('#luGb').textContent=gb.toFixed(1);}
+
+  /* 每一页右边自己动：像 Loop 每秒换一个动作给你看 */
+  function play(t){clearInterval(timer);clearTimeout(timer);var ph=$$('#luPg [data-ph]');ph.forEach(function(p){p.classList.remove('hl');});$('#luChip').style.display='none';$('#luBub').style.display='none';$('#luCap').textContent='';$$('.lu-turn').forEach(function(x){x.remove();});applyPage();
+    if(t==='paper'){var n=false;$('#luCap').innerHTML='白天 · <b>'+PAP[S.paper][1]+'</b>';if(S.nightAuto)timer=setInterval(function(){n=!n;var pg=$('#luPg');PAP.forEach(function(p){pg.classList.remove(p[0]);});pg.classList.add(PAP[n?S.nightPaper:S.paper][0]);$('#luCap').innerHTML=n?S.nightAt+' 以后 · <b>'+PAP[S.nightPaper][1]+'</b>':'白天 · <b>'+PAP[S.paper][1]+'</b>';},2200);}
+    if(t==='turn'){$('#luCap').innerHTML='<b>'+S.turn+'</b> · '+['立即','快','顺滑'][S.animI];var go=function(){var pg=$('#luPg'),o=document.createElement('div');o.className='lu-turn '+(S.turn==='左右翻'?'lr':'ud');o.innerHTML='<div style="padding:40px var(--lu-mg,34px) 0;box-sizing:border-box;height:100%"><p>'+TX.slice(6).join('')+TX.slice(0,4).join('')+'</p></div>';
+        o.style.animationDuration=[0.01,0.45,1.1][S.animI]+'s';pg.appendChild(o);setTimeout(function(){o.remove();},1500);};go();timer=setInterval(go,2200);}
+    if(t==='voice'){var v=VO[S.zh];$('#luChip').style.display='flex';$('#luAv').style.background=v[1];$('#luAv').textContent=v[0];$('#luVn').textContent=S.zh;$('#luVs').textContent='念给你听 · '+f1(S.speed)+'×';$('#luCap').innerHTML='正在念 · <b>'+S.zh+'</b>';var i=0;
+      var step=function(){ph.forEach(function(p,j){p.classList.toggle('hl',j===i%ph.length);});i++;};step();timer=setInterval(step,Math.round(1300/S.speed));}
+    if(t==='listen'){$('#luChip').style.display='flex';var v2=VO[S.zh];$('#luAv').style.background=v2[1];$('#luAv').textContent=v2[0];$('#luVn').textContent='睡眠定时';var sec=S.sleep==='15 分钟'?900:S.sleep==='30 分钟'?1800:0;
+      var tick=function(){$('#luVs').textContent=sec?Math.floor(sec/60)+':'+('0'+sec%60).slice(-2)+' 后停':(S.sleep==='这一章完'?'这一章念完就停':'不定时');if(sec)sec--;};tick();timer=setInterval(tick,1000);$('#luCap').innerHTML='听书 · <b>'+S.sleep+'</b>';}
+    if(t==='ai'){$('#luBub').style.display='block';ph.forEach(function(p,j){p.classList.toggle('hl',j===1);});
+      if(!S.conn){$('#luBubH').textContent='书伴';$('#luBubT').innerHTML='<span style="color:var(--t3)">还没连上。点左边的“粘贴 Key…”，就能问我书里的任何事。</span>';}
+      else{$('#luBubH').textContent=S.ai+' · 你选中了一句';var A='这是全文的“眼”。作者没写父亲长什么样，只写背影；后面买橘子那段，背影会再出现一次。',k=0;var ty=function(){k=0;var h=setInterval(function(){k++;$('#luBubT').textContent=A.slice(0,k);if(k>=A.length)clearInterval(h);},38);};ty();timer=setInterval(ty,6000);}}
+    if(t==='fl'){gloss();var rs=$$('#luEn ruby'),j=0;timer=setInterval(function(){var on=rs.filter(function(r){return !r.classList.contains('off')||r.classList.contains('ul');});rs.forEach(function(r){r.classList.remove('ping');});if(on.length){on[j%on.length].classList.add('ping');j++;}},1000);}
+    if(t==='sync'){var pc=$$('[data-pct]'),p=42;timer=setInterval(function(){if(!S.icloud)return;p++;pc[1].textContent=p+'%';pc[1].classList.add('new');setTimeout(function(){pc[0].textContent=pc[2].textContent=p+'%';pc.forEach(function(x){x.classList.remove('new');});},700);},2600);$('#luSyC').textContent=S.icloud?'三台停在同一页 · 你在 Mac 上翻，另外两台跟着走':'没开同步';}
+    if(t==='store')setTimeout(ring,60);
+    if(t==='gen')$('#luMini').className='f-mini '+(S.look==='深色'?'dk':'lt');}
+
+  function head(t){var x=TAB[t];$('#luHead').innerHTML=IC(x)+'<h3>'+x[1]+'</h3><button id="luInsp" title="显示 / 收起预览">'+I('i-side')+'</button>';$('#luInsp').onclick=function(){W.classList.toggle('noprev');};}
+  function go(t,first){cur=t;head(t);var f=$('#luForm');f.innerHTML=FORM[t]();f.classList.remove('in');void f.offsetWidth;if(!first)f.classList.add('in');wire();
+    var el=$('.lu-tab[data-t="'+t+'"]');$('#luSel').style.top=el.offsetTop+'px';$$('.lu-stage').forEach(function(s){s.classList.toggle('on',s.dataset.s===STAGE_OF[t]);});deps();play(t);}
+  $$('.lu-tab').forEach(function(el){el.onclick=function(){go(el.dataset.t);};});
+  function deps(){$$('[data-dep]').forEach(function(r){r.style.opacity=S[r.dataset.dep]?1:.4;r.style.pointerEvents=S[r.dataset.dep]?'':'none';});}
+  function fill(r){r.style.setProperty('--p',((r.value-r.min)/(r.max-r.min)*100)+'%');}
+  function wire(){var F=$('#luForm');
+    [].forEach.call(F.querySelectorAll('.lu-sw'),function(s){s.onclick=function(){var k=s.dataset.k;S[k]=!S[k];s.classList.toggle('on',S[k]);deps();if(['ind','nightAuto','gloss','icloud'].indexOf(k)>=0)play(cur);if(k==='ind')applyPage();};});
+    [].forEach.call(F.querySelectorAll('.lu-pop'),function(p){var m=p.querySelector('.lu-menu');p.onclick=function(e){e.stopPropagation();var o=e.target.closest('[data-o]');if(o){var k=p.dataset.pop,v=o.dataset.o;S[k]=v;p.querySelector('[data-v]').textContent=v;[].forEach.call(m.querySelectorAll('[data-o]'),function(x){x.querySelector('b').textContent=x.dataset.o===v?'✓':'';});m.classList.remove('on');
+          if(k==='nightPaper2')S.nightPaper=v==='黑底'?3:2;if(k==='zh'||k==='en')say(VO[v]);play(cur);return;}
+        $$('.lu-menu.on').forEach(function(x){if(x!==m)x.classList.remove('on');});m.classList.toggle('on');};});
+    [].forEach.call(F.querySelectorAll('.lu-rng'),function(r){fill(r);r.oninput=function(){fill(r);var k=r.dataset.r,v=+r.value;S[k]=v;var o=F.querySelector('[data-o="'+k+'"]');
+      o.textContent=k==='lh'?f1(v):k==='speed'?f1(v)+'×':k==='lv'?['四级','六级','雅思','GRE'][v]:k==='animI'?['立即','快','顺滑'][v]:v;
+      var tk=r.parentNode.querySelectorAll('.lu-ticks span');[].forEach.call(tk,function(s,i){s.classList.toggle('on',i===v);});
+      if(['fs','lh','mg'].indexOf(k)>=0)applyPage();if(k==='lv')gloss();};r.onchange=function(){if(['speed','animI','lv'].indexOf(r.dataset.r)>=0)play(cur);if(r.dataset.r==='speed')say(VO[S.zh]);};});
+    [].forEach.call(F.querySelectorAll('[data-big]'),function(g){[].forEach.call(g.querySelectorAll('button'),function(b){b.onclick=function(){[].forEach.call(g.querySelectorAll('button'),function(x){x.classList.toggle('on',x===b);});S[g.dataset.big]=+b.dataset.i;applyPage();play(cur);};});});
+    var k=F.querySelector('#luKey');if(k)k.onclick=function(){modal('ai');};var az=F.querySelector('#luAz');if(az)az.onclick=function(){if(!S.azure)modal('az');};
+    var sy=F.querySelector('#luSync');if(sy)sy.onclick=function(){sy.textContent='同步中…';setTimeout(function(){sy.textContent='现在同步';sy.parentNode.querySelector('small').textContent='刚刚';},900);};
+    ['CA','CV'].forEach(function(x){var b=F.querySelector('#lu'+x);if(b)b.onclick=function(){if(S['c'+x.charAt(1)])return;S['c'+x.charAt(1)]=true;b.textContent='清掉了';ring();};});
+    var dl=F.querySelector('#luDict');if(dl){var drag=null;[].forEach.call(dl.children,function(r){r.draggable=true;r.ondragstart=function(){drag=r;r.classList.add('drag');};r.ondragend=function(){r.classList.remove('drag');};r.ondragover=function(e){e.preventDefault();if(drag&&drag!==r){var a=[].indexOf.call(dl.children,drag),b=[].indexOf.call(dl.children,r);dl.insertBefore(drag,a<b?r.nextSibling:r);}};});}}
+  document.addEventListener('click',function(){$$('.lu-menu.on').forEach(function(x){x.classList.remove('on');});});
+  /* 粘 Key：在窗口里弹一张圆角卡（Luminare 的 modal） */
+  function modal(which){var ai=which==='ai';$('#luSheet').innerHTML='<h4>'+(ai?LOGO(CLAUDE)+'连接 '+S.ai:'连接微软 Azure')+'</h4><p>'+(ai?'把 Key 粘在下面，认出是哪家、自动核对。Key 只存在这台 Mac 的钥匙串里。':'粘“密钥 1”，区域会自己认出来。')+'</p>'+
+      '<div class="lu-field" id="luF"><span>'+(ai?'sk-ant-…':'密钥 1')+'</span><button class="lu-btn" id="luPaste">粘贴</button></div><div class="lu-st" id="luSt"></div><div class="lu-foot"><button class="lu-btn" id="luCancel">取消</button><button class="lu-btn k" id="luDone" disabled style="opacity:.5">完成</button></div>';
+    $('#luModal').classList.add('on');$('#luCancel').onclick=function(){$('#luModal').classList.remove('on');};
+    $('#luPaste').onclick=function(){$('#luF').classList.add('v');$('#luF span').textContent=ai?'sk-ant-api03-••••••••••7Qw':'••••••••••••a81c · eastasia';$('#luSt').innerHTML='<i class="f-spin"></i>认出是 '+(ai?'Claude':'Azure')+'，正在核对…';
+      setTimeout(function(){$('#luSt').className='lu-st ok';$('#luSt').textContent=ai?'✓ 连上了':'✓ 连上了 · 多了 214 个声音';var d=$('#luDone');d.disabled=false;d.style.opacity=1;d.onclick=function(){if(ai){S.conn=true;$('#luDot').style.display='none';}else S.azure=true;$('#luModal').classList.remove('on');go(cur);};},1000);};}
+  function say(v){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(v[3].indexOf('en')===0?'I can still remember the sight of his back.':TX.slice(0,2).join(''));u.lang=v[3];u.rate=Math.min(2,S.speed);var vs=speechSynthesis.getVoices(),h=vs.filter(function(x){return v[2]&&x.name.indexOf(v[2])===0;})[0]||vs.filter(function(x){return x.lang.replace('_','-').indexOf(v[3])===0;})[0];if(h)u.voice=h;speechSynthesis.speak(u);}catch(e){}}
+
+  var hv=(location.hash.match(/^#v10-(\w+)/)||[])[1];go(hv&&FORM[hv]?hv:'type',true);
+  var idx=document.getElementById('idx');var a=document.createElement('a');a.href='#v10';a.textContent='第十版 · 照 Loop';idx.insertBefore(a,idx.firstChild);
 })();
 </script>
 </body></html>
