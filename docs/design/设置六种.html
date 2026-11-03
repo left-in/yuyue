@@ -44,102 +44,133 @@ body{margin:0;min-height:100vh;background:color-mix(in srgb,var(--bg) 70%,#d9d6c
 .sample{border-radius:6px;padding:18px 20px;font-family:var(--sf);font-size:var(--fs);line-height:var(--lh);background:var(--pb);color:var(--pi);transition:background-color .35s,color .35s}
 .sample h4{margin:0 0 8px;text-align:center;font-size:1.05em;letter-spacing:.3em;font-weight:600}
 .sample p{margin:0;text-indent:var(--ind);text-align:var(--ta)}
-/* ---------------- 1 书架同款 ---------------- */
-.v1{width:860px;height:580px;background:var(--desk)}
-.v1 .side{position:absolute;left:0;top:0;bottom:0;width:200px;padding:46px 10px 10px}
-.v1 .srch{display:flex;align-items:center;gap:7px;height:30px;padding:0 9px;border-radius:9px;background:var(--field);font-size:12px;color:var(--t2)}
-.v1 .srch kbd{margin-left:auto;font:10.5px var(--sans);color:var(--t3)}
-.v1 .gt{margin:0;padding:14px 8px 4px;font-size:10.5px;font-weight:600;color:var(--t3)}
-.v1 .it{display:flex;align-items:center;gap:8px;height:28px;padding:0 8px;border-radius:8px;font-size:12px;cursor:pointer}
-.v1 .it .ico{color:var(--t2)}
-.v1 .it.on{background:var(--wash);font-weight:600}.v1 .it.on .ico{color:var(--t1)}
-.v1 .it:not(.on):hover{background:color-mix(in srgb,var(--wash) 50%,transparent)}
-.v1 .paper{position:absolute;left:208px;top:8px;right:8px;bottom:8px;border-radius:12px;background:var(--bg);box-shadow:0 0 0 .5px rgba(0,0,0,.07),0 1px 3px rgba(51,46,41,.06),0 8px 24px rgba(51,46,41,.06);overflow:auto;padding:0 28px 28px}
-.v1 h2{margin:0;padding-top:26px;font-size:22px;font-weight:700}
-.v1 .sub{margin:4px 0 18px;font-size:12px;color:var(--t2)}
-.v1 .gl{margin:16px 4px 6px;font-size:11.5px;font-weight:600;color:var(--t2)}
-.v1 .box{padding:0 16px;border-radius:12px;background:var(--card);box-shadow:var(--zsh)}
-.v1 .sample{margin:0 0 4px;border-radius:12px;box-shadow:var(--zsh);max-height:148px;overflow:hidden}
-/* ---------------- 2 顶上一排标签 ---------------- */
-.v2{width:700px;background:var(--bg)}
-.v2 .bar{height:92px;background:color-mix(in srgb,var(--card) 55%,var(--bg));box-shadow:inset 0 -.5px 0 var(--line);position:relative}
-.v2 .bar h1{position:absolute;left:0;right:0;top:11px;margin:0;text-align:center;font-size:13px;font-weight:600}
-.v2 .tabs{position:absolute;left:0;right:0;top:36px;display:flex;justify-content:center;gap:2px}
-.v2 .tabs span{width:66px;height:48px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:var(--t2);cursor:pointer}
-.v2 .tabs .ico{width:19px;height:19px}
-.v2 .tabs span.on{background:var(--inset);color:var(--t1);font-weight:600}.v2 .tabs span.on .ico{color:var(--accent)}
-.v2 .body{padding:20px 40px 28px;display:flex;flex-direction:column;gap:12px}
-.v2 .box{padding:0 16px;border-radius:12px;background:var(--card);box-shadow:var(--zsh)}
-.v2 .gl{margin:4px 4px -6px;font-size:11.5px;font-weight:600;color:var(--t2)}
-.v2 .sample{max-height:120px;overflow:hidden;box-shadow:var(--zsh);border-radius:12px}
-/* ---------------- 3 一页滚到底 ---------------- */
-.v3{width:780px;height:600px;background:var(--bg)}
-.v3 .idx{position:absolute;left:0;top:0;bottom:0;width:170px;padding:54px 0 0 26px}
-.v3 .idx .srch{display:flex;align-items:center;gap:6px;width:128px;height:28px;margin-bottom:18px;padding:0 0 0 2px;border-bottom:.5px solid var(--line);font-size:12px;color:var(--t3)}
-.v3 .idx a{display:block;position:relative;padding:5px 0 5px 12px;font-size:12.5px;color:var(--t3);cursor:pointer;text-decoration:none;transition:color .2s}
-.v3 .idx a::before{content:"";position:absolute;left:0;top:7px;bottom:7px;width:2px;border-radius:1px;background:var(--accent);transform:scaleY(0);transition:transform .25s var(--e)}
-.v3 .idx a.on{color:var(--t1);font-weight:600}.v3 .idx a.on::before{transform:none}
-.v3 .scroll{position:absolute;left:170px;top:0;right:0;bottom:0;overflow:auto;padding:46px 40px 240px 20px;scroll-behavior:smooth}
-.v3 section{padding-bottom:30px}
-.v3 section h2{display:flex;align-items:baseline;gap:10px;margin:0 0 4px;font-size:19px;font-weight:700}
-.v3 section h2 small{font-size:12px;font-weight:400;color:var(--t3)}
-.v3 .sub{margin:0 0 10px;font-size:12px;color:var(--t2)}
-.v3 .box{border-top:.5px solid var(--line);border-bottom:.5px solid var(--line)}
-.v3 .sample{margin:10px 0 6px;max-height:140px;overflow:hidden}
-/* ---------------- 4 图标栏 + 样张在上 ---------------- */
-.v4{width:840px;height:600px;background:var(--bg)}
-.v4 .rail{position:absolute;left:0;top:0;bottom:0;width:76px;padding-top:50px;background:var(--desk);display:flex;flex-direction:column;align-items:center;gap:2px}
-.v4 .rail span{width:60px;height:50px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;color:var(--t2);cursor:pointer}
-.v4 .rail .ico{width:18px;height:18px}
-.v4 .rail span.on{background:var(--card);color:var(--t1);font-weight:600;box-shadow:var(--zsh)}.v4 .rail span.on .ico{color:var(--accent)}
-.v4 .main{position:absolute;left:76px;top:0;right:0;bottom:0;overflow:auto;padding:0 30px 30px}
-.v4 h2{margin:0;padding-top:24px;font-size:22px;font-weight:700}
-.v4 .sub{margin:4px 0 16px;font-size:12px;color:var(--t2)}
-.v4 .hero{height:170px;overflow:hidden;border-radius:14px;margin-bottom:16px;box-shadow:var(--zsh)}
-.v4 .hero .sample{height:100%;border-radius:14px;padding:22px 34px}
-.v4 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.v4 .cell{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:14px 16px;border-radius:12px;background:var(--card);box-shadow:var(--zsh)}
-.v4 .cell .lab b{font-weight:600;font-size:12.5px}
-.v4 .cell.wide{grid-column:1/-1}
-/* ---------------- 5 先看总览，再点进去 ---------------- */
-.v5{width:760px;height:580px;background:var(--bg)}
-.v5 .pane{position:absolute;inset:0;padding:52px 32px 28px;overflow:auto;transition:transform .32s var(--e),opacity .25s}
-.v5 .home h2,.v5 .detail h2{margin:0 0 4px;font-size:22px;font-weight:700}
-.v5 .home .sub{margin:0 0 18px;font-size:12px;color:var(--t2)}
-.v5 .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.v5 .tile{display:flex;flex-direction:column;gap:8px;min-height:104px;padding:14px 16px;border-radius:14px;background:var(--card);box-shadow:var(--zsh);cursor:pointer;transition:transform .15s}
-.v5 .tile:hover{transform:translateY(-1px)}.v5 .tile:active{transform:scale(.98)}
-.v5 .tile .ico{width:18px;height:18px;color:var(--accent)}
-.v5 .tile b{font-size:13.5px}
-.v5 .tile small{margin-top:auto;font-size:12px;line-height:1.45;color:var(--t2)}
-.v5 .tile.big{grid-column:span 2;flex-direction:row;align-items:stretch;gap:16px}
-.v5 .tile.big .sample{flex:1;max-height:118px;overflow:hidden;padding:12px 16px}
-.v5 .tile.big>div{display:flex;flex-direction:column;gap:8px;width:120px}
-.v5 .detail{transform:translateX(100%);opacity:0;pointer-events:none}
-.v5.open .home{transform:translateX(-24%);opacity:0;pointer-events:none}
-.v5.open .detail{transform:none;opacity:1;pointer-events:auto}
-.v5 .back{display:inline-flex;align-items:center;gap:2px;margin:0 0 10px -4px;padding:2px 4px;border:0;background:none;font:13px var(--sans);color:var(--accent);cursor:pointer}
-.v5 .box{padding:0 16px;border-radius:12px;background:var(--card);box-shadow:var(--zsh)}
-.v5 .gl{margin:14px 4px 6px;font-size:11.5px;font-weight:600;color:var(--t2)}
-.v5 .detail .sample{margin:10px 0 4px;max-height:130px;overflow:hidden;box-shadow:var(--zsh);border-radius:12px}
-/* ---------------- 6 在书旁边改 ---------------- */
-.v6{width:900px;height:600px;background:var(--desk)}
-.v6 .book{position:absolute;left:8px;top:8px;bottom:8px;width:540px;border-radius:12px;overflow:hidden;box-shadow:0 0 0 .5px rgba(0,0,0,.07),0 8px 24px rgba(51,46,41,.08)}
-.v6 .book .sample{height:100%;border-radius:12px;padding:70px 56px}
-.v6 .book .no{position:absolute;left:0;right:0;bottom:18px;text-align:center;font-size:10.5px;color:var(--pi);opacity:.5}
-.v6 .insp{position:absolute;left:556px;top:0;right:0;bottom:0;padding:16px 18px 16px 10px;display:flex;flex-direction:column}
-.v6 .insp .seg{align-self:stretch;display:flex}.v6 .insp .seg button{flex:1;height:26px;font-size:12px}
-.v6 .insp .scroll{flex:1;overflow:auto;margin-top:12px}
-.v6 .gl{margin:14px 2px 6px;font-size:11px;font-weight:600;color:var(--t3)}
-.v6 .gl:first-child{margin-top:0}
-.v6 .box{padding:0 14px;border-radius:12px;background:var(--card);box-shadow:var(--zsh)}
-.v6 .box .sl input{width:110px}
-.v6 .more{display:flex;align-items:center;justify-content:space-between;height:36px;margin-top:10px;padding:0 12px;border-radius:10px;background:var(--wash);font-size:12.5px;cursor:pointer}
-.v6 .sheet{position:absolute;inset:0;background:rgba(0,0,0,.18);display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .2s}
-.v6.sh .sheet{opacity:1;pointer-events:auto}
-.v6 .sheet>div{width:440px;max-height:480px;overflow:auto;padding:20px 22px;border-radius:14px;background:var(--bg);box-shadow:0 20px 60px rgba(0,0,0,.25);transform:scale(.97);transition:transform .25s var(--e)}
-.v6.sh .sheet>div{transform:none}
-.v6 .sheet h3{display:flex;justify-content:space-between;align-items:center;margin:0 0 6px;font-size:16px}
+/* ---------------- 1 在书上直接改 ---------------- */
+.w1{width:900px;height:620px;background:var(--desk)}
+.w1 .tbar{position:absolute;left:84px;top:13px;font-size:13px;font-weight:600}
+.w1 .pg{position:absolute;left:112px;top:66px;width:400px;height:520px;border-radius:4px;box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04),0 18px 40px rgba(51,46,41,.14);overflow:visible}
+.w1 .pg .sample{position:absolute;inset:0;padding:54px var(--mg) 0;border-radius:4px;overflow:hidden}
+.w1 .pg .no{position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:10.5px;color:var(--pi);opacity:.5}
+.w1 .hd{position:absolute;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--t2);white-space:nowrap;user-select:none}
+.w1 .grip{width:16px;height:30px;border-radius:5px;background:var(--card);box-shadow:var(--zsh);display:grid;place-items:center;cursor:ew-resize;color:var(--t3);font-size:10px}
+.w1 .grip.v{width:30px;height:16px;cursor:ns-resize}
+.w1 .guide{position:absolute;top:40px;bottom:40px;width:0;border-left:1px dashed color-mix(in srgb,var(--accent) 45%,transparent);pointer-events:none}
+.w1 .papers{position:absolute;left:112px;top:40px;display:flex;gap:6px}
+.w1 .papers i{width:18px;height:18px;border-radius:50%;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.2);cursor:pointer}
+.w1 .papers i.on{box-shadow:0 0 0 2px var(--desk),0 0 0 3.5px var(--accent)}
+.w1 .fonts{position:absolute;left:112px;top:596px}
+.w1 .knobs{position:absolute;left:24px;top:110px;width:70px;display:flex;flex-direction:column;align-items:center;gap:26px}
+.w1 .knobs>span{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:10.5px;color:var(--t3);text-align:center;line-height:1.3}
+.w1 .knobs b{color:var(--t1);font-size:13px;font-variant-numeric:tabular-nums}
+.w1 .tip{position:absolute;left:520px;top:66px;width:0}
+.w1 .side{position:absolute;left:548px;top:52px;right:20px;bottom:20px;overflow:auto;padding:4px 4px 0}
+.w1 .side h3{margin:0 0 10px;font-size:12px;font-weight:600;color:var(--t3)}
+.w1 .acc{border-radius:12px;background:var(--card);box-shadow:var(--zsh);margin-bottom:8px;padding:0 14px}
+.w1 .acc>b{display:flex;align-items:center;gap:8px;height:42px;font-size:13px;cursor:pointer}
+.w1 .acc>b small{margin-left:auto;font-weight:400;font-size:11.5px;color:var(--t3)}
+.w1 .acc>b .ico{color:var(--t2)}
+.w1 .acc .row{min-height:40px}
+.w1 .acc .sl input{width:110px}
+.w1 .acc .seg button{padding:0 7px}
+/* ---------------- 2 读书方式 ---------------- */
+.w2{width:900px;height:620px;background:var(--bg)}
+.w2 .in{position:absolute;inset:0;overflow:auto;padding:50px 34px 26px}
+.w2 h2{margin:0;font-size:22px;font-weight:700}
+.w2 .sub{margin:4px 0 18px;font-size:12px;color:var(--t2)}
+.w2 .modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.w2 .mode{position:relative;display:flex;flex-direction:column;gap:10px;padding:10px;border-radius:16px;background:var(--card);box-shadow:var(--zsh);cursor:pointer;transition:transform .2s var(--e),box-shadow .2s}
+.w2 .mode:hover{transform:translateY(-2px)}
+.w2 .mode.on{box-shadow:0 0 0 2px var(--accent),var(--zsh)}
+.w2 .mode .mini{height:104px;border-radius:9px;padding:12px 14px;font:11px/1.9 var(--serif);overflow:hidden}
+.w2 .mode .mini b{display:block;text-align:center;letter-spacing:.2em;margin-bottom:2px}
+.w2 .mode>div:last-child{padding:0 4px 4px}
+.w2 .mode strong{display:block;font-size:13.5px}
+.w2 .mode small{display:block;margin-top:2px;font-size:11px;color:var(--t3)}
+.w2 .mode .when{position:absolute;right:16px;top:16px;padding:2px 7px;border-radius:9px;background:rgba(0,0,0,.35);color:#fff;font-size:10px}
+.w2 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:18px}
+.w2 .gl{margin:0 4px 6px;font-size:11.5px;font-weight:600;color:var(--t2)}
+.w2 .box{padding:0 16px;border-radius:12px;background:var(--card);box-shadow:var(--zsh)}
+.w2 .box .sl input{width:120px}
+.w2 .foot{display:flex;gap:18px;margin-top:20px;padding-top:14px;border-top:.5px solid var(--line);font-size:12px;color:var(--t2)}
+.w2 .foot a{display:flex;align-items:center;gap:5px;cursor:pointer}
+/* ---------------- 3 一次阅读 ---------------- */
+.w3{width:1040px;height:600px;background:var(--bg)}
+.w3 .in{position:absolute;inset:0;padding:50px 28px 24px;display:flex;flex-direction:column}
+.w3 h2{margin:0;font-size:22px;font-weight:700}
+.w3 .sub{margin:4px 0 22px;font-size:12px;color:var(--t2)}
+.w3 .line{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;flex:1;min-height:0}
+.w3 .st{display:flex;flex-direction:column;min-height:0}
+.w3 .st header{position:relative;display:flex;align-items:center;gap:8px;padding-bottom:12px;font-size:13.5px;font-weight:700}
+.w3 .st header i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;font:600 11px var(--sans);font-style:normal;flex:none;z-index:1}
+.w3 .st header::after{content:"";position:absolute;left:22px;right:-12px;top:11px;height:1px;background:color-mix(in srgb,var(--accent) 30%,transparent)}
+.w3 .st:last-child header::after{display:none}
+.w3 .st header small{font-weight:400;font-size:11px;color:var(--t3)}
+.w3 .col{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.w3 .it{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:12px;background:var(--card);box-shadow:var(--zsh)}
+.w3 .it .lab b{font-size:12.5px}
+.w3 .it.inl{flex-direction:row;align-items:center}
+.w3 .it .sl input{width:100%}.w3 .it .sl{width:100%}
+.w3 .it .seg{align-self:flex-start;flex-wrap:wrap}
+.w3 .it .seg button{padding:0 7px}
+.w3 .it .pp{gap:4px}.w3 .it .pp i{width:26px;height:22px;font-size:11px}
+/* ---------------- 4 只看改过的 ---------------- */
+.w4{width:640px;min-height:480px;background:var(--bg)}
+.w4 .in{padding:56px 40px 30px}
+.w4 h2{margin:0;font-size:34px;font-weight:300;letter-spacing:-.01em}
+.w4 h2 b{font-weight:700}
+.w4 .sub{margin:6px 0 22px;font-size:12.5px;color:var(--t2)}
+.w4 .box{padding:0 16px;border-radius:12px;background:var(--card);box-shadow:var(--zsh)}
+.w4 .row .lab small a{color:var(--accent);cursor:pointer}
+.w4 .row.fresh{animation:w4in .35s var(--e)}
+@keyframes w4in{from{opacity:0;transform:translateY(-4px)}}
+.w4 .empty{padding:26px 0;text-align:center;font-size:12.5px;color:var(--t3)}
+.w4 .ask{position:relative;margin-top:16px}
+.w4 .ask label{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:12px;background:var(--card);box-shadow:var(--zsh);font-size:13px;color:var(--t3)}
+.w4 .ask input{flex:1;border:0;outline:0;background:none;font:inherit;color:var(--t1)}
+.w4 .sugg{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.w4 .sugg span{height:26px;padding:0 10px;border-radius:13px;background:var(--inset);display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--t2);cursor:pointer}
+.w4 .sugg span:hover{color:var(--t1)}
+.w4 .sugg .ico{width:12px;height:12px}
+.w4 .ver{display:flex;align-items:center;gap:10px;margin-top:26px;font-size:11px;color:var(--t3)}
+.w4 .ver img{width:22px;height:22px;border-radius:5px}
+/* ---------------- 5 问一句 ---------------- */
+.w5{width:880px;height:600px;background:var(--bg)}
+.w5 .l{position:absolute;left:0;top:0;bottom:0;width:520px;padding:90px 44px 30px;display:flex;flex-direction:column}
+.w5 h2{margin:0 0 16px;font-size:26px;font-weight:700}
+.w5 form{display:flex;align-items:center;gap:10px;height:48px;padding:0 8px 0 16px;border-radius:14px;background:var(--card);box-shadow:0 0 0 .5px var(--line),0 8px 24px rgba(51,46,41,.08)}
+.w5 form input{flex:1;border:0;outline:0;background:none;font:15px var(--sans);color:var(--t1)}
+.w5 form button{height:32px;padding:0 14px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:600 12.5px var(--sans);cursor:pointer}
+.w5 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.w5 .chips span{height:28px;padding:0 12px;border-radius:14px;background:var(--inset);display:flex;align-items:center;font-size:12px;color:var(--t2);cursor:pointer}
+.w5 .chips span:hover{background:var(--accent-soft);color:var(--accent)}
+.w5 .say{min-height:20px;margin:12px 2px 0;font-size:12px;color:var(--t3)}
+.w5 .log{flex:1;overflow:auto;margin-top:16px;border-top:.5px solid var(--line)}
+.w5 .log div{display:flex;align-items:center;gap:10px;height:40px;border-bottom:.5px solid var(--line);font-size:12.5px;animation:w4in .3s var(--e)}
+.w5 .log div em{font-style:normal;color:var(--t3);font-size:11.5px}
+.w5 .log div a{margin-left:auto;font-size:11.5px;color:var(--accent);cursor:pointer}
+.w5 .log p{margin:14px 0;font-size:11.5px;color:var(--t3)}
+.w5 .r{position:absolute;left:520px;top:0;right:0;bottom:0;background:var(--desk);padding:56px 34px 30px}
+.w5 .r .sample{height:420px;overflow:hidden;border-radius:4px;padding:34px var(--mg);box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 14px 30px rgba(51,46,41,.12)}
+.w5 .r .now{margin-top:14px;font-size:11.5px;line-height:1.7;color:var(--t2)}
+.w5 .r .now a{color:var(--accent);cursor:pointer}
+/* ---------------- 6 书口索引 ---------------- */
+.w6{width:880px;height:620px;background:var(--desk)}
+.w6 .bk{position:absolute;left:70px;top:44px;width:640px;bottom:30px;border-radius:3px 6px 6px 3px;box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04),0 20px 44px rgba(51,46,41,.14)}
+.w6 .bk::after{content:"";position:absolute;top:2px;bottom:2px;right:-5px;width:5px;border-radius:0 3px 3px 0;background:repeating-linear-gradient(0deg,color-mix(in srgb,var(--pi) 18%,var(--pb)) 0 1px,var(--pb) 1px 2.5px)}
+.w6 .bk>.sample{position:absolute;inset:0;border-radius:3px 6px 6px 3px;padding:48px 56px;overflow:auto}
+.w6 .bk h1{margin:0 0 4px;font:600 22px var(--serif);letter-spacing:.2em;text-align:center}
+.w6 .bk .kick{margin:0 0 26px;text-align:center;font:11px var(--sans);letter-spacing:.2em;opacity:.55}
+.w6 .bk .ex{font-size:var(--fs);line-height:var(--lh);margin:0 0 22px;padding-bottom:18px;border-bottom:.5px solid color-mix(in srgb,var(--pi) 18%,transparent)}
+.w6 .bk .row{border-top-color:color-mix(in srgb,var(--pi) 14%,transparent);font-family:var(--sans)}
+.w6 .bk .row:first-child{border-top:0}
+.w6 .bk .lab b{font-family:var(--serif);font-size:14px;color:var(--pi)}
+.w6 .bk .gl{margin:18px 0 4px;font:11px var(--sans);letter-spacing:.2em;color:var(--pi);opacity:.55}
+.w6 .bk .about{color:var(--pi)}
+.w6 .tabs{position:absolute;left:715px;top:70px;display:flex;flex-direction:column;gap:6px}
+.w6 .tabs span{width:46px;padding:12px 0;border-radius:0 8px 8px 0;display:flex;flex-direction:column;align-items:center;gap:6px;font:13px var(--serif);writing-mode:vertical-rl;letter-spacing:.3em;cursor:pointer;color:var(--t2);background:color-mix(in srgb,var(--card) 70%,var(--desk));box-shadow:0 0 0 .5px rgba(0,0,0,.08),2px 2px 6px rgba(51,46,41,.06);transform:translateX(-10px);transition:transform .25s var(--e),background-color .2s}
+.w6 .tabs span:hover{transform:translateX(-4px)}
+.w6 .tabs span.on{transform:none;background:var(--accent);color:#fff;font-weight:600}
+.w6 .turn{animation:w6t .38s var(--e)}
+@keyframes w6t{from{opacity:.2;transform:translateX(14px)}}
 /* 关于页 */
 .about{display:flex;align-items:center;gap:16px;padding:6px 0 14px}
 .about img{width:64px;height:64px;border-radius:14px;box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 6px 16px rgba(30,28,24,.12)}
@@ -158,12 +189,12 @@ body{margin:0;min-height:100vh;background:color-mix(in srgb,var(--bg) 70%,#d9d6c
 <div class="stage"><p class="cap" id="cap"></p><div id="stage"></div></div>
 <nav class="proto-picker" aria-label="六种设置窗口">
   <span class="proto-picker-highlight" aria-hidden="true"></span>
-  <button class="proto-picker-item" data-active aria-current="true">书架同款</button>
-  <button class="proto-picker-item">顶上标签</button>
-  <button class="proto-picker-item">一页滚到底</button>
-  <button class="proto-picker-item">样张在上</button>
-  <button class="proto-picker-item">先看总览</button>
-  <button class="proto-picker-item">在书旁边改</button>
+  <button class="proto-picker-item" data-active aria-current="true">在书上直接改</button>
+  <button class="proto-picker-item">读书方式</button>
+  <button class="proto-picker-item">一次阅读</button>
+  <button class="proto-picker-item">只看改过的</button>
+  <button class="proto-picker-item">问一句</button>
+  <button class="proto-picker-item">书口索引</button>
 </nav>
 <script>
 /* ===== 一份设置、一份状态；六种窗口只是六种摆法 ===== */
@@ -213,54 +244,98 @@ function SAMPLE(extra){var p=PAPER[S.paper];return '<div class="sample" data-sam
 function SV(){var p=PAPER[S.paper];return '--pb:'+p[1]+';--pi:'+p[2]+';--sf:'+FONT[S.font][1]+';--fs:'+S.fs+'px;--lh:'+S.lh+';--ind:'+(S.ind?'2em':'0')+';--ta:'+(S.just?'justify':'left');}
 var cur='page';
 
-/* ---- 1 书架同款：桌面色上的侧栏 + 一张纸 ---- */
-function V1(){var g='';return '<div class="win v1"><div class="lights"><i></i><i></i><i></i></div><aside class="side"><div class="srch">'+I('search')+'搜索设置<kbd>⌘F</kbd></div>'+
-  PAGES.map(function(p){var h=p.g!==g?'<p class="gt">'+p.g+'</p>':'';g=p.g;return h+'<div class="it'+(p.id===cur?' on':'')+'" data-go="'+p.id+'">'+I(p.i)+p.n+'</div>';}).join('')+
-  '</aside><main class="paper"><h2>'+BY[cur].n+'</h2><p class="sub">'+BY[cur].d+'</p>'+(BY[cur].sample?SAMPLE():'')+GROUPS(BY[cur],1)+'</main></div>';}
-/* ---- 2 顶上一排标签：老派 Mac 偏好设置，窗口窄、一列 ---- */
-function V2(){var p=BY[cur];return '<div class="win v2"><div class="lights"><i></i><i></i><i></i></div><div class="bar"><h1>'+p.n+'</h1><div class="tabs">'+PAGES.map(function(q){return '<span class="'+(q.id===cur?'on':'')+'" data-go="'+q.id+'">'+I(q.i)+q.n+'</span>';}).join('')+'</div></div>'+
-  '<div class="body">'+(p.sample?SAMPLE():'')+GROUPS(p,1)+'</div></div>';}
-/* ---- 3 一页滚到底：左边一列字是目录，跟着滚动走 ---- */
-function V3(){return '<div class="win v3"><div class="lights"><i></i><i></i><i></i></div><nav class="idx"><div class="srch">'+I('search')+'搜索</div>'+PAGES.map(function(p){return '<a class="'+(p.id===cur?'on':'')+'" data-jump="'+p.id+'">'+p.n+'</a>';}).join('')+'</nav>'+
-  '<div class="scroll" id="v3s">'+PAGES.map(function(p){return '<section id="v3-'+p.id+'"><h2>'+p.n+'<small>'+p.now()+'</small></h2><p class="sub">'+p.d+'</p>'+(p.id==='page'?SAMPLE():'')+GROUPS(p,0)+'</section>';}).join('')+'</div></div>';}
-/* ---- 4 窄的图标栏 + 样张在最上面，设置排成两列小卡 ---- */
-function V4(){var p=BY[cur];return '<div class="win v4"><div class="lights"><i></i><i></i><i></i></div><nav class="rail">'+PAGES.map(function(q){return '<span class="'+(q.id===cur?'on':'')+'" data-go="'+q.id+'" title="'+q.n+'">'+I(q.i)+q.n+'</span>';}).join('')+'</nav>'+
-  '<main class="main"><h2>'+p.n+'</h2><p class="sub">'+p.d+'</p>'+(p.sample?'<div class="hero">'+SAMPLE('父亲说：“事已如此，不必难过，好在天无绝人之路！”')+'</div>':'')+(p.about?GROUPS({G:[],about:1},0):'')+
-  '<div class="grid">'+p.G.reduce(function(a,g){return a.concat(g[1]);},[]).map(function(r){var wide=r[2]==='pp'||(r[2]==='seg'&&r[3].length>3)||r[2]==='btn';return '<div class="cell'+(wide?' wide':'')+'"><div class="lab"><b>'+r[1]+'</b></div>'+CTL(r)+'</div>';}).join('')+'</div></main></div>';}
-/* ---- 5 先看总览：九块卡片各写着现在的样子，点进去才是细项 ---- */
-function V5(){var open=V5.open;return '<div class="win v5'+(open?' open':'')+'"><div class="lights"><i></i><i></i><i></i></div><div class="pane home"><h2>设置</h2><p class="sub">每一块写着现在是什么样，点进去改。</p><div class="tiles">'+
-  PAGES.map(function(p){if(p.id==='page')return '<div class="tile big" data-open="page">'+SAMPLE()+'<div>'+I(p.i)+'<b>书页</b><small>'+p.now()+'</small></div></div>';return '<div class="tile" data-open="'+p.id+'">'+I(p.i)+'<b>'+p.n+'</b><small>'+p.now()+'</small></div>';}).join('')+'</div></div>'+
-  '<div class="pane detail">'+(open?'<button class="back" data-back>'+I('chev')+'设置</button><h2>'+BY[open].n+'</h2>'+(BY[open].sample?SAMPLE():'')+GROUPS(BY[open],1):'')+'</div></div>';}
-/* ---- 6 在书旁边改：左边就是一页书，右边常用的几样；不常用的在“全部设置…” ---- */
-var V6TAB=['page','voice','fl','ai'];
-function V6(){var t=V6TAB.indexOf(cur)<0?'page':cur,p=BY[t];return '<div class="win v6'+(V6.sh?' sh':'')+'"><div class="lights"><i></i><i></i><i></i></div><div class="book">'+SAMPLE('父亲说：“事已如此，不必难过，好在天无绝人之路！”回家变卖典质，父亲还了亏空；又借钱办了丧事。这些日子，家中光景很是惨淡，一半为了丧事，一半为了父亲赋闲。')+'<span class="no">3</span></div>'+
-  '<aside class="insp"><span class="seg">'+V6TAB.map(function(id){return '<button class="'+(id===t?'on':'')+'" data-go="'+id+'">'+BY[id].n+'</button>';}).join('')+'</span><div class="scroll">'+p.G.map(function(g){return (g[0]?'<p class="gl">'+g[0]+'</p>':'')+'<div class="box">'+g[1].map(ROW).join('')+'</div>';}).join('')+'</div>'+
-  '<div class="more" data-sheet>全部设置… <span style="color:var(--t3)">听书、同步、存储、通用、关于</span></div></aside>'+
-  '<div class="sheet" data-unsheet><div data-stop><h3>全部设置<button class="btn" data-unsheet>完成</button></h3>'+['listen','sync','store','gen','about'].map(function(id){var q=BY[id];return '<p class="gl" style="font-size:12.5px;color:var(--t1);margin:16px 2px 6px">'+q.n+' <span style="font-weight:400;color:var(--t3)">· '+q.now()+'</span></p>'+GROUPS(q,0);}).join('')+'</div></div></div>';}
+/* ---- 共用：再加一个“页边”，样张都按它排 ---- */
+S.mg=24;var D=JSON.parse(JSON.stringify(S));
+SV=function(){var p=PAPER[S.paper];return '--pb:'+p[1]+';--pi:'+p[2]+';--sf:'+FONT[S.font][1]+';--fs:'+S.fs+'px;--lh:'+S.lh+';--ind:'+(S.ind?'2em':'0')+';--ta:'+(S.just?'justify':'left')+';--mg:'+S.mg+'px';};
+var TXT='<p>我与父亲不相见已二年余了，我最不能忘记的是他的背影。</p><p>那年冬天，祖母死了，父亲的差使也交卸了，正是祸不单行的日子。我从北京到徐州，打算跟着父亲奔丧回家。到徐州见着父亲，看见满院狼藉的东西，又想起祖母，不禁簌簌地流下眼泪。父亲说：“事已如此，不必难过，好在天无绝人之路！”</p><p>回家变卖典质，父亲还了亏空；又借钱办了丧事。这些日子，家中光景很是惨淡，一半为了丧事，一半为了父亲赋闲。</p>';
+var PAGE=function(){return '<div class="sample" data-sample style="'+SV()+'"><h4>背　影</h4>'+TXT+'</div>';};
+var LAB={};PAGES.forEach(function(p){p.G.forEach(function(g){g[1].forEach(function(r){if(r[0])LAB[r[0]]=[r,p];});});});
+LAB.mg=[['mg','页边','sl',14,44,2],BY.page];
+var NAMEV=function(k){var r=LAB[k][0];if(r[2]==='tg')return S[k]?'开':'关';if(r[2]==='seg')return r[3][S[k]];if(r[2]==='pp')return PAPER[S[k]][0];return FV(k)+(k==='fs'||k==='mg'?' px':'');};
 
-var VARS=[V1,V2,V3,V4,V5,V6];
-var CAPS=['<b>书架同款</b>：和现在的书架窗口一模一样——桌面色上的侧栏（单色图标、淡灰选中），右边一张纸，设置放白色圆角组里；书页、声音在最上面放一条样张。',
-  '<b>顶上标签</b>：老派 Mac 偏好设置的样子——窗口窄，标题栏下面一排图标标签，下面一列设置。最省地方、最熟悉。',
-  '<b>一页滚到底</b>：没有分页，所有设置从上到下一页排完；左边一列字是目录，滚到哪亮到哪，点一下跳过去。每段标题旁边写着现在的样子。',
-  '<b>样张在上</b>：左边一条窄的图标栏；每页最上面一大块样张，照现在的纸和字排；设置排成两列小卡，一眼看完。',
-  '<b>先看总览</b>：打开先看到九块卡片，每块写着现在是什么样（书页那块直接是样张）；点一块，细项从右边滑进来，左上角“设置”退回。',
-  '<b>在书旁边改</b>：左边就是一页书，右边只放最常改的四页（书页、声音、外文、书伴），改什么书上马上变；不常用的收在“全部设置…”里，点开是一张单子。'];
+/* ---- 1 在书上直接改：页边拖、字号拖、行距拖、纸点；别的放旁边折起来 ---- */
+var OPEN1='voice';
+function W1(){var L=60,Wd=440;var rest=['voice','fl','ai','listen','sync','store','gen','about'];
+  return '<div class="win w1"><div class="lights"><i></i><i></i><i></i></div><span class="tbar">设置</span>'+
+  '<div class="papers">'+PAPER.map(function(p,i){return '<i class="'+(S.paper===i?'on':'')+'" title="'+p[0]+'" style="background:'+p[1]+'" data-k="paper" data-v="'+i+'"></i>';}).join('')+'<span class="hd" style="position:static;margin-left:6px">纸 · '+PAPER[S.paper][0]+'</span></div>'+
+  '<div class="pg">'+PAGE()+'<span class="no">3</span>'+
+   '<i class="guide" style="left:'+S.mg+'px"></i><i class="guide" style="right:'+S.mg+'px"></i>'+
+  '</div><div class="knobs">'+[['fs','A','字号','y',-1],['lh','≡','行距','y',-1],['mg','⇿','页边','x',1]].map(function(h){return '<span><span class="grip'+(h[3]==='y'?' v':'')+'" data-drag="'+h[0]+'" data-ax="'+h[3]+'" data-dir="'+h[4]+'" title="按住拖：'+h[2]+'">'+h[1]+'</span><b data-o="'+h[0]+'">'+FV(h[0])+'</b>'+h[2]+(h[3]==='y'?'<br>上下拖':'<br>左右拖')+'</span>';}).join('')+
+  '</div><div class="fonts">'+CTL(['font','','seg',FONT.map(function(f){return f[0];})])+'</div>'+
+  '<aside class="side"><h3>别的</h3>'+rest.map(function(id){var p=BY[id];return '<div class="acc"><b data-acc="'+id+'">'+I(p.i)+p.n+'<small>'+p.now()+'</small></b>'+(OPEN1===id?GROUPS(p,0,'in'):'')+'</div>';}).join('')+'</aside></div>';}
+/* ---- 2 读书方式：先挑一种场景，再调这一种里的几样 ---- */
+var MODES=[{n:'白天 · 纸书',d:'纸本、宋体 15 号',set:{paper:0,font:0,fs:15,lh:2,speed:1.2},k:['paper','font','fs','lh']},
+  {n:'夜里',d:'夜间纸、字大一号',set:{paper:2,font:0,fs:16,lh:2.1},k:['paper','fs','lh','quiet'],when:'22:00 起'},
+  {n:'通勤 · 听书',d:'婷婷 1.2×，30 分钟停',set:{zh:0,speed:1.2,sleep:2},k:['zh','speed','sleep','foot']},
+  {n:'外文精读',d:'白纸、标比六级难的词',set:{paper:1,font:1,gloss:1,lv:1},k:['paper','gloss','lv','ai']}];
+var M2=0;
+function W2(){var m=MODES[M2];return '<div class="win w2"><div class="lights"><i></i><i></i><i></i></div><div class="in"><h2>读书方式</h2><p class="sub">挑一种场景，语阅就照它排书、念书；每一种都能再调。</p>'+
+  '<div class="modes">'+MODES.map(function(x,i){var p=PAPER[x.set.paper!=null?x.set.paper:0];return '<div class="mode'+(i===M2?' on':'')+'" data-mode="'+i+'">'+(x.when?'<span class="when">'+x.when+'</span>':'')+'<div class="mini" style="background:'+p[1]+';color:'+p[2]+';font-family:'+FONT[x.set.font||0][1]+'"><b>背影</b>我与父亲不相见已二年余了，我最不能忘记的是他的背影。</div><div><strong>'+x.n+'</strong><small>'+x.d+'</small></div></div>';}).join('')+'</div>'+
+  '<div class="two"><div><p class="gl">“'+m.n+'”里</p><div class="box">'+m.k.map(function(k){return ROW(LAB[k][0]);}).join('')+'</div></div><div><p class="gl">样张</p><div style="border-radius:12px;overflow:hidden;box-shadow:var(--zsh);height:'+(m.k.length*44+2)+'px">'+PAGE()+'</div></div></div>'+
+  '<div class="foot">'+['sync','store','gen','about'].map(function(id){return '<a data-pop="'+id+'">'+I(BY[id].i)+BY[id].n+' · '+BY[id].now()+'</a>';}).join('')+'</div></div></div>';}
+/* ---- 3 一次阅读：按“什么时候用得上”排成一条线 ---- */
+var STEPS=[['打开书','',['open','look','menu']],['读','字和纸',['paper','font','fs','lh','gloss','lv']],['听','声音',['zh','speed','dlg','sleep']],['晚上','',['night','quiet','tip']],['合上以后','',['icloud','sA','sB','bk']]];
+function W3(){return '<div class="win w3"><div class="lights"><i></i><i></i><i></i></div><div class="in"><h2>一次阅读里会用到的</h2><p class="sub">从打开书到合上，按先后排；哪一步不舒服，就改那一步。</p><div class="line">'+
+  STEPS.map(function(s,i){return '<div class="st"><header><i>'+(i+1)+'</i>'+s[0]+(s[1]?'<small>'+s[1]+'</small>':'')+'</header><div class="col">'+s[2].map(function(k){var r=LAB[k][0],inl=r[2]==='tg';return '<div class="it'+(inl?' inl':'')+'"><div class="lab"><b>'+r[1]+'</b></div>'+CTL(r)+'</div>';}).join('')+'</div></div>';}).join('')+'</div></div></div>';}
+/* ---- 4 只看改过的：默认的都不显示；想改什么，在底下说 ---- */
+var PIN=[],FRESH=null;
+function W4(){var ch=Object.keys(LAB).filter(function(k){return S[k]!==D[k]||PIN.indexOf(k)>=0;});
+  return '<div class="win w4"><div class="lights"><i></i><i></i><i></i></div><div class="in"><h2>'+(function(){var n=ch.filter(function(k){return S[k]!==D[k];}).length;return n?'你改过 <b>'+n+'</b> 处':ch.length?'正在改 <b>'+ch.length+'</b> 样':'都是<b>默认</b>的';})()+'</h2><p class="sub">'+(ch.length?'其余的都还是默认，默认就挺好。':'语阅已经替你排好了。哪里不顺手，在下面说一声。')+'</p>'+
+  (ch.length?'<div class="box">'+ch.map(function(k){var r=LAB[k][0];return '<div class="row'+(k===FRESH?' fresh':'')+'"><div class="lab"><b>'+r[1]+'</b><small>'+LAB[k][1].n+(S[k]!==D[k]?' · <a data-reset="'+k+'">改回默认</a>':' · 还是默认')+'</small></div>'+CTL(r)+'</div>';}).join('')+'</div>':'')+
+  '<div class="ask"><label>'+I('search')+'<input id="w4q" placeholder="想改什么？比如 字号、夜间、声音、Key" autocomplete="off"></label><div class="sugg" id="w4s">'+SUGG('')+'</div></div>'+
+  '<div class="ver"><img src="'+LOGO+'" alt="">语阅 1.0 · 书、笔记和 Key 都只在你的设备上</div></div></div>';}
+function SUGG(v){v=(v||'').trim();var all=Object.keys(LAB).filter(function(k){return PIN.indexOf(k)<0&&S[k]===D[k];});
+  var hit=v?all.filter(function(k){return (LAB[k][0][1]+LAB[k][1].n).indexOf(v)>=0;}):['fs','paper','zh','speed','night'];
+  return hit.slice(0,8).map(function(k){return '<span data-add="'+k+'">'+I(LAB[k][1].i)+LAB[k][0][1]+'</span>';}).join('')||'<span style="cursor:default">没有“'+v.replace(/</g,'&lt;')+'”</span>';}
+/* ---- 5 问一句：写一句话就改好，下面记着改了什么，每条能撤销 ---- */
+var LOG=[],SAY='';
+var RULES=[[/大/,function(){return ['fs',Math.min(22,S.fs+1)];}],[/小/,function(){return ['fs',Math.max(12,S.fs-1)];}],[/(暗|夜|黑)/,function(){return ['paper',2];}],[/(白|亮)/,function(){return ['paper',1];}],[/纸本|暖/,function(){return ['paper',0];}],
+  [/慢/,function(){return ['speed',+Math.max(.6,S.speed-.2).toFixed(1)];}],[/快/,function(){return ['speed',+Math.min(2,S.speed+.2).toFixed(1)];}],[/(换个?声音|换人)/,function(){return ['zh',(S.zh+1)%3];}],
+  [/(松|行距大|宽)/,function(){return ['lh',+Math.min(2.6,S.lh+.2).toFixed(1)];}],[/(紧|密)/,function(){return ['lh',+Math.max(1.5,S.lh-.2).toFixed(1)];}],[/黑体/,function(){return ['font',1];}],[/楷/,function(){return ['font',2];}],[/宋/,function(){return ['font',0];}],
+  [/(难词|生词|标)/,function(){return ['gloss',1];}],[/(同步)/,function(){return ['icloud',1];}]];
+function ASK(t){for(var i=0;i<RULES.length;i++){if(RULES[i][0].test(t)){var r=RULES[i][1](),k=r[0],old=S[k];if(old===r[1]){SAY='已经是这样了。';return;}S[k]=r[1];LOG.unshift({t:t,k:k,old:old});SAY='';return;}}SAY='没听懂“'+t+'”。试试：字大一点、夜里用暗纸、念慢一点。';}
+function W5(){return '<div class="win w5"><div class="lights"><i></i><i></i><i></i></div><div class="l"><h2>想怎么读？</h2><form id="w5f"><input id="w5q" placeholder="比如：字大一点" autocomplete="off"><button>好</button></form>'+
+  '<div class="chips">'+['字大一点','夜里用暗纸','行距松一点','念慢一点','换个声音','标出难词','用楷体'].map(function(c){return '<span data-chip="'+c+'">'+c+'</span>';}).join('')+'</div><p class="say">'+SAY+'</p>'+
+  '<div class="log">'+(LOG.length?LOG.map(function(l,i){return '<div><span>'+l.t+'</span><em>'+LAB[l.k][0][1]+' → '+NAMEV(l.k)+'</em><a data-undo="'+i+'">撤销</a></div>';}).join(''):'<p>改过的会记在这里，每一条都能撤销。</p>')+'</div></div>'+
+  '<div class="r">'+PAGE()+'<p class="now">现在：'+S.fs+' 号'+FONT[S.font][0]+'，行距 '+FV('lh')+'，'+PAPER[S.paper][0]+'；'+ZH[S.zh]+'念，'+FV('speed')+'。<br><a data-goall>想一项项看？打开全部设置</a></p></div></div>';}
+/* ---- 6 书口索引：书口上贴着索引签，点哪个签翻到哪一章 ---- */
+var CH=[['读',['page','fl']],['听',['voice','listen']],['帮手',['ai']],['数据',['sync','store']],['其他',['gen','about']]],T6=0;
+function W6(){var c=CH[T6];return '<div class="win w6"><div class="lights"><i></i><i></i><i></i></div><div class="bk"><div class="sample turn" data-sample style="'+SV()+'"><h1>'+c[0]+'</h1><p class="kick">第 '+['一','二','三','四','五'][T6]+' 章</p>'+
+  (T6===0?'<div class="ex">'+TXT.split('</p>')[0]+'</p></div>':'')+c[1].map(function(id){var p=BY[id];return '<p class="gl">'+p.n+'</p>'+GROUPS(p,0,'in');}).join('')+'</div></div>'+
+  '<div class="tabs">'+CH.map(function(x,i){return '<span class="'+(i===T6?'on':'')+'" data-tab="'+i+'">'+x[0]+'</span>';}).join('')+'</div></div>';}
+
+var VARS=[W1,W2,W3,W4,W5,W6];
+var CAPS=['<b>在书上直接改</b>：窗口中间就是一页书。页边、字号、行距在书旁边的小把手上拖，纸色点书上方的小圆；改的就是你看到的那页。别的设置在右边，一样一行，点开才展开。',
+  '<b>读书方式</b>：不按“字、声音、同步”分，按场景分——白天纸书、夜里、通勤听书、外文精读。挑一种，语阅就照它排；每一种里只放和它有关的四样，旁边是样张。',
+  '<b>一次阅读</b>：按“什么时候用得上”排成一条线——打开书、读、听、晚上、合上以后。哪一步不舒服，就改那一步。',
+  '<b>只看改过的</b>：默认的都不显示，窗口里只有你改过的几样，每样能“改回默认”。想改别的，在底下说一声（或点建议），它就加进来。',
+  '<b>问一句</b>：写一句话就改好——“字大一点”“夜里用暗纸”“念慢一点”。下面记着刚才改了什么，每条都能撤销；右边是照现在设置排的书页。',
+  '<b>书口索引</b>：窗口就是一本书，书口上贴着索引签（读、听、帮手、数据、其他）。点哪个签翻到哪一章，设置就排在那一页上，纸色就是你选的纸。'];
 var stage=document.getElementById('stage'),current=0;
-function render(){stage.innerHTML=VARS[current]();document.getElementById('cap').innerHTML=CAPS[current];if(current===2)spy();}
+function render(){var sc=stage.querySelector('.side,.in,.col,.l .log,.bk .sample'),top=sc?sc.scrollTop:0;stage.innerHTML=VARS[current]();document.getElementById('cap').innerHTML=CAPS[current];
+  var f=document.getElementById('w5f');if(f)f.onsubmit=function(e){e.preventDefault();var q=document.getElementById('w5q');if(q.value.trim()){ASK(q.value.trim());render();document.getElementById('w5q').focus();}};
+  var q4=document.getElementById('w4q');if(q4)q4.oninput=function(){document.getElementById('w4s').innerHTML=SUGG(q4.value);};
+  var sc2=stage.querySelector('.side,.in,.col,.l .log,.bk .sample');if(sc2&&!stage.querySelector('.turn.fresh'))sc2.scrollTop=top;}
 function refreshSamples(){[].forEach.call(document.querySelectorAll('[data-sample]'),function(e){e.setAttribute('style',SV());});}
-stage.addEventListener('click',function(e){var t=e.target;
-  var go=t.closest('[data-go]');if(go){cur=go.dataset.go;render();return;}
-  var j=t.closest('[data-jump]');if(j){var s=document.getElementById('v3s'),sec=document.getElementById('v3-'+j.dataset.jump);s.scrollTop=sec.offsetTop-40;return;}
-  var op=t.closest('[data-open]');if(op){V5.open=op.dataset.open;render();return;}
-  if(t.closest('[data-back]')){V5.open=null;render();return;}
-  if(t.closest('[data-sheet]')){V6.sh=1;render();return;}
-  if(t.closest('[data-unsheet]')&&!t.closest('[data-stop]')||t.matches('button[data-unsheet]')){V6.sh=0;render();return;}
-  var k=t.closest('[data-k]');if(!k||k.tagName==='INPUT')return;
-  var key=k.dataset.k;if(k.classList.contains('tg'))S[key]=S[key]?0:1;else S[key]=+k.dataset.v;
-  var sc=stage.querySelector('.scroll,.paper,.main,.pane.detail'),top=sc?sc.scrollTop:0;render();var sc2=stage.querySelector('.scroll,.paper,.main,.pane.detail');if(sc2)sc2.scrollTop=top;});
+stage.addEventListener('click',function(e){var t=e.target,x;
+  if(x=t.closest('[data-acc]')){OPEN1=OPEN1===x.dataset.acc?null:x.dataset.acc;render();return;}
+  if(x=t.closest('[data-mode]')){M2=+x.dataset.mode;var s=MODES[M2].set;for(var k in s)S[k]=s[k];render();return;}
+  if(x=t.closest('[data-pop]')){current=0;OPEN1=x.dataset.pop;setActive(0);return;}
+  if(x=t.closest('[data-add]')){var k=x.dataset.add;PIN.push(k);FRESH=k;render();FRESH=null;return;}
+  if(x=t.closest('[data-reset]')){S[x.dataset.reset]=D[x.dataset.reset];render();return;}
+  if(x=t.closest('[data-chip]')){ASK(x.dataset.chip);render();return;}
+  if(x=t.closest('[data-undo]')){var l=LOG.splice(+x.dataset.undo,1)[0];S[l.k]=l.old;render();return;}
+  if(t.closest('[data-goall]')){setActive(0);return;}
+  if(x=t.closest('[data-tab]')){T6=+x.dataset.tab;render();return;}
+  if(t.closest('[data-drag]'))return;
+  var kk=t.closest('[data-k]');if(!kk||kk.tagName==='INPUT')return;
+  var key=kk.dataset.k;if(kk.classList.contains('tg'))S[key]=S[key]?0:1;else S[key]=+kk.dataset.v;render();});
 stage.addEventListener('input',function(e){var k=e.target.dataset.k;if(!k)return;S[k]=+e.target.value;var o=stage.querySelector('[data-o="'+k+'"]');if(o)o.textContent=FV(k);refreshSamples();});
-function spy(){var s=document.getElementById('v3s');s.addEventListener('scroll',function(){var best='page';PAGES.forEach(function(p){var el=document.getElementById('v3-'+p.id);if(el.offsetTop-80<=s.scrollTop)best=p.id;});
-  if(best!==cur){cur=best;[].forEach.call(document.querySelectorAll('.v3 .idx a'),function(a){a.classList.toggle('on',a.dataset.jump===cur);});}});}
+stage.addEventListener('change',function(e){if(e.target.dataset.k)render();});
+/* 书上的小把手：按住拖 */
+stage.addEventListener('pointerdown',function(e){var g=e.target.closest('[data-drag]');if(!g)return;e.preventDefault();var k=g.dataset.drag,r=LAB[k][0],ax=g.dataset.ax,dir=+g.dataset.dir,st=r[5],x0=e.clientX,y0=e.clientY,v0=S[k];g.setPointerCapture(e.pointerId);
+  g.onpointermove=function(ev){var d=(ax==='x'?ev.clientX-x0:ev.clientY-y0)*dir,v=Math.min(r[4],Math.max(r[3],v0+Math.round(d/(ax==='x'?4:8))*st));v=+v.toFixed(1);if(v!==S[k]){S[k]=v;refreshSamples();var o=stage.querySelector('[data-o="'+k+'"]');if(o)o.textContent=FV(k);if(k==='mg'){var gs=stage.querySelectorAll('.guide');gs[0].style.left=v+'px';gs[1].style.right=v+'px';}}};
+  g.onpointerup=function(){g.onpointermove=null;render();};});
 /* 切换条：照 prototype 规范的接线 */
 var picker=document.querySelector('.proto-picker'),hl=picker.querySelector('.proto-picker-highlight'),items=[].slice.call(picker.querySelectorAll('.proto-picker-item'));
 function moveHighlight(){var el=items[current];hl.style.width=el.offsetWidth+'px';hl.style.transform='translateX('+el.offsetLeft+'px)';}
