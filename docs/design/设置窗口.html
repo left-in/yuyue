@@ -3290,6 +3290,125 @@ body{margin:0}
 .w-c .x-sbar i{display:block;height:100%}
 .w-insp .y-f{flex:none}
 .w-jump>div em{margin-left:auto;font-style:normal;font-size:11px;color:var(--t3)}
+/* ===== 2026-11-03 发散：五个完全不同的方向（d- 开头） ===== */
+.v-mac.d-win{width:1000px;height:600px;margin:0;display:flex;flex-direction:column}
+.d-tb{height:40px;flex:none;display:flex;align-items:center;gap:14px;padding:0 14px;border-bottom:.5px solid var(--line);font-size:12.5px;font-weight:600;background:color-mix(in srgb,var(--card) 60%,var(--bg))}
+.d-tb em{margin-left:auto;font-style:normal;font-weight:400;font-size:11.5px;color:var(--t3)}
+.d-bd{flex:1;min-height:0;position:relative;overflow:hidden}
+.d-why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:1000px;margin-top:14px}
+.d-why>div{background:var(--card);box-shadow:var(--zsh);border-radius:14px;padding:12px 15px;font-size:12.5px;line-height:1.7;color:var(--t2)}
+.d-why>div b{display:block;color:var(--t1);font-size:13px;margin-bottom:3px}
+.d-why>div.bad b{color:var(--warn)}
+/* 甲 书桌 */
+.d-desk{position:absolute;inset:0;background:radial-gradient(ellipse at 45% 40%,color-mix(in srgb,#C9A57A 22%,var(--bg)),color-mix(in srgb,#8A6A48 18%,var(--bg)));cursor:default}
+.d-obj{position:absolute;cursor:pointer;transition:transform .14s ease-out,filter .14s}
+.d-obj:hover{transform:translateY(-3px);filter:drop-shadow(0 10px 14px rgba(51,46,41,.18))}
+.d-lab{position:absolute;white-space:nowrap;font-size:11px;color:var(--t2);background:var(--card);box-shadow:var(--zsh);border-radius:8px;padding:4px 9px;line-height:1.45}
+.d-lab b{color:var(--t1);font-weight:600;display:block;font-size:11.5px}
+.d-book{position:absolute;left:250px;top:86px;width:460px;height:300px;display:flex;filter:drop-shadow(0 14px 22px rgba(51,46,41,.22))}
+.d-book>div{flex:1;background:var(--p-bg);color:var(--p-ink);font-family:var(--p-font);padding:26px 24px;font-size:11.5px;line-height:2;text-indent:2em;text-align:justify;overflow:hidden;transition:background .3s,color .3s}
+.d-book>div:first-child{border-radius:6px 0 0 6px;box-shadow:inset -14px 0 18px -14px rgba(0,0,0,.25)}
+.d-book>div:last-child{border-radius:0 6px 6px 0;box-shadow:inset 14px 0 18px -14px rgba(0,0,0,.25)}
+.d-book h4{text-indent:0;text-align:center;font-size:14px;letter-spacing:.14em;margin:0 0 8px;font-weight:600}
+.d-sw{left:742px;top:112px;width:120px;height:150px}
+.d-sw>i{position:absolute;left:0;top:0;width:96px;height:124px;border-radius:5px;background:var(--p-bg);box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 4px 10px rgba(0,0,0,.08);transform-origin:20% 90%}
+.d-fonts{left:92px;top:110px;width:120px;height:130px}
+.d-fonts>span:not(.d-lab){position:absolute;width:64px;height:84px;border-radius:6px;background:var(--card);box-shadow:0 0 0 .5px var(--line),0 4px 10px rgba(0,0,0,.08);display:grid;place-items:center;font-size:32px;color:var(--t1)}
+.d-lamp{left:60px;top:300px;width:150px;height:200px}
+.d-radio{left:650px;top:410px;width:250px;height:130px}
+.d-radio .d-rb{position:absolute;inset:0;border-radius:18px;background:linear-gradient(#3A3532,#24211F);box-shadow:0 10px 20px rgba(0,0,0,.25)}
+.d-radio .d-scale{position:absolute;left:18px;right:96px;top:20px;height:50px;border-radius:8px;background:#E9DFC9;overflow:hidden}
+.d-radio .d-scale span{position:absolute;top:8px;font-size:10px;color:#4A3F33;transform:translateX(-50%);white-space:nowrap}
+.d-radio .d-scale i{position:absolute;bottom:0;width:1px;height:10px;background:#4A3F33;opacity:.5}
+.d-radio .d-needle{position:absolute;top:4px;bottom:0;width:2px;background:#C4492F;transition:left .35s cubic-bezier(.2,.8,.2,1)}
+.d-radio .d-knob{position:absolute;right:22px;top:22px;width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#6A615A,#2A2624);box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.d-radio .d-knob::after{content:"";position:absolute;left:50%;top:6px;width:3px;height:14px;border-radius:2px;background:#E9DFC9;transform:translateX(-50%)}
+.d-radio .d-grill{position:absolute;left:18px;right:96px;bottom:18px;height:28px;background:repeating-linear-gradient(90deg,#1A1817 0 2px,transparent 2px 5px);border-radius:4px;opacity:.8}
+.d-keys{left:300px;top:440px;width:260px;height:110px}
+.d-keys svg{position:absolute;inset:0}
+.d-box{left:838px;top:300px;width:150px;height:96px}
+.d-box>div{position:absolute;inset:0;border-radius:8px;background:linear-gradient(#B9946A,#A07D56);box-shadow:0 8px 16px rgba(51,46,41,.2)}
+.d-box>div::before{content:"";position:absolute;left:0;right:0;top:0;height:22px;border-radius:8px 8px 0 0;background:#C7A47B;border-bottom:1px solid rgba(0,0,0,.12)}
+.d-box>div::after{content:"";position:absolute;left:50%;top:44px;width:56px;height:24px;transform:translateX(-50%);background:#F3EBDD;border-radius:3px}
+.d-dock{left:80px;top:40px;width:190px;height:56px}
+/* 乙 一天 */
+.d-day{position:absolute;inset:0;display:grid;grid-template-columns:520px minmax(0,1fr)}
+.d-ring{position:relative;display:grid;place-items:center}
+.d-ring svg{width:440px;height:440px}
+.d-ring .d-ctr{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:200px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.d-ctr b{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.d-ctr small{font-size:12px;color:var(--t2)}
+.d-ctr .w-mini{width:150px;height:96px;flex:none;padding:10px 12px;border-radius:7px}
+.d-ctr .w-mini p{font-size:8.5px;line-height:1.9}
+.d-ctr .w-mini h4{font-size:9px;margin-bottom:3px}
+.d-arc{cursor:pointer;transition:opacity .14s}
+.d-arc:hover{opacity:.85}
+.d-side{padding:26px 26px 20px 0;display:flex;flex-direction:column;gap:14px;min-width:0}
+.d-side h3{margin:0;font-size:18px;display:flex;align-items:center;gap:8px}
+.d-side h3 svg{width:18px;height:18px}
+.d-side h3 small{font-size:12px;font-weight:400;color:var(--t3)}
+.d-chg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.d-chg>div{background:var(--card);box-shadow:var(--zsh);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--t2);display:flex;flex-direction:column;gap:4px}
+.d-chg>div b{font-size:14px;color:var(--t1);font-weight:600}
+.d-trig{display:flex;flex-wrap:wrap;gap:8px}
+.d-trig span{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:15px;background:var(--card);box-shadow:var(--zsh);font-size:12px}
+.d-trig span svg{width:13px;height:13px;color:var(--accent)}
+.d-trig span.add{background:none;box-shadow:inset 0 0 0 1px var(--line);color:var(--t2)}
+/* 丙 按住 ⌥ */
+.d-rd{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--p-bg);color:var(--p-ink);transition:background .3s,color .3s}
+.d-rd .d-txt{flex:1;position:relative;padding:66px var(--d-mg,150px) 0;font-family:var(--p-font);font-size:var(--d-fs,18px);line-height:var(--d-lh,2.05);text-align:justify;transition:padding .24s,font-size .24s}
+.d-rd .d-txt p{text-indent:2em;margin:0}
+.d-rd .d-txt h4{text-align:center;font-size:22px;letter-spacing:.14em;margin:0 0 18px;font-weight:600;position:relative}
+.d-veil{position:absolute;inset:0;pointer-events:none;background:color-mix(in srgb,var(--accent) 4%,transparent)}
+.d-g{position:absolute;top:0;bottom:0;border-left:1px dashed color-mix(in srgb,var(--accent) 70%,transparent)}
+.d-g b{position:absolute;top:46%;left:-5px;width:9px;height:30px;border-radius:5px;background:var(--card);box-shadow:0 0 0 1px var(--accent)}
+.d-pill{position:absolute;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;background:var(--accent);color:#fff;font-family:var(--sans);font-size:11.5px;font-weight:600;white-space:nowrap;text-indent:0;line-height:1;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+:root[data-theme="dark"] .d-pill{color:#101214}
+.d-pill svg{width:12px;height:12px}
+.d-pill.l{background:var(--card);color:var(--t1);box-shadow:var(--zfl);font-weight:500}
+.d-brk{position:absolute;width:10px;border:1.5px solid var(--accent);border-right:0;border-radius:3px 0 0 3px}
+.d-peel{position:absolute;right:0;bottom:56px;width:80px;height:80px;background:linear-gradient(135deg,transparent 50%,var(--d-under,#1B1A17) 50%);cursor:pointer}
+.d-peel::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 49%,rgba(0,0,0,.18) 50%,color-mix(in srgb,var(--p-bg) 80%,#fff) 51%,var(--p-bg) 70%,transparent 71%);clip-path:polygon(0 100%,100% 0,0 0)}
+.d-play{height:56px;flex:none;display:flex;align-items:center;gap:12px;padding:0 20px;border-top:.5px solid var(--p-line);font-family:var(--sans);font-size:12px;color:var(--p-ink-2);position:relative}
+.d-play .w-pl{margin-left:0;background:var(--p-ink);color:var(--p-bg)}
+.d-hint{position:absolute;left:50%;top:10px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;height:32px;padding:0 6px 0 14px;border-radius:16px;background:var(--card);box-shadow:var(--zfl);font-family:var(--sans);font-size:12px;color:var(--t2);white-space:nowrap;z-index:3}
+.d-hint kbd{font-family:var(--sans);font-size:11px;padding:2px 6px;border-radius:5px;background:var(--inset);color:var(--t1)}
+.d-hint .v-seg{width:240px}
+/* 丁 它来找你 */
+.d-feed{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,1fr) 300px}
+.d-fl{padding:20px 26px;display:flex;flex-direction:column;gap:12px;overflow:hidden;background:var(--inset)}
+.d-fl h3{margin:0;font-size:18px}
+.d-fl h3 small{font-size:12px;font-weight:400;color:var(--t3);margin-left:8px}
+.d-it{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:13px 15px;border-radius:14px;background:var(--card);box-shadow:var(--zsh);transition:opacity .24s,transform .24s}
+.d-it.gone{opacity:0;transform:translateX(30px)}
+.d-it>i{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.d-it>i svg{width:16px;height:16px}
+.d-it>i.w{background:rgba(183,121,31,.14);color:var(--warn)}
+.d-it b{font-size:13px;font-weight:600;display:block}
+.d-it p{margin:2px 0 0;font-size:11.5px;color:var(--t2);line-height:1.55}
+.d-it .y-opt{gap:6px;flex-wrap:nowrap}
+.d-fr{padding:20px 20px;display:flex;flex-direction:column;gap:12px;background:var(--card);border-left:.5px solid var(--line)}
+.d-fr h5{margin:0;font-size:11px;color:var(--t3);font-weight:600}
+.d-ok{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.d-ok i{width:16px;height:16px;border-radius:8px;background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok);display:grid;place-items:center;font-size:10px;font-style:normal;font-weight:700}
+.d-ok em{margin-left:auto;font-style:normal;color:var(--t3);font-size:11px}
+/* 戊 问一句 */
+.d-q{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:0 60px}
+.d-q h3{margin:0;font-size:26px;font-family:var(--serif);font-weight:600;text-align:center}
+.d-q>p{margin:-14px 0 0;font-size:13px;color:var(--t2)}
+.d-ans{display:grid;grid-template-columns:repeat(3,220px);gap:16px}
+.d-an{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:16px;background:var(--card);box-shadow:var(--zsh);cursor:pointer;transition:transform .14s,box-shadow .14s}
+.d-an:hover{transform:translateY(-2px);box-shadow:var(--zfl)}
+.d-an.on{box-shadow:inset 0 0 0 2px var(--accent)}
+.d-an .w-mini{height:118px;flex:none;padding:12px 14px}
+.d-an .w-mini p{font-size:var(--q-fs,10px);line-height:var(--q-lh,1.9)}
+.d-an .w-mini h4{font-size:10px;margin-bottom:4px}
+.d-an b{font-size:14px;padding:0 4px}
+.d-an small{font-size:11.5px;color:var(--t3);padding:0 4px;margin-top:-6px}
+.d-dots{display:flex;gap:6px;align-items:center;font-size:11.5px;color:var(--t3)}
+.d-dots i{width:6px;height:6px;border-radius:3px;background:var(--line)}
+.d-dots i.on{width:18px;background:var(--t1)}
+.d-skip{position:absolute;right:22px;bottom:18px;font-size:12px;color:var(--accent)}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -3888,7 +4007,7 @@ body{margin:0}
   <header class="x-top">
     <p class="eyebrow">语阅 · Mac · 设置窗口</p>
     <h1>设置窗口重新整理</h1>
-    <p><b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
+    <p><b>11-03 第四版</b>：最上面“发散”五个方向是新的，先看它。<b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
     <p>十页挨个过了一遍。窗口外框、顶上的分页、开关、分段、滑杆这些控件<b>不动</b>，照 prototype-v0.29；按钮还是系统按钮（上次换成带图标、带下划线的样式被撤回过）。改的是<b>每页里放什么、怎么排、说明怎么写</b>。每页可以在“现在”和“改后”之间切；编号对着右边的说明，红的是问题，蓝的是改法。</p>
   </header>
   <div class="x-bar">
@@ -3898,6 +4017,18 @@ body{margin:0}
     <label><input type="checkbox" id="vNums" checked>显示编号</label>
     <nav class="x-idx" id="idx"></nav>
   </div>
+  <section id="diverge">
+    <h2 class="x-h">发散：五个完全不同的方向 <span class="y-rec">11-03 第四版</span></h2>
+    <p class="y-cap2">第三版是一个“好用的总览”，还是在“设置窗口里放什么”这个框里想。这里从根上换问题：设置一定要是一个窗口吗？一定要按“外观、阅读、朗读”分吗？一定要你自己去找吗？五个方向各换掉一个前提，每个窗口里都能点。它们可以拼起来用。</p>
+    <div class="v-tg" role="group" id="dDirs" style="margin:12px 0 4px"><button data-d="desk" aria-pressed="true">甲 · 书桌</button><button data-d="day" aria-pressed="false">乙 · 一天</button><button data-d="opt" aria-pressed="false">丙 · 按住 ⌥</button><button data-d="feed" aria-pressed="false">丁 · 它来找你</button><button data-d="ask" aria-pressed="false">戊 · 问一句</button></div>
+    <div class="x-stage"><div id="dWin"></div></div>
+    <div class="d-why" id="dWhy"></div>
+    <div class="y-plan" style="margin-top:14px">
+      <div><b>换掉的前提</b>甲：设置得是一列列控件 → 设置是桌上的东西。乙：按种类分 → 按时间和场合分。丙：设置得在设置窗口里 → 在书上。丁：你得自己去找 → 它来找你。戊：你得懂术语 → 只回答问题。</div>
+      <div><b>可以怎么拼（我的倾向）</b>丙 管书页（日常改字号纸色都在书上）＋ 乙 管“什么时候用哪套”＋ 丁 当设置窗口的首页（有事说事，没事一句一切正常）＋ 第三版的总览当“全部设置”。甲 和 戊 更适合第一次打开的引导。</div>
+      <div><b>都不变的</b>⌘K 能搜到每一行；控件都是大一号的系统控件；减弱动态效果时只淡入淡出；没设情景、不按 ⌥ 的人，看到的和现在一样能用。</div>
+    </div>
+  </section>
   <section id="whole">
     <h2 class="x-h">整个窗口重做 <span class="y-rec">11-03 第三版</span></h2>
     <p class="y-cap2">前两版都还是“左边一列目录、右边一列开关”，只是换了排法。这一版把这个样子拿掉：打开设置先看到<b>一张总览</b>，每张卡是那一样<b>现在的样子</b>（真的书页、能点的声音、用量）；点卡片放大进去，<b>左边是活的东西、右边是检查器</b>，边看边改。顶上多一个<b>情景</b>：一套书页 + 声音，到点、戴耳机、开英文书时自己换。下面的窗口能点：卡片、‹ 总览、情景、纸、字体、声音卡，字号行距边距的滑杆是真的能拖。</p>
@@ -4530,6 +4661,131 @@ PAGES.push({id:'data',name:'数据',
   var hv=(location.hash.match(/^#whole-(\w+)/)||[])[1];if(hv&&VIEWS[hv])S.scr=hv;
   draw();
   var idx=document.getElementById('idx');var a=document.createElement('a');a.href='#whole';a.textContent='整个重做';idx.insertBefore(a,idx.firstChild);
+})();
+/* ===== 2026-11-03 发散：五个完全不同的方向。每个窗口里都能点 ===== */
+(function(){
+  var YB=function(t,cls){return '<span class="y-b '+(cls||'')+'">'+t+'</span>';};
+  var T1='我与父亲不相见已二年余了，我最不能忘记的是他的背影。',T2='那年冬天，祖母死了，父亲的差使也交卸了，正是祸不单行的日子。我从北京到徐州，打算跟着父亲奔丧回家。到徐州见着父亲，看见满院狼藉的东西，又想起祖母，不禁簌簌地流下眼泪。',
+      T3='父亲说：“事已如此，不必难过，好在天无绝人之路！”回家变卖典质，父亲还了亏空；又借钱办了丧事。这些日子，家中光景很是惨淡，一半为了丧事，一半为了父亲赋闲。';
+  var PAP=['paper-kami','paper-kaminight','paper-plain','paper-dark'],PAPN=['纸本','纸本 · 夜','白','黑'];
+  var FON=[['宋','宋体','var(--serif)'],['黑','黑体','var(--sans)'],['楷','楷体','"Kaiti SC","STKaiti",KaiTi,serif']];
+  var VO=['美佳','婷婷','Nova','Ava','晓晓'];
+  var TB=function(t,r){return '<div class="d-tb"><span class="v-lights"><i></i><i></i><i></i></span>'+t+(r?'<em>'+r+'</em>':'')+'</div>';};
+
+  /* 甲 书桌 */
+  var D={p:0,f:0,v:1};
+  var DESK=function(){
+    var sw=[0,1,2,3].map(function(i){var k=(D.p+i)%4;return '<i class="'+PAP[k]+'" style="transform:rotate('+(12-i*7)+'deg);z-index:'+(4-i)+'"></i>';}).reverse().join('');
+    var fo=[2,1,0].map(function(i){var k=(D.f+i)%3;return '<span style="left:'+(i*22)+'px;top:'+(i*10)+'px;transform:rotate('+(i*6-6)+'deg);font-family:'+FON[k][2]+';z-index:'+(3-i)+'">永</span>';}).join('');
+    var sc='';VO.forEach(function(n,i){sc+='<span style="left:'+(10+i*20)+'%">'+n+'</span>';});for(var i=0;i<=20;i++)sc+='<i style="left:'+(i*5)+'%"></i>';
+    var night=D.p===1||D.p===3;
+    var lamp='<svg viewBox="0 0 150 200" width="150" height="200">'+(night?'<ellipse cx="96" cy="150" rx="70" ry="22" fill="#FFE2A0" opacity=".35"/><path d="M78 62 L40 160 L150 160 L112 62Z" fill="#FFE7B0" opacity=".22"/>':'')+
+      '<ellipse cx="40" cy="186" rx="34" ry="8" fill="#2A2624"/><path d="M40 184 L52 96 L96 58" stroke="#2A2624" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M76 40 L120 40 L132 74 L64 74Z" fill="'+(night?'#F4C86A':'#4A6B8A')+'"/><circle cx="96" cy="58" r="5" fill="#2A2624"/></svg>';
+    var keys='<svg viewBox="0 0 260 110"><circle cx="40" cy="40" r="22" fill="none" stroke="#8A8682" stroke-width="4"/>'+
+      [['#D97757','Claude',70,30,-8],['#111','OpenAI',120,52,4],['#0078D4','Azure',170,30,-4]].map(function(k){return '<g transform="rotate('+k[4]+' '+k[2]+' '+k[3]+')"><path d="M58 40 L'+k[2]+' '+k[3]+'" stroke="#8A8682" stroke-width="2"/><rect x="'+k[2]+'" y="'+(k[3]-9)+'" width="44" height="18" rx="9" fill="'+k[0]+'"/><rect x="'+(k[2]+44)+'" y="'+(k[3]-3)+'" width="26" height="6" fill="#B9B4AC"/><rect x="'+(k[2]+58)+'" y="'+(k[3]+3)+'" width="4" height="6" fill="#B9B4AC"/><rect x="'+(k[2]+64)+'" y="'+(k[3]+3)+'" width="4" height="4" fill="#B9B4AC"/><text x="'+(k[2]+22)+'" y="'+(k[3]+3.5)+'" font-size="9" fill="#fff" text-anchor="middle" font-family="PingFang SC,sans-serif">'+k[1]+'</text></g>';}).join('')+'</svg>';
+    return TB('设置','每样东西点一下就能改 · 悬停看现在是什么')+'<div class="d-bd"><div class="d-desk" style="'+(night?'filter:brightness(.78) saturate(.9)':'')+'">'+
+      '<div class="d-obj d-dock"><span class="d-lab" style="left:0;top:6px"><b>手机座 · 同步</b>这台、iPhone、iPad · 2 分钟前</span></div>'+
+      '<div class="d-obj d-fonts" data-d="f">'+fo+'<span class="d-lab" style="left:0;top:104px"><b>字帖 · '+FON[D.f][1]+'</b>点一下换下一种</span></div>'+
+      '<div class="d-book"><div class="'+PAP[D.p]+'" style="font-family:'+FON[D.f][2]+'"><h4>背　影</h4>'+T1+T2+'</div><div class="'+PAP[D.p]+'" style="font-family:'+FON[D.f][2]+'">'+T3+T2+'</div></div>'+
+      '<span class="d-lab" style="left:410px;top:396px"><b>摊开的书</b>拖书页边改边距，⌘ 滚轮改字号</span>'+
+      '<div class="d-obj d-sw" data-d="p">'+sw+'<span class="d-lab" style="left:0;top:132px"><b>纸样 · '+PAPN[D.p]+'</b>点一下翻到下一张</span></div>'+
+      '<div class="d-obj d-lamp" data-d="l">'+lamp+'<span class="d-lab" style="left:56px;top:150px"><b>台灯 · '+(night?'开着':'关着')+'</b>开灯＝夜里的纸，到 22 点自己开</span></div>'+
+      '<div class="d-obj d-box"><div></div><span class="d-lab" style="left:10px;top:-40px"><b>档案盒 · 3.2 GB</b>备份、导出、清理</span></div>'+
+      '<div class="d-obj d-keys">'+keys+'<span class="d-lab" style="left:40px;top:84px"><b>钥匙串 · 3 把</b>把 Key 拖到桌上就挂上去</span></div>'+
+      '<div class="d-obj d-radio" data-d="v"><div class="d-rb"></div><div class="d-scale">'+sc+'<b class="d-needle" style="left:'+(10+D.v*20)+'%"></b></div><div class="d-grill"></div><div class="d-knob" style="transform:rotate('+(D.v*40-80)+'deg)"></div><span class="d-lab" style="left:20px;top:-30px"><b>收音机 · '+VO[D.v]+'</b>转旋钮换声音，同时念一句</span></div>'+
+      '</div></div>';
+  };
+
+  /* 乙 一天 */
+  var DAY={on:'night'};
+  var SCN={go:['通勤听','i-headset','#7A8F5C',[[7,9],[17.5,19]],[['声音','Nova · 1.4×'],['书页','不显示，只听'],['跳过','脚注、图注'],['睡眠定时','到站自动停 · 关']]],
+    day:['白天读','i-sun','#D9B26A',[[9,17.5],[19,22]],[['纸','纸本'],['字','宋体 · 17'],['声音','婷婷 · 1.2×'],['书伴','开着']]],
+    night:['夜里读','i-moon','#3B4A6B',[[22,25.5]],[['纸','纸本 · 夜'],['字','宋体 · 19 · 行距 2.2'],['屏幕','跟着纸色调暗'],['书伴提示','关，别打扰']]]};
+  var pt=function(h,r){var a=(h/24)*2*Math.PI-Math.PI/2;return [220+r*Math.cos(a),220+r*Math.sin(a)];};
+  var arc=function(a,b,r){var p=pt(a,r),q=pt(b,r);return 'M'+p[0].toFixed(1)+' '+p[1].toFixed(1)+' A'+r+' '+r+' 0 '+((b-a)>12?1:0)+' 1 '+q[0].toFixed(1)+' '+q[1].toFixed(1);};
+  var DAYV=function(){
+    var s='<svg viewBox="0 0 440 440"><circle cx="220" cy="220" r="180" fill="none" stroke="var(--inset)" stroke-width="34"/>';
+    Object.keys(SCN).forEach(function(k){SCN[k][3].forEach(function(seg){s+='<path class="d-arc" data-day="'+k+'" d="'+arc(seg[0],seg[1],180)+'" fill="none" stroke="'+SCN[k][2]+'" stroke-width="'+(k===DAY.on?34:26)+'" opacity="'+(k===DAY.on?1:.55)+'"/>';});});
+    for(var h=0;h<24;h++){var a=pt(h,150),b=pt(h,h%6?156:160);s+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="var(--t3)" stroke-width="'+(h%6?1:1.5)+'"/>';
+      if(h%6===0){var l=pt(h,138);s+='<text x="'+l[0]+'" y="'+(l[1]+4)+'" font-size="11" fill="var(--t3)" text-anchor="middle">'+h+'</text>';}}
+    var n=pt(22.67,180);s+='<circle cx="'+n[0]+'" cy="'+n[1]+'" r="9" fill="var(--card)" stroke="var(--t1)" stroke-width="2.5"/>';
+    [[7,'#7A8F5C'],[9,'#D9B26A'],[22,'#3B4A6B']].forEach(function(e){var p=pt(e[0],180);s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="6" fill="var(--card)" stroke="'+e[1]+'" stroke-width="2"/>';});
+    s+='</svg>';
+    var c=SCN[DAY.on];
+    return TB('设置 · 一天','拖弧线两头改时间 · 点一段看它管什么')+'<div class="d-bd"><div class="d-day"><div class="d-ring">'+s+
+      '<div class="d-ctr"><b>22:40</b><small>现在 · 夜里读</small><div class="w-mini paper-kaminight"><h4>背　影</h4><p>'+T1+T2+'</p></div></div></div>'+
+      '<div class="d-side"><h3>'+I(c[1])+c[0]+'<small>'+c[3].map(function(g){var f=function(x){x=x%24;var hh=Math.floor(x),mm=Math.round((x-hh)*60);return hh+':'+(mm<10?'0':'')+mm;};return f(g[0])+'–'+f(g[1]);}).join('，')+'</small></h3>'+
+        '<div class="d-chg">'+c[4].map(function(x){return '<div>'+x[0]+'<b>'+x[1]+'</b></div>';}).join('')+'</div>'+
+        '<p class="v-ms-gl" style="margin:6px 0 0">不看时间，看你在做什么</p><div class="d-trig"><span>'+I('i-headset')+'戴上耳机 → 通勤听</span><span>'+I('i-trans')+'打开英文书 → 读英文</span><span>'+I('i-car')+'连上车载 → 只听</span><span class="add">＋ 加一条</span></div>'+
+        '<p class="v-ms-gl" style="margin:6px 0 0">其余的</p><div class="d-trig"><span>'+I('i-key')+'服务与 Key</span><span>'+I('i-sync')+'同步</span><span>'+I('i-disk')+'存储与备份</span></div>'+
+      '</div></div></div>';
+  };
+
+  /* 丙 按住 ⌥ */
+  var OP={p:0};
+  var OPT=function(){
+    var mg=150,under=OP.p===0?'#1B1A17':'#F5F4ED';
+    return TB('背影 · 朱自清','这不是设置窗口，是读书窗口按住 ⌥ 的样子')+'<div class="d-bd"><div class="d-rd '+PAP[OP.p===0?0:1]+'">'+
+      '<div class="d-hint">按住 <kbd>⌥</kbd> 看到能改的，松开就收起 · 改的是<span class="v-seg sm"><span class="on">所有书</span><span>只这本</span></span></div>'+
+      '<div class="d-txt"><i class="d-veil"></i><i class="d-g" style="left:'+mg+'px"><b></b></i><i class="d-g" style="right:'+mg+'px"><b></b></i>'+
+        '<span class="d-pill l" style="left:'+(mg-118)+'px;top:250px">'+I('i-swap')+'拖 · 边距 150</span>'+
+        '<h4>背　影<span class="d-pill" style="left:calc(50% + 60px);top:2px">宋体 '+I('i-down')+'</span></h4>'+
+        '<i class="d-brk" style="left:'+(mg-16)+'px;top:140px;height:37px"></i><span class="d-pill l" style="left:'+(mg-128)+'px;top:146px">'+I('i-updown')+'行距 2.05</span>'+
+        '<p>'+T1+T2+'</p><p>'+T3+'</p>'+
+        '<span class="d-pill" style="right:12px;top:200px">'+I('i-cursor')+'⌘ 滚轮 · 字号 18</span>'+
+      '</div>'+
+      '<div class="d-peel" data-op="1" style="--d-under:'+under+'"></div><span class="d-pill l" style="right:86px;bottom:92px">掀开纸角换纸 →</span>'+
+      '<div class="d-play"><span class="w-pl">'+I('i-playf')+'</span>第 3 / 41 句<span class="d-pill" style="position:static">婷婷 '+I('i-down')+'</span><span class="d-pill l" style="position:static">1.2× · 左右拖</span><span style="margin-left:auto">书伴、Key、同步这些不在书上的，⌘, 打开总表</span></div>'+
+      '</div></div>';
+  };
+
+  /* 丁 它来找你 */
+  var FEED=function(){
+    var it=function(ic,w,t,p,a){return '<div class="d-it"><i class="'+(w?'w':'')+'">'+I(ic)+'</i><div><b>'+t+'</b><p>'+p+'</p></div><span class="y-opt">'+a+'</span></div>';};
+    return TB('设置','它先告诉你该看什么；全部设置在右下角')+'<div class="d-bd"><div class="d-feed"><div class="d-fl"><h3>有 4 件事<small>都处理完就是一句“一切正常”</small></h3>'+
+      it('i-moon',0,'最近 6 个晚上，你 11 点以后都把纸调暗了','做成“夜里读”，以后 22 点自动换？',YB('好','k d-x')+YB('不用','d-x'))+
+      it('i-warn',1,'iPhone 两天没同步了','上次是 11-01 21:14 · 可能是 iCloud 空间满了',YB('看看','k d-x'))+
+      it('i-ear',0,'这本英文书还在用中文声音念','书是英文的，换成 Ava（高级）？试听：“It was the best of times”',YB(I('i-playf')+'听','')+YB('换','k d-x'))+
+      it('i-disk',0,'3 本有声书听完了，占 1.4 GB','划线和书签会留着',YB('清掉','k d-x')+YB('留着','d-x'))+
+      '</div><div class="d-fr"><h5>好着的</h5>'+
+        [['书伴 · Claude','刚刚'],['朗读 · 婷婷','本机'],['Azure Key','还剩 3.2 万字'],['备份','昨天']].map(function(x){return '<div class="d-ok"><i>✓</i>'+x[0]+'<em>'+x[1]+'</em></div>';}).join('')+
+        '<h5 style="margin-top:8px">最近改过</h5>'+
+        [['字号 18 → 19','昨天'],['翻页 上下滚 → 左右翻','10-30']].map(function(x){return '<div class="d-ok"><i style="background:var(--inset);color:var(--t2)">↺</i>'+x[0]+'<em>'+x[1]+'</em></div>';}).join('')+
+        '<div style="margin-top:auto">'+YB(I('i-grid')+'全部设置')+'</div>'+
+      '</div></div></div>';
+  };
+
+  /* 戊 问一句 */
+  var Q={on:1};
+  var QV=function(){
+    var an=[['paper-plain','var(--sans)',9,1.8,'小一点、密一点','一页多看几行'],['paper-kami','var(--serif)',10.5,2,'正好','和现在一样'],['paper-kami','var(--serif)',12.5,2.3,'大一点、松一点','眼睛不累']];
+    return TB('设置','重新调一下 · 第 2 问，共 5 问')+'<div class="d-bd"><div class="d-q"><h3>哪一页你读着最舒服？</h3><p>不用懂“字号”“行距”，挑一页就行；挑完还能细调</p><div class="d-ans">'+
+      an.map(function(a,i){return '<div class="d-an'+(i===Q.on?' on':'')+'" data-q="'+i+'"><div class="w-mini '+a[0]+'" style="font-family:'+a[1]+';--q-fs:'+a[2]+'px;--q-lh:'+a[3]+'"><h4>背　影</h4><p>'+T1+T2+'</p></div><b>'+a[4]+'</b><small>'+a[5]+'</small></div>';}).join('')+
+      '</div><div class="d-dots"><i></i><i class="on"></i><i></i><i></i><i></i>　下一问：你听书多吗？</div><a class="d-skip">跳过，直接看全部设置 ›</a></div></div>';
+  };
+
+  var DIRS={
+    desk:[DESK,'甲 · 书桌','设置窗口是一张书桌：摊开的书、纸样、字帖、台灯、收音机、钥匙串、档案盒。东西就是设置本身：点纸样翻纸、开台灯就是夜里的纸、转收音机的旋钮换声音、把 Key 拖到桌上就挂上钥匙串。','一眼就懂，第一次打开会记住；和“书”的气质最合；每样东西本身就是现在的状态。','做得不好会显得幼稚；东西多了桌面放不下；高级选项（标点挤压、繁简）还得有个抽屉放。'],
+    day:[DAYV,'乙 · 一天','设置不按“种类”分，按“什么时候、在做什么”分。中间是一圈 24 小时，一段一段是情景：通勤听、白天读、夜里读。点一段看它管什么，拖两头改时间；戴耳机、开英文书这些也能触发。','大部分人改设置其实是为了“晚上”“路上”；改一次，以后自己换，不用再进设置。','要动核心里设置的存法；只读一种方式的人用不上这一圈，要保证“只有一段”时跟现在一样简单。'],
+    opt:[OPT,'丙 · 按住 ⌥','书上的设置不在设置窗口里：在读书窗口按住 ⌥，能改的东西都亮出来：边距的线能拖、行距有括号、⌘ 滚轮改字号、掀开纸角换纸、播放条上的声音和语速能直接拨。松开就收起。设置窗口只剩书伴、Key、同步、存储。','改书页时眼睛一直在书上，不用来回切；设置窗口一下少一半。','藏起来的手势要教：第一次打开书时提示一次；iPhone 上换成长按两指。'],
+    feed:[FEED,'丁 · 它来找你','打开设置先看到“有 4 件事”：它发现你每晚都调暗纸，问要不要自动；iPhone 没同步；英文书在用中文声音；听完的有声书占地方。点一下就办完，办完的卡片滑走。右边是“好着的”和“最近改过”，能一键改回。','大部分人打开设置是因为“哪里不对”；这里直接告诉你哪里不对、怎么办。','要在本机记下你怎么改设置（不上传）；没事的时候这页就一句“一切正常”，全部设置在角上。'],
+    ask:[QV,'戊 · 问一句','不让你懂“字号 18、行距 2.05”，而是问“哪一页你读着最舒服？”，挑一页就行。五个问题：哪页舒服、听书多吗、读外文吗、要书伴吗、几台设备。第一次打开、或者“重新调一下”时走一遍。','对不爱折腾的人最友好；也是最好的第一次打开引导。','只适合大的方向，细调还得有地方放；问多了会烦，所以只有 5 问、随时能跳过。']};
+  var cur='desk',box=document.getElementById('dWin'),bs=[].slice.call(document.querySelectorAll('#dDirs button'));
+  function draw(anim){
+    var d=DIRS[cur];box.innerHTML='<div class="v-mac v-ms-set d-win'+(anim?' w-fade':'')+'">'+d[0]()+'</div>';
+    document.getElementById('dWhy').innerHTML='<div><b>'+d[1]+'</b>'+d[2]+'</div><div><b>好在</b>'+d[3]+'</div><div class="bad"><b>代价</b>'+d[4]+'</div>';
+    bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.d===cur?'true':'false');});
+    [].forEach.call(box.querySelectorAll('[data-d]'),function(el){el.addEventListener('click',function(){var k=el.dataset.d;
+      if(k==='p')D.p=(D.p+1)%4;if(k==='f')D.f=(D.f+1)%3;if(k==='v')D.v=(D.v+1)%5;if(k==='l')D.p=(D.p===1?0:1);draw();});});
+    [].forEach.call(box.querySelectorAll('[data-day]'),function(el){el.addEventListener('click',function(){DAY.on=el.dataset.day;draw();});});
+    [].forEach.call(box.querySelectorAll('[data-op]'),function(el){el.addEventListener('click',function(){OP.p=OP.p?0:1;draw();});});
+    [].forEach.call(box.querySelectorAll('[data-q]'),function(el){el.addEventListener('click',function(){Q.on=+el.dataset.q;draw();});});
+    [].forEach.call(box.querySelectorAll('.d-x'),function(el){el.addEventListener('click',function(){var it=el.closest('.d-it');it.classList.add('gone');setTimeout(function(){it.style.display='none';},240);});});
+  }
+  bs.forEach(function(b){b.addEventListener('click',function(){cur=b.dataset.d;draw(1);});});
+  var hv=(location.hash.match(/^#dir-(\w+)/)||[])[1];if(hv&&DIRS[hv])cur=hv;
+  draw();
+  var idx=document.getElementById('idx');var a=document.createElement('a');a.href='#diverge';a.textContent='五个方向';idx.insertBefore(a,idx.firstChild);
 })();
 </script>
 </body></html>
