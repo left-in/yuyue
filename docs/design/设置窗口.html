@@ -3588,6 +3588,74 @@ body{margin:0}
 .f-tints{display:flex;gap:10px}
 .f-tints button{width:28px;height:28px;border-radius:14px;border:0;cursor:pointer;transition:box-shadow .2s}
 .f-tints button.on{box-shadow:0 0 0 2.5px var(--card),0 0 0 4.5px var(--t1)}
+/* ===== 2026-11-03 第六版：设置就是一段话（h- 开头） ===== */
+.v-mac.h-win{width:1040px;height:660px;margin:0;display:flex;flex-direction:column;background:var(--p-bg);color:var(--p-ink);transition:background .45s ease,color .45s ease;--h-fs:17px;--h-lh:2;--h-font:var(--serif);--h-e:cubic-bezier(.2,.8,.2,1)}
+.h-tb{height:46px;flex:none;display:flex;align-items:center;gap:14px;padding:0 16px;font-family:var(--sans)}
+.h-tb .h-chg{margin-left:auto;font-size:11.5px;color:var(--p-ink-2);opacity:0;transform:translateY(-4px);transition:opacity .24s,transform .35s var(--h-e);display:flex;align-items:center;gap:8px}
+.h-tb .h-chg.on{opacity:1;transform:none}
+.h-tb .h-chg a{color:var(--p-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.h-find{display:flex;align-items:center;gap:6px;width:150px;height:26px;padding:0 9px;border-radius:7px;background:color-mix(in srgb,var(--p-ink) 6%,transparent);font-size:12px;color:var(--p-ink-2)}
+.h-find svg{width:12px;height:12px;flex:none}
+.h-find input{border:0;background:none;outline:0;font:inherit;color:var(--p-ink);width:100%;padding:0}
+.h-find input::placeholder{color:var(--p-ink-2)}
+.h-sc{flex:1;min-height:0;overflow:auto;scrollbar-width:none;position:relative}
+.h-sc::-webkit-scrollbar{display:none}
+.h-doc{max-width:600px;margin:0 auto;padding:30px 0 80px;font-family:var(--h-font);font-size:var(--h-fs);line-height:var(--h-lh);letter-spacing:.02em;transition:font-size .3s var(--h-e),line-height .3s var(--h-e)}
+.h-doc>header{font-family:var(--sans);margin-bottom:34px;letter-spacing:0}
+.h-doc>header b{display:block;font-size:13px;font-weight:600;color:var(--p-ink)}
+.h-doc>header span{font-size:12px;color:var(--p-ink-2);line-height:1.7}
+.h-doc p{margin:0 0 1.1em;text-align:left}
+.h-s{transition:opacity .3s}
+.h-doc.q .h-s:not(.m){opacity:.18}
+.h-s.say{background:linear-gradient(var(--p-hl),var(--p-hl)) 0 0/0 100% no-repeat;animation:hSay var(--d,3s) linear forwards;border-radius:2px}
+@keyframes hSay{to{background-size:100% 100%}}
+/* 一个能改的词 */
+.h-t{position:relative;font-weight:inherit;color:var(--p-accent);cursor:pointer;border-radius:4px;padding:0 1px;margin:0 1px;background-image:linear-gradient(currentColor,currentColor);background-size:100% 1px;background-position:0 calc(100% - .12em);background-repeat:no-repeat;transition:background-color .14s,color .3s;white-space:nowrap}
+.h-t:hover,.h-t.open{background-color:color-mix(in srgb,var(--p-accent) 10%,transparent)}
+.h-t.num{cursor:ew-resize;font-variant-numeric:tabular-nums;background-image:linear-gradient(90deg,currentColor 50%,transparent 50%);background-size:4px 1px;background-repeat:repeat-x}
+.h-t.flash{animation:hFlash .6s ease-out}
+@keyframes hFlash{0%{background-color:color-mix(in srgb,var(--p-accent) 28%,transparent)}100%{background-color:transparent}}
+.h-t .h-v{display:inline-block;transition:transform .24s var(--h-e),opacity .24s}
+.h-t .h-v.in{animation:hIn .3s var(--h-e)}
+@keyframes hIn{from{transform:translateY(.45em);opacity:0}}
+body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
+/* 拖数字时下面一把尺 */
+.h-ruler{position:absolute;left:50%;top:100%;margin-top:4px;transform:translateX(-50%);display:flex;align-items:flex-end;gap:5px;height:16px;padding:0 6px;pointer-events:none;font-family:var(--sans);opacity:0;transition:opacity .14s}
+.h-t.drag .h-ruler{opacity:1}
+.h-ruler i{width:1px;height:6px;background:var(--p-ink-2);opacity:.5;transition:height .14s,opacity .14s}
+.h-ruler i.on{height:14px;opacity:1;background:var(--p-accent);width:2px}
+/* 点一个词：别的选法在它上下排开，像一只轮子 */
+.h-wheel{position:absolute;z-index:20;display:flex;flex-direction:column;padding:6px;border-radius:14px;background:color-mix(in srgb,var(--p-bg) 82%,#fff);box-shadow:0 0 0 .5px color-mix(in srgb,var(--p-ink) 14%,transparent),0 14px 40px rgba(0,0,0,.16);font-family:var(--h-font);opacity:0;transform:scale(.96);transition:opacity .2s,transform .3s var(--h-e);pointer-events:none}
+.paper-kaminight .h-wheel,.paper-dark .h-wheel{background:color-mix(in srgb,var(--p-bg) 88%,#fff)}
+.h-wheel.on{opacity:1;transform:none;pointer-events:auto}
+.h-wheel button{display:flex;align-items:center;gap:10px;height:36px;padding:0 14px;border:0;border-radius:9px;background:none;font:inherit;font-size:max(15px,calc(var(--h-fs) * .9));color:var(--p-ink);cursor:pointer;white-space:nowrap;text-align:left;opacity:.55;transition:opacity .14s,background .14s}
+.h-wheel button:hover,.h-wheel button.kb{opacity:1;background:color-mix(in srgb,var(--p-ink) 7%,transparent)}
+.h-wheel button.on{opacity:1;color:var(--p-accent);font-weight:600}
+.h-wheel button small{margin-left:auto;padding-left:16px;font-family:var(--sans);font-size:11px;color:var(--p-ink-2);font-weight:400}
+.h-wheel button i{width:16px;height:16px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.2)}
+/* Key：词本身变成一个输入框 */
+.h-key{display:inline-flex;align-items:center;gap:8px;vertical-align:baseline;height:1.7em;width:var(--w,7em);padding:0 6px 0 10px;border-radius:8px;background:color-mix(in srgb,var(--p-bg) 70%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--p-accent) 50%,transparent),0 0 0 3px color-mix(in srgb,var(--p-accent) 14%,transparent);font-family:var(--mono);font-size:.78em;transition:width .35s var(--h-e);overflow:hidden}
+.h-key input{flex:1;min-width:0;border:0;background:none;outline:0;font:inherit;color:var(--p-ink);padding:0}
+.h-key input::placeholder{color:var(--p-ink-2)}
+.h-key kbd{font-family:var(--sans);font-size:10.5px;color:var(--p-ink-2);white-space:nowrap}
+.h-st{font-family:var(--sans);font-size:.72em;color:var(--p-ink-2);margin-left:6px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;vertical-align:.08em}
+.h-st.ok{color:var(--ok)}
+.h-spin{width:.8em;height:.8em;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--p-ink) 20%,transparent);border-top-color:var(--p-accent);animation:fSpin .8s linear infinite;display:inline-block}
+/* 难词例子 */
+.h-ex{font-family:Georgia,"Times New Roman",serif;font-style:italic;letter-spacing:0}
+.h-ex rt{font-family:var(--sans);font-style:normal;font-size:.5em;color:var(--p-ink-2);transition:opacity .3s}
+.h-ex.ul{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.2em}
+.h-ex.ul rt,.h-ex.no rt{opacity:0}
+/* 不常改的几句：收起来 */
+.h-more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--h-e)}
+.h-more>div{overflow:hidden}
+.h-more.on{grid-template-rows:1fr}
+.h-fold{font-family:var(--sans);font-size:12px;color:var(--p-ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-top:4px;letter-spacing:0}
+.h-fold svg{width:11px;height:11px;transition:transform .35s var(--h-e)}
+.h-fold.on svg{transform:rotate(180deg)}
+.h-hint{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-family:var(--sans);font-size:11.5px;color:var(--p-ink-2);display:flex;gap:16px;white-space:nowrap;pointer-events:none;transition:opacity .4s}
+.h-hint span{display:flex;align-items:center;gap:6px}
+.h-hint i{font-style:normal;display:inline-grid;place-items:center;height:18px;padding:0 6px;border-radius:5px;background:color-mix(in srgb,var(--p-ink) 7%,transparent);color:var(--p-ink);font-size:10.5px}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -4186,7 +4254,7 @@ body{margin:0}
   <header class="x-top">
     <p class="eyebrow">语阅 · Mac · 设置窗口</p>
     <h1>设置窗口重新整理</h1>
-    <p><b>11-03 第五版</b>：最上面“第五版”是新的，只做一个方向、做细了，先看它。<b>11-03 第四版</b>：最上面“发散”五个方向是新的，先看它。<b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
+    <p><b>11-03 第六版</b>：最上面“设置就是一段话”是新的，先看它。<b>11-03 第五版</b>：最上面“第五版”是新的，只做一个方向、做细了，先看它。<b>11-03 第四版</b>：最上面“发散”五个方向是新的，先看它。<b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
     <p>十页挨个过了一遍。窗口外框、顶上的分页、开关、分段、滑杆这些控件<b>不动</b>，照 prototype-v0.29；按钮还是系统按钮（上次换成带图标、带下划线的样式被撤回过）。改的是<b>每页里放什么、怎么排、说明怎么写</b>。每页可以在“现在”和“改后”之间切；编号对着右边的说明，红的是问题，蓝的是改法。</p>
   </header>
   <div class="x-bar">
@@ -4196,6 +4264,16 @@ body{margin:0}
     <label><input type="checkbox" id="vNums" checked>显示编号</label>
     <nav class="x-idx" id="idx"></nav>
   </div>
+  <section id="v6">
+    <h2 class="x-h">第六版：设置就是一段话 <span class="y-rec">11-03</span></h2>
+    <p class="y-cap2">没有分页、没有开关、没有滑杆。整个设置窗口是一张纸，纸上写着一段话，写的就是你现在怎么读书、怎么听书。<b>蓝色的词都能改</b>：数字按住左右拖（或者滚轮），别的词点一下，别的选法在它上下排开。这段字本身就照你的书页排，改字号它就变大，换纸整张纸就换。选声音时，这台电脑真的用那个声音把这句话念出来。</p>
+    <div class="x-stage" style="margin-top:14px"><div id="hRoot"></div></div>
+    <div class="y-plan" style="margin-top:16px">
+      <div><b>为什么是一段话</b>开关列表回答的是“这个功能开没开”，一段话回答的是“我现在是怎么读书的”。一眼读完就知道全部状态，不用翻页；改的时候也是在改一句自己的话。</div>
+      <div><b>怎么保证好用</b>每个能改的词都是同一个样子（蓝、带下划线），数字是虚线，一看就知道能拖。点开的选法正好压在原位上，上下键、回车、Esc 都能用；Tab 能一个个走过去。右上角“改了几处 · 全部改回去”。⌘F 找一句，别的句子淡下去。</div>
+      <div><b>真的做起来</b>Mac 上是一个 SwiftUI 文本视图，词是 Text 里的可点区域；拖数字用 DragGesture；“念出来”就是现在的朗读引擎念这一句。iPhone 上一样是一段话，数字改成上下拨。英文界面写成一段英文。</div>
+    </div>
+  </section>
   <section id="v5">
     <h2 class="x-h">第五版：每一样都有一个活的预览 <span class="y-rec">11-03</span></h2>
     <p class="y-cap2">只做一个方向，把它做细。顶上一排 7 样（滑块跟着滑），左边是这一样<b>真的样子</b>：正在念的书页、一页注了中文的英文书、会开口的书伴、三台停在同一页的设备、一条用量。右边是大一号的控件，改什么左边当场变。没有比喻、没有第二层，最多点一下。<b>下面的窗口全都能玩</b>：换纸、拖滑杆、点声音、拖级别、点词、点“粘贴”、点“现在同步”、点“清掉”。</p>
@@ -5134,6 +5212,148 @@ PAGES.push({id:'data',name:'数据',
   requestAnimationFrame(placeAll);setTimeout(placeAll,300);
   var hv=(location.hash.match(/^#v5-(\w+)/)||[])[1];if(hv&&PN[hv])setTimeout(function(){cat(hv);},50);
   var idx=document.getElementById('idx');var a=document.createElement('a');a.href='#v5';a.textContent='第五版';idx.insertBefore(a,idx.firstChild);
+})();
+/* ===== 2026-11-03 第六版：设置就是一段话。蓝色的词都能改：数字左右拖、别的点一下；选声音时真的念出来 ===== */
+(function(){
+  var root=document.getElementById('hRoot');if(!root)return;
+  var PAPERS={'纸本':'paper-kami','夜间纸本':'paper-kaminight','白纸':'paper-plain','黑底':'paper-dark','墨水屏':'paper-eink'};
+  var FONTS={'宋体':'var(--serif)','黑体':'var(--sans)','楷体':'"Kaiti SC","STKaiti",KaiTi,serif'};
+  var EX={'四级':['reluctant','不情愿的'],'六级':['ubiquitous','无处不在的'],'雅思':['ephemeral','短暂的'],'GRE':['obstreperous','吵闹不服管的']};
+  var VOICE={'婷婷':['Tingting','zh-CN'],'美佳':['Meijia','zh-TW'],'善怡':['Sinji','zh-HK'],'Nova':['','zh-CN'],'Ava':['Ava','en-US'],'Zoe':['Zoe','en-US'],'Samantha':['Samantha','en-US']};
+  /* 每个能改的词：num 拖，pick 点 */
+  var T={
+    font:{t:'pick',v:'宋体',o:['宋体','黑体','楷体'],n:{'宋体':'书一样','黑体':'屏幕上清楚','楷体':'像手写'}},
+    fs:{t:'num',v:17,min:13,max:26,step:1,f:function(v){return v;}},
+    lh:{t:'num',v:2,min:1.5,max:2.6,step:.1,f:function(v){return v.toFixed(1);}},
+    paper:{t:'pick',v:'纸本',o:['纸本','白纸','黑底','夜间纸本','墨水屏']},
+    night:{t:'pick',v:'晚上十点',o:['晚上九点','晚上十点','晚上十一点','日落','从不']},
+    nightp:{t:'pick',v:'夜间纸本',o:['夜间纸本','黑底']},
+    turn:{t:'pick',v:'左右翻',o:['左右翻','上下滚']},
+    zh:{t:'pick',v:'婷婷',o:['婷婷','美佳','善怡','Nova'],n:{'婷婷':'本机 · 高级','美佳':'本机 · 高级','善怡':'要下载 210 MB','Nova':'OpenAI · 云端'}},
+    en:{t:'pick',v:'Ava',o:['Ava','Zoe','Samantha'],n:{'Ava':'本机 · 高级','Zoe':'本机 · 高级','Samantha':'本机'}},
+    speed:{t:'num',v:1.2,min:.6,max:2,step:.1,f:function(v){return v.toFixed(1);}},
+    dlg:{t:'pick',v:'换一个声音念',o:['换一个声音念','也用同一个声音']},
+    lv:{t:'pick',v:'六级',o:['四级','六级','雅思','GRE']},
+    gl:{t:'pick',v:'在它头上写中文',o:['在它头上写中文','只在下面划一道线','不管它']},
+    dict:{t:'pick',v:'柯林斯双解',o:['柯林斯双解','牛津高阶','系统词典'],n:{'柯林斯双解':'导入的','牛津高阶':'导入的','系统词典':'自带'}},
+    ai:{t:'pick',v:'Claude',o:['Claude','OpenAI','这台 Mac 自己'],n:{'Claude':'要 Key','OpenAI':'要 Key','这台 Mac 自己':'不联网，懂得少一些'}},
+    key:{t:'key',v:'粘一个 Key'},
+    quiet:{t:'pick',v:'一句话也不说',o:['一句话也不说','遇到难处轻轻提一句']},
+    dev:{t:'pick',v:'这台 Mac、iPhone 和 iPad',o:['这台 Mac、iPhone 和 iPad','这台 Mac 和 iPhone','哪儿也不']},
+    days:{t:'num',v:30,min:7,max:90,step:1,f:function(v){return v;}},
+    bk:{t:'pick',v:'天',o:['天','周','月']},
+    ind:{t:'pick',v:'空两格',o:['空两格','顶格']},
+    two:{t:'pick',v:'分成两栏',o:['分成两栏','还是一栏']},
+    open:{t:'pick',v:'回到书架',o:['回到书架','接着读上次那本']},
+    sleep:{t:'pick',v:'不睡着',o:['不睡着','照常睡']},
+    look:{t:'pick',v:'跟着系统',o:['跟着系统','一直浅色','一直深色']},
+    tint:{t:'pick',v:'墨蓝',o:['墨蓝','墨黑']}};
+  var K=function(k){var x=T[k];return '<b class="h-t'+(x.t==='num'?' num':'')+'" data-k="'+k+'" tabindex="0"><span class="h-v">'+(x.t==='num'?x.f(x.v):x.v)+'</span>'+(x.t==='num'?'<span class="h-ruler"></span>':'')+'</b>';};
+  var S_=function(html){return '<span class="h-s">'+html.replace(/\{(\w+)\}/g,function(_,k){return K(k);})+'</span>';};
+  var doc='<header><b>语阅的设置</b><span>这一段字就照你的书页排：字体、字号、行距、纸都是真的。蓝色的词能改。</span></header>'+
+    '<p>'+S_('我用{font}读书，字{fs}号，行距{lh}，纸是{paper}的；')+S_('到了{night}，纸换成{nightp}。')+S_('翻页时{turn}。')+'</p>'+
+    '<p>'+S_('听书时，中文请{zh}念，英文请{en}念，速度{speed}倍；')+S_('小说里的对话{dlg}。')+'</p>'+
+    '<p>'+S_('遇到比{lv}难的英文词，比如 <ruby class="h-ex" id="hEx">ubiquitous<rt>无处不在的</rt></ruby>，{gl}；')+S_('点一下就查{dict}。')+'</p>'+
+    '<p>'+S_('书伴是{ai}，<span id="hKeyW">{key}</span>就能问它这本书里的任何事；')+S_('沉浸阅读时，它{quiet}。')+'</p>'+
+    '<p>'+S_('读到哪、划线和生词，在{dev}之间同步。')+S_('听完的有声书{days}天后清掉，每{bk}备份一次；')+S_('现在一共占 3.2 GB。')+'</p>'+
+    '<div class="h-more" id="hMore"><div><p>'+S_('每段开头{ind}；窗口够宽时{two}。')+S_('打开语阅时{open}；听书时 Mac {sleep}。')+S_('界面颜色{look}，主题色是{tint}。')+'</p></div></div>'+
+    '<span class="h-fold" id="hFold">'+I('i-down')+'<span>还有 3 句不常改的</span></span>';
+  root.innerHTML='<div class="v-mac h-win paper-kami" id="hWin"><div class="h-tb"><span class="v-lights"><i></i><i></i><i></i></span>'+
+    '<span class="h-chg" id="hChg"><span id="hChgN"></span><a id="hUndo">全部改回去</a></span><label class="h-find">'+I('i-search')+'<input id="hFind" placeholder="找一句"></label></div>'+
+    '<div class="h-sc" id="hSc"><div class="h-doc" id="hDoc">'+doc+'</div><div class="h-wheel" id="hWheel"></div></div>'+
+    '<div class="h-hint" id="hHint"><span><i>拖</i>数字</span><span><i>点</i>别的词</span><span><i>⌘F</i>找一句</span></div></div>';
+
+  var W=document.getElementById('hWin'),D=document.getElementById('hDoc'),SC=document.getElementById('hSc'),WH=document.getElementById('hWheel');
+  var orig={};Object.keys(T).forEach(function(k){orig[k]=T[k].v;});
+  function tok(k){return D.querySelector('.h-t[data-k="'+k+'"]');}
+  function show(k,anim){var el=tok(k);if(!el)return;var x=T[k],v=el.querySelector('.h-v');v.textContent=x.t==='num'?x.f(x.v):x.v;if(anim){v.classList.remove('in');void v.offsetWidth;v.classList.add('in');}}
+  function changed(){var n=Object.keys(T).filter(function(k){return T[k].v!==orig[k];}).length;document.getElementById('hChg').classList.toggle('on',n>0);document.getElementById('hChgN').textContent='改了 '+n+' 处';}
+  /* 改了以后，世界跟着变 */
+  function apply(k){var v=T[k].v;
+    if(k==='fs')W.style.setProperty('--h-fs',v+'px');
+    if(k==='lh')W.style.setProperty('--h-lh',v);
+    if(k==='font')W.style.setProperty('--h-font',FONTS[v]);
+    if(k==='paper'){Object.keys(PAPERS).forEach(function(p){W.classList.remove(PAPERS[p]);});W.classList.add(PAPERS[v]);}
+    if(k==='lv'){var e=EX[v],ex=document.getElementById('hEx');ex.style.opacity=0;setTimeout(function(){ex.innerHTML=e[0]+'<rt>'+e[1]+'</rt>';ex.style.opacity=1;},160);}
+    if(k==='gl'){var ex2=document.getElementById('hEx');ex2.classList.toggle('ul',v==='只在下面划一道线');ex2.classList.toggle('no',v==='不管它');}
+    if(k==='ai'){var w=document.getElementById('hKeyW');if(v==='这台 Mac 自己'){w.dataset.h=w.innerHTML;w.innerHTML='不用 Key，';}else if(w.dataset.h&&!tok('key')){w.innerHTML=w.dataset.h;wire(w);}}
+    if(k==='zh'||k==='en')speak(tok(k).closest('.h-s'),k);
+    changed();}
+  function applyAll(){Object.keys(T).forEach(function(k){if(k!=='zh'&&k!=='en')apply(k);show(k);});}
+  /* 念出来：真的用这台电脑的声音，念的就是这句话 */
+  function speak(s,k){
+    D.querySelectorAll('.h-s.say').forEach(function(x){x.classList.remove('say');});
+    var text=s.textContent,rate=T.speed.v,dur=Math.max(1.6,text.length*.2/rate);
+    s.style.setProperty('--d',dur+'s');void s.offsetWidth;s.classList.add('say');
+    try{var ss=window.speechSynthesis;if(!ss)return;ss.cancel();var u=new SpeechSynthesisUtterance(k==='en'?'Hello, I’m '+T.en.v+'. I’ll read your English books.':text);
+      var want=VOICE[T[k||'zh'].v]||['','zh-CN'];u.lang=want[1];u.rate=Math.min(2,Math.max(.5,rate));
+      var vs=ss.getVoices(),hit=vs.filter(function(x){return want[0]&&x.name.indexOf(want[0])===0;})[0]||vs.filter(function(x){return x.lang.replace('_','-').indexOf(want[1])===0;})[0];if(hit)u.voice=hit;
+      u.onend=function(){s.classList.remove('say');};ss.speak(u);}catch(e){}
+  }
+  /* 轮子：别的选法在这个词上下排开，现在的那个正好压在原来的位置上 */
+  var openK=null,kb=-1;
+  function wheel(el){var k=el.dataset.k,x=T[k];close();openK=k;el.classList.add('open');
+    WH.innerHTML=x.o.map(function(o){var sw=k==='paper'||k==='nightp'?'<i class="'+PAPERS[o]+'" style="background:var(--p-bg)"></i>':'';
+      return '<button data-o="'+o+'"'+(o===x.v?' class="on"':'')+(k==='font'?' style="font-family:'+FONTS[o]+'"':'')+'>'+sw+o+(x.n&&x.n[o]?'<small>'+x.n[o]+'</small>':'')+'</button>';}).join('');
+    var r=el.getBoundingClientRect(),sr=SC.getBoundingClientRect(),i=x.o.indexOf(x.v);
+    WH.style.left=Math.max(8,r.left-sr.left-20)+'px';WH.style.top=(r.top-sr.top+SC.scrollTop-6-i*36+(r.height-36)/2)+'px';WH.style.transformOrigin='20px '+(6+i*36+18)+'px';
+    requestAnimationFrame(function(){WH.classList.add('on');});kb=i;
+    [].forEach.call(WH.querySelectorAll('button'),function(b){
+      b.addEventListener('mouseenter',function(){if(k==='paper')preview(b.dataset.o);if(k==='font')W.style.setProperty('--h-font',FONTS[b.dataset.o]);});
+      b.addEventListener('click',function(e){e.stopPropagation();pick(k,b.dataset.o);});});
+    WH.onmouseleave=function(){if(k==='paper')preview(T.paper.v);if(k==='font')W.style.setProperty('--h-font',FONTS[T.font.v]);};
+  }
+  function preview(p){Object.keys(PAPERS).forEach(function(q){W.classList.remove(PAPERS[q]);});W.classList.add(PAPERS[p]);}
+  function pick(k,o){T[k].v=o;close();show(k,true);var el=tok(k);el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');apply(k);}
+  function close(){if(openK){var el=tok(openK);if(el)el.classList.remove('open');}openK=null;WH.classList.remove('on');}
+  document.addEventListener('click',function(e){if(openK&&!WH.contains(e.target))close();});
+  /* 拖数字：每 8 像素一格，下面出一把尺 */
+  function scrub(el,e){var k=el.dataset.k,x=T[k],x0=e.clientX,v0=x.v,moved=false;
+    var n=Math.round((x.max-x.min)/x.step),ru=el.querySelector('.h-ruler'),cnt=Math.min(n,14);
+    function ruler(){var at=Math.round((x.v-x.min)/(x.max-x.min)*(cnt-1)),s='';for(var i=0;i<cnt;i++)s+='<i class="'+(i===at?'on':'')+'"></i>';ru.innerHTML=s;}
+    ruler();el.classList.add('drag');document.body.classList.add('h-drag');
+    function mv(ev){var d=Math.round((ev.clientX-x0)/8);if(d)moved=true;var v=Math.min(x.max,Math.max(x.min,v0+d*x.step));v=Math.round(v/x.step)*x.step;v=+v.toFixed(2);
+      if(v!==x.v){x.v=v;show(k);apply(k);ruler();}}
+    function up(){document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);el.classList.remove('drag');document.body.classList.remove('h-drag');
+      if(k==='speed'&&moved)speak(el.closest('.h-s'),'zh');}
+    document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);e.preventDefault();}
+  /* Key：这个词自己变成输入框，宽度长开；粘进去、回车就核对 */
+  function key(el){var w=document.getElementById('hKeyW');
+    w.innerHTML='<span class="h-key" id="hKey" style="--w:7em"><input id="hKeyI" placeholder="粘贴 sk-ant-…"><kbd>⌘V · ↩</kbd></span>';
+    var box=document.getElementById('hKey'),inp=document.getElementById('hKeyI');setTimeout(function(){box.style.setProperty('--w','17em');},20);inp.focus();
+    function go(){var v=inp.value||'sk-ant-api03-demo7Qw';var shown=v.slice(0,7)+'••••'+v.slice(-3);
+      w.innerHTML='<b class="h-t" data-k="key"><span class="h-v">'+shown+'</span></b><span class="h-st" id="hSt"><i class="h-spin"></i>认出是 '+(T.ai.v==='OpenAI'?'OpenAI':'Claude')+'，正在核对</span>';
+      setTimeout(function(){var st=document.getElementById('hSt');st.className='h-st ok';st.textContent='✓ 连上了';T.key.v=shown;changed();},1100);wire(w);}
+    inp.addEventListener('keydown',function(e){if(e.key==='Enter')go();if(e.key==='Escape'){w.innerHTML=K('key');wire(w);}});
+    inp.addEventListener('paste',function(){setTimeout(go,60);});}
+  function wire(scope){[].forEach.call(scope.querySelectorAll('.h-t'),function(el){var x=T[el.dataset.k];
+    if(x.t==='num'){el.addEventListener('mousedown',function(e){scrub(el,e);});
+      el.addEventListener('wheel',function(e){e.preventDefault();var k=el.dataset.k;x.v=+Math.min(x.max,Math.max(x.min,x.v+(e.deltaY<0?x.step:-x.step))).toFixed(2);show(k,true);apply(k);},{passive:false});}
+    else el.addEventListener('click',function(e){e.stopPropagation();if(x.t==='key'){if(x.v==='粘一个 Key')key(el);return;}openK===el.dataset.k?close():wheel(el);});
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click();}
+      if(x.t==='num'&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){x.v=+Math.min(x.max,Math.max(x.min,x.v+(e.key==='ArrowRight'?x.step:-x.step))).toFixed(2);show(el.dataset.k,true);apply(el.dataset.k);}});});}
+  wire(D);
+  /* 轮子里上下键、回车、Esc */
+  document.addEventListener('keydown',function(e){if(!openK)return;var bs=WH.querySelectorAll('button');
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();kb=(kb+(e.key==='ArrowDown'?1:-1)+bs.length)%bs.length;[].forEach.call(bs,function(b,i){b.classList.toggle('kb',i===kb);});}
+    if(e.key==='Enter'){e.preventDefault();pick(openK,bs[kb].dataset.o);}if(e.key==='Escape')close();});
+  /* 找一句：别的句子淡下去 */
+  var F=document.getElementById('hFind');
+  F.addEventListener('input',function(){var q=F.value.trim().toLowerCase();D.classList.toggle('q',!!q);
+    if(q&&/大小|字号|声|key|同步|备份|纸|夜|翻/.test(q)===false){}
+    [].forEach.call(D.querySelectorAll('.h-s'),function(s){var t=s.textContent.toLowerCase(),syn={'字号':'号','大小':'号','声音':'念','key':'key','颜色':'纸','暗':'夜'};var hit=t.indexOf(q)>=0||(syn[q]&&t.indexOf(syn[q])>=0);s.classList.toggle('m',!!hit);});
+    if(q&&!document.getElementById('hMore').classList.contains('on')&&[].some.call(document.querySelectorAll('#hMore .h-s'),function(s){return s.classList.contains('m');}))fold(true);});
+  document.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='f'&&W.getBoundingClientRect().top<innerHeight&&W.getBoundingClientRect().bottom>0){e.preventDefault();F.focus();}});
+  function fold(on){document.getElementById('hMore').classList.toggle('on',on);var f=document.getElementById('hFold');f.classList.toggle('on',on);f.querySelector('span').textContent=on?'收起来':'还有 3 句不常改的';}
+  document.getElementById('hFold').addEventListener('click',function(){fold(!document.getElementById('hMore').classList.contains('on'));});
+  document.getElementById('hUndo').addEventListener('click',function(){Object.keys(orig).forEach(function(k){if(k!=='key')T[k].v=orig[k];});applyAll();changed();});
+  SC.addEventListener('scroll',function(){close();document.getElementById('hHint').style.opacity=SC.scrollTop>10?0:1;});
+  var idx=document.getElementById('idx');var a=document.createElement('a');a.href='#v6';a.textContent='第六版';idx.insertBefore(a,idx.firstChild);
+  /* 截图用：#v6-wheel 打开一只轮子，#v6-night 换夜里的纸 */
+  var hv=(location.hash.match(/^#v6-(\w+)/)||[])[1];
+  if(hv==='wheel')setTimeout(function(){wheel(tok('zh'));},200);
+  if(hv==='night')setTimeout(function(){pick('paper','夜间纸本');T.fs.v=20;show('fs');apply('fs');},200);
+  if(hv==='key')setTimeout(function(){key(tok('key'));},200);
 })();
 </script>
 </body></html>
