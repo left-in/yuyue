@@ -4255,6 +4255,40 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .sv-use{display:flex;flex-direction:column;gap:10px;padding:14px 0}
 .sv-use .x-sbar{height:8px}
 .sv-use .x-sbar i{display:block;height:100%;transition:flex-grow .6s var(--e)}
+/* 第十一版第三稿：三块——目录、设置、一张纸 */
+.v-mac.sv-win.sv3{display:grid;grid-template-columns:212px minmax(0,1fr) 296px}
+.sv3 .sv-side{position:relative;display:flex;flex-direction:column;min-height:0;padding:16px 14px 12px 20px;background:color-mix(in srgb,var(--card) 40%,var(--bg));border-right:.5px solid var(--line)}
+.sv3 .sv-ttl{margin:30px 0 0;font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:.32em;color:var(--t1)}
+.sv-q{display:flex;align-items:center;gap:6px;margin:14px 0 4px;height:28px;padding:0 9px;border-radius:8px;background:color-mix(in srgb,var(--t1) 5%,transparent);font-size:12px;color:var(--t3)}
+.sv-q svg{width:12px;height:12px;flex:none}
+.sv-q input{flex:1;min-width:0;border:0;background:none;outline:0;font:inherit;color:var(--t1);padding:0}
+.sv-q input::placeholder{color:var(--t3)}
+.sv-q kbd{font-family:var(--sans);font-size:10.5px}
+.sv3 .sv-toc{margin-top:4px}
+.sv-ch{display:flex;align-items:baseline;gap:10px;margin:18px 0 4px;font-family:var(--serif);font-size:11.5px;color:var(--t3);letter-spacing:.16em}
+.sv-ch i{font-style:normal;width:14px;letter-spacing:0}
+.sv3 .sv-it{display:flex;align-items:center;height:30px;padding:0 0 0 24px;font-family:var(--serif);font-size:14px;color:var(--t2);letter-spacing:.06em;background:none;box-shadow:none;cursor:pointer;transition:color .2s}
+.sv3 .sv-it:hover{color:var(--t1);background:none}
+.sv3 .sv-it.on{color:var(--t1);font-weight:600;background:none;box-shadow:none}
+.sv-bar2{position:absolute;left:0;top:0;width:2px;height:14px;border-radius:1px;background:var(--accent);transition:top .4s var(--e)}
+.sv3 .sv-it .sv-mk{margin-left:7px}
+.sv3 .sv-foot{margin-left:-6px}
+.sv3 .sv-mid{position:relative;overflow:hidden;min-width:0}
+.sv3 .sv-pg{padding:14px 26px 32px}
+.sv3 .sv-col{max-width:none}
+.sv-paper{position:relative;overflow:hidden;border-left:.5px solid var(--line)}
+.sv-paper.in .sv-sheet{animation:svIn .35s var(--e)}
+.sv3 .sv-sheet{position:absolute;inset:0;height:auto;border-radius:0;padding:64px 30px 0;-webkit-mask-image:none;mask-image:none;box-shadow:inset 12px 0 22px -18px rgba(0,0,0,.22)}
+.sv3 .sv-sheet h4{font-size:15px;margin-bottom:16px}
+.sv-plab{position:absolute;left:30px;right:30px;top:26px;margin:0!important;font-family:var(--sans);font-size:10.5px!important;line-height:1.4!important;color:var(--p-ink-2);letter-spacing:.06em;text-indent:0!important;text-align:left!important}
+.sv-plab span{color:var(--p-ink)}
+.sv-note h4{font-size:24px!important;text-align:left!important;letter-spacing:.14em!important;margin:6px 0 16px!important}
+.sv-note .sv-lead{font-size:13.5px;line-height:2.05;text-indent:0;text-align:left;color:var(--p-ink)}
+.sv-note dl{margin:30px 0 0;padding:0;border-top:.5px solid color-mix(in srgb,var(--p-ink) 14%,transparent)}
+.sv-note dl div{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:.5px solid color-mix(in srgb,var(--p-ink) 14%,transparent);font-family:var(--sans);font-size:12.5px}
+.sv-note dt{color:var(--p-ink-2)}
+.sv-note dd{margin:0;color:var(--p-ink);text-align:right}
+.sv3 .sv-bar{position:absolute;left:22px;right:22px;bottom:22px}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -4864,7 +4898,7 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
     <nav class="x-idx" id="idx"></nav>
   </div>
   <section id="v11">
-    <h2 class="x-h">第十一版：设置窗口（第二稿） <span class="y-rec">11-03</span></h2>
+    <h2 class="x-h">第十一版：设置窗口（第三稿） <span class="y-rec">11-03</span></h2>
     <p class="y-cap2">从 Loop 只借两点：一行一样、排得很齐；只在需要的地方放预览。别的都是语阅自己的：窗口外壳和书架窗口一模一样（同一块浮起来的侧栏、同一种行和开关）；侧栏是一页<b>目录</b>，分“卷一 读、卷二 听……”，每页后面有页码，选中哪页，一条<b>书签丝带</b>从顶上垂下来停在那一行；右边每一页像书的一页：页眉、衬线大标题、一句话说明、页码、末尾“完”。只有书页、外文、声音三页旁边夹一张<b>样张</b>（盖一个小小的“样”字），其余页不放预览、只有一栏。改过的页，目录上那一行前面点一个小点，侧栏底下写“改了几处 · 全部改回”。Key 不弹窗，就在那一行底下展开一个大框。</p>
     <div class="x-stage" style="margin-top:14px"><div id="svRoot"></div></div>
     <div class="m9-why"><div><b>和现在的 App 一样</b>外壳、侧栏、行、开关、分段、滑杆、按钮都是现在书架窗口和设置窗口里的那几样，颜色只有纸色和墨蓝。</div>
@@ -6612,7 +6646,7 @@ PAGES.push({id:'data',name:'数据',
   var S=JSON.parse(JSON.stringify(D));
   /* 每个设置属于哪一页（目录上标“改过”的小点用） */
   var OWN={paper:'page',font:'page',fs:'page',lh:'page',mg:'page',ind:'page',just:'page',turn:'page',edge:'page',night:'page',nightAt:'page',gloss:'fl',lv:'fl',gm:'fl',zh:'voice',en:'voice',speed:'voice',dlg:'voice',sleep:'listen',foot:'listen',awake:'listen',ai:'ai',tip:'ai',quiet:'ai',icloud:'sync',sA:'sync',sB:'sync',sC:'sync',sD:'sync',bk:'store',look:'gen',tint:'gen',open:'gen',menu:'gen'};
-  var TOC=[['','读',[['page','书页','i-book'],['fl','外文','i-trans']]],['','听',[['voice','声音','i-ear'],['listen','听书','i-headset']]],['','帮手',[['ai','书伴','i-spark']]],['','数据',[['sync','同步','i-sync'],['store','存储与备份','i-disk']]],['','其他',[['gen','通用','i-sliders'],['about','关于','i-info']]]];
+  var TOC=[['一','读',[['page','书页','i-book'],['fl','外文','i-trans']]],['二','听',[['voice','声音','i-ear'],['listen','听书','i-headset']]],['三','帮手',[['ai','书伴','i-spark']]],['四','数据',[['sync','同步','i-sync'],['store','存储与备份','i-disk']]],['五','其他',[['gen','通用','i-sliders'],['about','关于','i-info']]]];
   var PG={};TOC.forEach(function(v){v[2].forEach(function(t){PG[t[0]]=t;});});
   var SAMPLE={page:1,fl:1,voice:1};
 
@@ -6656,25 +6690,33 @@ PAGES.push({id:'data',name:'数据',
     about:{intro:'',
       html:function(){return BOX(R('语阅','1.0 · 2026 年 11 月',NB('检查更新')),R('写信给我们','',NB('发邮件…')),R('隐私','书、笔记和 Key 都只在你的设备上',''));}}};
 
-  var SMP={page:'<p class="v-ms-gl">预览</p><div class="sv-sheet" id="svSheet"><h4>背　影</h4><p>'+TX.slice(0,2).join('')+'</p><p>'+TX.slice(2,6).join('')+'</p></div>',
-    fl:'<p class="v-ms-gl">预览<em>比 <span id="svLvC">六级</span> 难的词</em></p><div class="sv-sheet en paper-kami" id="svEn"><h4 style="font-family:var(--serif)">Chapter 1</h4><p>'+EN.map(function(w){return w[2]?'<ruby data-d="'+w[2]+'">'+w[0]+'<rt>'+w[1]+'</rt></ruby>':w[0];}).join('')+'</p></div>',
-    voice:'<p class="v-ms-gl">预览<em>念到哪亮到哪</em></p><div class="sv-sheet" id="svSheetV"><h4>背　影</h4><p>'+TX.slice(0,2).map(function(s,i){return '<span data-ph="'+i+'">'+s+'</span>';}).join('')+'</p><p>'+TX.slice(2,8).map(function(s,i){return '<span data-ph="'+(i+2)+'">'+s+'</span>';}).join('')+'</p></div><div class="sv-bar"><span class="av" id="svAv"></span><span><b id="svVn"></b> · <span id="svVs" style="color:var(--t3)"></span></span><button class="pp" id="svPP">'+I('i-pausef')+'</button></div>'};
+  var SMP={page:'<div class="sv-sheet" id="svSheet"><p class="sv-plab">预览 · 照现在的设置排</p><h4>背　影</h4><p>'+TX.slice(0,2).join('')+'</p><p>'+TX.slice(2).join('')+'</p><p>父亲说：“事已如此，不必难过，好在天无绝人之路！”回家变卖典质，父亲还了亏空；又借钱办了丧事。这些日子，家中光景很是惨淡，一半为了丧事，一半为了父亲赋闲。</p></div>',
+    fl:'<div class="sv-sheet en paper-kami" id="svEn"><p class="sv-plab">预览 · 比 <span id="svLvC">六级</span> 难的词这样标</p><h4 style="font-family:var(--serif)">Chapter 1</h4><p>'+EN.map(function(w){return w[2]?'<ruby data-d="'+w[2]+'">'+w[0]+'<rt>'+w[1]+'</rt></ruby>':w[0];}).join('')+'</p></div>',
+    voice:'<div class="sv-sheet" id="svSheetV"><p class="sv-plab">预览 · 念到哪亮到哪</p><h4>背　影</h4><p>'+TX.slice(0,2).map(function(s,i){return '<span data-ph="'+i+'">'+s+'</span>';}).join('')+'</p><p>'+TX.slice(2).map(function(s,i){return '<span data-ph="'+(i+2)+'">'+s+'</span>';}).join('')+'</p></div><div class="sv-bar"><span class="av" id="svAv"></span><span><b id="svVn"></b> · <span id="svVs" style="color:var(--t3)"></span></span><button class="pp" id="svPP">'+I('i-pausef')+'</button></div>'};
 
-  root.innerHTML='<div class="v-mac sv-win" id="svW"><aside class="v-mac-sb"><span class="v-lights"><i></i><i></i><i></i></span><div class="v-mac-sch">'+I('i-search')+'<input id="svQ" placeholder="找一项设置" style="border:0;background:none;outline:0;font:inherit;color:var(--t1);width:100%;padding:0"><kbd>⌘F</kbd></div>'+
-    '<div class="sv-toc" id="svToc"><i class="sv-sel" id="svRib"></i>'+TOC.map(function(v){return '<p class="v-mac-gt">'+v[1]+'</p>'+v[2].map(function(t){return '<div class="v-mac-it sv-it" data-p="'+t[0]+'">'+I(t[2])+t[1]+'<i class="sv-mk"></i></div>';}).join('');}).join('')+'</div>'+
-    '<div class="sv-foot" id="svFoot"><span id="svCn"></span><a id="svUndo">全部改回</a></div></aside><div class="v-mac-mn" id="svMn"></div></div>';
+  root.innerHTML='<div class="v-mac sv-win sv3" id="svW"><aside class="sv-side"><span class="v-lights"><i></i><i></i><i></i></span><h2 class="sv-ttl">目录</h2><label class="sv-q">'+I('i-search')+'<input id="svQ" placeholder="找一项设置"><kbd>⌘F</kbd></label>'+
+    '<div class="sv-toc" id="svToc"><i class="sv-bar2" id="svRib"></i>'+TOC.map(function(v){return '<p class="sv-ch"><i>'+v[0]+'</i>'+v[1]+'</p>'+v[2].map(function(t){return '<div class="sv-it" data-p="'+t[0]+'">'+t[1]+'<i class="sv-mk"></i></div>';}).join('');}).join('')+'</div>'+
+    '<div class="sv-foot" id="svFoot"><span id="svCn"></span><a id="svUndo">全部改回</a></div></aside><div class="sv-mid" id="svMn"></div><div class="sv-paper" id="svPaper"></div></div>';
   var W=document.getElementById('svW'),$=function(s){return W.querySelector(s);},$$=function(s){return [].slice.call(W.querySelectorAll(s));};
   var cur=null,timer=null,ph=0;
 
   function page(p,first){cur=p;clearInterval(timer);var t=PG[p],b=BODY[p],has=SAMPLE[p];
-    $('#svMn').innerHTML='<div class="sv-pg'+(first?'':' in')+'"><div class="v-mac-hd"><h3>'+t[1]+'</h3></div>'+(b.intro?'<p class="sv-sub">'+b.intro+'</p>':'')+
-      '<div class="sv-body'+(has?' with':'')+'"><div class="sv-col'+(has?'':' solo')+'">'+b.html()+'</div>'+(has?'<div class="sv-smp">'+SMP[p]+'</div>':'')+'</div></div>';
-    $$('.sv-it').forEach(function(x){x.classList.toggle('on',x.dataset.p===p);});var it=$('.sv-it[data-p="'+p+'"]');var rb=$('#svRib');if(first){rb.style.transition='none';rb.style.top=it.offsetTop+'px';void rb.offsetWidth;rb.style.transition='';}else rb.style.top=it.offsetTop+'px';
+    $('#svMn').innerHTML='<div class="sv-pg'+(first?'':' in')+'"><div class="v-mac-hd"><h3>'+t[1]+'</h3></div>'+(b.intro?'<p class="sv-sub">'+b.intro+'</p>':'')+'<div class="sv-col">'+b.html()+'</div></div>';
+    var pp=$('#svPaper');pp.innerHTML=has?SMP[p]:NOTE(p);pp.classList.remove('in');void pp.offsetWidth;if(!first)pp.classList.add('in');
+    $$('.sv-it').forEach(function(x){x.classList.toggle('on',x.dataset.p===p);});var it=$('.sv-it[data-p="'+p+'"]');var rb=$('#svRib'),y=it.offsetTop+8;if(first){rb.style.transition='none';rb.style.top=y+'px';void rb.offsetWidth;rb.style.transition='';}else rb.style.top=y+'px';
     wire();apply();if(p==='voice')read();}
   $$('.sv-it').forEach(function(x){x.onclick=function(){page(x.dataset.p);};});
 
   /* 改了：样张跟着变，目录上那一页旁边点一个小点，侧栏底下“改了几处” */
-  function set(k,v){S[k]=v;apply(k);marks();}
+  function set(k,v){S[k]=v;apply(k);marks();if(!SAMPLE[cur])$('#svPaper').innerHTML=NOTE(cur);}
+  /* 没有预览的页：右边那张纸上写这一页是干什么的、现在是什么样 */
+  function NOTE(p){var L={listen:['听书时的几样习惯，每本书都一样。',[['睡眠定时',['不定时','15 分钟','30 分钟','这一章念完'][S.sleep]],['脚注和图注',S.foot?'跳过':'照念'],['听书时',S.awake?'Mac 不睡着':'照常睡']]],
+      ai:['读到不懂的地方，选中一句问它。它只看你选的那一段，不看整本书。',[['书伴',['Claude','OpenAI','这台 Mac'][S.ai]],['Key',S.conn?'已连上':'还没连上'],['难处提示',S.tip?'开着':'关着']]],
+      sync:['你在哪一台上读到哪，另外几台就翻到哪。',[['iCloud',S.icloud?'开着':'关着'],['跟着走',[S.sA?'读到哪':'',S.sB?'划线':'',S.sC?'生词':'',S.sD?'设置':''].filter(String).join('、')||'没有'],['上次','2 分钟前']]],
+      store:['书、有声书和念过的句子，都放在这台 Mac 上。',[['一共',(3.2-(S.cA?1.4:0)-(S.cV?.5:0)).toFixed(1)+' GB'],['备份',['每天','每周','不备份'][S.bk]],['上次备份','昨天 23:00']]],
+      gen:['和书无关的几样。',[['外观',['浅色','深色','跟随系统'][S.look]],['主题色',['墨蓝','墨黑'][S.tint]]]],
+      about:['好好读一本书。',[['版本','1.0'],['书、笔记和 Key','只在你的设备上']]]}[p];
+    return '<div class="sv-sheet sv-note paper-kami"><p class="sv-plab">这一页</p><h4>'+PG[p][1]+'</h4><p class="sv-lead">'+L[0]+'</p><dl>'+L[1].map(function(r){return '<div><dt>'+r[0]+'</dt><dd>'+r[1]+'</dd></div>';}).join('')+'</dl></div>';}
   function marks(){var n=0,pg={};Object.keys(OWN).forEach(function(k){if(S[k]!==D[k]){n++;pg[OWN[k]]=1;}});$$('.sv-it').forEach(function(x){x.classList.toggle('chg',!!pg[x.dataset.p]);});$('#svFoot').classList.toggle('on',n>0);$('#svCn').textContent='改了 '+n+' 处';}
   function apply(k){var sh=$('#svSheet')||$('#svSheetV');if(sh){sh.style.setProperty('--sv-fs',S.fs+'px');sh.style.setProperty('--sv-lh',S.lh);sh.style.setProperty('--sv-mg',S.mg+'px');sh.style.setProperty('--sv-font',FON[S.font][1]);sh.style.setProperty('--sv-ind',S.ind?'2em':'0');
       PAP.forEach(function(p){sh.classList.remove(p[0]);});sh.classList.add(PAP[S.paper][0]);[].forEach.call(sh.querySelectorAll('p'),function(p){p.style.textAlign=S.just?'justify':'left';});
