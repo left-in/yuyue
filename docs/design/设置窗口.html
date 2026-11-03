@@ -4170,27 +4170,22 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .lu-sheet .lu-btn{height:28px;padding:0 14px}
 /* ===== 2026-11-03 第十一版：设置是一本书的目录（sv- 开头） ===== */
 .v-mac.sv-win{width:1040px;height:660px;margin:0;--e:cubic-bezier(.2,.8,.2,1)}
-/* 侧栏：目录。书签丝带从顶上垂下来，停在选中那一行 */
-.sv-win .v-mac-sb{overflow:hidden}
-.sv-toc{position:relative;display:flex;flex-direction:column;margin-top:6px}
-.sv-vol{display:flex;align-items:baseline;gap:6px;padding:14px 8px 4px 22px;font-size:10.5px;font-weight:600;color:var(--t3);letter-spacing:.04em}
-.sv-vol i{font-style:normal;font-family:var(--serif);font-weight:400}
-.sv-it{position:relative;display:flex;align-items:baseline;gap:6px;height:28px;line-height:28px;padding:0 8px 0 22px;border-radius:8px;font-size:12.5px;color:var(--t1);cursor:pointer;transition:color .14s,background .14s}
-.sv-it::after{content:"";order:1;flex:1;border-bottom:1px dotted color-mix(in srgb,var(--t3) 70%,transparent);transform:translateY(-4px);min-width:10px}
-.sv-it em{order:2;font-style:normal;font-family:var(--serif);font-size:11px;color:var(--t3);font-variant-numeric:tabular-nums}
-.sv-it:hover{background:color-mix(in srgb,var(--t1) 4%,transparent)}
-.sv-it.on{font-weight:600;color:var(--accent)}
-.sv-it.on em{color:var(--accent)}
-.sv-it .sv-mk{position:absolute;left:10px;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:3px;background:var(--accent);opacity:0;transform:scale(.4);transition:opacity .2s,transform .3s var(--e)}
-.sv-it.chg .sv-mk{opacity:.55;transform:none}
-.sv-it.on .sv-mk{opacity:0}
-.sv-rib{position:absolute;left:4px;top:-6px;width:9px;height:0;background:var(--accent);clip-path:polygon(0 0,100% 0,100% 100%,50% calc(100% - 5px),0 100%);transition:height .45s var(--e);z-index:2;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+/* 侧栏：和书架窗口同一种行，选中的白底滑过去 */
+.sv-toc{position:relative;display:flex;flex-direction:column}
+.sv-toc .v-mac-gt:first-of-type{padding-top:16px}
+.sv-it{position:relative;z-index:1;cursor:pointer;transition:color .14s}
+.sv-it.on{background:none;box-shadow:none}
+.sv-it:not(.on):hover{background:color-mix(in srgb,var(--t1) 4%,transparent)}
+.sv-sel{position:absolute;left:0;right:0;top:0;height:28px;border-radius:8px;background:var(--card);box-shadow:var(--zsh);transition:top .35s var(--e);z-index:0}
+.sv-it .sv-mk{margin-left:auto;width:5px;height:5px;border-radius:3px;background:var(--accent);opacity:0;transform:scale(.4);transition:opacity .2s,transform .3s var(--e)}
+.sv-it.chg .sv-mk{opacity:.7;transform:none}
 .sv-foot{margin-top:auto;padding:10px 8px 4px;border-top:.5px solid var(--line);font-size:11px;color:var(--t3);display:flex;justify-content:space-between;align-items:center;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .3s var(--e)}
 .sv-foot.on{opacity:1;transform:none}
 .sv-foot a{color:var(--accent);cursor:pointer}
 /* 右边：一页 */
 .sv-win .v-mac-mn{padding:0;overflow:hidden}
-.sv-pg{position:absolute;inset:0;overflow:auto;scrollbar-width:none;padding:0 30px 40px 26px}
+.sv-pg{position:absolute;inset:0;overflow:auto;scrollbar-width:none;padding:4px 28px 32px 22px}
+.sv-sub{margin:-10px 2px 18px;font-size:12px;color:var(--t2);line-height:1.6}
 .sv-pg::-webkit-scrollbar{display:none}
 .sv-pg.in{animation:svIn .3s var(--e)}
 @keyframes svIn{from{opacity:0;transform:translateY(6px)}}
@@ -4206,10 +4201,11 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .sv-col.solo{max-width:560px}
 .sv-end{margin-top:30px;text-align:center;font-family:var(--serif);font-size:11px;color:var(--t3);letter-spacing:.1em}
 /* 样张：只在书页、外文、声音三页有 */
-.sv-smp{position:sticky;top:12px;display:flex;flex-direction:column;gap:10px}
+.sv-smp{position:sticky;top:0;display:flex;flex-direction:column;gap:6px}
+.sv-smp .v-ms-gl{margin:0 4px 2px}
 .sv-smp>small{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--t3);letter-spacing:.08em}
 .sv-seal{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:3px;border:1px solid color-mix(in srgb,var(--danger) 70%,transparent);color:color-mix(in srgb,var(--danger) 80%,transparent);font-family:var(--serif);font-size:10px;letter-spacing:0;transform:rotate(-6deg)}
-.sv-sheet{position:relative;height:350px;box-sizing:border-box;padding:28px var(--sv-mg,24px) 0;border-radius:4px;background:var(--p-bg);color:var(--p-ink);font-family:var(--sv-font,var(--serif));box-shadow:0 0 0 .5px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.04),0 14px 30px rgba(51,46,41,.12);overflow:hidden;transition:background .4s,color .4s,padding .3s var(--e)}
+.sv-sheet{position:relative;box-sizing:border-box;padding:24px var(--sv-mg,24px) 26px;border-radius:10px;background:var(--p-bg);color:var(--p-ink);font-family:var(--sv-font,var(--serif));box-shadow:0 0 0 .5px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.04),0 14px 30px rgba(51,46,41,.12);overflow:hidden;transition:background .4s,color .4s,padding .3s var(--e)}
 .sv-sheet h4{margin:0 0 12px;text-align:center;font-size:13px;font-weight:600;letter-spacing:.18em}
 .sv-sheet p{margin:0;font-size:var(--sv-fs,14px);line-height:var(--sv-lh,2);text-indent:var(--sv-ind,2em);text-align:justify;transition:font-size .3s var(--e),line-height .3s var(--e),text-indent .3s var(--e)}
 .sv-sheet .no{position:absolute;left:0;right:0;bottom:0;padding:10px 0 10px;background:var(--p-bg);transition:background .4s;text-align:center;font-family:var(--sans);font-size:9.5px;color:var(--p-ink-2)}
@@ -4868,7 +4864,7 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
     <nav class="x-idx" id="idx"></nav>
   </div>
   <section id="v11">
-    <h2 class="x-h">第十一版：设置是一本书的目录 <span class="y-rec">11-03</span></h2>
+    <h2 class="x-h">第十一版：设置窗口（第二稿） <span class="y-rec">11-03</span></h2>
     <p class="y-cap2">从 Loop 只借两点：一行一样、排得很齐；只在需要的地方放预览。别的都是语阅自己的：窗口外壳和书架窗口一模一样（同一块浮起来的侧栏、同一种行和开关）；侧栏是一页<b>目录</b>，分“卷一 读、卷二 听……”，每页后面有页码，选中哪页，一条<b>书签丝带</b>从顶上垂下来停在那一行；右边每一页像书的一页：页眉、衬线大标题、一句话说明、页码、末尾“完”。只有书页、外文、声音三页旁边夹一张<b>样张</b>（盖一个小小的“样”字），其余页不放预览、只有一栏。改过的页，目录上那一行前面点一个小点，侧栏底下写“改了几处 · 全部改回”。Key 不弹窗，就在那一行底下展开一个大框。</p>
     <div class="x-stage" style="margin-top:14px"><div id="svRoot"></div></div>
     <div class="m9-why"><div><b>和现在的 App 一样</b>外壳、侧栏、行、开关、分段、滑杆、按钮都是现在书架窗口和设置窗口里的那几样，颜色只有纸色和墨蓝。</div>
@@ -6616,7 +6612,7 @@ PAGES.push({id:'data',name:'数据',
   var S=JSON.parse(JSON.stringify(D));
   /* 每个设置属于哪一页（目录上标“改过”的小点用） */
   var OWN={paper:'page',font:'page',fs:'page',lh:'page',mg:'page',ind:'page',just:'page',turn:'page',edge:'page',night:'page',nightAt:'page',gloss:'fl',lv:'fl',gm:'fl',zh:'voice',en:'voice',speed:'voice',dlg:'voice',sleep:'listen',foot:'listen',awake:'listen',ai:'ai',tip:'ai',quiet:'ai',icloud:'sync',sA:'sync',sB:'sync',sC:'sync',sD:'sync',bk:'store',look:'gen',tint:'gen',open:'gen',menu:'gen'};
-  var TOC=[['卷一','读',[['page','书页','3'],['fl','外文','9']]],['卷二','听',[['voice','声音','13'],['listen','听书','17']]],['卷三','帮手',[['ai','书伴','21']]],['卷四','数据',[['sync','同步','25'],['store','存储与备份','29']]],['附','',[['gen','通用','33'],['about','关于','35']]]];
+  var TOC=[['','读',[['page','书页','i-book'],['fl','外文','i-trans']]],['','听',[['voice','声音','i-ear'],['listen','听书','i-headset']]],['','帮手',[['ai','书伴','i-spark']]],['','数据',[['sync','同步','i-sync'],['store','存储与备份','i-disk']]],['','其他',[['gen','通用','i-sliders'],['about','关于','i-info']]]];
   var PG={};TOC.forEach(function(v){v[2].forEach(function(t){PG[t[0]]=t;});});
   var SAMPLE={page:1,fl:1,voice:1};
 
@@ -6630,7 +6626,7 @@ PAGES.push({id:'data',name:'数据',
     page:{intro:'书上的字和纸。改的是所有书；某一本想不一样，在那本书的 Aa 里改。',
       html:function(){return GL('纸')+BOX(R('纸色','','<span class="sv-pp" data-k="paper">'+PAP.map(function(p,i){return '<span data-i="'+i+'"'+(i===S.paper?' class="on"':'')+'><i class="'+p[0]+'">文</i>'+p[1]+'</span>';}).join('')+'</span>','v-ms-rt'),
           R('到了晚上换夜间纸','',CTL(SG('nightAt',['21:00','22:00','23:00'],150),TG('night'))))+
-        GL('字')+BOX(R('字体','','<span class="sv-ff" data-k="font">'+FON.map(function(f,i){return '<span data-i="'+i+'" style="font-family:'+f[1]+'"'+(i===S.font?' class="on"':'')+'>'+f[0]+'</span>';}).join('')+'</span>'),
+        GL('字')+BOX(R('字体','',SG('font',['宋体','黑体','楷体'],190)),
           R('字号','',SLD('fs',12,22,1,'i')),R('行距','',SLD('lh',1.5,2.6,.1,'f')),R('页边','',SLD('mg',14,44,2,'i')))+
         GL('排版')+BOX(R('翻页','',SG('turn',['左右翻','上下滚'],150)),R('每段开头空两格','',TG('ind'),'v-ms-rs'),R('两端对齐','',TG('just'),'v-ms-rs'),R('点屏幕左右两边翻页','',TG('edge'),'v-ms-rs'));}},
     fl:{intro:'读英文书时，比你水平难的词，在头上写一个中文意思。',
@@ -6660,20 +6656,20 @@ PAGES.push({id:'data',name:'数据',
     about:{intro:'',
       html:function(){return BOX(R('语阅','1.0 · 2026 年 11 月',NB('检查更新')),R('写信给我们','',NB('发邮件…')),R('隐私','书、笔记和 Key 都只在你的设备上',''));}}};
 
-  var SMP={page:'<small><span class="sv-seal">样</span>样张 · 照你现在的设置排</small><div class="sv-sheet" id="svSheet"><h4>背　影</h4><p>'+TX.slice(0,2).join('')+'</p><p>'+TX.slice(2).join('')+'</p><span class="no">— 3 —</span></div>',
-    fl:'<small><span class="sv-seal">样</span>样张 · 比 <b id="svLvC" style="color:var(--t1)">六级</b> 难的词这样标</small><div class="sv-sheet en paper-kami" id="svEn"><h4 style="font-family:var(--serif)">Chapter 1</h4><p>'+EN.map(function(w){return w[2]?'<ruby data-d="'+w[2]+'">'+w[0]+'<rt>'+w[1]+'</rt></ruby>':w[0];}).join('')+'</p><span class="no">— 1 —</span></div>',
-    voice:'<small><span class="sv-seal">样</span>样张 · 念到哪亮到哪</small><div class="sv-sheet" id="svSheetV"><h4>背　影</h4><p>'+TX.slice(0,2).map(function(s,i){return '<span data-ph="'+i+'">'+s+'</span>';}).join('')+'</p><p>'+TX.slice(2).map(function(s,i){return '<span data-ph="'+(i+2)+'">'+s+'</span>';}).join('')+'</p><span class="no">— 3 —</span></div><div class="sv-bar"><span class="av" id="svAv"></span><span><b id="svVn"></b> · <span id="svVs" style="color:var(--t3)"></span></span><button class="pp" id="svPP">'+I('i-pausef')+'</button></div>'};
+  var SMP={page:'<p class="v-ms-gl">预览</p><div class="sv-sheet" id="svSheet"><h4>背　影</h4><p>'+TX.slice(0,2).join('')+'</p><p>'+TX.slice(2,6).join('')+'</p></div>',
+    fl:'<p class="v-ms-gl">预览<em>比 <span id="svLvC">六级</span> 难的词</em></p><div class="sv-sheet en paper-kami" id="svEn"><h4 style="font-family:var(--serif)">Chapter 1</h4><p>'+EN.map(function(w){return w[2]?'<ruby data-d="'+w[2]+'">'+w[0]+'<rt>'+w[1]+'</rt></ruby>':w[0];}).join('')+'</p></div>',
+    voice:'<p class="v-ms-gl">预览<em>念到哪亮到哪</em></p><div class="sv-sheet" id="svSheetV"><h4>背　影</h4><p>'+TX.slice(0,2).map(function(s,i){return '<span data-ph="'+i+'">'+s+'</span>';}).join('')+'</p><p>'+TX.slice(2,8).map(function(s,i){return '<span data-ph="'+(i+2)+'">'+s+'</span>';}).join('')+'</p></div><div class="sv-bar"><span class="av" id="svAv"></span><span><b id="svVn"></b> · <span id="svVs" style="color:var(--t3)"></span></span><button class="pp" id="svPP">'+I('i-pausef')+'</button></div>'};
 
   root.innerHTML='<div class="v-mac sv-win" id="svW"><aside class="v-mac-sb"><span class="v-lights"><i></i><i></i><i></i></span><div class="v-mac-sch">'+I('i-search')+'<input id="svQ" placeholder="找一项设置" style="border:0;background:none;outline:0;font:inherit;color:var(--t1);width:100%;padding:0"><kbd>⌘F</kbd></div>'+
-    '<div class="sv-toc" id="svToc"><i class="sv-rib" id="svRib"></i>'+TOC.map(function(v){return '<p class="sv-vol"><i>'+v[0]+'</i>'+v[1]+'</p>'+v[2].map(function(t){return '<div class="sv-it" data-p="'+t[0]+'"><i class="sv-mk"></i>'+t[1]+'<em>'+t[2]+'</em></div>';}).join('');}).join('')+'</div>'+
+    '<div class="sv-toc" id="svToc"><i class="sv-sel" id="svRib"></i>'+TOC.map(function(v){return '<p class="v-mac-gt">'+v[1]+'</p>'+v[2].map(function(t){return '<div class="v-mac-it sv-it" data-p="'+t[0]+'">'+I(t[2])+t[1]+'<i class="sv-mk"></i></div>';}).join('');}).join('')+'</div>'+
     '<div class="sv-foot" id="svFoot"><span id="svCn"></span><a id="svUndo">全部改回</a></div></aside><div class="v-mac-mn" id="svMn"></div></div>';
   var W=document.getElementById('svW'),$=function(s){return W.querySelector(s);},$$=function(s){return [].slice.call(W.querySelectorAll(s));};
   var cur=null,timer=null,ph=0;
 
   function page(p,first){cur=p;clearInterval(timer);var t=PG[p],b=BODY[p],has=SAMPLE[p];
-    $('#svMn').innerHTML='<div class="sv-pg'+(first?'':' in')+'"><div class="sv-run"><span>语阅 · 设置</span><span>'+(t[0]==='about'?'':'— '+t[2]+' —')+'</span></div><div class="sv-hd"><h3>'+t[1]+'</h3>'+(b.intro?'<p>'+b.intro+'</p>':'')+'</div>'+
-      '<div class="sv-body'+(has?' with':'')+'"><div class="sv-col'+(has?'':' solo')+'">'+b.html()+'</div>'+(has?'<div class="sv-smp">'+SMP[p]+'</div>':'')+'</div><p class="sv-end">— 完 —</p></div>';
-    $$('.sv-it').forEach(function(x){x.classList.toggle('on',x.dataset.p===p);});var it=$('.sv-it[data-p="'+p+'"]');$('#svRib').style.height=(it.offsetTop+it.offsetHeight-2+6)+'px';
+    $('#svMn').innerHTML='<div class="sv-pg'+(first?'':' in')+'"><div class="v-mac-hd"><h3>'+t[1]+'</h3></div>'+(b.intro?'<p class="sv-sub">'+b.intro+'</p>':'')+
+      '<div class="sv-body'+(has?' with':'')+'"><div class="sv-col'+(has?'':' solo')+'">'+b.html()+'</div>'+(has?'<div class="sv-smp">'+SMP[p]+'</div>':'')+'</div></div>';
+    $$('.sv-it').forEach(function(x){x.classList.toggle('on',x.dataset.p===p);});var it=$('.sv-it[data-p="'+p+'"]');var rb=$('#svRib');if(first){rb.style.transition='none';rb.style.top=it.offsetTop+'px';void rb.offsetWidth;rb.style.transition='';}else rb.style.top=it.offsetTop+'px';
     wire();apply();if(p==='voice')read();}
   $$('.sv-it').forEach(function(x){x.onclick=function(){page(x.dataset.p);};});
 
