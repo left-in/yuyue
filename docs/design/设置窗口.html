@@ -3656,6 +3656,70 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .h-hint{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-family:var(--sans);font-size:11.5px;color:var(--p-ink-2);display:flex;gap:16px;white-space:nowrap;pointer-events:none;transition:opacity .4s}
 .h-hint span{display:flex;align-items:center;gap:6px}
 .h-hint i{font-style:normal;display:inline-grid;place-items:center;height:18px;padding:0 6px;border-radius:5px;background:color-mix(in srgb,var(--p-ink) 7%,transparent);color:var(--p-ink);font-size:10.5px}
+/* ===== 2026-11-03 第七版：一页滚到底，左边的预览跟着你滚到哪变成哪（s7- 开头） ===== */
+.v-mac.s7-win{width:1040px;height:660px;margin:0;display:flex;flex-direction:column;--f-fs:17px;--f-lh:2;--f-mg:34px;--f-ind:2em;--f-font:var(--serif);--f-e:cubic-bezier(.2,.8,.2,1)}
+.s7-tb{height:46px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:.5px solid var(--line);background:color-mix(in srgb,var(--card) 70%,var(--bg))}
+.s7-tb b{margin-left:18px;font-size:13px}
+.s7-bd{flex:1;min-height:0;display:grid;grid-template-columns:420px minmax(0,1fr)}
+.s7-left{position:relative;display:flex;flex-direction:column;background:radial-gradient(120% 90% at 50% 40%,color-mix(in srgb,var(--inset) 55%,var(--bg)),var(--inset));border-right:.5px solid var(--line)}
+.s7-pv{flex:1;position:relative;overflow:hidden}
+.s7-pv .f-st{padding:0 20px;box-sizing:border-box}
+.s7-pv .f-book{width:300px;height:388px;padding-top:30px}
+.s7-pv .f-book h4{font-size:15px;margin-bottom:12px}
+.s7-idx{flex:none;position:relative;display:flex;justify-content:space-between;padding:0 18px 16px}
+.s7-idx button{position:relative;border:0;background:none;font:inherit;font-size:12px;color:var(--t2);padding:6px 4px;cursor:pointer;transition:color .14s}
+.s7-idx button.on{color:var(--t1);font-weight:600}
+.s7-idx>i{position:absolute;bottom:14px;height:2px;border-radius:1px;background:var(--t1);transition:left .35s var(--f-e),width .35s var(--f-e)}
+.s7-right{position:relative;min-height:0;display:flex;flex-direction:column;background:var(--card)}
+.s7-find{flex:none;padding:14px 28px 10px;display:flex;align-items:center;gap:10px}
+.s7-find label{flex:1;display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;border-radius:9px;background:var(--inset);font-size:13px;color:var(--t3)}
+.s7-find label:focus-within{background:var(--card);box-shadow:0 0 0 .5px var(--line),0 0 0 3px color-mix(in srgb,var(--accent) 28%,transparent)}
+.s7-find svg{width:14px;height:14px;flex:none}
+.s7-find input{flex:1;border:0;background:none;outline:0;font:inherit;color:var(--t1);padding:0}
+.s7-find input::placeholder{color:var(--t3)}
+.s7-find em{font-style:normal;font-size:11.5px;color:var(--t3);white-space:nowrap}
+.s7-sc{flex:1;min-height:0;overflow:auto;scroll-behavior:smooth;scrollbar-width:thin;padding:0 28px 120px}
+.s7-sec{padding:18px 0 26px;border-top:.5px solid var(--line);display:flex;flex-direction:column;gap:16px}
+.s7-sec:first-child{border-top:0;padding-top:6px}
+.s7-sec>header h3{margin:0;font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px}
+.s7-sec>header h3 svg{width:16px;height:16px;color:var(--t2)}
+.s7-sum{margin:4px 0 0;font-family:var(--serif);font-size:13.5px;color:var(--t2);line-height:1.6}
+.s7-sum b{color:var(--t1);font-weight:600}
+.s7-sum b.flash{animation:hFlash .6s ease-out;border-radius:3px}
+.s7-row{display:grid;grid-template-columns:96px minmax(0,1fr);align-items:center;gap:14px;min-height:34px;font-size:13px}
+.s7-row>span{color:var(--t2)}
+.s7-row.top{align-items:start}
+.s7-row.top>span{padding-top:8px}
+.s7-row .f-r{min-height:28px}
+.s7-row .f-fonts button{line-height:1.1}
+.s7-pv .f-ph{transition:background .3s,box-shadow .3s}
+.s7-chips{display:flex;flex-wrap:wrap;gap:6px}
+.s7-chips button{height:30px;padding:0 13px;border:0;border-radius:15px;background:var(--inset);font:inherit;font-size:12.5px;color:var(--t1);cursor:pointer;transition:background .14s,color .14s,box-shadow .2s}
+.s7-chips button:hover{background:color-mix(in srgb,var(--t1) 9%,var(--inset))}
+.s7-chips button.on{background:var(--black);color:var(--on-black);font-weight:600}
+.s7-chips button small{font-size:10.5px;opacity:.7;margin-left:4px}
+.s7-hide{display:none!important}
+.s7-mark{background:color-mix(in srgb,var(--hl-y) 75%,transparent);border-radius:3px}
+.s7-none{display:none;padding:40px 0;text-align:center;font-size:13px;color:var(--t3)}
+.s7-toast{position:absolute;left:50%;bottom:18px;transform:translate(-50%,12px);display:flex;align-items:center;gap:12px;height:38px;padding:0 6px 0 14px;border-radius:19px;background:var(--t1);color:var(--bg);font-size:12.5px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .24s,transform .35s var(--f-e);box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.s7-toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.s7-toast button{height:28px;padding:0 12px;border:0;border-radius:14px;background:color-mix(in srgb,var(--bg) 18%,transparent);color:var(--bg);font:inherit;font-size:12px;cursor:pointer}
+.s7-pv .f-devs{transform:scale(.62);transform-origin:50% 60%}
+.s7-pv .f-sto{width:340px}
+.s7-pv .f-mini{transform:scale(.72)}
+.s7-pv .f-bub{right:auto;left:50%;top:auto;bottom:26px;width:300px;margin-left:-150px}
+.s7-pv .f-st[data-c="ai"]{padding-right:20px}
+.s7-pv .f-book.en p{font-size:13.5px;line-height:2.4}
+.s7-pv .f-player{bottom:16px}
+.s7-pv .f-st[data-c="voice"]{padding-bottom:56px}
+/* 好不好用：几件常做的事，各要几步 */
+.s7-tasks{width:100%;max-width:1040px;border-collapse:collapse;font-size:12.5px;margin-top:14px;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--zsh)}
+.s7-tasks th,.s7-tasks td{padding:10px 14px;text-align:left;border-top:.5px solid var(--line);vertical-align:top;line-height:1.6}
+.s7-tasks th{font-weight:600;color:var(--t2);font-size:11.5px;border-top:0;background:color-mix(in srgb,var(--inset) 50%,var(--card))}
+.s7-tasks td:first-child{font-weight:600;color:var(--t1);white-space:nowrap}
+.s7-tasks td{color:var(--t2)}
+.s7-tasks td.best{color:var(--t1)}
+.s7-tasks td i{font-style:normal;color:var(--danger)}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -4254,7 +4318,7 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
   <header class="x-top">
     <p class="eyebrow">语阅 · Mac · 设置窗口</p>
     <h1>设置窗口重新整理</h1>
-    <p><b>11-03 第六版</b>：最上面“设置就是一段话”是新的，先看它。<b>11-03 第五版</b>：最上面“第五版”是新的，只做一个方向、做细了，先看它。<b>11-03 第四版</b>：最上面“发散”五个方向是新的，先看它。<b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
+    <p><b>11-03 第七版</b>：最上面“一页滚到底，预览跟着你走”是新的，下面有一张表比较几版做常用的事各要几步。<b>11-03 第六版</b>：最上面“设置就是一段话”是新的，先看它。<b>11-03 第五版</b>：最上面“第五版”是新的，只做一个方向、做细了，先看它。<b>11-03 第四版</b>：最上面“发散”五个方向是新的，先看它。<b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
     <p>十页挨个过了一遍。窗口外框、顶上的分页、开关、分段、滑杆这些控件<b>不动</b>，照 prototype-v0.29；按钮还是系统按钮（上次换成带图标、带下划线的样式被撤回过）。改的是<b>每页里放什么、怎么排、说明怎么写</b>。每页可以在“现在”和“改后”之间切；编号对着右边的说明，红的是问题，蓝的是改法。</p>
   </header>
   <div class="x-bar">
@@ -4264,6 +4328,25 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
     <label><input type="checkbox" id="vNums" checked>显示编号</label>
     <nav class="x-idx" id="idx"></nav>
   </div>
+  <section id="v7">
+    <h2 class="x-h">第七版：一页滚到底，预览跟着你走 <span class="y-rec">11-03</span></h2>
+    <p class="y-cap2">第六版好玩但不方便：要从一段话里找词、数字要“知道能拖”才会拖、点开才看得到有哪些选法。这一版先按“用的人要做什么”来排：<b>所有设置在右边一页摆出来，选项都看得见，不藏手势</b>；左边的预览<b>跟着你滚到哪一段，就变成哪一段</b>（书页 → 正在念的书 → 注了中文的英文 → 书伴 → 三台设备……）；每段标题下留着第六版那句话，一眼看到现在是什么样；每改一次，下面冒一条“撤销”。顶上搜索认同义词（打“暗”“大”“念”“api”试试）。</p>
+    <div class="x-stage" style="margin-top:14px"><div id="s7Root"></div></div>
+    <table class="s7-tasks">
+      <tr><th>常做的事</th><th>现在（10 个分页）</th><th>第五版（7 个分页 + 预览）</th><th>第六版（一段话）</th><th>第七版（一页 + 跟着走的预览）</th></tr>
+      <tr><td>字调大一点</td><td>打开设置 → 点“阅读” → 找到滑杆 → 拖，<i>看不到书变成什么样</i></td><td>点“书页” → 拖</td><td>在一段话里找到“17” → 按住左右拖，<i>得先知道它能拖</i></td><td class="best">打开就是第一段 → 拖，左边书页跟着变</td></tr>
+      <tr><td>接上书伴</td><td>点“书伴” → 服务商菜单 → 往 200 宽的小框里粘 → 点连接</td><td>点“书伴” → 粘贴</td><td>找到“粘一个 Key” → 点 → 粘 → 回车</td><td class="best">点下面的“书伴”（或滚下去）→ 粘贴，自己认出、核对</td></tr>
+      <tr><td>换个声音</td><td>点“朗读” → 弹出菜单挑 → 点试听</td><td>点“声音” → 点一个</td><td>点“婷婷” → 挑，真的念出来</td><td class="best">滚到声音 → 点一个，左边那页已经在念</td></tr>
+      <tr><td>找“难词级别”在哪</td><td><i>猜它在“外文”还是“阅读”</i></td><td><i>还是猜分页</i></td><td>把一段话读一遍</td><td class="best">搜“难度”“级别”“GRE”，只剩那一行</td></tr>
+      <tr><td>改错了</td><td><i>得记得原来是多少</i></td><td><i>同左</i></td><td>右上角全部改回去</td><td class="best">每改一次下面冒“撤销”，4 秒内点一下</td></tr>
+      <tr><td>看一眼现在都设成什么</td><td><i>翻 10 页</i></td><td><i>翻 7 页</i></td><td class="best">读一段话</td><td class="best">每段标题下一句话，滚一遍就看完</td></tr>
+    </table>
+    <div class="y-plan" style="margin-top:14px">
+      <div><b>几条规矩</b>看得见胜过藏起来：选项全摆出来（几个选一个用一排圆角块），不用点开才知道有什么，也没有要学的手势。一页滚到底：没有分页，⌘F 和滚动就能到任何一行。每次改都能撤。</div>
+      <div><b>特别在哪</b>预览不是一张固定的图：你滚到哪一段，它就变成那一段真的样子，而且一直活着（书在念、书伴在答、三台设备在同步）。下面那排字跟着滑，点一下跳过去。</div>
+      <div><b>从前几版留下的</b>第五版的活预览；第六版的“一句话说清现在是什么样”，放在每段标题下面，改哪个词，那个词闪一下；第三版的 Key 一处粘、自己认出是哪家。</div>
+    </div>
+  </section>
   <section id="v6">
     <h2 class="x-h">第六版：设置就是一段话 <span class="y-rec">11-03</span></h2>
     <p class="y-cap2">没有分页、没有开关、没有滑杆。整个设置窗口是一张纸，纸上写着一段话，写的就是你现在怎么读书、怎么听书。<b>蓝色的词都能改</b>：数字按住左右拖（或者滚轮），别的词点一下，别的选法在它上下排开。这段字本身就照你的书页排，改字号它就变大，换纸整张纸就换。选声音时，这台电脑真的用那个声音把这句话念出来。</p>
@@ -5354,6 +5437,165 @@ PAGES.push({id:'data',name:'数据',
   if(hv==='wheel')setTimeout(function(){wheel(tok('zh'));},200);
   if(hv==='night')setTimeout(function(){pick('paper','夜间纸本');T.fs.v=20;show('fs');apply('fs');},200);
   if(hv==='key')setTimeout(function(){key(tok('key'));},200);
+})();
+/* ===== 2026-11-03 第七版：一页滚到底。右边所有设置都摆出来、看得见；左边的预览跟着你滚到哪一段变成哪一段 ===== */
+(function(){
+  var root=document.getElementById('s7Root');if(!root)return;
+  var PH=[['我与父亲不相见已二年余了，','我最不能忘记的是他的背影。'],['那年冬天，','祖母死了，','父亲的差使也交卸了，','正是祸不单行的日子。','我从北京到徐州，','打算跟着父亲奔丧回家。'],['到徐州见着父亲，','看见满院狼藉的东西，','又想起祖母，','不禁簌簌地流下眼泪。']];
+  var PAPERS=[['paper-kami','纸本'],['paper-kaminight','夜间'],['paper-plain','白'],['paper-dark','黑'],['paper-eink','墨水屏']];
+  var FONTS=[['宋体','var(--serif)'],['黑体','var(--sans)'],['楷体','"Kaiti SC","STKaiti",KaiTi,serif']];
+  var SECS=[['page','书页','i-book'],['voice','声音','i-ear'],['fl','外文','i-trans'],['ai','书伴','i-spark'],['sync','同步','i-sync'],['store','存储','i-disk'],['gen','通用','i-sliders']];
+  var VO=[[['婷','#B5654A','婷婷','本机 · 高级'],['美','#7A8F5C','美佳','本机 · 高级'],['N','#2B4C7E','Nova','OpenAI · 云端'],['晓','#6B5B95','晓晓','连上 Azure 就能用',1]],[['A','#3F7D7A','Ava','本机 · 高级'],['Z','#A0703C','Zoe','本机 · 高级'],['Al','#2B4C7E','Alloy','OpenAI · 云端']]];
+  var LV=['四级','六级','雅思','GRE'];
+  var S={paper:0,font:0,fs:17,lh:2,mg:34,turn:'左右翻页',scope:'所有书',lang:0,voice:[0,0],speed:1.2,lv:1,gmode:'头上写中文',gloss:true,ai:'Claude',conn:false,look:'跟随系统',tint:'墨蓝',bk:'每天',gb:3.2,ph:1};
+  var CK='<svg class="f-ck" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var AV=function(v){return '<span class="f-av" style="background:'+v[1]+'">'+v[0]+'</span>';};
+  var SW=function(on,k){return '<span class="sw2'+(on?' on':'')+'"'+(k?' data-k="'+k+'"':'')+'></span>';};
+  var CH=function(k,opts,on){return '<div class="s7-chips" data-ch="'+k+'">'+opts.map(function(o){return '<button data-o="'+o+'"'+(o===on?' class="on"':'')+'>'+o+'</button>';}).join('')+'</div>';};
+  var ROW=function(lab,ctl,q,top){return '<div class="s7-row'+(top?' top':'')+'" data-q="'+(lab+' '+(q||'')).toLowerCase()+'"><span>'+lab+'</span><div>'+ctl+'</div></div>';};
+  var TG=function(lab,on,q,sub,k){return '<div class="s7-row" data-q="'+(lab+' '+(q||'')).toLowerCase()+'"><span></span><div class="f-r"><div>'+lab+(sub?'<small>'+sub+'</small>':'')+'</div>'+SW(on,k)+'</div></div>';};
+  var RNG=function(k,min,max,step,v){return '<label class="f-sl" style="grid-template-columns:minmax(0,1fr) 44px"><input class="f-rng" type="range" data-r="'+k+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+v+'"><em data-o="'+k+'">'+v+'</em></label>';};
+  var BOOK=function(id){var n=0;return '<div class="f-book" data-book id="'+id+'"><span class="f-pg">1 / 12</span><h4>背　影</h4>'+PH.map(function(p){return '<p>'+p.map(function(s){return '<span class="f-ph" data-n="'+(n++)+'">'+s+'</span>';}).join('')+'</p>';}).join('')+'</div>';};
+  var BARS='<span class="f-bars">'+[10,18,14,20,12].map(function(h,i){return '<i style="height:'+h+'px;animation-delay:'+(i*-0.18)+'s"></i>';}).join('')+'</span>';
+  var EN=[['It is a truth ',0],['universally','普遍地',3],[' ',0],['acknowledged','公认的',2],[', that a single man in ',0],['possession','拥有',1],[' of a good ',0],['fortune','财产',1],[', must be in want of a wife. However little known the feelings of such a man on his first entering a ',0],['neighbourhood','街坊',1],[', he is considered the ',0],['rightful','理所应当的',4],[' ',0],['property','所有物',3],[' of some one or other of their daughters.',0]];
+
+  /* 左边：七个预览叠在一起，滚到哪段亮哪个 */
+  var PV={
+    page:BOOK('s7Bk1'),
+    voice:BOOK('s7Bk2')+'<div class="f-player"><span id="s7Av">'+AV(VO[0][0])+'</span><div><b id="s7Vn">婷婷</b><small id="s7Vs">念给你听 · 1.2×</small></div>'+BARS+'<button class="f-pp" id="s7PP">'+I('i-pausef')+'</button></div>',
+    fl:'<div class="f-book en" data-book style="width:330px"><h4 style="font-family:var(--serif)">Chapter 1</h4><p>'+EN.map(function(w){return w[2]?'<ruby data-d="'+w[2]+'">'+w[0]+'<rt>'+w[1]+'</rt></ruby>':w[0];}).join('')+'</p></div>',
+    ai:BOOK('s7Bk3')+'<div class="f-bub off" id="s7Bub"><header>'+LOGO(CLAUDE)+'<span id="s7BubH">书伴</span></header><div id="s7BubT">还没连上。在右边点“粘贴”，就能问我这本书里的任何事。</div></div>',
+    sync:'<div class="f-devs"><div class="f-dev" style="left:0"><div class="f-scr" style="width:84px;height:170px;border-radius:16px"><div>'+PH[0].join('')+PH[1].join('')+'</div></div>iPhone <em data-pct>42%</em></div>'+
+      '<div class="f-dev" style="left:116px"><div class="f-scr" style="width:276px;height:176px"><div style="font-size:8px">'+PH[0].join('')+PH[1].join('')+PH[2].join('')+'</div></div><i style="display:block;width:330px;height:10px;margin-top:-10px;border-radius:0 0 8px 8px;background:#B9B8B5"></i>这台 Mac <em data-pct>42%</em></div>'+
+      '<div class="f-dev" style="left:474px"><div class="f-scr" style="width:118px;height:156px;border-radius:12px"><div>'+PH[0].join('')+PH[1].join('')+'</div></div>iPad <em data-pct>42%</em></div>'+
+      '<i class="f-dot" id="s7D1" style="offset-path:path(\'M281 120 C 210 30, 90 40, 42 110\')"></i><i class="f-dot" id="s7D2" style="offset-path:path(\'M281 120 C 350 30, 480 40, 533 130\')"></i></div>',
+    store:'<div class="f-sto"><div class="f-num"><span id="s7Num">3.2</span><small>GB</small></div><div class="f-bar"><i style="flex:1.1 1 0;background:var(--accent)"></i><i id="s7BA" style="flex:1.4 1 0;background:#B5654A"></i><i id="s7BV" style="flex:.5 1 0;background:#7A8F5C"></i><i style="flex:.2 1 0;background:#B7791F"></i></div>'+
+      '<div class="f-leg"><div><i style="background:var(--accent)"></i>书<em>1.1 GB</em></div><div><i style="background:#B5654A"></i>有声书<em id="s7LA">1.4 GB</em></div><div><i style="background:#7A8F5C"></i>念过的句子<em id="s7LV">0.5 GB</em></div><div><i style="background:#B7791F"></i>词典<em>0.2 GB</em></div></div></div>',
+    gen:'<div class="f-mini lt" id="s7Mini"><aside><i class="on"></i><i></i><i></i><i></i><i style="margin-top:14px"></i><i></i></aside><main><b></b>'+['#B5654A','#3B4A6B','#7A8F5C','#6B5B95','#A0703C','#8A8682','#2B4C7E','#3F7D7A'].map(function(c){return '<i style="background:'+c+'"></i>';}).join('')+'</main></div>'};
+
+  /* 右边：每一段都摆出来，选项看得见，不用点开才知道有什么 */
+  var SEC={
+    page:ROW('纸','<div class="f-papers">'+PAPERS.map(function(p,i){return '<button data-paper="'+i+'"'+(i===0?' class="on"':'')+'><i class="'+p[0]+'">文</i>'+p[1]+'</button>';}).join('')+'</div>','颜色 背景 夜 黑 白 墨水屏 主题',1)+
+      ROW('字体','<div class="f-fonts">'+FONTS.map(function(f,i){return '<button data-font="'+i+'" style="font-family:'+f[1]+';height:54px"'+(i===0?' class="on"':'')+'>永<small>'+f[0]+'</small></button>';}).join('')+'</div>','宋体 黑体 楷体',1)+
+      ROW('字号',RNG('fs',13,24,1,17),'大小 字大 字小')+ROW('行距',RNG('lh',1.5,2.6,.1,'2.0'),'行间距 间距')+ROW('边距',RNG('mg',20,56,2,34),'页边 留白')+
+      ROW('翻页',CH('turn',['左右翻页','上下滚动'],'左右翻页'),'滚动 翻页方式')+TG('首行空两格',1,'缩进','','ind')+TG('窗口够宽时分两栏',0,'双栏 两页')+
+      ROW('改的是',CH('scope',['所有书','只这本《背影》'],'所有书'),'默认 这本书'),
+    voice:ROW('给',CH('lang',['中文书','英文书'],'中文书'),'中文 英文 语言')+ROW('谁来念','<div class="f-voices" id="s7Voices"></div>','声音 朗读 婷婷 美佳 ava 选声音',1)+
+      ROW('语速',RNG('sp',.6,2,.1,'1.2'),'速度 快慢 倍速')+TG('小说里的对话换一个声音念',1,'分角色 对话 旁白')+
+      ROW('Azure','<div class="f-key" id="s7AzK"><span>粘 Azure 的 Key，多 200 多个声音</span><button class="f-btn" data-paste="az">粘贴</button></div><div class="f-stat" id="s7AzS" style="margin-top:6px"></div>','key 云端 微软 azure 密钥',1),
+    fl:TG('在难词上写中文意思',1,'注释 难词 生词','','gloss')+ROW('从哪级起',CH('lv',LV,'六级'),'级别 四级 六级 雅思 gre 难度')+ROW('写在',CH('gmode',['头上写中文','只划一道线'],'头上写中文'),'注释 位置 下划线')+
+      ROW('点词先查','<div class="f-dicts">'+[['1','柯林斯双解','导入的'],['2','牛津高阶','导入的'],['3','系统词典','自带']].map(function(d){return '<div>'+I('i-grip')+'<i>'+d[0]+'</i>'+d[1]+'<em>'+d[2]+'</em></div>';}).join('')+'</div><span class="f-link" style="margin-top:4px">＋ 导入 MDict 词典</span>','词典 查词 mdict 柯林斯 牛津',1)+TG('查过的词自动进生词本',1,'生词本 单词'),
+    ai:ROW('谁来当','<div class="f-prov"><button class="on" data-prov="Claude">'+LOGO(CLAUDE)+'Claude</button><button data-prov="OpenAI"><span class="f-lg" style="background:#111">AI</span>OpenAI</button><button data-prov="只用本机"><span class="f-lg" style="background:#8A8682">本</span>只用本机</button></div>','书伴 模型 claude openai 服务商',1)+
+      ROW('Key','<div class="f-key" id="s7K"><span>粘贴 Claude 的 Key（sk-ant-…）</span><button class="f-btn" data-paste="ai">粘贴</button></div><div class="f-stat" id="s7KS" style="margin-top:6px"></div><span class="f-link">没有 Key？去拿一个 ↗</span>','key 密钥 api 连接',1)+
+      TG('读到难处时轻轻提一句',1,'提示 打扰')+TG('沉浸阅读时不打扰',1,'专注 沉浸'),
+    sync:TG('用 iCloud 同步',1,'icloud 同步','三台都登同一个 Apple ID')+TG('读到哪',1,'进度 同步')+TG('划线和笔记',1,'划线 笔记 同步')+TG('生词本',1,'生词 同步')+
+      ROW('这几台','<div class="f-dicts"><div>'+I('i-laptop')+'这台 Mac<em>刚刚</em></div><div>'+I('i-phone')+'iPhone 16<em id="s7Ph">2 分钟前</em></div><div>'+I('i-tablet')+'iPad Air<em id="s7Pd">昨天 22:10</em></div></div><button class="f-btn" id="s7Sync" style="margin-top:6px">'+I('i-sync')+'现在同步</button>','设备 iphone ipad 同步',1),
+    store:ROW('可以清掉','<div class="f-r"><div>听完的有声书<small>3 本 · 1.4 GB · 划线和书签留着</small></div><button class="f-btn" id="s7CA">清掉</button></div><div class="f-r"><div>念过的句子<small>0.5 GB · 再念时重新生成</small></div><button class="f-btn" id="s7CV">清掉</button></div>','清理 空间 有声书 缓存 存储',1)+
+      ROW('自动备份',CH('bk',['每天','每周','不备份'],'每天'),'备份')+ROW('带走','<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="f-btn">导出笔记和生词…</button><button class="f-btn">在访达里显示书库</button></div>','导出 书库 位置 markdown csv'),
+    gen:ROW('外观',CH('look',['浅色','深色','跟随系统'],'跟随系统'),'深色 浅色 暗色 外观 主题')+ROW('主题色',CH('tint',['墨蓝','墨黑'],'墨蓝'),'颜色 主题色')+
+      TG('打开语阅时接着读上次那本',0,'启动 打开')+TG('听书时 Mac 不睡着',1,'睡眠 合盖','合上盖子照样会停')+TG('菜单栏里放播放按钮',1,'菜单栏')};
+
+  root.innerHTML='<div class="v-mac s7-win" id="s7W"><div class="s7-tb"><span class="v-lights"><i></i><i></i><i></i></span><b>设置</b></div><div class="s7-bd">'+
+    '<div class="s7-left"><div class="s7-pv">'+SECS.map(function(s,i){return '<div class="f-st'+(i===0?' on':'')+'" data-c="'+s[0]+'">'+PV[s[0]]+'</div>';}).join('')+'</div>'+
+      '<nav class="s7-idx" id="s7Idx"><i></i>'+SECS.map(function(s,i){return '<button data-go="'+s[0]+'"'+(i===0?' class="on"':'')+'>'+s[1]+'</button>';}).join('')+'</nav></div>'+
+    '<div class="s7-right"><div class="s7-find"><label>'+I('i-search')+'<input id="s7Q" placeholder="搜索设置：字号、声音、Key、夜……"></label><em id="s7Qn"></em></div><div class="s7-sc" id="s7Sc">'+
+      SECS.map(function(s){return '<section class="s7-sec" data-c="'+s[0]+'"><header><h3>'+I(s[2])+s[1]+'</h3><p class="s7-sum" data-sum="'+s[0]+'"></p></header>'+SEC[s[0]]+'</section>';}).join('')+
+      '<p class="s7-none" id="s7None">没找到。换个说法试试，比如“大小”“暗”“念”。</p></div>'+
+      '<div class="s7-toast" id="s7T"><span id="s7Tt"></span><button id="s7Tu">撤销</button></div></div></div></div>';
+
+  var W=document.getElementById('s7W'),$=function(s){return W.querySelector(s);},$$=function(s){return [].slice.call(W.querySelectorAll(s));},SC=$('#s7Sc');
+  /* 每段标题下一句话：现在是什么样，改了哪个词闪一下 */
+  var SUM={page:function(){return '<b data-w="font">'+FONTS[S.font][0]+'</b>，<b data-w="fs">'+S.fs+' 号</b>，行距 <b data-w="lh">'+(+S.lh).toFixed(1)+'</b>，<b data-w="paper">'+PAPERS[S.paper][1]+'</b>的纸，<b data-w="turn">'+S.turn+'</b>';},
+    voice:function(){return '中文书 <b data-w="v0">'+VO[0][S.voice[0]][2]+'</b> 念，英文书 <b data-w="v1">'+VO[1][S.voice[1]][2]+'</b> 念，<b data-w="sp">'+(+S.speed).toFixed(1)+' 倍</b>';},
+    fl:function(){return S.gloss?'比 <b data-w="lv">'+LV[S.lv]+'</b> 难的词，<b data-w="gm">'+S.gmode+'</b>；先查柯林斯':'难词不注释；先查柯林斯';},
+    ai:function(){return S.ai==='只用本机'?'<b data-w="ai">只用这台 Mac</b>，不联网':'<b data-w="ai">'+S.ai+'</b> · <b data-w="conn">'+(S.conn?'已连上':'还没连上')+'</b>';},
+    sync:function(){return 'iCloud · 这台 Mac、iPhone、iPad · <b data-w="st">'+(S.synced?'刚刚':'2 分钟前')+'</b>';},
+    store:function(){return '一共 <b data-w="gb">'+S.gb.toFixed(1)+' GB</b>，<b data-w="bk">'+S.bk+'</b>'+(S.bk==='不备份'?'':'备份');},
+    gen:function(){return '<b data-w="look">'+S.look+'</b>，主题色<b data-w="tint">'+S.tint+'</b>';}};
+  function sum(c,w){var el=$('[data-sum="'+c+'"]');el.innerHTML=SUM[c]();if(w){var b=el.querySelector('[data-w="'+w+'"]');if(b)b.classList.add('flash');}}
+  SECS.forEach(function(s){sum(s[0]);});
+  /* 改了就在下面冒一条“撤销” */
+  var tt=null;function toast(t,undo){var T=$('#s7T');$('#s7Tt').textContent=t;T.classList.add('on');$('#s7Tu').onclick=function(){undo();T.classList.remove('on');};clearTimeout(tt);tt=setTimeout(function(){T.classList.remove('on');},4000);}
+
+  /* 滚到哪，左边就是哪；点下面的字跳过去 */
+  var cur='page';
+  function idx(){var b=$('#s7Idx button.on'),i=$('#s7Idx>i');i.style.left=b.offsetLeft+4+'px';i.style.width=(b.offsetWidth-8)+'px';}
+  function act(c){if(c===cur)return;cur=c;$$('.s7-pv .f-st').forEach(function(d){d.classList.toggle('on',d.dataset.c===c);});$$('#s7Idx button').forEach(function(b){b.classList.toggle('on',b.dataset.go===c);});idx();}
+  SC.addEventListener('scroll',function(){var top=SC.scrollTop+90,c='page';$$('.s7-sec:not(.s7-hide)').forEach(function(s){if(s.offsetTop-SC.offsetTop<=top)c=s.dataset.c;});if(SC.scrollTop+SC.clientHeight>=SC.scrollHeight-4){var v=$$('.s7-sec:not(.s7-hide)');c=v[v.length-1].dataset.c;}act(c);});
+  $$('#s7Idx button').forEach(function(b){b.addEventListener('click',function(){var s=$('.s7-sec[data-c="'+b.dataset.go+'"]');SC.scrollTop=s.offsetTop-SC.offsetTop;act(b.dataset.go);});});
+  $$('.s7-sec').forEach(function(s){s.addEventListener('pointerdown',function(){act(s.dataset.c);});});
+  requestAnimationFrame(idx);setTimeout(idx,300);
+
+  /* 书页 */
+  function paper(i){S.paper=i;$$('[data-book],.f-dev .f-scr>div').forEach(function(b){PAPERS.forEach(function(p){b.classList.remove(p[0]);});b.classList.add(PAPERS[i][0]);});$$('[data-paper]').forEach(function(b){b.classList.toggle('on',+b.dataset.paper===i);});sum('page','paper');}
+  paper(0);
+  $$('[data-paper]').forEach(function(b){b.addEventListener('click',function(){var was=S.paper,i=+b.dataset.paper;if(i===was)return;paper(i);toast('纸：'+PAPERS[was][1]+' → '+PAPERS[i][1],function(){paper(was);});});});
+  function font(i){S.font=i;W.style.setProperty('--f-font',FONTS[i][1]);$$('[data-font]').forEach(function(x){x.classList.toggle('on',+x.dataset.font===i);});sum('page','font');}
+  $$('[data-font]').forEach(function(b){b.addEventListener('click',function(){var was=S.font,i=+b.dataset.font;if(i===was)return;font(i);toast('字体：'+FONTS[was][0]+' → '+FONTS[i][0],function(){font(was);});});});
+  function fill(r){r.style.setProperty('--p',((r.value-r.min)/(r.max-r.min)*100)+'%');}
+  var NM={fs:['字号',function(v){return v;}],lh:['行距',function(v){return (+v).toFixed(1);}],mg:['边距',function(v){return v;}],sp:['语速',function(v){return (+v).toFixed(1)+'×';}]};
+  function setR(k,v){var r=$('[data-r="'+k+'"]');r.value=v;fill(r);$('[data-o="'+k+'"]').textContent=NM[k][1](v);
+    if(k==='fs'){S.fs=+v;W.style.setProperty('--f-fs',v+'px');sum('page','fs');}if(k==='lh'){S.lh=+v;W.style.setProperty('--f-lh',v);sum('page','lh');}if(k==='mg'){W.style.setProperty('--f-mg',v+'px');}
+    if(k==='sp'){S.speed=+v;$('#s7Vs').textContent='念给你听 · '+(+v).toFixed(1)+'×';sum('voice','sp');restart();}}
+  $$('.f-rng').forEach(function(r){fill(r);var start;r.addEventListener('pointerdown',function(){start=r.value;});r.addEventListener('input',function(){setR(r.dataset.r,r.value);});
+    r.addEventListener('change',function(){var k=r.dataset.r,a=start,b=r.value;if(a!==undefined&&a!==b)toast(NM[k][0]+'：'+NM[k][1](a)+' → '+NM[k][1](b),function(){setR(k,a);});});});
+  /* 开关、选项 */
+  $$('.sw2').forEach(function(s){s.addEventListener('click',function(){s.classList.toggle('on');var on=s.classList.contains('on'),k=s.dataset.k;
+    if(k==='ind')W.style.setProperty('--f-ind',on?'2em':'0');if(k==='gloss'){S.gloss=on;gloss();sum('fl');}});});
+  function chip(k,o){var box=$('[data-ch="'+k+'"]');[].forEach.call(box.querySelectorAll('button'),function(b){b.classList.toggle('on',b.dataset.o===o);});
+    if(k==='turn'){S.turn=o;sum('page','turn');}if(k==='scope'){S.scope=o;}if(k==='lang'){S.lang=o==='中文书'?0:1;voices();}
+    if(k==='lv'){S.lv=LV.indexOf(o);gloss();sum('fl','lv');}if(k==='gmode'){S.gmode=o;gloss();sum('fl','gm');}
+    if(k==='bk'){S.bk=o;sum('store','bk');}if(k==='look'){S.look=o;$('#s7Mini').className='f-mini '+(o==='深色'?'dk':'lt');sum('gen','look');}
+    if(k==='tint'){S.tint=o;$('#s7Mini').style.setProperty('--m-acc',o==='墨黑'?'#101214':'#2B4C7E');sum('gen','tint');}}
+  $$('[data-ch]').forEach(function(box){[].forEach.call(box.querySelectorAll('button'),function(b){b.addEventListener('click',function(){var k=box.dataset.ch,was=box.querySelector('button.on').dataset.o,o=b.dataset.o;if(o===was)return;chip(k,o);if(k!=='lang')toast(o+'（原来是'+was+'）',function(){chip(k,was);});});});});
+  $('#s7Mini').style.setProperty('--m-acc','#2B4C7E');
+
+  /* 声音：左边那页一直在念，点哪个声音就用它从头念 */
+  var timer=null,phs=$$('#s7Bk2 .f-ph'),play=true;
+  function step(){phs.forEach(function(p){p.classList.remove('hl');});if(play)phs[S.ph%phs.length].classList.add('hl');}
+  function restart(){clearInterval(timer);step();if(play)timer=setInterval(function(){S.ph=(S.ph+1)%phs.length;step();},Math.round(1500/S.speed));$$('.f-bars i').forEach(function(i){i.style.animationDuration=(1/S.speed).toFixed(2)+'s';});}
+  function voices(){var L=S.lang;$('#s7Voices').innerHTML=VO[L].map(function(v,i){return '<div class="f-vo'+(i===S.voice[L]?' on':'')+(v[4]?' off':'')+'" data-v="'+i+'" style="height:44px">'+AV(v)+'<div>'+v[2]+'<small>'+v[3]+'</small></div>'+CK+'</div>';}).join('');
+    $$('#s7Voices .f-vo').forEach(function(d){d.addEventListener('click',function(){if(d.classList.contains('off'))return;var was=S.voice[L],i=+d.dataset.v;pick(i);if(i!==was)toast('声音：'+VO[L][was][2]+' → '+VO[L][i][2],function(){S.lang=L;pick(was);});});});}
+  function pick(i){var L=S.lang;S.voice[L]=i;var v=VO[L][i];$$('#s7Voices .f-vo').forEach(function(d){d.classList.toggle('on',+d.dataset.v===i);});$('#s7Av').innerHTML=AV(v);$('#s7Vn').textContent=v[2];S.ph=0;play=true;$('#s7PP').innerHTML=I('i-pausef');$('.f-bars').classList.remove('stop');restart();sum('voice','v'+L);}
+  $('#s7PP').addEventListener('click',function(){play=!play;$('#s7PP').innerHTML=I(play?'i-pausef':'i-playf');$('.f-bars').classList.toggle('stop',!play);restart();});
+  voices();restart();
+  /* 外文 */
+  function gloss(){$$('.s7-pv .f-book.en ruby').forEach(function(r){r.classList.toggle('off',!S.gloss||+r.dataset.d<S.lv+1);r.style.textDecoration=S.gmode==='只划一道线'&&S.gloss&&+r.dataset.d>=S.lv+1?'underline':'';var rt=r.querySelector('rt');rt.style.opacity=S.gmode==='只划一道线'?0:'';});}
+  gloss();
+  /* Key：粘贴 → 认出 → 核对 → 连上 */
+  var ANS='这是全文的“眼”。作者没写父亲长什么样，只写背影；后面在车站买橘子那段，背影会再出现一次。';
+  function type(el,t){var i=0;var h=setInterval(function(){i++;el.innerHTML=t.slice(0,i)+(i<t.length?'<span class="f-caret"></span>':'');if(i>=t.length)clearInterval(h);},40);}
+  function paste(w){var k=w==='ai'?$('#s7K'):$('#s7AzK'),st=w==='ai'?$('#s7KS'):$('#s7AzS');k.classList.add('focus','v');k.querySelector('span').textContent=w==='ai'?'sk-ant-api03-••••••••••••7Qw':'eastasia · ••••••••a81c';
+    st.className='f-stat';st.innerHTML='<i class="f-spin"></i>认出是 '+(w==='ai'?S.ai:'微软 Azure')+'，正在核对…';act(w==='ai'?'ai':'voice');
+    setTimeout(function(){k.classList.remove('focus');st.className='f-stat ok';st.innerHTML='✓ 连上了'+(w==='ai'?'':' · 多了 214 个声音');k.querySelector('button').textContent='换一个';
+      if(w==='ai'){S.conn=true;sum('ai','conn');var b=$('#s7Bub');b.classList.remove('off');$('#s7BubH').textContent=S.ai+' · 你选中了一句';$$('#s7Bk3 .f-ph')[1].classList.add('sel');type($('#s7BubT'),ANS);}
+      else{VO[0][3][3]='Azure · 云端';VO[0][3][4]=0;voices();}},1100);}
+  $$('[data-paste]').forEach(function(b){b.addEventListener('click',function(){paste(b.dataset.paste);});});
+  $$('[data-prov]').forEach(function(b){b.addEventListener('click',function(){$$('[data-prov]').forEach(function(x){x.classList.toggle('on',x===b);});S.ai=b.dataset.prov;var loc=S.ai==='只用本机';
+    $('#s7K').parentNode.parentNode.style.display=loc?'none':'';$('#s7K span').textContent='粘贴 '+S.ai+' 的 Key（'+(S.ai==='Claude'?'sk-ant-':'sk-')+'…）';sum('ai','ai');});});
+  /* 同步 */
+  var pct=42;$('#s7Sync').addEventListener('click',function(){pct++;['#s7D1','#s7D2'].forEach(function(d){var e=$(d);e.classList.remove('go');void e.offsetWidth;e.classList.add('go');});var pc=$$('.s7-pv [data-pct]');pc[1].textContent=pct+'%';
+    setTimeout(function(){pc[0].textContent=pct+'%';pc[2].textContent=pct+'%';$('#s7Ph').textContent='刚刚';$('#s7Pd').textContent='刚刚';S.synced=true;sum('sync','st');},1300);});
+  /* 存储：数字往下数 */
+  function num(v){var a=S.gb,t0=performance.now();(function f(t){var k=Math.min((t-t0)/600,1),e=1-Math.pow(1-k,3);$('#s7Num').textContent=(a+(v-a)*e).toFixed(1);if(k<1)requestAnimationFrame(f);else{S.gb=v;sum('store','gb');}})(t0);}
+  function clr(btn,bar,leg,gb){btn.addEventListener('click',function(){if(btn.disabled)return;btn.disabled=true;btn.textContent='清掉了';$(bar).style.flexGrow=0.001;$(leg).textContent='0 GB';num(S.gb-gb);act('store');});}
+  clr($('#s7CA'),'#s7BA','#s7LA',1.4);clr($('#s7CV'),'#s7BV','#s7LV',.5);
+
+  /* 搜索：只留下对得上的那几行，同义词也算 */
+  var SYN={'大':'字号','小':'字号','暗':'夜','黑':'深色','念':'声音','读':'声音','api':'key','密钥':'key','清理':'清掉','空间':'清掉','单词':'生词'};
+  $('#s7Q').addEventListener('input',function(){var q=this.value.trim().toLowerCase(),n=0;
+    $$('.s7-row').forEach(function(r){r.querySelector('span').classList.remove('s7-mark');});
+    $$('.s7-sec').forEach(function(sec){var title=sec.querySelector('h3').textContent.toLowerCase(),any=false,whole=q&&title.indexOf(q)>=0;
+      [].forEach.call(sec.querySelectorAll('.s7-row'),function(r){var hit=!q||whole||r.dataset.q.indexOf(q)>=0||(SYN[q]&&r.dataset.q.indexOf(SYN[q])>=0);r.classList.toggle('s7-hide',!hit);if(hit){any=true;if(q&&!whole)n++;}});
+      sec.classList.toggle('s7-hide',!any);if(whole)n++;});
+    $('#s7Qn').textContent=q?(n?n+' 处':''):'';$('#s7None').style.display=q&&!n?'block':'none';SC.scrollTop=0;var f=$('.s7-sec:not(.s7-hide)');if(f){cur='';act(f.dataset.c);}});
+  document.addEventListener('keydown',function(e){var r=W.getBoundingClientRect();if((e.metaKey||e.ctrlKey)&&e.key==='f'&&r.top<innerHeight&&r.bottom>0){e.preventDefault();$('#s7Q').focus();}
+    if(e.key==='Escape'&&document.activeElement===$('#s7Q')){$('#s7Q').value='';$('#s7Q').dispatchEvent(new Event('input'));}});
+
+  var idxN=document.getElementById('idx');var a=document.createElement('a');a.href='#v7';a.textContent='第七版';idxN.insertBefore(a,idxN.firstChild);
+  var hv=(location.hash.match(/^#v7-(\w+)/)||[])[1];
+  if(hv==='search')setTimeout(function(){$('#s7Q').value='暗';$('#s7Q').dispatchEvent(new Event('input'));},200);
+  else if(hv)setTimeout(function(){var s=$('.s7-sec[data-c="'+hv+'"]');if(s){SC.style.scrollBehavior='auto';SC.scrollTop=s.offsetTop-SC.offsetTop;act(hv);}},200);
 })();
 </script>
 </body></html>
