@@ -5055,6 +5055,20 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .v-mac.s21 .kz-hero .s14-pg.r{padding:26px 24px 0;border-left:0}
 .v-mac.s21 .kz-hero .s14-pg .no{bottom:12px}
 .v-mac.s21 .kz-play{left:16px;right:16px;bottom:34px;border-top-color:color-mix(in srgb,var(--p-ink) 12%,transparent);color:var(--p-ink)}
+/* ===== 左边导航照现在 Mac App 书架窗口的导航（MacShelfView.swift 的 ShelfDesk / SidebarRow）：直接放在桌面色上，没有卡片；选中是一层 7% 的淡灰；搜索框比桌面深 5%。右边内容不动 ===== */
+.v-mac.s21{--kz-desk:rgb(234,232,227);--kz-on:rgba(42,43,46,.07);--kz-field:rgba(0,0,0,.05)}
+:root[data-theme="dark"] .v-mac.s21{--kz-desk:rgb(12,12,13);--kz-on:rgba(255,255,255,.08);--kz-field:rgba(255,255,255,.06)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .v-mac.s21{--kz-desk:rgb(12,12,13);--kz-on:rgba(255,255,255,.08);--kz-field:rgba(255,255,255,.06)}}
+.v-mac.s21::before{left:0;top:0;bottom:0;width:212px;border-radius:0;background:var(--kz-desk);box-shadow:inset -.5px 0 0 var(--line)}
+.v-mac.s21 .kz-sf{height:30px;border-radius:9px;background:var(--kz-field);color:var(--t2)}
+.v-mac.s21 .kz-sf:focus-within{background:var(--kz-field)}
+.kz-toc .s19-ch{padding-left:8px;font-size:10.5px;font-weight:600;color:var(--t3)}
+.kz-toc .s19-ch i{color:var(--t3)}
+.v-mac.s21 .kz-toc .s16-e[data-p]{height:28px;padding:0 8px;border-radius:8px;font-size:12px;color:var(--t1)}
+.v-mac.s21 .kz-toc .s16-e[data-p] em{font-size:10.5px;color:var(--t3)}
+.v-mac.s21 .kz-toc .s16-e[data-p].on{background:var(--kz-on);box-shadow:none;color:var(--t1);font-weight:600}
+.v-mac.s21 .kz-toc .s16-e[data-p].on em{color:var(--t3)}
+@media (hover:hover){.v-mac.s21 .kz-toc .s16-e[data-p]:not(.on):hover{background:color-mix(in srgb,var(--kz-on) 55%,transparent)}}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
