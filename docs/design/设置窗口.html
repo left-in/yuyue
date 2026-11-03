@@ -4392,6 +4392,73 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .s12-toast.on{opacity:1;transform:translate(-50%,0)}
 /* 外观里的纸色、声音里的播放条 */
 .s12-paper .sv-bar{height:38px}
+/* ===== 2026-11-03 第十三版：照书架窗口（s13- 开头）。外壳、侧栏、行、按钮全是现在 App 的；只有一种强调色；衬线字只用在“目录”、章号和纸上 ===== */
+.v-mac.s13{margin:0}
+.s13 .v-mac-sb{overflow:hidden}
+.s13 .v-mac-sch{cursor:text}
+.s13 .v-mac-sch input{flex:1;min-width:0;border:0;padding:0;background:none;outline:0;font:inherit;color:var(--t1)}
+.s13 .v-mac-sch input::placeholder{color:var(--t2)}
+.s13 .v-mac-sch:focus-within{background:var(--card);box-shadow:0 0 0 .5px var(--line),0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.s13-list{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:none}
+.s13-list::-webkit-scrollbar{display:none}
+.s13-tt{margin:0;padding:16px 8px 0;font-family:var(--serif);font-size:15px;font-weight:600;line-height:1.3;color:var(--t1)}
+.s13 .v-mac-gt{display:flex;align-items:baseline;gap:8px;font-size:11px}
+.s13 .v-mac-gt b{min-width:12px;font-family:var(--serif);font-weight:600;color:var(--t2)}
+.s13 .v-mac-it{gap:6px;padding-left:28px;font-size:12.5px;cursor:pointer}
+.s13 .v-mac-it.r{padding-left:8px}
+.s13 .v-mac-it .mk{width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none;opacity:0}
+.s13 .v-mac-it.ed .mk{opacity:1}
+.s13 .v-mac-it mark{background:none;color:inherit;font-weight:700}
+@media (hover:hover){.s13 .v-mac-it:not(.on):hover{background:color-mix(in srgb,var(--t1) 4%,transparent)}}
+.s13-nil{padding:10px 8px;font-size:11.5px;line-height:1.6;color:var(--t3)}
+.s13-ft{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:32px;padding:0 8px;border-top:.5px solid var(--line);font-size:11px;color:var(--t3)}
+.s13-ft a{color:var(--accent);cursor:pointer}
+/* 右边：标题、设置、预览在同一张底上；预览那一栏也用分组标题开头，和设置的第一组齐 */
+.s13 .v-mac-mn{overflow:auto;overscroll-behavior:contain;scrollbar-width:none}
+.s13 .v-mac-mn::-webkit-scrollbar{display:none}
+.s13-pg{display:grid;grid-template-columns:minmax(0,1fr);column-gap:24px;align-items:start;padding-bottom:28px}
+.s13-pg.with{grid-template-columns:minmax(0,1fr) 244px}
+.s13-pg>.v-mac-hd,.s13-sub{grid-column:1/-1}
+.s13-sub{margin:-14px 2px 20px;font-size:12px;line-height:1.5;color:var(--t2)}
+.s13-col{display:flex;flex-direction:column;gap:6px;min-width:0}
+.s13-col .v-ms-gl{margin-top:14px}
+.s13-col>.v-ms-gl:first-child{margin-top:0}
+.s13-pv{position:sticky;top:16px;display:flex;flex-direction:column;gap:6px}
+@media (prefers-reduced-motion:no-preference){.s13-pg.in{animation:s13In .18s ease-out}}
+@media (prefers-reduced-motion:reduce){.s13-pg.in{animation:s13Fade .15s ease-out}}
+@keyframes s13In{from{opacity:0;transform:translateY(4px)}}
+@keyframes s13Fade{from{opacity:0}}
+/* 一页书：和书架上的书一样的影子，不做渐隐，整行截断 */
+.s13-sheet.sv-sheet{padding:24px var(--sv-mg,24px) 0;border-radius:3px;box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06),0 8px 20px rgba(51,46,41,.1)}
+.s13-sheet .tx{overflow:hidden}
+.s13-sheet .no{position:static;display:block;padding:12px 0 14px}
+.s13-pv .sv-bar{margin-top:4px;height:38px}
+.s13-pv .s13-cap{margin:2px 2px 0;font-size:10.5px;line-height:1.5;color:var(--t3)}
+/* 一家一行：单选、字母小方块、名字和说明、右边一个按钮 */
+.s13 .v-ms-row.s13-pr{gap:12px;min-height:50px;padding:8px 0}
+.s13-rd{width:16px;height:16px;border-radius:50%;flex:none;display:grid;place-items:center;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--t1) 24%,transparent)}
+.s13-rd.on{background:var(--v-fill);box-shadow:none}
+.s13-rd.on::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--on-black)}
+.s13-rd.no{visibility:hidden}
+.s13-pr.pick{cursor:pointer}
+.s13-lg{width:26px;height:26px;border-radius:7px;flex:none;display:grid;place-items:center;background:var(--inset);color:var(--t2);font-size:12px;font-weight:600}
+.s13-lg svg{width:14px;height:14px}
+.s13-lg.add{background:var(--accent-soft);color:var(--accent)}
+.s13-pr code{font-family:var(--mono);font-size:10.5px}
+.s13-man{display:flex;flex-direction:column;gap:8px;padding:0 0 14px 66px}
+.s13-man input.y-f{flex:none;height:32px;border:0;outline:0;font-size:12px;color:var(--t1)}
+.s13-man input.y-f:focus{box-shadow:inset 0 0 0 .5px rgba(0,0,0,.22),0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent)}
+.s13-man p{margin:0;font-size:11px;color:var(--t3)}
+.s13-man.v{padding-left:38px}
+.s13-man p a{color:var(--accent);cursor:pointer;margin-left:8px}
+.s13 .v-btn.sm .f-spin{width:10px;height:10px}
+@media (hover:hover){.s13 .v-btn{cursor:pointer}}
+@media (prefers-reduced-motion:no-preference){.s13 .v-btn:not(.dis):active{transform:scale(.96);transition:transform .15s ease-out}}
+.s13 .v-btn.dis{opacity:.55;pointer-events:none}
+/* 搜到以后，那一行亮一下 */
+.s13-col .v-ms-row,.s13-col .v-ms-gl{position:relative;isolation:isolate}
+.s13-fl::before{content:"";position:absolute;top:0;bottom:0;left:-10px;right:-10px;border-radius:8px;background:var(--accent-soft);z-index:-1;animation:s13Fl 1.6s ease-out forwards;pointer-events:none}
+@keyframes s13Fl{0%,40%{opacity:1}100%{opacity:0}}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -4990,7 +5057,7 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
   <header class="x-top">
     <p class="eyebrow">语阅 · Mac · 设置窗口</p>
     <h1>设置窗口重新整理</h1>
-    <p><b>11-03 第十二版</b>：最上面“目录 · 设置 · 样张”是新的。<b>11-03 第十一版</b>：最上面“设置是一本书的目录”是新的。<b>11-03 第十版</b>：最上面“照 Loop 的设置”是新的。<b>11-03 第九版</b>：最上面“五个方案”是新的。<b>11-03 第八版</b>：最上面“海报墙”是新的。<b>11-03 第七版</b>：最上面“一页滚到底，预览跟着你走”是新的，下面有一张表比较几版做常用的事各要几步。<b>11-03 第六版</b>：最上面“设置就是一段话”是新的，先看它。<b>11-03 第五版</b>：最上面“第五版”是新的，只做一个方向、做细了，先看它。<b>11-03 第四版</b>：最上面“发散”五个方向是新的，先看它。<b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
+    <p><b>11-03 第十三版</b>：最上面“照书架窗口”是新的。<b>11-03 第十二版</b>：最上面“目录 · 设置 · 样张”是新的。<b>11-03 第十一版</b>：最上面“设置是一本书的目录”是新的。<b>11-03 第十版</b>：最上面“照 Loop 的设置”是新的。<b>11-03 第九版</b>：最上面“五个方案”是新的。<b>11-03 第八版</b>：最上面“海报墙”是新的。<b>11-03 第七版</b>：最上面“一页滚到底，预览跟着你走”是新的，下面有一张表比较几版做常用的事各要几步。<b>11-03 第六版</b>：最上面“设置就是一段话”是新的，先看它。<b>11-03 第五版</b>：最上面“第五版”是新的，只做一个方向、做细了，先看它。<b>11-03 第四版</b>：最上面“发散”五个方向是新的，先看它。<b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
     <p>十页挨个过了一遍。窗口外框、顶上的分页、开关、分段、滑杆这些控件<b>不动</b>，照 prototype-v0.29；按钮还是系统按钮（上次换成带图标、带下划线的样式被撤回过）。改的是<b>每页里放什么、怎么排、说明怎么写</b>。每页可以在“现在”和“改后”之间切；编号对着右边的说明，红的是问题，蓝的是改法。</p>
   </header>
   <div class="x-bar">
@@ -5000,6 +5067,14 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
     <label><input type="checkbox" id="vNums" checked>显示编号</label>
     <nav class="x-idx" id="idx"></nav>
   </div>
+  <section id="v13">
+    <h2 class="x-h">第十三版：照书架窗口 <span class="y-rec">11-03</span></h2>
+    <p class="y-cap2">这次照着项目里的设计规范（界面、排版、版式、配色几份）改：窗口外壳、侧栏、搜索框、行、按钮全用书架窗口和现在设置窗口里的；只有一种强调色（墨蓝）；衬线字只用在“目录”、章号和纸上。侧栏就是目录：章是“一 读、二 听……”，页码放在书架侧栏写本数的位置。搜索框和书架一样在侧栏最上面，搜的时候侧栏变成结果，回车跳到那一行。预览那一栏也用“预览”这样的分组标题开头，和设置的第一组齐平；没有预览的页，设置就占满，窗口大小不变。书伴只有一行“用云端 AI · 粘贴 Key”，剪贴板里有 Key 时这一行直接写出来，按钮变成“用它”。</p>
+    <div class="x-stage" style="margin-top:14px"><div id="s13Root"></div></div>
+    <div class="m9-why"><div><b>和现在的 App 一样</b>侧栏是书架窗口那块浮起来的侧栏，选中的白底、右边灰色数字、顶上的搜索框都一样；按钮是“接着读”“听”那种圆角按钮。</div>
+      <div><b>拿掉了</b>点线、双线、字母间距拉开的小字、彩色的厂商方块、顶上的提示条、会变宽变窄的窗口、渐隐被裁掉的纸。</div>
+      <div><b>可以试</b>点“书伴”，点“用它”；点“这台 Mac”切回来；“移除”再点“粘贴 Key”，下面展开输入框和去拿 Key 的链接。⌘F 搜“字号”回车。书页拖字号，预览总是整行截断。</div></div>
+  </section>
   <section id="v12">
     <h2 class="x-h">第十二版：目录 · 设置 · 样张 <span class="y-rec">11-03</span></h2>
     <p class="y-cap2">还是三块，但三块是<b>一张底</b>：左边是一页真的目录（章、页名、点线、页码），中间是设置，右边那张纸就放在设置旁边、和第一组对齐，不再是另一栏。只有书页、外文、声音三页有这张纸；别的页没有纸，<b>窗口自己收窄</b>，像 Mac 自带的设置窗口换页时那样。搜索挪到窗口右上角，搜的是<b>每一项设置</b>，回车直接跳到那一行、那一行亮一下。按钮换成不描边的软药丸。书伴不用先选再点再贴：<b>复制了 Key 回来，打开这页就看到“用它”</b>；在这页任何地方按 ⌘V 也行，认得出是哪家。</p>
@@ -7024,6 +7099,168 @@ PAGES.push({id:'data',name:'数据',
 
   var hv=(location.hash.match(/^#v12-(\w+)/)||[])[1];page(hv&&BODY[hv]?hv:'page',{first:1});
   var idx=document.getElementById('idx');var a=document.createElement('a');a.href='#v12';a.textContent='第十二版 · 目录 设置 样张';idx.insertBefore(a,idx.firstChild);
+})();
+/* ===== 2026-11-03 第十三版：照书架窗口。侧栏就是目录（章、页、页码放在书架数字的位置），搜索在侧栏顶上、结果就在侧栏里；预览那一栏和设置同一张底；书伴只有一行“粘贴 Key” ===== */
+(function(){
+  var root=document.getElementById('s13Root');if(!root)return;
+  var PAP=[['paper-kami','纸本'],['paper-plain','白纸'],['paper-kaminight','夜间'],['paper-dark','黑底'],['paper-eink','墨水屏']];
+  var FON=[['宋体','var(--serif)'],['黑体','var(--sans)'],['楷体',"'Kaiti SC',STKaiti,KaiTi,serif"]];
+  var VO={'婷婷':['婷','#B5654A','Tingting','zh-CN'],'美佳':['美','#7A8F5C','Meijia','zh-TW'],'Nova':['N','#2B4C7E','','zh-CN'],'晓晓':['晓','#8A5A9E','Xiaoxiao','zh-CN'],'Ava':['A','#3F7D7A','Ava','en-US'],'Zoe':['Z','#A0703C','Zoe','en-US']};
+  var TX=['我与父亲不相见已二年余了，','我最不能忘记的是他的背影。','那年冬天，','祖母死了，','父亲的差使也交卸了，','正是祸不单行的日子。','我从北京到徐州，','打算跟着父亲奔丧回家。','到徐州见着父亲，','看见满院狼藉的东西，','又想起祖母，','不禁簌簌地流下眼泪。'];
+  var TX3='父亲说：“事已如此，不必难过，好在天无绝人之路！”回家变卖典质，父亲还了亏空；又借钱办了丧事。这些日子，家中光景很是惨淡，一半为了丧事，一半为了父亲赋闲。';
+  var EN=[['It is a truth ',0],['universally','普遍地',3],[' ',0],['acknowledged','公认的',2],[', that a single man in ',0],['possession','拥有',1],[' of a good ',0],['fortune','财产',1],[', must be in want of a wife. However little known the feelings of such a man on his first entering a ',0],['neighbourhood','街坊',1],[', he is considered the ',0],['rightful','理所应当的',4],[' ',0],['property','所有物',3],[' of some one or other of their daughters.',0]];
+  var D={paper:0,font:0,fs:15,lh:2.0,mg:24,ind:1,just:1,turn:0,edge:1,night:1,nightAt:1,zh:0,en:0,speed:1.2,dlg:1,sleep:2,foot:1,awake:1,gloss:1,lv:1,gm:0,ai:'mac',tip:1,quiet:1,icloud:1,sA:1,sB:1,sC:1,sD:0,bk:0,look:2,tint:0,open:0,menu:1};
+  var S=JSON.parse(JSON.stringify(D));
+  var OWN={paper:'page',font:'page',fs:'page',lh:'page',mg:'page',ind:'page',just:'page',turn:'page',edge:'page',night:'page',nightAt:'page',gloss:'fl',lv:'fl',gm:'fl',zh:'voice',en:'voice',speed:'voice',dlg:'voice',sleep:'listen',foot:'listen',awake:'listen',tip:'ai',quiet:'ai',icloud:'sync',sA:'sync',sB:'sync',sC:'sync',sD:'sync',bk:'store',look:'gen',tint:'gen',open:'gen',menu:'gen'};
+  var TOC=[['一','读',[['page','书页'],['fl','外文']]],['二','听',[['voice','声音'],['listen','听书']]],['三','帮手',[['ai','书伴']]],['四','数据',[['sync','同步'],['store','存储与备份']]],['','附录',[['gen','通用'],['about','关于']]]];
+  var PN={page:1,fl:12,voice:17,listen:23,ai:27,sync:31,store:39,gen:46,about:50};
+  var PG={};TOC.forEach(function(v){v[2].forEach(function(t){PG[t[0]]=t[1];});});
+  var SAMPLE={page:1,fl:1,voice:1};
+
+  /* 哪几家、怎么从 Key 认出是哪家 */
+  var NAME={claude:'Claude',openai:'ChatGPT',gemini:'Gemini',deepseek:'DeepSeek',azure:'微软 Azure'};
+  var LET={claude:'C',openai:'O',gemini:'G',deepseek:'D',azure:'Az'};
+  var SITE={claude:'console.anthropic.com',openai:'platform.openai.com',gemini:'aistudio.google.com',deepseek:'platform.deepseek.com',azure:'portal.azure.com'};
+  var FAKE={claude:'sk-ant-api03-Hk2v9QxLm4Rt8Wn1Pz6Yb3Cd5Fg7Jh0Ks2Lq4Mw6Nx8R7Qw',openai:'sk-proj-4fT9kLm2Qx7Rb1Wz8Yc3Nd6Vh0Jp5Gs9Ae2',gemini:'AIzaSyB4c9Xq2Lm7Rt1Wn8Pz3Yb6Cd0Fg5Jh2Ks',deepseek:'sk-3f9a1c7e2b8d4f60a5c1e9b7d3f2a81c',azure:'7d2e9b41c8a35f60e1b9d7c4a2f8a81c'};
+  var KEY={},ORDER=[];               /* 连上的几家，按连上的先后 */
+  var CLIP={p:'claude',k:FAKE.claude};   /* 原型：假装你刚在网站上复制了一个 Claude 的 Key */
+  function detect(t){t=(t||'').trim();if(/^sk-ant-[\w-]{20,}$/.test(t))return 'claude';if(/^AIza[\w-]{30,}$/.test(t))return 'gemini';if(/^sk-[0-9a-f]{32}$/.test(t))return 'deepseek';if(/^sk-(proj-)?[\w-]{20,}$/.test(t))return 'openai';if(/^[0-9a-fA-F]{32}$/.test(t)||/^[A-Za-z0-9]{84}$/.test(t))return 'azure';return null;}
+  function mask(k){var i=k.lastIndexOf('-',12);return (i>0?k.slice(0,i+1):k.slice(0,4))+'…'+k.slice(-4);}
+  function kind(p){return p==='azure'?'voice':'ai';}
+
+  /* 控件：现在 App 的开关、分段、滑杆、v-btn */
+  var TG=function(k){return '<span class="sw2'+(S[k]?' on':'')+'" data-k="'+k+'"></span>';};
+  var SG=function(k,items,w){return '<span class="v-seg sm" data-k="'+k+'" style="width:'+w+'px;flex:none">'+items.map(function(s,i){return '<span'+(i===S[k]?' class="on"':'')+' data-i="'+i+'">'+s+'</span>';}).join('')+'</span>';};
+  var FMT={i:function(v){return v;},f:function(v){return (+v).toFixed(1);},x:function(v){return (+v).toFixed(1)+'×';}};
+  var SLD=function(k,min,max,step,fmt,w){var at=(S[k]-min)/(max-min);return '<span class="v-ms-sl" data-k="'+k+'" data-min="'+min+'" data-max="'+max+'" data-step="'+step+'" data-f="'+fmt+'"><span class="v-ms-tr" style="width:'+(w||150)+'px"><i style="width:'+at*100+'%"></i><b style="left:'+at*100+'%"></b></span><span class="x-val" style="min-width:34px;justify-content:flex-end"><b data-o="'+k+'">'+FMT[fmt](S[k])+'</b></span></span>';};
+  var BT=function(t,cls,at){return '<span class="v-btn sm'+(cls?' '+cls:'')+'"'+(at?' '+at:'')+'>'+t+'</span>';};
+  var ZH=function(){return ['婷婷','美佳','Nova'].concat(KEY.azure?['晓晓']:[]);};
+
+  /* 连上的一家：单选、字母方块、名字、Key 末四位、移除 */
+  function ROW(p,pick){var sel=pick&&S.ai===p;return '<div class="v-ms-row s13-pr'+(pick?' pick':'')+'" data-pick="'+(pick?p:'')+'" data-row="'+p+'">'+(pick?'<span class="s13-rd'+(sel?' on':'')+'"></span>':'')+'<span class="s13-lg">'+LET[p]+'</span><div class="v-ms-lab"><b>'+NAME[p]+'</b><span><code>'+mask(KEY[p])+'</code>'+(p==='azure'?' · 多了 214 个声音':'')+'</span></div>'+BT('移除','t','data-un="'+p+'"')+'</div>';}
+  /* 最后一行：加一家。剪贴板里有 Key，就直接写出来，按钮变“用它” */
+  function ADD(w){var c=CLIP&&!KEY[CLIP.p]&&kind(CLIP.p)===w;
+    var t=w==='ai'?'用云端 AI':'用微软 Azure 的声音',d=w==='ai'?'Claude、ChatGPT、Gemini、DeepSeek 都行，粘贴 Key 就连上':'中文声音最多，每月有免费额度';
+    return '<div class="v-ms-row s13-pr" data-add="'+w+'">'+(w==='ai'?'<span class="s13-rd no"></span>':'')+'<span class="s13-lg add">'+I('i-plus')+'</span><div class="v-ms-lab"><b>'+(c?'剪贴板里有一个 '+NAME[CLIP.p]+' 的 Key':t)+'</b><span id="s13Ad'+w+'">'+(c?'<code>'+mask(CLIP.k)+'</code>':d)+'</span></div>'+BT(c?'用它':'粘贴 Key','k','data-paste="'+w+'"')+'</div>'+
+      '<div class="sv-open" id="s13M'+w+'"><div><div class="s13-man'+(w==='ai'?'':' v')+'"><input class="y-f" data-in="'+w+'" placeholder="剪贴板里没有 Key，可以在这里粘贴或输入" spellcheck="false" autocomplete="off"><p>还没有 Key？'+(w==='ai'?['claude','openai','gemini','deepseek']:['azure']).map(function(p){return '<a data-get="'+p+'">'+NAME[p]+' ↗</a>';}).join('')+'</p></div></div></div>';}
+
+  var BODY={
+    page:{intro:'书上的字和纸。改的是所有书；哪一本想不一样，在那本书的 Aa 里改。',
+      html:function(){return GL('纸')+BOX(R('纸色','','<span class="sv-pp" data-k="paper">'+PAP.map(function(p,i){return '<span data-i="'+i+'"'+(i===S.paper?' class="on"':'')+'><i class="'+p[0]+'">文</i>'+p[1]+'</span>';}).join('')+'</span>','v-ms-rt'),
+          R('到了晚上换夜间纸','',CTL(SG('nightAt',['21:00','22:00','23:00'],140),TG('night'))))+
+        GL('字')+BOX(R('字体','',SG('font',['宋体','黑体','楷体'],160)),R('字号','',SLD('fs',12,22,1,'i')),R('行距','',SLD('lh',1.5,2.6,.1,'f')),R('页边','',SLD('mg',14,44,2,'i')))+
+        GL('排版')+BOX(R('翻页','',SG('turn',['左右翻','上下滚'],140)),R('每段开头空两格','',TG('ind'),'v-ms-rs'),R('两端对齐','',TG('just'),'v-ms-rs'),R('点屏幕左右两边翻页','',TG('edge'),'v-ms-rs'));}},
+    fl:{intro:'读英文书时，比你水平难的词，在头上写一个中文意思。',
+      html:function(){return GL('难词注释')+BOX(R('在难词上写中文','',TG('gloss'),'v-ms-rs'),R('从哪一级起','越往右，标出来的越少',SG('lv',['四级','六级','雅思','GRE'],200)),R('怎么标','',SG('gm',['写中文','划一道线'],140)))+
+        GL('点一个词先查','拖着排先后')+'<div class="v-ms-box sv-dict" id="s13Dict">'+[['柯林斯双解','导入的'],['牛津高阶','导入的'],['系统词典','自带']].map(function(d){return '<div draggable="true">'+I('i-grip')+d[0]+'<em>'+d[1]+'</em></div>';}).join('')+'</div>'+
+        '<p class="v-ms-pvn">'+I('i-plus')+'<a>导入 MDict 词典…</a></p>';}},
+    voice:{intro:'听书时谁来念、念多快。换了马上用这个声音念给你听。',
+      html:function(){var z=ZH();return GL('谁来念')+BOX(R('中文书','',SG('zh',z,z.length*60)),R('英文书','',SG('en',['Ava','Zoe'],120)),R('语速','',SLD('speed',.6,2,.1,'x')),R('小说里的对话换一个声音念','',TG('dlg'),'v-ms-rs'))+
+        GL('云端声音','用你自己的 Key')+BOX((KEY.azure?ROW('azure',false):ADD('voice')));}},
+    listen:{intro:'听书时的几样习惯，每本书都一样。',
+      html:function(){return BOX(R('睡眠定时','',SG('sleep',['不定时','15 分','30 分','本章完'],230)),R('跳过脚注和图注','',TG('foot'),'v-ms-rs'),R('听书时 Mac 不睡着','合上盖子照样会停',TG('awake')))+GL('有声书')+BOX(R('听完的有声书','30 天后清掉；划线和书签留着',BT('改')));}},
+    ai:{intro:'读到不懂的，选中一句问它。它只看你选的那一段，不看整本书。',
+      html:function(){return GL('谁来回答')+BOX(ORDER.map(function(p){return ROW(p,true);}).join('')+
+          '<div class="v-ms-row s13-pr pick" data-pick="mac"><span class="s13-rd'+(S.ai==='mac'?' on':'')+'"></span><span class="s13-lg">'+I('i-laptop')+'</span><div class="v-ms-lab"><b>这台 Mac</b><span>不联网，不用 Key；回答简单一些</span></div></div>'+ADD('ai'))+
+        '<p class="v-ms-pvn">'+I('i-lock')+'Key 只存在这台 Mac 的钥匙串里。在这一页按 ⌘V 也能粘贴。</p>'+
+        GL('什么时候出来')+BOX(R('读到难处时轻轻提一句','',TG('tip'),'v-ms-rs'),R('沉浸阅读时不打扰','',TG('quiet'),'v-ms-rs'));}},
+    sync:{intro:'读到哪、划线、生词，在你的几台设备之间跟着走。',
+      html:function(){return BOX(R('用 iCloud 同步','三台都登着同一个 Apple ID',TG('icloud')))+GL('同步什么')+BOX(R('读到哪','',TG('sA'),'v-ms-rs'),R('划线和笔记','',TG('sB'),'v-ms-rs'),R('生词本','',TG('sC'),'v-ms-rs'),R('这些设置','纸、字、声音在几台一样',TG('sD')))+
+        GL('这几台')+BOX(R('这台 Mac','刚刚',''),R('iPhone 16','<span id="s13Ph">2 分钟前</span>',''),R('iPad Air','<span id="s13Pd">昨天 22:10</span>',BT('现在同步','','id="s13Sync"')));}},
+    store:{intro:'这台 Mac 上语阅占了多少地方，哪些能清，多久备份一次。',
+      html:function(){return '<div class="v-ms-box"><div class="sv-use"><div class="x-usen"><span>一共</span><b id="s13Gb">3.2 GB</b><em>书 1.1 · 有声书 1.4 · 念过的句子 0.5 · 词典 0.2</em></div><div class="x-sbar"><i style="flex:1.1 1 0;background:var(--accent)"></i><i id="s13BA" style="flex:1.4 1 0;background:#B5654A"></i><i id="s13BV" style="flex:.5 1 0;background:#7A8F5C"></i><i style="flex:.2 1 0;background:#B7791F"></i></div></div></div>'+
+        GL('可以清掉的')+BOX(R('听完的有声书','3 本 · 1.4 GB · 划线和书签留着',BT('清掉','r','id="s13CA"')),R('念过的句子','0.5 GB · 再念时重新生成',BT('清掉','r','id="s13CV"')))+
+        GL('备份')+BOX(R('自动备份','上次：昨天 23:00',SG('bk',['每天','每周','不备份'],170)),R('以前的备份','',BT('打开…')))+GL('带走')+BOX(R('笔记和生词','Markdown、CSV',BT('导出…')),R('书库','~/书库',BT('在访达里显示')));}},
+    gen:{intro:'和书无关的几样。',
+      html:function(){return BOX(R('外观','',SG('look',['浅色','深色','跟随系统'],200)),R('主题色','',SG('tint',['墨蓝','墨黑'],116)))+GL('打开和关上')+BOX(R('打开语阅时接着读上次那本','',TG('open'),'v-ms-rs'),R('菜单栏里放播放按钮','',TG('menu'),'v-ms-rs'));}},
+    about:{intro:'好好读一本书。',
+      html:function(){return BOX(R('语阅','1.0 · 2026 年 11 月',BT('检查更新','','id="s13Up"')),R('写信给我们','',BT('发邮件…')),R('隐私','书、笔记和 Key 都只在你的设备上',''));}}};
+
+  var SPANS=function(a,o){return a.map(function(s,i){return '<span data-ph="'+(i+o)+'">'+s+'</span>';}).join('');};
+  var PV={page:function(){return GL('预览')+'<div class="sv-sheet s13-sheet" id="s13Sheet" style="--h:300"><h4>背　影</h4><div class="tx"><p>'+TX.slice(0,2).join('')+'</p><p>'+TX.slice(2).join('')+'</p><p>'+TX3+'</p></div><span class="no">3</span></div><p class="s13-cap">照现在的纸和字排的一页。</p>';},
+    fl:function(){return GL('预览')+'<div class="sv-sheet en paper-kami s13-sheet" id="s13En"><h4 style="font-family:var(--serif)">Chapter 1</h4><div class="tx"><p>'+EN.map(function(w){return w[2]?'<ruby data-d="'+w[2]+'">'+w[0]+'<rt>'+w[1]+'</rt></ruby>':w[0];}).join('')+'</p></div><span class="no">1</span></div><p class="s13-cap">比<span id="s13LvC">六级</span>难的词这样标。</p>';},
+    voice:function(){return GL('预览')+'<div class="sv-sheet s13-sheet" id="s13SheetV" style="--h:236"><h4>背　影</h4><div class="tx"><p>'+SPANS(TX.slice(0,2),0)+'</p><p>'+SPANS(TX.slice(2),2)+'</p></div><span class="no">3</span></div><div class="sv-bar"><span class="av" id="s13Av"></span><span><b id="s13Vn"></b> · <span id="s13Vs" style="color:var(--t3)"></span></span><button class="pp" id="s13PP" aria-label="暂停">'+I('i-pausef')+'</button></div>';}};
+
+  root.innerHTML='<div class="v-mac s13" id="s13W"><aside class="v-mac-sb"><span class="v-lights"><i></i><i></i><i></i></span>'+
+    '<label class="v-mac-sch">'+I('i-search')+'<input id="s13Q" placeholder="搜索设置" autocomplete="off" aria-label="搜索设置"><kbd>⌘F</kbd></label>'+
+    '<div class="s13-list" id="s13L"></div><div class="s13-ft" id="s13Ft"></div></aside><div class="v-mac-mn" id="s13Mn"></div></div>';
+  var W=document.getElementById('s13W'),$=function(s){return W.querySelector(s);},$$=function(s){return [].slice.call(W.querySelectorAll(s));};
+  var cur=null,timer=null,ph=0,q=$('#s13Q'),hits=[],sel=0;
+
+  /* 侧栏：平时是目录，搜的时候是结果 */
+  function side(){var v=q.value.trim().toLowerCase(),L=$('#s13L');
+    if(!v){L.innerHTML='<p class="s13-tt">目录</p>'+TOC.map(function(c){return '<div class="v-mac-gt"><b>'+c[0]+'</b>'+c[1]+'</div>'+c[2].map(function(t){return '<div class="v-mac-it'+(t[0]===cur?' on':'')+'" data-p="'+t[0]+'"><span>'+t[1]+'</span><i class="mk"></i><em>'+PN[t[0]]+'</em></div>';}).join('');}).join('');marks();}
+    else{hits=IDX.filter(function(x){return x.t.toLowerCase().indexOf(v)>=0;});IDX.forEach(function(x){if(x.pg&&KW[x.p].indexOf(v)>=0&&hits.indexOf(x)<0)hits.push(x);});hits=hits.slice(0,12);sel=0;
+      var re=new RegExp('('+v.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','i');
+      L.innerHTML='<div class="v-mac-gt">'+(hits.length?'找到 '+hits.length+' 项':'')+'</div>'+(hits.length?hits.map(function(x,i){return '<div class="v-mac-it r'+(i?'':' on')+'" data-h="'+i+'"><span>'+x.t.replace(re,'<mark>$1</mark>')+'</span><em>'+(x.pg?'整页':PG[x.p])+'</em></div>';}).join(''):'<p class="s13-nil">没有“'+q.value.replace(/</g,'&lt;')+'”。试试 字号、Key、备份、深色。</p>');}
+    [].forEach.call(L.querySelectorAll('[data-p]'),function(x){x.onclick=function(){if(x.dataset.p!==cur)page(x.dataset.p);};});
+    [].forEach.call(L.querySelectorAll('[data-h]'),function(x){x.onmousedown=function(e){e.preventDefault();go(hits[+x.dataset.h]);};});}
+  function marks(){var n=0,pg={};Object.keys(OWN).forEach(function(k){if(S[k]!==D[k]){n++;pg[OWN[k]]=1;}});$$('.v-mac-it[data-p]').forEach(function(x){x.classList.toggle('ed',!!pg[x.dataset.p]);});
+    $('#s13Ft').innerHTML=n?'<span>改了 '+n+' 处</span><a id="s13Undo">全部改回</a>':'<span>语阅 1.0</span>';var u=$('#s13Undo');if(u)u.onclick=function(){Object.keys(OWN).forEach(function(k){S[k]=D[k];});page(cur,{keep:1});};}
+
+  function page(p,o){o=o||{};var mn=$('#s13Mn'),top=o.keep?mn.scrollTop:0,has=!!SAMPLE[p];cur=p;clearInterval(timer);
+    mn.innerHTML='<div class="s13-pg'+(has?' with':'')+(o.first||o.keep?'':' in')+'"><div class="v-mac-hd"><h3>'+PG[p]+'</h3></div><p class="s13-sub">'+BODY[p].intro+'</p><div class="s13-col" id="s13Set">'+BODY[p].html()+'</div>'+(has?'<div class="s13-pv">'+PV[p]()+'</div>':'')+'</div>';mn.scrollTop=top;
+    if(!q.value)side();wire();apply();if(p==='voice')read();}
+
+  function set(k,v){S[k]=v;apply(k);marks();}
+  /* 预览按整行截断：算一下这一页放得下几行 */
+  function fit(sh){var tx=sh.querySelector('.tx'),h=+getComputedStyle(sh).getPropertyValue('--h')||300;var lh=parseFloat(getComputedStyle(tx.querySelector('p')).lineHeight)||30;tx.style.height=Math.max(1,Math.floor(h/lh))*lh+'px';}
+  function apply(k){var sh=$('#s13Sheet')||$('#s13SheetV');if(sh){sh.style.setProperty('--sv-fs',S.fs+'px');sh.style.setProperty('--sv-lh',S.lh);sh.style.setProperty('--sv-mg',S.mg+'px');sh.style.setProperty('--sv-font',FON[S.font][1]);sh.style.setProperty('--sv-ind',S.ind?'2em':'0');
+      PAP.forEach(function(p){sh.classList.remove(p[0]);});sh.classList.add(PAP[S.paper][0]);[].forEach.call(sh.querySelectorAll('p'),function(p){p.style.textAlign=S.just?'justify':'left';});
+      if(k==='turn'){var o=document.createElement('div');o.className='sv-flip'+(S.turn?' ud':'');o.innerHTML='<div style="padding:24px var(--sv-mg) 0"><p>'+TX.slice(6).join('')+TX.slice(0,3).join('')+'</p></div>';sh.appendChild(o);setTimeout(function(){o.remove();},800);}
+      if((k==='night'||k==='nightAt')&&S.night){PAP.forEach(function(p){sh.classList.remove(p[0]);});sh.classList.add('paper-kaminight');setTimeout(function(){PAP.forEach(function(p){sh.classList.remove(p[0]);});sh.classList.add(PAP[S.paper][0]);},1400);}
+      fit(sh);}
+    var en=$('#s13En');if(en){fit(en);[].forEach.call(en.querySelectorAll('ruby'),function(r){var d=+r.dataset.d,on=S.gloss&&d>=S.lv+1;r.classList.toggle('off',!on||S.gm===1);r.classList.toggle('ul',on&&S.gm===1);});$('#s13LvC').textContent=['四级','六级','雅思','GRE'][S.lv];}
+    if(cur==='voice'){var n=ZH()[S.zh]||'婷婷',v=VO[n];$('#s13Av').style.background=v[1];$('#s13Av').textContent=v[0];$('#s13Vn').textContent=n;$('#s13Vs').textContent=FMT.x(S.speed);if(k==='zh'||k==='speed'){read();say(v);}if(k==='en')say(VO[['Ava','Zoe'][S.en]]);}}
+  function read(){clearInterval(timer);var sp=$$('#s13SheetV [data-ph]');ph=0;var step=function(){sp.forEach(function(s,j){s.classList.toggle('hl',j===ph%sp.length);});ph++;};step();timer=setInterval(step,Math.round(1300/S.speed));}
+  function say(v){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(v[3].indexOf('en')===0?'I can still remember the sight of his back.':TX.slice(0,2).join(''));u.lang=v[3];u.rate=Math.min(2,S.speed);var vs=speechSynthesis.getVoices(),h=vs.filter(function(x){return v[2]&&x.name.indexOf(v[2])===0;})[0]||vs.filter(function(x){return x.lang.replace('_','-').indexOf(v[3])===0;})[0];if(h)u.voice=h;speechSynthesis.speak(u);}catch(e){}}
+  function flash(el){if(!el)return;el.classList.remove('s13-fl');void el.offsetWidth;el.classList.add('s13-fl');var mn=$('#s13Mn'),r=el.getBoundingClientRect(),s=mn.getBoundingClientRect();if(r.top<s.top+20||r.bottom>s.bottom-20)mn.scrollTo({top:mn.scrollTop+r.top-s.top-s.height/2+r.height/2,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});}
+
+  /* 连上：按钮转一下，“加一家”那一行变成连上的那一家，书伴自动选它 */
+  function connect(p,k){var w=kind(p),b=$('[data-paste="'+w+'"]');if(b){b.classList.add('dis');b.innerHTML='<i class="f-spin"></i>核对中';}
+    setTimeout(function(){KEY[p]=k;if(w==='ai'){if(ORDER.indexOf(p)<0)ORDER.push(p);S.ai=p;}if(CLIP&&CLIP.p===p)CLIP=null;page(cur,{keep:1});flash($('[data-row="'+p+'"]'));},700);}
+  function note(w,t){var e=$('#s13Ad'+w);if(e)e.textContent=t;}
+
+  function wire(){var M=$('#s13Mn');
+    [].forEach.call(M.querySelectorAll('.sw2[data-k]'),function(s){s.onclick=function(){var k=s.dataset.k,v=S[k]?0:1;s.classList.toggle('on',!!v);set(k,v);};});
+    [].forEach.call(M.querySelectorAll('.v-seg[data-k],.sv-pp[data-k]'),function(g){[].forEach.call(g.children,function(o){o.onclick=function(){[].forEach.call(g.children,function(x){x.classList.toggle('on',x===o);});set(g.dataset.k,+o.dataset.i);};});});
+    [].forEach.call(M.querySelectorAll('.v-ms-sl[data-k]'),function(sl){var tr=sl.querySelector('.v-ms-tr'),k=sl.dataset.k,mn=+sl.dataset.min,mx=+sl.dataset.max,st=+sl.dataset.step,f=FMT[sl.dataset.f];
+      function at(x){var r=tr.getBoundingClientRect(),p=Math.min(1,Math.max(0,(x-r.left)/r.width)),v=+(Math.round((mn+p*(mx-mn))/st)*st).toFixed(2),qq=(v-mn)/(mx-mn)*100;tr.firstChild.style.width=qq+'%';tr.querySelector('b').style.left=qq+'%';sl.querySelector('[data-o]').textContent=f(v);if(v!==S[k])set(k,v);}
+      tr.onpointerdown=function(e){tr.setPointerCapture(e.pointerId);at(e.clientX);tr.onpointermove=function(ev){at(ev.clientX);};};tr.onpointerup=function(){tr.onpointermove=null;};});
+    /* 书伴、云端声音 */
+    [].forEach.call(M.querySelectorAll('[data-pick]'),function(r){var p=r.dataset.pick;if(!p)return;r.onclick=function(e){if(e.target.closest('.v-btn'))return;S.ai=p;$$('[data-pick] .s13-rd').forEach(function(x){x.classList.toggle('on',x.parentNode.dataset.pick===p);});};});
+    [].forEach.call(M.querySelectorAll('[data-paste]'),function(b){b.onclick=function(){var w=b.dataset.paste;
+      if(CLIP&&!KEY[CLIP.p]&&kind(CLIP.p)===w)return connect(CLIP.p,CLIP.k);
+      if(CLIP&&!KEY[CLIP.p])note(w,'剪贴板里是 '+NAME[CLIP.p]+' 的 Key，它在“'+(kind(CLIP.p)==='voice'?'声音':'书伴')+'”那一页用');
+      var m=$('#s13M'+w);m.classList.add('on');setTimeout(function(){m.querySelector('input').focus();},200);};});
+    [].forEach.call(M.querySelectorAll('[data-in]'),function(f){f.oninput=function(){var w=f.dataset.in,v=f.value.trim(),d=detect(v);
+      if(d&&kind(d)===w){note(w,'认出是 '+NAME[d]+'，正在核对…');connect(d,v);}
+      else if(d)note(w,'这是 '+NAME[d]+' 的 Key，它在“'+(kind(d)==='voice'?'声音':'书伴')+'”那一页用');
+      else note(w,v.length>6?'还认不出是哪家的 Key':(w==='ai'?'Claude、ChatGPT、Gemini、DeepSeek 都行，粘贴 Key 就连上':'中文声音最多，每月有免费额度'));};});
+    [].forEach.call(M.querySelectorAll('[data-get]'),function(a){a.onclick=function(){var p=a.dataset.get,w=kind(p);note(w,'（原型）在浏览器里打开了 '+SITE[p]+'，复制好 Key 回来…');setTimeout(function(){CLIP={p:p,k:FAKE[p]};if(cur===(w==='ai'?'ai':'voice'))page(cur,{keep:1});},1500);};});
+    [].forEach.call(M.querySelectorAll('[data-un]'),function(b){b.onclick=function(){var p=b.dataset.un;delete KEY[p];ORDER=ORDER.filter(function(x){return x!==p;});if(S.ai===p)S.ai='mac';if(p==='azure'&&S.zh>2)S.zh=0;page(cur,{keep:1});};});
+    /* 别的 */
+    var dl=$('#s13Dict');if(dl){var dr=null;[].forEach.call(dl.children,function(r){r.ondragstart=function(){dr=r;r.classList.add('drag');};r.ondragend=function(){r.classList.remove('drag');};r.ondragover=function(e){e.preventDefault();if(dr&&dr!==r){var a=[].indexOf.call(dl.children,dr),b=[].indexOf.call(dl.children,r);dl.insertBefore(dr,a<b?r.nextSibling:r);}};});}
+    var sy=$('#s13Sync');if(sy)sy.onclick=function(){sy.classList.add('dis');sy.innerHTML='<i class="f-spin"></i>同步中';setTimeout(function(){sy.classList.remove('dis');sy.textContent='现在同步';$('#s13Ph').textContent='刚刚';$('#s13Pd').textContent='刚刚';},900);};
+    var up=$('#s13Up');if(up)up.onclick=function(){up.classList.add('dis');up.innerHTML='<i class="f-spin"></i>检查中';setTimeout(function(){up.textContent='已经是最新的';},900);};
+    var gb=3.2;[['s13CA','s13BA',1.4],['s13CV','s13BV',.5]].forEach(function(c){var b=$('#'+c[0]);if(b)b.onclick=function(){b.className='v-btn sm dis';b.textContent='清掉了';$('#'+c[1]).style.flexGrow=0.001;gb-=c[2];$('#s13Gb').textContent=gb.toFixed(1)+' GB';};});}
+
+  /* 搜索：每一项设置都进索引；回车跳到那一行，那一行亮一下 */
+  var KW={page:'纸 字 字号 大小 行距 页边 翻页 夜 字体 宋体 缩进 对齐',fl:'外文 英文 难词 注释 级别 词典 mdict 生词',voice:'声音 朗读 念 语速 婷婷 azure 云端 对话 key 密钥',listen:'听书 睡眠 定时 脚注 有声书',ai:'书伴 key 密钥 claude openai chatgpt gemini deepseek api ai',sync:'同步 icloud iphone ipad 设备',store:'存储 空间 清理 备份 导出 书库',gen:'外观 深色 浅色 暗 主题 菜单栏 启动',about:'关于 版本 更新 隐私'};
+  var IDX=[];Object.keys(BODY).forEach(function(p){var t=document.createElement('div');t.innerHTML=BODY[p].html();IDX.push({t:PG[p],p:p,pg:1});
+    [].forEach.call(t.querySelectorAll('.v-ms-gl,.v-ms-lab>b'),function(e){var s=(e.firstChild&&e.firstChild.nodeType===3?e.firstChild.textContent:e.textContent).trim();if(s&&s.indexOf('剪贴板')<0&&!IDX.some(function(x){return x.t===s&&x.p===p;}))IDX.push({t:s,p:p});});});
+  function mark(i){sel=i;$$('.v-mac-it[data-h]').forEach(function(m,j){m.classList.toggle('on',j===i);});}
+  function go(x){if(!x)return;q.value='';q.blur();if(x.p!==cur)page(x.p);else side();if(x.pg)return;
+    var el=null;$$('#s13Set .v-ms-gl,#s13Set .v-ms-lab>b').forEach(function(e){var s=(e.firstChild&&e.firstChild.nodeType===3?e.firstChild.textContent:e.textContent).trim();if(!el&&s===x.t)el=e;});if(el)flash(el.closest('.v-ms-row,.v-ms-gl'));}
+  q.addEventListener('input',side);
+  q.addEventListener('keydown',function(e){if(!q.value)return;if(e.key==='ArrowDown'){e.preventDefault();mark(Math.min(hits.length-1,sel+1));}else if(e.key==='ArrowUp'){e.preventDefault();mark(Math.max(0,sel-1));}else if(e.key==='Enter'){e.preventDefault();go(hits[sel]);}else if(e.key==='Escape'){q.value='';side();}});
+  var inView=function(){var r=W.getBoundingClientRect();return r.top<innerHeight*.7&&r.bottom>innerHeight*.3;};
+  document.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='f'&&inView()){e.preventDefault();q.focus();q.select();}});
+  document.addEventListener('paste',function(e){if(!inView()||(cur!=='ai'&&cur!=='voice')||/INPUT|TEXTAREA/.test((e.target||{}).tagName||''))return;var t=((e.clipboardData||window.clipboardData).getData('text')||'').trim();if(!t)return;e.preventDefault();var d=detect(t),w=cur==='ai'?'ai':'voice';
+    if(d&&kind(d)===w)connect(d,t);else if(d)note(w,'这是 '+NAME[d]+' 的 Key，它在“'+(kind(d)==='voice'?'声音':'书伴')+'”那一页用');else note(w,'粘贴的不像是一个 Key');});
+
+  var hv=(location.hash.match(/^#v13-(\w+)/)||[])[1];page(hv&&BODY[hv]?hv:'page',{first:1});
+  var idx=document.getElementById('idx');var a=document.createElement('a');a.href='#v13';a.textContent='第十三版 · 照书架窗口';idx.insertBefore(a,idx.firstChild);
 })();
 </script>
 </body></html>
