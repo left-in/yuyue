@@ -4927,6 +4927,32 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .kz-dev.ph i{width:52px;height:104px;border-radius:12px}
 .kz-dev.mac i{width:132px;height:86px;border-radius:6px 6px 2px 2px;box-shadow:0 8px 0 -6px var(--t1)}
 .kz-dev.pad i{width:84px;height:116px;border-radius:9px}
+/* 第二十一版改：目录每页下面一行小字写现在的样子；存储是一叠纸的侧面 */
+.kz-toc{width:128px}
+.kz-mid{left:182px;width:360px}
+.v-mac.s21:not(.with) .kz-mid{width:530px}
+.kz-toc .s19-ch{height:0;margin:12px 0 0;overflow:hidden}
+.kz-toc .s19-ch:first-child{margin-top:0}
+.v-mac.s21 .kz-toc .s16-e[data-p]{display:block;height:auto;padding:5px 0 6px 12px}
+.kz-n{display:flex;align-items:center;gap:5px;font-size:13.5px;line-height:1.4}
+.kz-st{display:block;margin-top:1px;font-size:11px;line-height:1.4;font-weight:400;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.v-mac.s21 .kz-toc .s16-e[data-p]::before{left:0;top:7px;bottom:7px;width:2px;height:auto;margin:0;border-radius:1px;background:var(--t1);transform:scaleY(0);transform-origin:center}
+.v-mac.s21 .kz-toc .s16-e[data-p].on::before{transform:none}
+.v-mac.s21 .kz-toc .s16-e[data-p].on .kz-st{color:var(--t2)}
+.kz-stack{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:44px 0 40px 40px;border-left:.5px solid var(--line)}
+.kz-tot{margin:0;font-size:12px;line-height:1.6;color:var(--t2)}
+.kz-tot b{display:block;margin-top:2px;font-size:30px;font-weight:300;letter-spacing:-.02em;color:var(--t1);font-variant-numeric:tabular-nums}
+.kz-pile{display:flex;flex-direction:column}
+.kz-ly{position:relative;height:var(--h);display:flex;align-items:center;transition:height .5s cubic-bezier(.2,0,0,1),opacity .3s ease}
+.kz-ly>i{align-self:stretch;width:120px;flex:none;border-radius:1px 5px 5px 1px;background:repeating-linear-gradient(0deg,color-mix(in srgb,var(--p-ink) 26%,transparent) 0 .5px,transparent .5px 2.5px),color-mix(in srgb,var(--p-ink) 7%,var(--p-bg));box-shadow:inset 0 0 0 .5px color-mix(in srgb,var(--p-ink) 40%,transparent)}
+.kz-ly+.kz-ly>i{border-top:1px solid var(--p-bg)}
+.kz-ly.c>i{background:repeating-linear-gradient(0deg,color-mix(in srgb,var(--p-ink) 14%,transparent) 0 .5px,transparent .5px 3.5px);box-shadow:none;outline:.5px dashed color-mix(in srgb,var(--p-ink) 50%,transparent);outline-offset:-.5px}
+.kz-ly>span{position:relative;margin-left:12px;padding-left:14px;font-size:12px;line-height:1.45;color:var(--t2);white-space:nowrap}
+.kz-ly>span::before{content:"";position:absolute;left:0;top:9px;width:8px;height:.5px;background:var(--t3)}
+.kz-ly>span b{font-weight:500;color:var(--t1)}
+.kz-ly>span em{display:block;font-style:normal;font-size:11px;color:var(--t3)}
+.kz-ly.gone{height:0!important;opacity:0;overflow:hidden}
+@media (prefers-reduced-motion:reduce){.kz-ly{transition:opacity .2s ease}}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -5537,7 +5563,7 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
   </div>
   <section id="v21">
     <h2 class="x-h">第二十一版：照 Kanso 的设计理念 <span class="y-rec">11-03</span></h2>
-    <p class="y-cap2">从 Kanso 学的不是样子，是想法：<b>整扇窗是一张纸</b>，没有侧栏面板、没有卡片，只靠留白和细线分开；<b>先用一个大字和一句人话说现在是什么样</b>，再给你列表；<b>只有墨色和纸色</b>，主按钮是实心黑；<b>数据本身就是画面</b>。放到语阅：窗口就是你选的纸（选夜间纸，整扇窗就是夜里）；左边目录只是一列字；中间每页开头一个大字和一句话（“15 号 · 宋体，行距 2.0，印在纸本上”），改什么这句话跟着变；右边是这一页的图——书页、外文、声音是直接排在窗口纸上的那一页，存储是一张块状图（空着的地方是一圈圈的线），同步是三台设备；别的页没有图，列表变宽。</p>
+    <p class="y-cap2">从 Kanso 学的不是样子，是想法：<b>整扇窗是一张纸</b>，没有侧栏面板、没有卡片，只靠留白和细线分开；<b>先用一个大字和一句人话说现在是什么样</b>，再给你列表；<b>只有墨色和纸色</b>，主按钮是实心黑；<b>数据本身就是画面</b>。放到语阅：窗口就是你选的纸（选夜间纸，整扇窗就是夜里）；左边目录每页名字下面一行小字，写这一页现在是什么样（“15 号宋体 · 纸本”“婷婷 · 1.2×”），不点进去也看得到；中间每页开头一个大字和一句话（“15 号 · 宋体，行距 2.0，印在纸本上”），改什么这句话跟着变；右边是这一页的图——书页、外文、声音是直接排在窗口纸上的那一页，存储是一叠纸的侧面（每一层多厚就是占多大，能清掉的两层在最上面、虚线，点“清掉”那一层就没了），同步是三台设备；别的页没有图，列表变宽。</p>
     <div class="x-stage" style="margin-top:14px"><div id="s21Root"></div></div>
   </section>
   <section id="v20">
@@ -9143,7 +9169,7 @@ PAGES.push({id:'data',name:'数据',
   var ICO={page:'i-book',fl:'i-trans',voice:'i-wave',listen:'i-headset',ai:'i-spark',sync:'i-sync',store:'i-disk',gen:'i-sliders',about:'i-info'};
   function side(){var L=$('#s21L');
     if(!W.classList.contains('srch')){
-      if(!L.dataset.toc){L.dataset.toc=1;L.innerHTML=TOC.map(function(c){return '<p class="s19-ch">'+(c[0]?'<i>'+c[0]+'</i>':'')+'<span>'+c[1]+'</span></p>'+c[2].map(function(t){return '<a class="s16-e" data-p="'+t[0]+'"><span>'+t[1]+'</span><i class="mk"></i><em>'+PN[t[0]]+'</em></a>';}).join('');}).join('');
+      if(!L.dataset.toc){L.dataset.toc=1;L.innerHTML=TOC.map(function(c){return '<p class="s19-ch">'+(c[0]?'<i>'+c[0]+'</i>':'')+'<span>'+c[1]+'</span></p>'+c[2].map(function(t){return '<a class="s16-e" data-p="'+t[0]+'"><span class="kz-n">'+t[1]+'<i class="mk"></i></span><small class="kz-st" data-st="'+t[0]+'"></small></a>';}).join('');}).join('');
         [].forEach.call(L.querySelectorAll('[data-p]'),function(x){x.onclick=function(){if(x.dataset.p!==cur)page(x.dataset.p);};});}
       $$('.s16-e[data-p]').forEach(function(x){x.classList.toggle('on',x.dataset.p===cur);});marks();return;}
     delete L.dataset.toc;var v=q.value.trim().toLowerCase();
@@ -9152,7 +9178,7 @@ PAGES.push({id:'data',name:'数据',
     var re=new RegExp('('+v.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','i');
     L.innerHTML=hits.length?'<p class="s16-rh">'+hits.length+' 项</p>'+hits.map(function(x,i){return '<a class="s16-e r'+(i?'':' on')+'" data-h="'+i+'"><span>'+x.t.replace(re,'<mark>$1</mark>')+'</span><em>'+(x.pg?'整页':PG[x.p])+'</em></a>';}).join(''):'<p class="s16-rh">没有“'+q.value.replace(/</g,'&lt;')+'”</p>';
     [].forEach.call(L.querySelectorAll('[data-h]'),function(a){a.onmousedown=function(e){e.preventDefault();go(hits[+a.dataset.h]);};a.onmouseenter=function(){mark(+a.dataset.h);};});}
-  function marks(){var n=0,pg={};Object.keys(OWN).forEach(function(k){if(S[k]!==D[k]){n++;pg[OWN[k]]=1;}});$$('.s16-e[data-p]').forEach(function(x){x.classList.toggle('ed',!!pg[x.dataset.p]);});
+  function marks(){var n=0,pg={};Object.keys(OWN).forEach(function(k){if(S[k]!==D[k]){n++;pg[OWN[k]]=1;}});$$('.s16-e[data-p]').forEach(function(x){x.classList.toggle('ed',!!pg[x.dataset.p]);});$$('.kz-st').forEach(function(x){x.textContent=STAT(x.dataset.st);});
     $('#s21Ft').innerHTML=n?'改了 '+n+' 处 · <a id="s21Undo">全部改回</a>':'';var u=$('#s21Undo');if(u)u.onclick=function(){Object.keys(OWN).forEach(function(k){S[k]=D[k];});page(cur,{keep:1});};}
 
   var bk=null;
@@ -9164,19 +9190,18 @@ PAGES.push({id:'data',name:'数据',
       listen:[['不停','15','30','本章'][S.sleep],S.sleep===1||S.sleep===2?'分钟':'',['一直念下去，','15 分钟后停，','30 分钟后停，','这一章念完就停，'][S.sleep]+(S.foot?'跳过脚注和图注。':'脚注和图注照念。')],
       ai:[S.ai==='mac'?'这台 Mac':NAME[S.ai],'',S.ai==='mac'?'在本机回答，不联网。连上一家云端 AI，会讲得更细。':'选中书里的一句话，就能问它。'],
       sync:[S.icloud?'3':'1','台',S.icloud?'读到哪、划线、生词在三台之间跟着走。上次同步在 2 分钟前。':'iCloud 同步关着，只在这台 Mac 上。'],
-      store:['3.2','GB','有声书占了 1.4 GB，都听完了，可以清掉；划线和书签会留着。'],
+      store:[(3.2-(CL.A?1.4:0)-(CL.V?.5:0)).toFixed(1),'GB',CL.A?'听完的有声书已经清掉了，划线和书签还在。':'有声书占了 1.4 GB，都听完了，可以清掉；划线和书签会留着。'],
       gen:[['浅色','深色','跟随系统'][S.look],'','打开语阅时'+(S.open?'接着读上次那本。':'先到书架。')],
       about:['1.0','','语阅，2026 年 11 月。书、笔记和 Key 都只在你的设备上。']}[p];
     return '<div class="kz-big'+(/^[\d.]+[×]?$/.test(String(d[0]))?'':' w')+'"><b>'+d[0]+'</b>'+(d[1]?'<small>'+d[1]+'</small>':'')+'<span class="kz-pt">'+PG[p]+'</span></div><p class="kz-say">'+d[2]+'</p>';}
+  /* 目录里每页下面那一行：这一页现在是什么样 */
+  function STAT(p){var F=['宋体','黑体','楷体'][S.font];return {page:S.fs+' 号'+F+' · '+PAP[S.paper][1],fl:S.gloss?'比'+['四级','六级','雅思','GRE'][S.lv]+'难的词':'不标难词',voice:(ZH()[S.zh]||'婷婷')+' · '+FMT.x(S.speed),listen:['不定时','15 分钟后停','30 分钟后停','本章完就停'][S.sleep],ai:S.ai==='mac'?'这台 Mac':NAME[S.ai],sync:S.icloud?'3 台 · 2 分钟前':'关着',store:(3.2-(CL.A?1.4:0)-(CL.V?.5:0)).toFixed(1)+' GB',gen:['浅色','深色','跟随系统'][S.look],about:'1.0 · 最新'}[p];}
+  var CL={A:0,V:0};
   function BOOKH(){return '<div class="s14-book" id="s21Bk">'+BOOK(bk)+'</div>';}
-  var NEST=function(n){var s='';for(var i=0;i<n;i++)s+='<i>';for(i=0;i<n;i++)s+='</i>';return s;};
-  var HERO={page:BOOKH,fl:BOOKH,
+    var HERO={page:BOOKH,fl:BOOKH,
     voice:function(){return BOOKH()+'<div class="kz-play"><span class="av" id="s21Av"></span><span><b id="s21Vn"></b> · <span class="vs" id="s21Vs"></span></span><button class="pp" aria-label="暂停">'+I('i-pausef')+'</button></div>';},
-    store:function(){return '<div class="kz-map"><div class="kz-free">'+NEST(9)+'<span>空着<br><b>240 GB</b></span></div>'+
-      '<div class="m" style="left:63%;top:0;width:37%;height:49%"><span>◑ 听完的有声书<br>1.4 GB</span></div>'+
-      '<div class="d" style="left:0;top:53%;width:56%;height:47%;border-radius:40px 30px 46px 34px"><span>书<br><b>1.1 GB</b></span></div>'+
-      '<div class="l" style="left:59%;top:53%;width:41%;height:27%"><span>◑ 念过的句子<br>0.5 GB</span></div>'+
-      '<div class="ll" style="left:59%;top:83%;width:41%;height:17%"><span>词典 0.2 GB</span></div></div>';},
+    store:function(){var L=[['A','听完的有声书',1.4,1],['V','念过的句子',.5,1],['D','词典',.2,0],['B','书',1.1,0]];
+      return '<div class="kz-stack"><p class="kz-tot">语阅在这台 Mac 上，是这么厚的一叠：<b id="kzTot">'+(3.2-(CL.A?1.4:0)-(CL.V?.5:0)).toFixed(1)+' GB</b></p><div class="kz-pile">'+L.map(function(l){return '<div class="kz-ly'+(l[3]?' c':'')+(CL[l[0]]?' gone':'')+'" id="kzL'+l[0]+'" style="--h:'+Math.round(l[2]*118)+'px"><i></i><span><b>'+l[1]+'</b> '+l[2].toFixed(1)+' GB'+(l[3]?'<em>可以清掉</em>':'')+'</span></div>';}).join('')+'</div></div>';},
     sync:function(){return '<div class="kz-devs">'+[['ph','iPhone 16','2 分钟前'],['mac','这台 Mac','刚刚'],['pad','iPad Air','昨天 22:10']].map(function(d){return '<div class="kz-dev '+d[0]+'"><i>42%</i><span><b>'+d[1]+'</b><br>'+d[2]+'</span></div>';}).join('')+'</div>';}};
 
   function page(p,o){o=o||{};var mn=$('#s21Mn'),top=o.keep?mn.scrollTop:0,has=!!SAMPLE[p],k=p==='fl'?'en':'zh';cur=p;clearInterval(timer);
@@ -9230,7 +9255,7 @@ PAGES.push({id:'data',name:'数据',
     var dl=$('#s21Dict');if(dl){var dr=null;[].forEach.call(dl.children,function(r){r.ondragstart=function(){dr=r;r.classList.add('drag');};r.ondragend=function(){r.classList.remove('drag');};r.ondragover=function(e){e.preventDefault();if(dr&&dr!==r){var a=[].indexOf.call(dl.children,dr),b=[].indexOf.call(dl.children,r);dl.insertBefore(dr,a<b?r.nextSibling:r);}};});}
     var sy=$('#s21Sync');if(sy)sy.onclick=function(){sy.classList.add('dis');sy.innerHTML='<i class="f-spin"></i>同步中';setTimeout(function(){sy.classList.remove('dis');sy.textContent='现在同步';$('#s21Ph').textContent='刚刚';$('#s21Pd').textContent='刚刚';},900);};
     var up=$('#s21Up');if(up)up.onclick=function(){up.classList.add('dis');up.innerHTML='<i class="f-spin"></i>检查中';setTimeout(function(){up.textContent='已经是最新的';},900);};
-    var gb=3.2;[['s21CA','s21BA',1.4],['s21CV','s21BV',.5]].forEach(function(c){var b=$('#'+c[0]);if(b)b.onclick=function(){b.className='v-btn sm dis';b.textContent='清掉了';$('#'+c[1]).style.flexGrow=0.001;gb-=c[2];$('#s21Gb').textContent=gb.toFixed(1)+' GB';};});}
+    var gb=3.2;[['s21CA','s21BA',1.4],['s21CV','s21BV',.5]].forEach(function(c){var b=$('#'+c[0]);if(b)b.onclick=function(){b.className='v-btn sm dis';b.textContent='清掉了';$('#'+c[1]).style.flexGrow=0.001;gb-=c[2];$('#s21Gb').textContent=gb.toFixed(1)+' GB';var w=c[0]==='s21CA'?'A':'V';CL[w]=1;var ly=$('#kzL'+w);if(ly)ly.classList.add('gone');var tt=$('#kzTot');if(tt)tt.textContent=(3.2-(CL.A?1.4:0)-(CL.V?.5:0)).toFixed(1)+' GB';marks();var su=$('#kzSum');if(su)su.innerHTML=SUM(cur);};});}
 
   /* 搜索：每一项设置都进索引；回车跳到那一行，那一行亮一下 */
   var KW={page:'纸 字 字号 大小 行距 页边 翻页 夜 字体 宋体 缩进 对齐',fl:'外文 英文 难词 注释 级别 词典 mdict 生词',voice:'声音 朗读 念 语速 婷婷 azure 云端 对话 key 密钥',listen:'听书 睡眠 定时 脚注 有声书',ai:'书伴 key 密钥 claude openai chatgpt gemini deepseek api ai',sync:'同步 icloud iphone ipad 设备',store:'存储 空间 清理 备份 导出 书库',gen:'外观 深色 浅色 暗 主题 菜单栏 启动',about:'关于 版本 更新 隐私'};
