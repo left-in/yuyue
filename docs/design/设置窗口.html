@@ -3138,6 +3138,158 @@ body{margin:0}
 .z-uses span.off{background:var(--inset);color:var(--t3)}
 .z-clip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:11px;background:var(--accent-soft);font-size:12.5px;color:var(--t1)}
 .z-clip svg{width:14px;height:14px;color:var(--accent)}
+/* ===== 2026-11-03 第三版：整个窗口重做（w- 开头） ===== */
+.v-mac.w-win{width:1000px;height:660px;display:flex;flex-direction:column;margin:0}
+.w-top{height:52px;flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 16px;border-bottom:.5px solid var(--line);background:color-mix(in srgb,var(--card) 60%,var(--bg))}
+.w-lft{display:flex;align-items:center;gap:16px;min-width:0}
+.w-crumb{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;white-space:nowrap}
+.w-crumb a{color:var(--accent);font-weight:500;display:inline-flex;align-items:center;cursor:pointer}
+.w-crumb svg{width:13px;height:13px}
+.w-cmd{width:380px;height:32px;border-radius:9px;background:var(--inset);display:flex;align-items:center;gap:8px;padding:0 12px;font-size:13px;color:var(--t3);cursor:pointer}
+.w-cmd.on{background:var(--card);color:var(--t1);box-shadow:0 0 0 .5px var(--line),0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent)}
+.w-cmd svg{width:14px;height:14px;color:var(--accent);flex:none}
+.w-cmd kbd{margin-left:auto;font-family:var(--sans);font-size:11px;color:var(--t3)}
+.w-rt{display:flex;justify-content:flex-end}
+.w-scn{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:14px;background:var(--card);box-shadow:var(--zsh);font-size:12.5px;cursor:pointer;white-space:nowrap}
+.w-scn svg{width:13px;height:13px}
+.w-scn small{color:var(--t3);font-size:11px}
+.w-body{flex:1;min-height:0;position:relative}
+.w-scr{position:absolute;inset:0;overflow:hidden}
+.w-scr.in{animation:wIn .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes wIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+.w-fade{animation:wFade .24s ease-out}
+@keyframes wFade{from{opacity:0;transform:translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){.w-scr.in,.w-fade{animation:wOp .2s}@keyframes wOp{from{opacity:0}}}
+/* 总览 */
+.w-home{height:100%;box-sizing:border-box;padding:16px 22px 20px;display:flex;flex-direction:column;gap:14px}
+.w-scenes{display:flex;gap:8px;align-items:center}
+.w-scenes>p{margin-left:auto;font-size:11px;color:var(--t3)}
+.w-sc{display:flex;align-items:center;gap:9px;height:42px;padding:0 14px 0 9px;border-radius:12px;background:var(--card);box-shadow:var(--zsh);font-size:13px;cursor:pointer;transition:box-shadow .14s}
+.w-sc>i{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--inset);color:var(--t2)}
+.w-sc>i svg{width:14px;height:14px}
+.w-sc b{font-weight:600;display:block;line-height:1.2}
+.w-sc small{font-size:10.5px;color:var(--t3);display:block}
+.w-sc.on{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.w-sc.on>i{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .w-sc.on>i{color:#101214}
+.w-sc.add{background:none;box-shadow:inset 0 0 0 1px var(--line);color:var(--t2);padding:0 14px}
+.w-bento{flex:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:minmax(0,1fr) minmax(0,1fr) 112px;gap:12px;min-height:0}
+.w-c{position:relative;border-radius:16px;background:var(--card);box-shadow:var(--zsh);padding:13px 15px;display:flex;flex-direction:column;gap:8px;cursor:pointer;overflow:hidden;transition:transform .14s ease-out,box-shadow .14s ease-out;min-height:0}
+.w-c:hover{transform:translateY(-1.5px);box-shadow:var(--zfl)}
+.w-c>header{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600}
+.w-c>header svg{width:14px;height:14px;color:var(--t2)}
+.w-c>header em{margin-left:auto;font-style:normal;font-size:11px;font-weight:400;color:var(--t3);display:flex;align-items:center;gap:3px}
+.w-c>header em svg{width:11px;height:11px;color:var(--t3)}
+.w-c .w-sum{font-size:11.5px;color:var(--t2);line-height:1.5;margin-top:auto}
+.w-c .w-sum b{color:var(--t1);font-weight:500}
+.w-c.big{grid-column:1/3;grid-row:1/3}
+.w-c.wide{grid-column:3/5}
+.w-mini{flex:1;min-height:0;border-radius:10px;background:var(--p-bg);color:var(--p-ink);padding:18px 24px;font-family:var(--p-font);overflow:hidden;box-shadow:inset 0 0 0 .5px var(--p-line);transition:background .24s,color .24s}
+.w-mini h4{font-size:14px;letter-spacing:.12em;margin:0 0 8px;font-weight:600;text-align:center}
+.w-mini p{font-size:13px;line-height:2;text-indent:2em;text-align:justify;margin:0}
+.w-vo{display:flex;align-items:center;gap:12px}
+.w-vo .z-face{width:40px;height:40px;border-radius:20px;font-size:16px}
+.w-vo b{font-size:15px;font-weight:600}
+.w-vo small{display:block;font-size:11px;color:var(--t3);margin-top:2px}
+.w-pl{width:34px;height:34px;border-radius:17px;background:var(--t1);color:var(--bg);display:grid;place-items:center;margin-left:auto;flex:none}
+.w-pl svg{width:13px;height:13px}
+.w-c .z-wave{height:22px}
+.w-c .z-wave i{background:var(--t3);opacity:.45}
+.w-c .z-wave i.p{background:var(--t1);opacity:1}
+.w-q{font-family:var(--serif);font-size:12.5px;color:var(--t2);line-height:1.6}
+.w-dev{display:flex;gap:12px;align-items:center;color:var(--t2)}
+.w-dev span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--t3)}
+.w-dev svg{width:20px;height:20px;color:var(--t1)}
+.w-big{font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.w-big small{font-size:11.5px;font-weight:400;color:var(--t3);margin-left:4px}
+.w-c .x-sbar{height:6px}
+.w-logos{display:flex;gap:5px}
+.w-logos .z-logo{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:10px;font-weight:700;color:#fff}
+.w-logos .x-logo{width:24px;height:24px;border-radius:7px;background:var(--inset)}
+.w-gl{font-family:Georgia,"Times New Roman",serif;font-size:15px;line-height:1.2}
+.w-gl rt{font-family:var(--sans);font-size:9.5px;color:var(--t2)}
+.w-th{display:flex;gap:6px}
+.w-th i{width:30px;height:20px;border-radius:5px;box-shadow:inset 0 0 0 .5px var(--line)}
+.w-th i.on{box-shadow:0 0 0 1.5px var(--accent)}
+/* 点进去：左边是活的东西，右边是检查器 */
+.w-cv{display:grid;grid-template-columns:minmax(0,1fr) 320px;height:100%}
+.w-stage{position:relative;background:var(--inset);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;min-width:0}
+.w-page{position:relative;width:420px;height:432px;box-sizing:border-box;border-radius:5px;background:var(--p-bg);color:var(--p-ink);font-family:var(--p-font);box-shadow:0 1px 2px rgba(0,0,0,.06),0 14px 36px rgba(51,46,41,.16);padding:34px var(--w-mg,40px);overflow:hidden;transition:background .24s,color .24s,padding .24s}
+.w-page h4{font-size:17px;letter-spacing:.12em;text-align:center;margin:0 0 14px;font-weight:600}
+.w-page p{margin:0;font-size:var(--w-fs,16px);line-height:var(--w-lh,2);text-indent:var(--w-ind,2em);text-align:justify;transition:font-size .24s,line-height .24s}
+.w-guide{position:absolute;top:0;bottom:0;width:0;border-left:1px dashed color-mix(in srgb,var(--accent) 65%,transparent);transition:left .24s,right .24s}
+.w-hd{position:absolute;top:50%;left:-5px;width:9px;height:26px;border-radius:5px;background:var(--card);box-shadow:0 0 0 1px var(--accent);transform:translateY(-50%);cursor:ew-resize}
+.w-tagk{position:absolute;font-family:var(--sans);font-size:10.5px;font-weight:600;color:#fff;background:var(--accent);border-radius:6px;padding:2px 7px;white-space:nowrap;text-indent:0;line-height:1.5}
+:root[data-theme="dark"] .w-tagk{color:#101214}
+.w-sel{background:color-mix(in srgb,var(--accent) 20%,transparent);border-radius:2px}
+.w-float{position:absolute;display:flex;align-items:center;gap:2px;padding:4px;border-radius:10px;background:var(--card);box-shadow:var(--zfl);font-family:var(--sans);font-size:12px;color:var(--t1);text-indent:0;line-height:1;white-space:nowrap;z-index:2}
+.w-float>span{height:26px;padding:0 9px;border-radius:7px;display:inline-flex;align-items:center;gap:5px}
+.w-float>span.on{background:var(--inset)}
+.w-float>span svg{width:10px;height:10px;color:var(--t3)}
+.w-float>i{width:.5px;height:16px;background:var(--line)}
+.w-for{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--t2)}
+.w-for .v-seg{width:340px}
+.w-insp{border-left:.5px solid var(--line);background:var(--card);padding:16px 18px 18px;display:flex;flex-direction:column;gap:18px;overflow:auto;min-height:0}
+.w-sec{display:flex;flex-direction:column;gap:10px}
+.w-sec>h5{margin:0;font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.04em;display:flex;justify-content:space-between}
+.w-sec>h5 em{font-style:normal;font-weight:400}
+.w-pp{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.w-pp>span{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10.5px;color:var(--t2);cursor:pointer}
+.w-pp>span>i{width:100%;aspect-ratio:1/1.2;border-radius:9px;background:var(--p-bg);color:var(--p-ink);font-family:var(--p-font);font-style:normal;display:grid;place-items:center;font-size:16px;box-shadow:inset 0 0 0 .5px color-mix(in srgb,var(--t1) 18%,transparent);transition:box-shadow .14s}
+.w-pp>span.on>i{box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--accent)}
+.w-pp>span.on{color:var(--t1);font-weight:600}
+.w-ff{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.w-ff>span{height:58px;border-radius:10px;background:var(--inset);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:21px;cursor:pointer;transition:box-shadow .14s,background .14s}
+.w-ff>span small{font-family:var(--sans);font-size:10.5px;color:var(--t2)}
+.w-ff>span.on{background:var(--card);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.w-sl{display:grid;grid-template-columns:40px minmax(0,1fr) 36px;align-items:center;gap:10px;font-size:12.5px}
+.w-sl>b{font-weight:400;color:var(--t2)}
+.w-sl>em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
+.w-sl input{width:100%;margin:0;accent-color:var(--black)}
+.w-turn{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.w-turn>span{height:62px;border-radius:10px;background:var(--inset);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-size:11.5px;color:var(--t2);cursor:pointer}
+.w-turn>span.on{background:var(--card);box-shadow:inset 0 0 0 1.5px var(--accent);color:var(--t1);font-weight:600}
+.w-pic{display:flex;gap:3px}
+.w-pic i{width:13px;height:18px;border-radius:2px;background:var(--t3);opacity:.55}
+.w-pic.v{flex-direction:column;gap:2px}
+.w-pic.v i{width:22px;height:8px}
+.w-row{display:flex;align-items:center;font-size:12.5px;gap:8px;min-height:26px}
+.w-row small{color:var(--t3);font-size:11px}
+.w-more{font-size:12px;color:var(--accent);cursor:pointer}
+/* 声音 */
+.w-vl{padding:16px 20px;display:flex;flex-direction:column;gap:12px;overflow:hidden;background:var(--inset);min-width:0}
+.w-vl .z-v{cursor:pointer;transition:box-shadow .14s,transform .14s}
+.w-vl .z-v:hover{transform:translateY(-1px)}
+.w-vl .z-stage .z-q{font-size:17px}
+.w-cast{display:flex;flex-direction:column;gap:6px}
+.w-cast>div{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.w-cast .z-face{width:22px;height:22px;border-radius:11px;font-size:10px}
+.w-cast em{margin-left:auto;font-style:normal;color:var(--t2);font-size:12px;display:flex;align-items:center;gap:3px}
+.w-cast em svg{width:10px;height:10px;color:var(--t3)}
+/* 服务与 Key */
+.w-kl{padding:18px 22px;display:flex;flex-direction:column;gap:14px;background:var(--inset);min-width:0}
+.w-kl .z-paste{box-shadow:var(--zsh)}
+.w-kl .z-paste .y-f{height:46px;font-size:14px}
+.w-kc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.w-kc>div{display:flex;flex-direction:column;gap:9px;padding:13px 14px;border-radius:13px;background:var(--card);box-shadow:var(--zsh);cursor:pointer}
+.w-kc>div.on{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.w-kc .z-svc{font-size:13px;font-weight:600}
+.w-kc small{font-size:11px;color:var(--t3);font-family:var(--mono)}
+.w-kc .add{align-items:center;justify-content:center;color:var(--t2);background:none;box-shadow:inset 0 0 0 1px var(--line);font-size:12.5px}
+/* 说一句 */
+.w-dim{position:absolute;inset:0;background:color-mix(in srgb,var(--bg) 50%,transparent);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.w-pal{position:absolute;left:50%;top:8px;width:600px;transform:translateX(-50%);border-radius:14px;background:var(--card);box-shadow:var(--zfl);padding:12px;display:flex;flex-direction:column;gap:10px}
+.w-pal .v-ms-box{box-shadow:0 0 0 .5px var(--line)}
+.w-save{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;background:var(--accent-soft);font-size:12.5px}
+.w-save svg{width:14px;height:14px;color:var(--accent)}
+.w-pal .z-apply{padding-top:0}
+.w-jump{display:flex;flex-direction:column}
+.w-jump>div{display:flex;align-items:center;gap:8px;height:30px;padding:0 8px;border-radius:7px;font-size:12.5px;color:var(--t2)}
+.w-jump>div svg{width:13px;height:13px}
+.w-jump>div b{color:var(--t1);font-weight:500}
+.w-c .x-sbar i{display:block;height:100%}
+.w-insp .y-f{flex:none}
+.w-jump>div em{margin-left:auto;font-style:normal;font-size:11px;color:var(--t3)}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -3736,7 +3888,7 @@ body{margin:0}
   <header class="x-top">
     <p class="eyebrow">语阅 · Mac · 设置窗口</p>
     <h1>设置窗口重新整理</h1>
-    <p><b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
+    <p><b>11-03 第三版</b>：最上面“整个窗口重做”是新的，先看它；它把第二版四个想法都收进去了。<b>11-03 第二版</b>：最上面“超前一点”四个想法是新的，先看它。<b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
     <p>十页挨个过了一遍。窗口外框、顶上的分页、开关、分段、滑杆这些控件<b>不动</b>，照 prototype-v0.29；按钮还是系统按钮（上次换成带图标、带下划线的样式被撤回过）。改的是<b>每页里放什么、怎么排、说明怎么写</b>。每页可以在“现在”和“改后”之间切；编号对着右边的说明，红的是问题，蓝的是改法。</p>
   </header>
   <div class="x-bar">
@@ -3746,6 +3898,21 @@ body{margin:0}
     <label><input type="checkbox" id="vNums" checked>显示编号</label>
     <nav class="x-idx" id="idx"></nav>
   </div>
+  <section id="whole">
+    <h2 class="x-h">整个窗口重做 <span class="y-rec">11-03 第三版</span></h2>
+    <p class="y-cap2">前两版都还是“左边一列目录、右边一列开关”，只是换了排法。这一版把这个样子拿掉：打开设置先看到<b>一张总览</b>，每张卡是那一样<b>现在的样子</b>（真的书页、能点的声音、用量）；点卡片放大进去，<b>左边是活的东西、右边是检查器</b>，边看边改。顶上多一个<b>情景</b>：一套书页 + 声音，到点、戴耳机、开英文书时自己换。下面的窗口能点：卡片、‹ 总览、情景、纸、字体、声音卡，字号行距边距的滑杆是真的能拖。</p>
+    <div class="v-tg" role="group" id="wTabs" style="margin:12px 0 4px"><button data-w="home" aria-pressed="true">总览</button><button data-w="page" aria-pressed="false">点进“书页”</button><button data-w="voice" aria-pressed="false">点进“声音”</button><button data-w="keys" aria-pressed="false">点进“服务与 Key”</button><button data-w="ask" aria-pressed="false">⌘K 说一句</button></div>
+    <div class="x-stage"><div id="wWin"></div></div>
+    <p class="y-cap2" id="wCap"></p>
+    <div class="y-plan" style="margin-top:18px">
+      <div><b>和现在比，变了什么</b><i>现在</i> 10 个分页、一列列开关，看不出改了以后书长什么样，要开一本书才知道。<br><u>改后</u> 没有分页。总览 8 张卡，点进去一层就到；书页、声音这两样边看边改。</div>
+      <div><b>为什么不会难用</b>最多点一下就到任何一样；⌘K 能搜到每一行；esc 或“‹ 总览”回来；控件都是大一号的系统控件（滑杆、开关、28 高的按钮、30～46 高的输入框）；同步、存储这种没什么可看的，点进去还是普通的列表。</div>
+      <div><b>“默认”和“这本书”不再分两处</b><i>现在</i> 设置里改的是默认，Aa 里改的是这本书，常常改了不生效。<br><u>改后</u> 书页下面一句“改的是：这个情景 / 所有书 / 只这本书”，读书窗口的 Aa 卡片也是同一套。</div>
+      <div><b>情景（可以晚点做）</b>白天读、夜里读、通勤听、读英文，各存一套纸、字、声音、语速。到点、戴上耳机、打开英文书时自己换；没设情景的人只看到一个“默认”，跟现在一样。要动核心里的设置存法，所以可以先做总览 + 书页 + 声音 + Key，情景放下一步。</div>
+      <div><b>动效</b>点卡片：卡片放大成整页（Mac 上用 matchedGeometryEffect，350 毫秒、不回弹）；回总览时缩回那张卡。换情景：卡片里的纸色、声音淡入换掉。都照 M0 那四档节奏，开了“减弱动态效果”只淡入淡出。</div>
+      <div><b>四个想法去哪了</b>第二版的 ① 说一句就改 → 顶上的 ⌘K；② 声音试衣间 → “声音”这页；③ Key 只在一处粘 → “服务与 Key”这页；④ 在哪用就在哪改 → 读书窗口 Aa 卡片和书页这页是同一套。</div>
+    </div>
+  </section>
   <section id="ahead">
     <h2 class="x-h">超前一点：四个想法 <span class="y-rec">11-03 第二版</span></h2>
     <p class="y-cap2">你说要更超前、又不能难用。下面四个想法都放在左侧栏窗口里画，可以一起要，也可以只挑几个。普通的侧栏、搜索照样在，新东西都是“多一条近路”，不会把熟悉的路堵上。</p>
@@ -4214,6 +4381,155 @@ PAGES.push({id:'data',name:'数据',
     document.getElementById('zCap').innerHTML=CAP[v];}
   bs.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.y);});});var hv=(location.hash.match(/^#idea-([a-d])/)||[])[1];set(hv||'a');
   var idx=document.getElementById('idx');var a=document.createElement('a');a.href='#ahead';a.textContent='超前一点';idx.insertBefore(a,idx.firstChild);
+})();
+/* ===== 2026-11-03 第三版：整个窗口重做。窗口里能点：卡片点进去、‹ 总览回来、情景能换、字号行距边距真的能拖 ===== */
+(function(){
+  var YB=function(t,cls){return '<span class="y-b '+(cls||'')+'">'+t+'</span>';};
+  var YF=function(t,v,on){return '<span class="y-f'+(v?' v':'')+(on?' on':'')+'">'+t+'</span>';};
+  var WAVE=function(n,p,seed){var s='';for(var i=0;i<n;i++){var h=20+Math.round(70*Math.abs(Math.sin((i+1)*(seed||1.7))));s+='<i class="'+(i<p?'p':'')+'" style="height:'+h+'%"></i>';}return '<span class="z-wave">'+s+'</span>';};
+  var FACE=function(t,c){return '<span class="z-face" style="background:'+c+'">'+t+'</span>';};
+  var LOGO2=function(t,c){return '<span class="z-logo" style="background:'+c+'">'+t+'</span>';};
+  var TXT=['我与父亲不相见已二年余了，我最不能忘记的是他的背影。','那年冬天，祖母死了，父亲的差使也交卸了，正是祸不单行的日子。我从北京到徐州，打算跟着父亲奔丧回家。到徐州见着父亲，看着满院狼藉的东西，又想起祖母，不禁簌簌地流下眼泪。父亲说：“事已如此，不必难过，好在天无绝人之路！”','回家变卖典质，父亲还了亏空；又借钱办了丧事。这些日子，家中光景很是惨淡，一半为了丧事，一半为了父亲赋闲。丧事完毕，父亲要到南京谋事，我也要回北京念书，我们便同行。'];
+  var PAPERS=[['paper-kami','纸本'],['paper-kaminight','纸本·夜'],['paper-plain','白'],['paper-dark','黑'],['paper-eink','墨水屏']];
+  var FONTS=[['宋','宋体','var(--serif)'],['黑','黑体','var(--sans)'],['楷','楷体','"Kaiti SC","STKaiti",KaiTi,serif']];
+  var VOICES=[['婷','#B5654A','婷婷','<span class="z-tag">高级</span>','本机 · 不联网',0,1.1],['美','#7A8F5C','美佳','<span class="z-tag">高级</span>','本机 · 不联网',0,2.3],['N','#2B4C7E','Nova','<span class="z-tag">OpenAI</span>','云端',0,1.7],
+    ['晓','#6B5B95','晓晓','<span class="z-tag">Azure</span>','连上 Azure 就能用',1,2.9],['A','#3F7D7A','Ava','<span class="z-tag">高级</span>','本机 · 英文',0,3.7],['善','#8A8682','善怡','<span class="z-tag">标准</span>','本机 · 下载 210 MB',1,3.3]];
+  var SCENES={
+    day:{name:'白天读',icon:'i-sun',sub:'默认',paper:0,font:0,fs:17,lh:2,mg:40,voice:0,speed:'1.2×'},
+    night:{name:'夜里读',icon:'i-moon',sub:'晚上 10 点后',paper:1,font:0,fs:19,lh:2.2,mg:44,voice:0,speed:'1.0×'},
+    go:{name:'通勤听',icon:'i-headset',sub:'戴上耳机时',paper:2,font:1,fs:17,lh:2,mg:36,voice:2,speed:'1.4×'},
+    en:{name:'读英文',icon:'i-trans',sub:'英文书',paper:2,font:1,fs:16,lh:1.9,mg:40,voice:4,speed:'1.1×'}};
+  var S={scr:'home',sc:'night'};
+  var cur=function(){return SCENES[S.sc];};
+
+  var TOP=function(){
+    var c=cur(),crumb={home:'<span>设置</span>',page:'<a data-go="home">'+I('i-l')+'总览</a><span>书页</span>',voice:'<a data-go="home">'+I('i-l')+'总览</a><span>声音</span>',keys:'<a data-go="home">'+I('i-l')+'总览</a><span>服务与 Key</span>',ask:'<span>设置</span>'}[S.scr];
+    var cmd=S.scr==='ask'?'<div class="w-cmd on">'+I('i-spark')+'晚上看书眼睛累，字大一点<kbd>esc</kbd></div>':'<div class="w-cmd" data-go="ask">'+I('i-spark')+'说一句，或搜设置<kbd>⌘K</kbd></div>';
+    return '<div class="w-top"><div class="w-lft"><span class="v-lights"><i></i><i></i><i></i></span><div class="w-crumb">'+crumb+'</div></div>'+cmd+
+      '<div class="w-rt"><span class="w-scn" data-go="home">'+I(c.icon)+c.name+'<small>· 正在用</small></span></div></div>';
+  };
+  var MINI=function(c){return '<div class="w-mini '+PAPERS[c.paper][0]+'" style="font-family:'+FONTS[c.font][2]+'"><h4>背　影</h4><p>'+TXT[0]+TXT[1]+'</p><p>'+TXT[2]+'</p></div>';};
+
+  var HOME=function(){
+    var c=cur(),v=VOICES[c.voice];
+    var sc=Object.keys(SCENES).map(function(k){var s=SCENES[k];return '<div class="w-sc'+(k===S.sc?' on':'')+'" data-sc="'+k+'"><i>'+I(s.icon)+'</i><div><b>'+s.name+'</b><small>'+s.sub+'</small></div></div>';}).join('')+'<div class="w-sc add">＋ 新情景</div>';
+    var GO='<em>'+I('i-r')+'</em>';
+    return '<div class="w-home"><div class="w-scenes">'+sc+'<p>情景 = 一套书页 + 声音，到点、戴耳机、开英文书时自己换</p></div><div class="w-bento">'+
+      '<div class="w-c big" data-go="page"><header>'+I('i-book')+'书页<em>'+FONTS[c.font][1]+' · '+c.fs+' · '+PAPERS[c.paper][1]+I('i-r')+'</em></header>'+MINI(c)+'</div>'+
+      '<div class="w-c wide" data-go="voice"><header>'+I('i-ear')+'声音<em>中文书 · 英文书自动换'+I('i-r')+'</em></header><div class="w-vo">'+FACE(v[0],v[1])+'<div><b>'+v[2]+'</b><small>'+v[4]+' · '+c.speed+'</small></div><span class="w-pl">'+I('i-playf')+'</span></div><p class="w-q">“我最不能忘记的是他的背影。”</p>'+WAVE(60,24,1.3)+'</div>'+
+      '<div class="w-c" data-go="keys"><header>'+I('i-spark')+'书伴'+GO+'</header><div class="w-logos">'+LOGO(CLAUDE)+'</div><p class="w-sum"><b>Claude</b> · 已连上<br>本月问了 86 次</p></div>'+
+      '<div class="w-c"><header>'+I('i-trans')+'外文'+GO+'</header><p class="w-gl"><ruby>ephemeral<rt>短暂的</rt></ruby> beauty</p><p class="w-sum">难词注释 · <b>四级以上</b><br>点词查 3 本词典</p></div>'+
+      '<div class="w-c"><header>'+I('i-sync')+'同步'+GO+'</header><div class="w-dev"><span>'+I('i-laptop')+'这台</span><span>'+I('i-phone')+'iPhone</span><span>'+I('i-tablet')+'iPad</span></div><p class="w-sum">iCloud · <b>2 分钟前</b></p></div>'+
+      '<div class="w-c"><header>'+I('i-disk')+'存储与备份'+GO+'</header><p class="w-big">3.2<small>GB</small></p><div class="x-sbar"><i style="flex:5;background:var(--accent)"></i><i style="flex:3;background:#B5654A"></i><i style="flex:1;background:#7A8F5C"></i><i style="flex:6;background:var(--inset)"></i></div><p class="w-sum">昨天自动备份过</p></div>'+
+      '<div class="w-c" data-go="keys"><header>'+I('i-key')+'服务与 Key'+GO+'</header><div class="w-logos">'+LOGO(CLAUDE)+LOGO2('AI','#111')+LOGO2('Az','#0078D4')+'</div><p class="w-sum">3 家 · 都能用</p></div>'+
+      '<div class="w-c"><header>'+I('i-sliders')+'通用'+GO+'</header><div class="w-th"><i class="on" style="background:linear-gradient(90deg,#F6F5F3 50%,#101112 50%)"></i><i style="background:#F6F5F3"></i><i style="background:#101112"></i></div><p class="w-sum">跟随系统 · 打开时接着读</p></div>'+
+      '</div></div>';
+  };
+
+  var PAGE=function(){
+    var c=cur(),mgL=c.mg;
+    return '<div class="w-cv"><div class="w-stage"><div class="w-page '+PAPERS[c.paper][0]+'" id="wPage" style="font-family:'+FONTS[c.font][2]+';--w-fs:'+c.fs+'px;--w-lh:'+c.lh+';--w-mg:'+mgL+'px">'+
+        '<i class="w-guide" id="wGl" style="left:'+mgL+'px"><b class="w-hd"></b></i><i class="w-guide" id="wGr" style="right:'+mgL+'px;left:auto"><b class="w-hd"></b></i>'+
+        '<span class="w-tagk" id="wMgTag" style="left:'+(mgL+8)+'px;top:10px">边距 '+mgL+'</span>'+
+        '<h4>背　影</h4><p>'+TXT[0]+'</p><p><span class="w-sel">那年冬天，祖母死了</span>'+TXT[1].slice(9)+'</p>'+
+        '<div class="w-float" style="left:'+(mgL+4)+'px;top:116px"><span class="on">'+FONTS[c.font][1]+I('i-down')+'</span><i></i><span>－</span><span id="wFsF">'+c.fs+'</span><span>＋</span><i></i><span>行距 '+c.lh+'</span></div>'+
+      '</div><div class="w-for">改的是<span class="v-seg sm"><span class="on">“'+c.name+'”情景</span><span>所有书</span><span>只这本《背影》</span></span></div></div>'+
+      '<div class="w-insp">'+
+        '<div class="w-sec"><h5>纸<em>点书页空白处也能换</em></h5><div class="w-pp">'+PAPERS.map(function(p,i){return '<span data-pp="'+i+'" class="'+(i===c.paper?'on':'')+'"><i class="'+p[0]+'">文</i>'+p[1]+'</span>';}).join('')+'</div></div>'+
+        '<div class="w-sec"><h5>字</h5><div class="w-ff">'+FONTS.map(function(f,i){return '<span data-ff="'+i+'" class="'+(i===c.font?'on':'')+'" style="font-family:'+f[2]+'">永<small>'+f[1]+'</small></span>';}).join('')+'</div>'+
+          '<label class="w-sl"><b>字号</b><input type="range" min="13" max="26" step="1" value="'+c.fs+'" data-k="fs"><em id="wFs">'+c.fs+'</em></label>'+
+          '<label class="w-sl"><b>行距</b><input type="range" min="1.5" max="2.6" step=".1" value="'+c.lh+'" data-k="lh"><em id="wLh">'+c.lh+'</em></label>'+
+          '<label class="w-sl"><b>边距</b><input type="range" min="20" max="64" step="2" value="'+c.mg+'" data-k="mg"><em id="wMg">'+c.mg+'</em></label></div>'+
+        '<div class="w-sec"><h5>翻页</h5><div class="w-turn"><span class="on"><span class="w-pic"><i></i><i></i></span>左右翻</span><span><span class="w-pic v"><i></i><i></i></span>上下滚</span></div>'+
+          '<div class="w-row">首行空两格'+SW(1)+'</div><div class="w-row">窗口够宽时分两栏'+SW(0)+'</div><span class="w-more">更多：标点挤压、段间距、繁简 ›</span></div>'+
+      '</div></div>';
+  };
+
+  var VOICE=function(){
+    var c=cur();
+    var cards=VOICES.map(function(v,i){return '<div class="z-v'+(i===c.voice?' on':'')+(v[5]?' z-off':'')+'" data-vv="'+i+'"><div class="z-top">'+FACE(v[0],v[1])+'<div><b>'+v[2]+v[3]+'</b><small>'+v[4]+'</small></div></div><div class="z-mini"><span class="z-pl">'+I('i-playf')+'</span>'+WAVE(22,0,v[6])+'</div>'+(i===c.voice?'<span class="z-use">✓ 在用</span>':'')+'</div>';}).join('');
+    var v=VOICES[c.voice];
+    return '<div class="w-cv"><div class="w-vl"><div class="z-stage '+PAPERS[c.paper][0]+'"><span class="z-src">用你正在读的《背影》试听 · 点下面哪张卡，就换哪个声音念这一句</span>'+
+        '<p class="z-q">我与父亲不相见已二年余了，<mark>我最不能忘记的是他的背影。</mark></p>'+
+        '<div class="z-bar"><span class="z-play">'+I('i-pausef')+'</span>'+WAVE(64,30,1.3)+'<span class="z-spd">'+v[2]+' · '+c.speed+'</span></div></div>'+
+        '<div class="z-chips"><span class="z-chip on">中文</span><span class="z-chip">英文</span><span style="width:12px"></span><span class="z-chip on">全部</span><span class="z-chip">这台 Mac 上的</span><span class="z-chip">云端</span><span class="z-chip">我的声音</span></div>'+
+        '<div class="z-grid">'+cards+'</div></div>'+
+      '<div class="w-insp">'+
+        '<div class="w-sec"><h5>速度</h5><label class="w-sl"><b>语速</b><input type="range" min=".6" max="2" step=".1" value="'+parseFloat(c.speed)+'"><em>'+c.speed+'</em></label></div>'+
+        '<div class="w-sec"><h5>换着用</h5><div class="w-row">按书的语言自动换'+SW(1)+'</div>'+
+          '<div class="w-cast"><div>'+FACE('婷','#B5654A')+'中文书<em>婷婷'+I('i-r')+'</em></div><div>'+FACE('A','#3F7D7A')+'英文书<em>Ava'+I('i-r')+'</em></div></div></div>'+
+        '<div class="w-sec"><h5>分角色<em>小说里的对话</em></h5><div class="w-row">对话换一个声音念'+SW(1)+'</div><div class="w-row"><small>默认旁白和对话各一个声音，不带语气；在书里点人名能单独给他配</small></div></div>'+
+        '<div class="w-sec"><h5>我的声音</h5><div class="w-row">读 30 句，用你的声音念书</div>'+YB('开始录')+'</div>'+
+        '<p class="w-more" data-go="keys">想要更多云端声音：去“服务与 Key”连上 Azure ›</p>'+
+      '</div></div>';
+  };
+
+  var KEYS=function(){
+    return '<div class="w-cv"><div class="w-kl">'+
+        '<div class="z-clip">'+I('i-copy')+'剪贴板里像是一个 Azure 的 Key。<span style="margin-left:auto"></span>'+YB('用它','k')+YB('不用')+'</div>'+
+        '<div class="z-paste"><b style="font-size:13.5px">粘贴任何一家的 Key</b>'+YF('sk-ant-api03-…7Qw',1,1)+
+          '<div class="z-det">'+LOGO(CLAUDE)+'认出来是 <b style="color:var(--t1)">Claude</b> · 核对过了，能用 ✓</div></div>'+
+        '<div class="w-kc">'+
+          '<div class="on"><i class="z-svc">'+LOGO(CLAUDE)+'Claude</i><small>sk-ant-…7Qw</small><span class="z-uses"><span>书伴</span></span></div>'+
+          '<div><i class="z-svc">'+LOGO2('AI','#111')+'OpenAI</i><small>sk-…3f9a</small><span class="z-uses"><span>朗读 11 个声音</span><span class="off">书伴</span></span></div>'+
+          '<div><i class="z-svc">'+LOGO2('Az','#0078D4')+'微软 Azure</i><small>eastasia · ••••a81c</small><span class="z-uses"><span>朗读 200+ 个声音</span><span>翻译</span></span></div>'+
+          '<div class="add">＋ 没有 Key？看看哪家适合你</div>'+
+        '</div></div>'+
+      '<div class="w-insp"><div class="w-sec"><h5>Claude</h5><div class="w-row"><span class="z-svc">'+LOGO(CLAUDE)+'</span>已连上 · 核对于 刚刚</div></div>'+
+        '<div class="w-sec"><h5>给谁用</h5><div class="w-row">书伴'+SW(1)+'</div><div class="w-row">翻译整句'+SW(0)+'</div><div class="w-row"><small>朗读：Claude 没有声音</small></div></div>'+
+        '<div class="w-sec"><h5>本月</h5><p class="w-big">86<small>次提问 · 约 ¥4.2</small></p></div>'+
+        '<div class="w-sec"><h5>Key</h5>'+YF('sk-ant-api03-…7Qw',1)+'<div class="y-row2">'+YB('换一个')+YB('移除','r')+'</div><div class="w-row"><small>只存在这台 Mac 的钥匙串里</small></div></div>'+
+      '</div></div>';
+  };
+
+  var ASK=function(){
+    return HOME()+'<div class="w-dim" data-go="home"></div><div class="w-pal w-fade">'+
+      '<p class="z-say">'+I('i-spark')+'改了马上能在书页上看到，不满意点“还原”</p>'+
+      BOX(R('<small>书页 · 字号</small>字号','<s class="z-new">19</s>改成 21',CTL(SL(.6,0,150),VAL('21')),'z-hit'),
+          R('<small>书页 · 纸</small>换成“纸本 · 夜”','现在已经是了',SW(1),'z-hit'),
+          R('<small>通用</small>屏幕亮度跟着纸色调暗','只在读书窗口里',SW(1),'z-hit'))+
+      '<div class="w-save">'+I('i-moon')+'这几样都存进“夜里读”情景？晚上 10 点后自动用'+'<span style="margin-left:auto"></span>'+YB('存进去','k')+YB('只这次')+'</div>'+
+      '<div class="w-jump"><div>'+I('i-search')+'也搜到 <b>书页 › 字号</b><em>↩ 打开</em></div><div>'+I('i-search')+'<b>外文 › 难词注释的字号</b><em>⌘2</em></div></div>'+
+      '<div class="z-apply"><span>没联网也能懂（本机关键词 + 同义词表）；接了书伴，说得再随意也懂</span>'+YB('还原')+'</div></div>';
+  };
+
+  var VIEWS={home:HOME,page:PAGE,voice:VOICE,keys:KEYS,ask:ASK};
+  var CAP={
+    home:'<b>总览</b>：打开设置先看到“现在是什么样”，不是一排分页。每张卡就是那一样的样子：书页卡是一张真的书页（你的字体、字号、纸）、声音卡能直接点 ▶ 听、存储卡是一条用量。点卡片，它放大成那一页（试试点“书页”“声音”“服务与 Key”）。顶上一排是<b>情景</b>：点“白天读”“通勤听”，下面的卡片当场换样子。',
+    page:'<b>书页</b>：左边一张真的书页，右边是检查器。拖右边的字号、行距、边距滑杆，书页当场变（这里是真的能拖）；也可以直接在书页上改：选中一段字，浮出“字体 · 字号 · 行距”；边距那两条虚线能拖。书页下面问一句“改的是谁”：这个情景、所有书、还是只这本书，不用再分“设置里的默认”和“Aa 里的这本书”。',
+    voice:'<b>声音</b>：左边用你正在读的书念一句，下面一张卡一个声音，点哪张就用哪个声音念同一句。右边是速度、中英文各用哪个、分角色、录我的声音。云端声音没连上时卡片半透明，点了带你去“服务与 Key”。',
+    keys:'<b>服务与 Key</b>：所有 Key 只在这里粘。一个大框，粘进来认出是哪家、当场核对；剪贴板里有 Key 时顶上直接问。每家一张卡，写它在给哪几样用；点卡片右边是它的详情：给谁用、本月用了多少、换 Key、移除。框都是整行宽、46 高，不再挤在右栏。',
+    ask:'<b>说一句</b>：⌘K 或点顶上的框，能搜也能说一句话。结果直接是那几行设置，能当场拨，书页同时变；再问一句要不要存进某个情景。按 esc 或点空白回去。'};
+
+  var box=document.getElementById('wWin'),tabs=[].slice.call(document.querySelectorAll('#wTabs button'));
+  function draw(from){
+    box.innerHTML='<div class="v-mac v-ms-set w-win">'+TOP()+'<div class="w-body"><div class="w-scr" id="wScr">'+VIEWS[S.scr]()+'</div></div></div>';
+    var scr=document.getElementById('wScr');
+    if(from){var r=scr.getBoundingClientRect();scr.style.transformOrigin=(from.left+from.width/2-r.left)+'px '+(from.top+from.height/2-r.top)+'px';scr.classList.add('in');}
+    tabs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.w===S.scr?'true':'false');});
+    document.getElementById('wCap').innerHTML=CAP[S.scr];
+    wire();
+  }
+  function go(scr,el){if(scr===S.scr)return;S.scr=scr;draw((el||box).getBoundingClientRect());}
+  function wire(){
+    [].forEach.call(box.querySelectorAll('[data-go]'),function(el){el.addEventListener('click',function(e){e.stopPropagation();go(el.dataset.go,S.scr==='home'?el:null);});});
+    [].forEach.call(box.querySelectorAll('[data-sc]'),function(el){el.addEventListener('click',function(){S.sc=el.dataset.sc;draw();});});
+    [].forEach.call(box.querySelectorAll('[data-pp]'),function(el){el.addEventListener('click',function(){cur().paper=+el.dataset.pp;draw();});});
+    [].forEach.call(box.querySelectorAll('[data-ff]'),function(el){el.addEventListener('click',function(){cur().font=+el.dataset.ff;draw();});});
+    [].forEach.call(box.querySelectorAll('[data-vv]'),function(el){el.addEventListener('click',function(){cur().voice=+el.dataset.vv;draw();});});
+    var pg=document.getElementById('wPage');
+    [].forEach.call(box.querySelectorAll('input[data-k]'),function(inp){inp.addEventListener('input',function(){
+      var k=inp.dataset.k,v=+inp.value,c=cur();c[k]=v;
+      if(k==='fs'){pg.style.setProperty('--w-fs',v+'px');document.getElementById('wFs').textContent=v;var f=document.getElementById('wFsF');if(f)f.textContent=v;}
+      if(k==='lh'){pg.style.setProperty('--w-lh',v);document.getElementById('wLh').textContent=v.toFixed(1);}
+      if(k==='mg'){pg.style.setProperty('--w-mg',v+'px');document.getElementById('wMg').textContent=v;document.getElementById('wGl').style.left=v+'px';document.getElementById('wGr').style.right=v+'px';var t=document.getElementById('wMgTag');t.style.left=(v+8)+'px';t.textContent='边距 '+v;}
+    });});
+  }
+  tabs.forEach(function(b){b.addEventListener('click',function(){go(b.dataset.w,null);});});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&S.scr!=='home'&&box.getBoundingClientRect().top<innerHeight){go('home');}});
+  var hv=(location.hash.match(/^#whole-(\w+)/)||[])[1];if(hv&&VIEWS[hv])S.scr=hv;
+  draw();
+  var idx=document.getElementById('idx');var a=document.createElement('a');a.href='#whole';a.textContent='整个重做';idx.insertBefore(a,idx.firstChild);
 })();
 </script>
 </body></html>
