@@ -3037,6 +3037,54 @@ body{margin:0}
 @media (min-width:1141px){.x-stage{overflow:visible}}
 .x-rpv{padding-top:26px}
 .x-limit span{top:3px}
+/* ===== 2026-11-03 · 整体规划 和 朗读右栏三种做法（y- 开头） ===== */
+/* 大一号的系统控件：按钮 28 高、输入框 30 高、13 号字（macOS 的 .controlSize(.large)） */
+.y-b{display:inline-flex;align-items:center;justify-content:center;gap:5px;height:28px;padding:0 13px;border-radius:7px;background:var(--x-nb);box-shadow:var(--x-nbs);font-size:13px;color:var(--t1);white-space:nowrap;flex:none}
+.y-b svg{width:11px;height:11px;color:var(--t2)}
+.y-b.r{color:var(--danger)}
+.y-b.k{background:var(--accent);color:#fff;box-shadow:none}
+.y-b.dis{color:var(--t3)}
+.y-f{display:flex;align-items:center;height:30px;padding:0 10px;border-radius:7px;background:var(--x-fld);box-shadow:var(--x-flds);font-family:var(--mono);font-size:12.5px;color:var(--t3);white-space:nowrap;overflow:hidden;flex:1;min-width:0}
+.y-f.v{color:var(--t1)}
+.y-f.on{box-shadow:inset 0 0 0 .5px rgba(0,0,0,.22),0 0 0 3px color-mix(in srgb,var(--accent) 35%,transparent)}
+.y-pop{display:flex;align-items:center;gap:8px;height:28px;padding:0 10px;border-radius:7px;background:var(--x-nb);box-shadow:var(--x-nbs);font-size:13px;flex:1;min-width:0}
+.y-pop small{color:var(--t3);font-size:11.5px}
+.y-pop svg{width:11px;height:11px;margin-left:auto;color:var(--t3)}
+/* 上下排：名字一行，控件占满下一行 */
+.y-stk{display:flex;flex-direction:column;gap:9px;padding:13px 0;border-top:.5px solid var(--line)}
+.y-stk:first-child{border-top:0}
+.y-stk .y-hd{display:flex;align-items:baseline;gap:8px;font-size:12.5px;font-weight:500}
+.y-stk .y-hd span{font-size:11px;font-weight:400;color:var(--t3)}
+.y-stk .y-hd a{margin-left:auto;font-size:11px;font-weight:400}
+.y-stk .y-ln{display:flex;gap:8px;align-items:center}
+.y-cap{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.y-cap>em{font-style:normal;font-size:10.5px;color:var(--t3)}
+/* 点开一层：右边写状态和 › */
+.y-st{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t2);white-space:nowrap}
+.y-st svg{width:11px;height:11px;color:var(--t3)}
+.y-back{display:inline-flex;align-items:center;gap:2px;font-size:12.5px;color:var(--accent)}
+.y-back svg{width:13px;height:13px}
+.y-steps{margin:0;padding:0 0 0 18px;font-size:11.5px;line-height:1.9;color:var(--t2)}
+.y-row2{display:flex;gap:10px}
+.y-foot{display:flex;justify-content:flex-end;gap:8px;padding:4px 0 14px}
+/* 左侧栏的设置窗口（方案 A）：侧栏用 v0.29 书架侧栏的那几样 */
+.v-mac.v-ms-set.x-win.y-sw{width:880px;display:grid;grid-template-columns:200px minmax(0,1fr);min-height:600px}
+.y-sb{display:flex;flex-direction:column;padding:12px 10px;background:color-mix(in srgb,var(--card) 55%,var(--bg));border-right:.5px solid var(--line)}
+.y-sb .v-mac-sch{margin-top:14px}
+.y-mn{display:flex;flex-direction:column;gap:12px;padding:12px 28px 28px;min-width:0}
+.y-tt{display:flex;align-items:center;gap:10px;height:30px;font-size:15px;font-weight:700}
+.y-hit{background:color-mix(in srgb,var(--hl-y) 70%,transparent);border-radius:3px;padding:0 1px}
+/* 规划卡 */
+.y-plan{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.y-plan>div{background:var(--card);box-shadow:var(--zsh);border-radius:14px;padding:14px 16px;font-size:13px;line-height:1.75;color:var(--t2)}
+.y-plan>div b{display:block;color:var(--t1);font-size:13.5px;margin-bottom:4px}
+.y-plan>div i{font-style:normal;color:var(--danger)}
+.y-plan>div u{text-decoration:none;color:var(--accent)}
+.y-opt{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.y-pair{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.y-cap2{font-size:12.5px;color:var(--t2);margin:10px 2px 0;max-width:880px;line-height:1.7}
+.y-rec{font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 7px}
+.y-var.hide{display:none}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -3635,6 +3683,7 @@ body{margin:0}
   <header class="x-top">
     <p class="eyebrow">语阅 · Mac · 设置窗口</p>
     <h1>设置窗口重新整理</h1>
+    <p><b>11-03 补</b>：最上面加了整个窗口的规划（侧栏 + 搜索、控件统一放大），和朗读页右边那一栏的三种做法，先看这两节。</p>
     <p>十页挨个过了一遍。窗口外框、顶上的分页、开关、分段、滑杆这些控件<b>不动</b>，照 prototype-v0.29；按钮还是系统按钮（上次换成带图标、带下划线的样式被撤回过）。改的是<b>每页里放什么、怎么排、说明怎么写</b>。每页可以在“现在”和“改后”之间切；编号对着右边的说明，红的是问题，蓝的是改法。</p>
   </header>
   <div class="x-bar">
@@ -3656,6 +3705,31 @@ body{margin:0}
       <div><b>去掉播客分页</b>那一页没有能改的东西，顶上从 10 个分页变成 9 个，不那么挤。</div>
       <div><b>窗口高度照旧</b>短的页照内容高，长的页最高 560、在里面滚。图里红虚线就是 560 的位置，线下面的要滚。<span id="x-tall"></span></div>
     </div>
+  </section>
+  <section id="plan">
+    <h2 class="x-h">2026-11-03 · 设置为什么难用，怎么改</h2>
+    <p class="y-cap2">下面九页的“改后”只解决了每页内部的排法。这里是整个窗口的问题。最后一节是你圈的那块：朗读页右边那一栏，三种做法。</p>
+    <div class="y-plan" style="margin-top:14px">
+      <div><b>1 · 分页太多，名字分不清</b><i>现在</i> 顶上 10 个分页挤在一排。外观 / 阅读、朗读 / 书伴 / 外文，要点进去才知道某个开关在哪一页。<br><u>改后</u> 左边一列侧栏，按“看 · 读 · 听 · 帮手 · 数据”分组，名字下面能放更多页（以后的播客、分角色声音）也不挤。</div>
+      <div><b>2 · 找不到某个设置</b><i>现在</i> 没有搜索，只能一页页翻。<br><u>改后</u> 侧栏顶上一个搜索框（⌘F）：打“Key”“声音”“缩进”，列出是哪一页哪一行，点一下跳过去、那一行黄底闪一下。</div>
+      <div><b>3 · 控件太小，输入难</b><i>现在</i> 按钮、输入框都是 22 高、11 号字，Key 框只有 90～200 宽，挤在右边。<br><u>改后</u> 全窗口一档：按钮 28、输入框 30、13 号字；要打字的框占满一整行，不再挤在右栏。</div>
+      <div><b>4 · 窗口太矮，长页要滚</b><i>现在</i> 窗口最高 560，同步、外文、数据都要在里面滚。<br><u>改后</u> 侧栏窗口能拉高、拉宽，默认 880 × 640，记住你拉的大小。</div>
+      <div><b>5 · 别处点不进来</b><i>现在</i> 读书窗口 Aa 里、书伴面板里遇到要设置的，只能自己打开设置再找。<br><u>改后</u> 这些地方的“设置…”直接打开到那一页那一行（比如书伴没接上 → 书伴页的服务商）。</div>
+      <div><b>6 · 每页里放什么</b>照下面九页的“改后”：说明只写一句、只是说明的不占一行、数字在右边、能删的不靠右键、去掉播客页。这些不变。</div>
+    </div>
+  </section>
+  <section id="frame">
+    <h2 class="x-h">窗口的样子：两种</h2>
+    <div class="v-tg" role="group" id="yFrame" style="margin:12px 0 4px"><button data-y="a" aria-pressed="true">A · 左侧栏 + 搜索</button><button data-y="b" aria-pressed="false">B · 顶上分页，合成 7 页</button></div>
+    <div class="x-stage"><div class="y-var" data-y="a" id="yFrameA"></div><div class="y-var hide" data-y="b" id="yFrameB"></div></div>
+    <p class="y-cap2" id="yFrameCap"></p>
+  </section>
+  <section id="speak">
+    <h2 class="x-h">朗读页右边那一栏：三种做法</h2>
+    <p class="y-cap2">你圈的问题：试听加弹出菜单、Key 框加按钮挤在右栏，又小又矮，Azure 两个框各 90 宽，打字看不全。三种做法控件都换成大一号（按钮 28、框 30、13 号字）。这三种都放在 A 的侧栏窗口里画。</p>
+    <div class="v-tg" role="group" id="ySpeak" style="margin:12px 0 4px"><button data-y="a" aria-pressed="true">A · 上下排</button><button data-y="b" aria-pressed="false">B · 点开一层 <span class="y-rec">建议</span></button><button data-y="c" aria-pressed="false">C · 只放大</button></div>
+    <div class="x-stage"><div class="y-var" data-y="a" id="ySpeakA"></div><div class="y-var hide" data-y="b" id="ySpeakB"></div><div class="y-var hide" data-y="c" id="ySpeakC"></div></div>
+    <p class="y-cap2" id="ySpeakCap"></p>
   </section>
   <div id="pages" style="display:flex;flex-direction:column;gap:72px"></div>
 </div>
@@ -3936,6 +4010,79 @@ PAGES.push({id:'data',name:'数据',
     var sv='';try{sv=localStorage.getItem(store)||'';}catch(e){}if(sv)set(sv);
   }
   group('vTheme','data-theme','yyTheme');group('vTint','data-tint','yyTint');
+})();
+/* ===== 2026-11-03：整体规划、窗口两种、朗读右栏三种 ===== */
+(function(){
+  var YB=function(t,cls){return '<span class="y-b '+(cls||'')+'">'+t+'</span>';};
+  var YF=function(t,v,on){return '<span class="y-f'+(v?' v':'')+(on?' on':'')+'">'+t+'</span>';};
+  var YP=function(t,sub){return '<span class="y-pop">'+t+(sub?'<small>'+sub+'</small>':'')+I('i-updown')+'</span>';};
+  var ST=function(t,ok){return '<span class="y-st">'+(ok?'<span class="x-ok">'+t+'</span>':t)+I('i-r')+'</span>';};
+  var STK=function(hd,ln){return '<div class="y-stk"><div class="y-hd">'+hd+'</div><div class="y-ln">'+ln+'</div></div>';};
+  var LK='<a class="x-lk">怎么拿 Key ↗</a>';
+  var SIDE=function(on,q){
+    var g=[['',[['通用','i-sliders'],['外观','i-sun']]],['读',[['阅读','i-book'],['外文','i-trans']]],['听',[['朗读','i-ear'],['播客','i-wave']]],['帮手',[['书伴','i-spark']]],['数据',[['同步','i-sync'],['存储与备份','i-disk']]]];
+    return '<aside class="y-sb"><span class="v-lights"><i></i><i></i><i></i></span><div class="v-mac-sch">'+I('i-search')+(q?'<span style="color:var(--t1)">'+q+'</span>':'搜索设置')+'<kbd>⌘F</kbd></div>'+
+      g.map(function(x){return (x[0]?'<p class="v-mac-gt">'+x[0]+'</p>':'<div style="height:10px"></div>')+x[1].map(function(t){return '<div class="v-mac-it'+(t[0]===on?' on':'')+'">'+I(t[1])+t[0]+'</div>';}).join('');}).join('')+'</aside>';
+  };
+  var SW2=function(on,title,body,q){return '<div class="v-mac v-ms-set x-win y-sw">'+SIDE(on,q)+'<div class="y-mn"><div class="y-tt">'+title+'</div>'+body+'</div></div>';};
+  var RATE2=CTL(SL(1/3,7,200),VAL('1.2×'));
+  var TOP=BOX(R('语速','读书窗口里调的也是这一个',RATE2));
+  var NOTE=PVN('i-lock','费用走你自己的账号。读过的句子存在这台 Mac 上，再听不花钱、断网也能听');
+
+  /* A · 上下排 */
+  var A=TOP+GL('声音','按书的语言自动换')+BOX(
+      STK('中文<span>系统声音 · 不联网</span>',YP('婷婷','高级')+YB(I('i-playf')+'试听')),
+      STK('英文<span>系统声音 · 不联网</span>',YP('Ava','高级')+YB(I('i-playf')+'试听')))+
+    PVN('i-info','想要更自然的，下载“高级”声音：<a>打开朗读内容设置 ↗</a>')+
+    GL('云端声音','用你自己的 Key')+BOX(
+      STK('OpenAI<span class="x-ok">已连上 · 11 个声音</span>'+LK,YF('sk-…3f9a',1)+YB('移除','r')),
+      STK('微软 Azure<span>中文声音最多，有免费额度</span>'+LK,'<span class="y-cap"><em>区域</em>'+YF('eastasia')+'</span><span class="y-cap" style="flex:2"><em>密钥</em>'+YF('粘贴资源的密钥 1',0,1)+'</span><span class="y-cap" style="flex:none"><em>&nbsp;</em>'+YB('连接','dis')+'</span>'),
+      STK('ElevenLabs<span>英文声音多</span>'+LK,YF('sk_…')+YB('连接','dis')))+NOTE;
+
+  /* B · 点开一层：列表只写状态，点一行进到它自己那一页 */
+  var B1=TOP+GL('声音','按书的语言自动换')+BOX(R('中文','系统声音 · 不联网',ST('婷婷（高级）')),R('英文','系统声音 · 不联网',ST('Ava（高级）')))+
+    PVN('i-info','想要更自然的，下载“高级”声音：<a>打开朗读内容设置 ↗</a>')+
+    GL('云端声音','用你自己的 Key')+BOX(R('OpenAI','11 个声音',ST('已连上',1)),R('微软 Azure','中文声音最多，有免费额度',ST('连接')),R('ElevenLabs','英文声音多',ST('连接')))+NOTE;
+  var B2='<div><span class="y-back">'+I('i-l')+'朗读</span></div>'+
+    GL('微软 Azure','中文声音最多，有免费额度')+BOX(
+      STK('区域',YF('eastasia',1)),
+      STK('密钥<span>Key 只存在这台 Mac 的钥匙串里</span>',YF('粘贴资源的密钥 1',0,1)+YB('粘贴')),
+      '<div class="y-foot">'+YB('取消')+YB('连接','k')+'</div>')+
+    GL('怎么拿 Key')+BOX('<ol class="y-steps" style="padding:12px 0 12px 18px"><li>打开 Azure 门户，新建一个“语音”资源（有免费额度）</li><li>在资源的“密钥和终结点”里，拷“密钥 1”和“位置/区域”</li><li>粘到上面，点连接</li></ol>','<div class="v-ms-row v-ms-rs">'+NB('打开 Azure 门户 ↗')+'</div>');
+  var B3='<div><span class="y-back">'+I('i-l')+'朗读</span></div>'+
+    GL('中文的声音','选中的就是读书时用的')+BOX(
+      ['婷婷|高级|1','美佳|高级|0','善怡|标准|0','OpenAI · alloy|云端|0','OpenAI · nova|云端|0'].map(function(s){var p=s.split('|');
+        return R(p[0]+(p[2]==='1'?' <span class="x-ok" style="font-weight:400">✓ 在用</span>':''),p[1],YB(I('i-playf')+'试听'),'v-ms-rs');}).join(''));
+
+  /* C · 只放大：布局不变，右栏统一 320 宽 */
+  var COL=function(){return '<span class="x-ctl" style="width:320px;justify-content:flex-end">'+[].slice.call(arguments).join('')+'</span>';};
+  var C=TOP+GL('声音','按书的语言自动换')+BOX(R('中文','',COL(YB(I('i-playf')+'试听'),YP('婷婷','高级'))),R('英文','',COL(YB(I('i-playf')+'试听'),YP('Ava','高级'))))+
+    PVN('i-info','想要更自然的，下载“高级”声音：<a>打开朗读内容设置 ↗</a>')+
+    GL('云端声音','用你自己的 Key')+BOX(R('OpenAI','<span class="x-ok">已连上 · 11 个声音</span>',COL(YF('sk-…3f9a',1),YB('移除','r'))),
+      R('微软 Azure','中文声音最多 · '+LK,COL(YF('区域'),YF('密钥'),YB('连接','dis'))),
+      R('ElevenLabs','英文声音多 · '+LK,COL(YF('sk_…'),YB('连接','dis'))))+NOTE;
+
+  document.getElementById('ySpeakA').innerHTML=SW2('朗读','朗读',A);
+  document.getElementById('ySpeakB').innerHTML='<div class="y-pair">'+SW2('朗读','朗读',B1)+SW2('朗读','微软 Azure',B2)+SW2('朗读','中文的声音',B3)+'</div>';
+  document.getElementById('ySpeakC').innerHTML=SW2('朗读','朗读',C);
+  var SPK={a:'<b>A · 上下排</b>：名字和说明一行，控件占满下一行。输入框有 400 多宽，Azure 的两个框上面写着“区域”“密钥”。改动最小，但这一页会变长一截。',
+    b:'<b>B · 点开一层</b>（建议）：列表里每行只写状态（“婷婷（高级）›”“已连上 ›”“连接 ›”），点进去才是填 Key 或选声音的那一页，左上“‹ 朗读”回来。填 Key 的页有整行宽的框、“粘贴”按钮、三步“怎么拿 Key”；选声音的页一行一个声音，每个都能试听。主页面变短、不再有挤在一起的框。和 macOS 系统设置的“互联网账户”一个做法。注意：这不是弹窗——上次撤掉的是弹出来的填 Key 窗口，这里是在设置窗口里换一页。',
+    c:'<b>C · 只放大</b>：布局不变，右栏统一 320 宽、控件放大。最省事，但 Azure 两个框还是挤，各 100 宽，Key 粘进去看不全。'};
+  var FRM={a:'<b>A · 左侧栏 + 搜索</b>（建议）：分组“读 · 听 · 帮手 · 数据”；存储和数据并成“存储与备份”（大小、清理、快照、导出都在一页）；侧栏里还留着播客的位置，以后有能设置的东西再放进来。图里搜了“key”，结果会列在侧栏下面。',
+    b:'<b>B · 顶上分页，合成 7 页</b>：保持现在的窗口样子，只把页数减下来：通用（含外观）、阅读、外文、朗读、书伴、同步、存储与备份。不用学新样子，但搜索放不下，以后加页还是挤。'};
+  document.getElementById('yFrameA').innerHTML=SW2('朗读','朗读',B1,'key');
+  var TABS7=[['通用','i-sliders'],['阅读','i-book'],['外文','i-trans'],['朗读','i-ear'],['书伴','i-spark'],['同步','i-sync'],['存储与备份','i-disk']];
+  document.getElementById('yFrameB').innerHTML=WIN(TABS7,'朗读',B1);
+  function wire(id,capId,caps){
+    var bs=[].slice.call(document.querySelectorAll('#'+id+' button')),box=document.getElementById(id).parentNode;
+    function set(v){bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.y===v?'true':'false');});
+      [].forEach.call(box.querySelectorAll('.y-var'),function(d){d.classList.toggle('hide',d.dataset.y!==v);});
+      document.getElementById(capId).innerHTML=caps[v];}
+    bs.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.y);});});set(bs[0].dataset.y);
+  }
+  wire('yFrame','yFrameCap',FRM);wire('ySpeak','ySpeakCap',SPK);
+  var idx=document.getElementById('idx');
+  [['#plan','规划'],['#frame','窗口两种'],['#speak','朗读右栏']].forEach(function(x,i){var a=document.createElement('a');a.href=x[0];a.textContent=x[1];idx.insertBefore(a,idx.children[i]);});
 })();
 </script>
 </body></html>
