@@ -5041,6 +5041,20 @@ body.h-drag,body.h-drag *{cursor:ew-resize!important;user-select:none}
 .v-mac.s21 .kz-toc .s16-e[data-p].on{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .v-mac.s21 .kz-toc .s16-e[data-p].on .ld{visibility:hidden}
 @media (hover:hover){.v-mac.s21 .kz-toc .s16-e[data-p]:not(.on):hover{background:var(--inset)}}
+/* ===== 配色照首页（书架窗口）导航：窗口底色、浮起来的侧栏、选中白底；纸只在右边那页书上 ===== */
+.v-mac.s21{background:var(--bg);color:var(--t1)}
+.v-mac.s21::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:196px;border-radius:14px;background:color-mix(in srgb,var(--card) 55%,var(--bg));box-shadow:var(--zsh)}
+.v-mac.s21 .kz-sf{background:var(--inset)}
+.v-mac.s21 .kz-mid{left:228px;width:428px}
+.v-mac.s21 .kz-hero{left:680px}
+.v-mac.s21 .kz-toc .s16-e[data-p]{color:var(--t1)}
+.v-mac.s21 .kz-toc .s16-e[data-p].on{background:var(--card);box-shadow:var(--zsh);color:var(--t1);font-weight:600}
+.v-mac.s21 .kz-toc .s16-e[data-p].on em{color:var(--t2)}
+@media (hover:hover){.v-mac.s21 .kz-toc .s16-e[data-p]:not(.on):hover{background:color-mix(in srgb,var(--t1) 4%,transparent)}}
+.v-mac.s21 .kz-hero .s14-book{border-radius:6px;background:var(--p-bg);box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05),0 10px 24px rgba(51,46,41,.1)}
+.v-mac.s21 .kz-hero .s14-pg.r{padding:26px 24px 0;border-left:0}
+.v-mac.s21 .kz-hero .s14-pg .no{bottom:12px}
+.v-mac.s21 .kz-play{left:16px;right:16px;bottom:34px;border-top-color:color-mix(in srgb,var(--p-ink) 12%,transparent);color:var(--p-ink)}
 </style>
 <body>
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
@@ -5767,7 +5781,7 @@ var CLAUDE='<svg viewBox="0 0 24 24"><path fill="#D97757" d="M4.709 15.955l4.72-
   function BOOK(k){if(k==='en')return '<div class="s14-pg l"></div><div class="s14-pg r en" id="s21R"><small class="s14-lab">预览 · 比 <b id="s21LvC">六级</b> 难的词这样标</small><h4>Chapter 1</h4><div class="tx"><p>'+EN.map(function(w){return w[2]?'<ruby data-d="'+w[2]+'">'+w[0]+'<rt>'+w[1]+'</rt></ruby>':w[0];}).join('')+'</p></div><span class="no">9</span></div>';
     return '<div class="s14-pg l"></div><div class="s14-pg r" id="s21R"><small class="s14-lab">预览 · 照你现在的设置排</small><h4>背　影</h4><div class="tx"><p>'+SPANS(TX.slice(0,2),0)+'</p><p>'+SPANS(TX.slice(2),2)+'</p><p>'+TX3+'</p><p>'+TX4[0]+'</p></div><span class="no">3</span></div>';}
 
-  root.innerHTML='<div class="v-mac s13 s14 s21 paper-kami s14-lt" id="s21W">'+
+  root.innerHTML='<div class="v-mac s13 s14 s21" id="s21W">'+
     '<header class="kz-top"><span class="v-lights"><i></i><i></i><i></i></span><b>语阅</b><span>设置</span>'+
     '<label class="kz-sf">'+I('i-search')+'<input id="s21Q" placeholder="搜索设置" autocomplete="off" spellcheck="false" aria-label="搜索设置"><kbd>⌘F</kbd></label><div class="v-ms-menu kz-res" id="kzRes" hidden></div></header>'+
     '<nav class="kz-toc" aria-label="目录"><div class="s16-list" id="s21L"></div><div class="s16-ft" id="s21Ft"></div></nav>'+
@@ -5824,7 +5838,7 @@ var CLAUDE='<svg viewBox="0 0 24 24"><path fill="#D97757" d="M4.709 15.955l4.72-
   /* 书页按整行截断：算一下这一页放得下几行 */
   function fit(pg){var tx=pg.querySelector('.tx');if(!tx)return;var p=tx.querySelector('p');if(!p)return;var lh=parseFloat(getComputedStyle(p).lineHeight)||30,av=pg.clientHeight-tx.offsetTop-(cur==='voice'?110:60);tx.style.height=Math.max(1,Math.floor(av/lh))*lh+'px';}
   /* 整扇窗就是你选的纸：纸是暗的，整扇窗一起暗 */
-  function tone(pp){var dk=pp==='paper-kaminight'||pp==='paper-dark';W.classList.toggle('s14-dk',dk);W.classList.toggle('s14-lt',!dk);PAP.forEach(function(x){W.classList.remove(x[0]);});W.classList.add(pp);}
+  function tone(){}  /* 窗口不再跟着纸变色，纸只在右边那页书上 */
   function apply(k){var B=$('#s21Bk')||document.createElement('div');B.style.setProperty('--sv-fs',S.fs+'px');B.style.setProperty('--sv-lh',S.lh);B.style.setProperty('--sv-mg',S.mg+'px');B.style.setProperty('--sv-font',FON[S.font][1]);B.style.setProperty('--sv-ind',S.ind?'2em':'0');B.classList.toggle('lj',!S.just);
     var paper=PAP[S.paper][0];PAP.forEach(function(p){B.classList.remove(p[0]);});B.classList.add(paper);tone(paper);
     if(k==='turn'){var r=$('#s21R'),o=document.createElement('div');o.className='sv-flip'+(S.turn?' ud':'');o.innerHTML='<div class="s14-fp"><p>'+TX4[1]+TX4[2]+'</p></div>';r.appendChild(o);setTimeout(function(){o.remove();},800);}
