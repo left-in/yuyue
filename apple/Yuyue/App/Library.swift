@@ -92,6 +92,9 @@ final class Library {
             self?.audiobooks.reload()
             self?.podcasts.reload()
         }
+        #if DEBUG
+        debugSeed()
+        #endif
     }
 
     /// 听书时 Mac 不睡着 (设置 · 通用).
