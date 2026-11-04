@@ -105,6 +105,44 @@ h2 .rec{font-size:11px;font-weight:600;color:var(--accent);background:var(--soft
 .td.er{color:var(--danger)}
 .td.wr{color:var(--t2);font-weight:500}
 
+
+/* ---------- E 印章（配节目里主持人的“印”） ---------- */
+.te{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:11.5px;color:var(--t2);font-variant-numeric:tabular-nums}
+.te .seal{width:20px;height:20px;display:grid;place-items:center;border:1px solid currentColor;border-radius:3px;
+  font:700 11.5px/1 "Songti SC","Noto Serif SC",serif;color:var(--t1);transition:background-color .15s,color .15s}
+.te:hover .seal{background:var(--t1);color:var(--card);border-color:var(--t1)}
+.te.pl .seal{background:var(--accent);border-color:var(--accent);color:#fff}.te.pl{color:var(--accent)}
+.te.hd .seal{color:#B5432F;border-color:#B5432F;rotate:-8deg;opacity:.75}.te.hd{color:var(--t3)}
+.te.wr .seal{color:var(--t3);border-style:dashed}
+.te.er .seal,.te.er{color:var(--danger);border-color:var(--danger)}
+
+/* ---------- F 墨线（书页朗读时句子下那道线） ---------- */
+.tf{display:inline-flex;flex-direction:column;align-items:flex-end;gap:4px;cursor:pointer;font-size:12px;font-weight:600;color:var(--t1);font-variant-numeric:tabular-nums}
+.tf .w{display:inline-flex;align-items:center;gap:6px}
+.tf .ln{position:relative;width:100%;height:2px;border-radius:1px;background:color-mix(in srgb,var(--t1) 10%,transparent);overflow:hidden}
+.tf .ln i{position:absolute;inset:0 auto 0 0;border-radius:1px;background:var(--t1)}
+.tf:hover .ln{background:color-mix(in srgb,var(--t1) 22%,transparent)}
+.tf.pl{color:var(--accent)}.tf.pl .ln i{background:var(--accent);animation:grow 30s linear forwards}
+.tf.hd{color:var(--t3);font-weight:500}.tf.hd .ln i{background:var(--t3)}
+.tf.wr{color:var(--t2);font-weight:500}.tf.wr .ln i{background:repeating-linear-gradient(90deg,var(--t2) 0 6px,transparent 6px 9px);animation:crawl .8s linear infinite}
+.tf.er{color:var(--danger)}.tf.er .ln{background:none;height:4px}
+.tf.er .ln i{background:none;border-bottom:1.5px dotted var(--danger);border-radius:0}
+@keyframes grow{to{width:100%}}
+@keyframes crawl{to{background-position:9px 0}}
+
+/* ---------- G 状态点（侧栏底下“● 还没开同步”那样） ---------- */
+.tg{display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:11.5px;font-weight:600;color:var(--t1);font-variant-numeric:tabular-nums;padding:5px 8px;margin:-5px -8px;border-radius:8px;transition:background-color .15s}
+.tg:hover{background:color-mix(in srgb,var(--t1) 5%,transparent)}
+.tg .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+.tg .dot.ring{background:none;box-shadow:inset 0 0 0 1.5px var(--accent)}
+.tg.pl{color:var(--accent)}.tg.pl .dot{animation:pulse 1.4s ease-in-out infinite}
+.tg.hd{color:var(--t3);font-weight:500}.tg.hd .dot{background:none}
+.tg.wr{color:var(--t2);font-weight:500}.tg.wr .dot{background:var(--t3);animation:pulse 1s ease-in-out infinite}
+.tg.er{color:var(--danger)}.tg.er .dot{background:var(--danger)}
+.tg .hov{display:none}.tg:hover .hov{display:inline}.tg:hover .rest{display:none}
+@keyframes pulse{50%{opacity:.3;scale:.7}}
+@media (prefers-reduced-motion:reduce){.tf .ln i,.tg .dot{animation:none!important}}
+
 /* shared bits */
 .bars{display:inline-flex;align-items:flex-end;gap:1.5px;height:10px}
 .bars i{width:2px;background:currentColor;border-radius:1px;animation:bar .9s ease-in-out infinite}
@@ -122,7 +160,7 @@ h2 .rec{font-size:11px;font-weight:600;color:var(--accent);background:var(--soft
   <div class="top">
     <div>
       <h1>播客列表 · 右边那一颗</h1>
-      <p class="lead">只改你圈的那一列，其他按钮已经改回原来的样子。每一套都把六种情况摆出来：没听、听了一半、正在听、听完了、正在写、没写成。行里其他东西和现在的 App 一样。点按钮能在“播放 / 暂停”之间切。</p>
+      <p class="lead">一共七套：A–D 是第一轮，E–G 是第二轮，都从语阅自己已有的东西来（主持人的印、书页的墨线、侧栏的状态点）。只改你圈的那一列，其他按钮已经改回原来的样子。每一套都把六种情况摆出来：没听、听了一半、正在听、听完了、正在写、没写成。行里其他东西和现在的 App 一样。点按钮能在“播放 / 暂停”之间切。</p>
     </div>
     <div class="seg" role="group" aria-label="颜色"><button data-t="light">浅色</button><button data-t="dark">深色</button><button data-t="" aria-pressed="true">跟随系统</button></div>
   </div>
@@ -146,6 +184,19 @@ h2 .rec{font-size:11px;font-weight:600;color:var(--accent);background:var(--soft
   <h2>D · 小气泡</h2>
   <p class="why">播客里文稿是聊天气泡，编辑部也是气泡，按钮也说同一种话：一个缺一个角的小气泡。正在听时气泡翻到另一边、变成主题色，像在回话；正在写时里面就是编辑部那三个点。</p>
   <div class="card" id="vD"></div>
+
+
+  <h2>E · 印章</h2>
+  <p class="why">配节目里两位主持人各有一枚“印”。按钮也是一枚印加一行小字：没听是“听”，听了一半是“续”，正在听这枚印填上主题色，听完了盖一枚斜一点的朱红“毕”，像书上盖过的章；正在写是虚线的“写”，没写成是红的“重”。鼠标移上去印变成实心。</p>
+  <div class="card" id="vE"></div>
+
+  <h2>F · 墨线 <span class="rec">也推荐</span></h2>
+  <p class="why">书页朗读时，句子底下有一道跟着声音长出来的墨线，这是语阅自己的东西。按钮就是一行字加这道线：线有多长就听了多少；正在听时它用主题色慢慢往前长，和书页里一样；听完了整道是灰的；正在写是一节一节往前爬的虚线；没写成是一道红的点线。没有框，看一眼就知道每一集听到哪。</p>
+  <div class="card" id="vF"></div>
+
+  <h2>G · 状态点</h2>
+  <p class="why">侧栏最底下“● 还没开同步”就是一个点加一行字。没听的前面一个墨蓝实心点（像没读的邮件），听了一半是空心圈，正在听的点在呼吸，听完了没有点、字变灰；正在写是灰点闪，没写成是红点。鼠标移上去，字换成“▶ 播放”或“暂停”，告诉你点了会怎样。</p>
+  <div class="card" id="vG"></div>
 
   <p class="note">字号、颜色都取自 Tokens.swift；正在放的那一行铺的淡墨蓝和现在一样。定下一套后我只改这一颗，其他按钮不动。</p>
 </div>
@@ -218,6 +269,29 @@ h2 .rec{font-size:11px;font-weight:600;color:var(--accent);background:var(--soft
       if(r.k==='heard') return '<span class="td hd">'+check+'听完了</span>';
       if(on) return '<span class="td pl">'+bars+'正在听 · 还剩 '+r.left+' 分</span>';
       return '<span class="td">'+play+(r.left?'接着听 · 还剩 '+r.left+' 分':r.min+' 分钟')+'</span>';
+    },
+    vE:function(r,on){
+      if(r.fail) return '<span class="te er"><span class="seal">重</span>再试一次</span>';
+      if(r.writing) return '<span class="te wr"><span class="seal">写</span>正在写 4 / 7</span>';
+      if(r.k==='heard') return '<span class="te hd"><span class="seal">毕</span>听完了</span>';
+      if(on) return '<span class="te pl"><span class="seal">听</span>正在听 · 还剩 '+r.left+' 分</span>';
+      return '<span class="te"><span class="seal">'+(r.left?'续':'听')+'</span>'+(r.left?'还剩 '+r.left+' 分':r.min+' 分钟')+'</span>';
+    },
+    vF:function(r,on){
+      var frac = r.k==='heard'?1 : r.writing?(r.h/r.n) : r.fail?1 : r.n?(r.h/r.n):0;
+      var ln='<span class="ln"><i style="width:'+Math.round(frac*100)+'%"></i></span>';
+      if(r.fail) return '<span class="tf er"><span class="w">'+retry+'再试一次</span>'+ln+'</span>';
+      if(r.writing) return '<span class="tf wr"><span class="w">正在写 4 / 7</span>'+ln+'</span>';
+      if(r.k==='heard') return '<span class="tf hd"><span class="w">'+check+'听完了</span>'+ln+'</span>';
+      if(on) return '<span class="tf pl"><span class="w">'+bars+'还剩 '+r.left+' 分</span>'+ln+'</span>';
+      return '<span class="tf"><span class="w">'+play+(r.left?'还剩 '+r.left+' 分':r.min+' 分钟')+'</span>'+ln+'</span>';
+    },
+    vG:function(r,on){
+      if(r.fail) return '<span class="tg er"><span class="dot"></span>再试一次</span>';
+      if(r.writing) return '<span class="tg wr"><span class="dot"></span>正在写 4 / 7</span>';
+      if(r.k==='heard') return '<span class="tg hd"><span class="rest">听完了</span><span class="hov">▶ 再听一遍</span></span>';
+      if(on) return '<span class="tg pl"><span class="dot"></span><span class="rest">正在听 · 还剩 '+r.left+' 分</span><span class="hov">暂停</span></span>';
+      return '<span class="tg"><span class="dot'+(r.left?' ring':'')+'"></span><span class="rest">'+(r.left?'还剩 '+r.left+' 分':r.min+' 分钟')+'</span><span class="hov">▶ '+(r.left?'接着听':'播放')+'</span></span>';
     }
   };
 
@@ -243,11 +317,11 @@ h2 .rec{font-size:11px;font-weight:600;color:var(--accent);background:var(--soft
         if(r.k==='heard'||r.writing||r.fail) return;
         rows.forEach(function(x){ if(x!==r) x.on=false; });
         r.on=!r.on; if(!r.left) r.left=r.min;
-        ['v0','vA','vB','vC','vD'].forEach(render);
+        ['v0','vA','vB','vC','vD','vE','vF','vG'].forEach(render);
       });
     });
   }
-  ['v0','vA','vB','vC','vD'].forEach(render);
+  ['v0','vA','vB','vC','vD','vE','vF','vG'].forEach(render);
 
   var root=document.documentElement, bs=document.querySelectorAll('.seg button');
   bs.forEach(function(x){x.addEventListener('click',function(){
