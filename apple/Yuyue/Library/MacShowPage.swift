@@ -110,8 +110,8 @@ struct MacShowPage: View {
                         if s.paused { Text("停着").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3) }
                     }
                     .padding(.horizontal, 10).frame(height: 28)
-                    .background(YYColor.card, in: .rect(cornerRadius: 9))
-                    .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(YYColor.line, lineWidth: 0.5))
+                    .background(YYColor.card, in: .capsule)
+                    .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
                 }
             }
         }

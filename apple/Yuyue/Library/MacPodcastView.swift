@@ -234,8 +234,7 @@ struct MacPodcastView: View {
             }
             Spacer(minLength: 12)
             SourceMarks(articles: e.articles).opacity(e.heard ? 0.5 : 1)
-            PodcastGlassButton(title: remaining(e, book), symbol: e.heard ? "checkmark" : "play.fill", kind: playing ? .playing : .plain,
-                               progress: e.heard ? nil : book?.progress) {
+            PodcastGlassButton(title: remaining(e, book), symbol: e.heard ? "checkmark" : "play.fill", kind: playing ? .playing : .plain) {
                 // Plays in the 播放条; 文稿 (double-click, the menu, the bar) opens the window.
                 // Picking one by hand ends 连着听.
                 library.upNext = []

@@ -3,81 +3,68 @@ import YuyueCore
 
 /// 播客's own pieces, the same on the Mac and the phone (docs/design/播客.html).
 
-/// 播客's button, drawn the way the rest of 语阅 draws its buttons — the shelf's 接着读 / 听 on
-/// a reading card: a rounded rectangle (9) with a faint wash of ink, no glass and no shadow;
-/// how far an episode has been heard is a thin line along its bottom, as 接着读 shows 42%.
-/// The glass capsule it replaced was the only one of its kind in the app (2026-11-05: “和软件一点
-/// 也不搭”).
+/// `.lg25`: the 液态玻璃 button chosen for 播客 (播客-按钮.html · A). Half see-through, a bright
+/// line along the top and a soft shadow under; the action in ink, the one playing in the theme's
+/// colour.
 struct PodcastGlassButton: View {
-    /// `main`: the screen's one action (建好了, 现在写一集), its words in the theme's colour.
+    /// `main`: the screen's one action (建好了), in the theme's colour without the moving bars.
     enum Kind { case plain, main, playing, writing }
     let title: String
     var symbol: String?
     var kind = Kind.plain
-    /// On the window's paper rather than on a white card: the card's white with a hairline
-    /// (`YYButtonStyle.raised`), so it doesn't sink into the paper.
+    /// No glass: the prototype's white capsule with a hairline (`.imp`), sitting on the paper.
     var flat = false
     /// The key that presses it, written small after the title (配节目-排版.html: 建好了 ⌘↩).
     var key: String?
-    /// Heard so far, 0–1: the line along the bottom. Nil or 0 draws none.
-    var progress: Double?
     let action: () -> Void
+    @Environment(\.colorScheme) private var scheme
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
-    @State private var hovering = false
 
     var body: some View {
         Button(action: action) {
             HStack(spacing: 6) {
                 switch kind {
-                case .playing:
-                    Image(systemName: "waveform").symbolEffect(.variableColor.iterative, options: .repeating)
-                        .font(.yy(size: 11, weight: .semibold))
+                case .playing: EqualizerBars().frame(width: 10, height: 10)
                 case .writing: ProgressView().controlSize(.mini).scaleEffect(0.8).frame(width: 10, height: 10)
-                case .plain, .main: if let symbol { Image(systemName: symbol).font(.yy(size: 10.5, weight: .semibold)) }
+                case .plain, .main: if let symbol { Image(systemName: symbol).font(.system(size: 8.5, weight: .bold)) }
                 }
                 Text(title).font(.yy(size: 11.5, weight: kind == .writing ? .regular : .semibold)).monospacedDigit().lineLimit(1)
                 if let key { Text(key).font(.yy(size: 10)).foregroundStyle(YYColor.t3).padding(.leading, -2) }
             }
             .foregroundStyle(kind == .playing || kind == .main ? tint.accent : kind == .writing ? YYColor.t2 : YYColor.t1)
-            .padding(.horizontal, 11)
-            .frame(height: 30)
-            .background(fill, in: .rect(cornerRadius: 9))
-            .overlay {
-                if flat { RoundedRectangle(cornerRadius: 9).strokeBorder(YYColor.line, lineWidth: 0.5) }
-            }
-            .overlay(alignment: .bottomLeading) {
-                if let progress, progress > 0.01, progress < 1 {
-                    GeometryReader { g in
-                        ZStack(alignment: .leading) {
-                            Rectangle().fill(YYColor.t1.opacity(0.06))
-                            UnevenRoundedRectangle(bottomTrailingRadius: 1.5, topTrailingRadius: 1.5)
-                                .fill(kind == .playing ? tint.accent : YYColor.t1.opacity(0.7))
-                                .frame(width: min(g.size.width, max(8, g.size.width * progress)))
-                        }
-                        .frame(height: 2.5)
-                        .frame(maxHeight: .infinity, alignment: .bottom)
-                    }
-                }
-            }
-            .clipShape(.rect(cornerRadius: 9))
-            .contentShape(.rect(cornerRadius: 9))
-            .animation(YYMotion.quick, value: hovering)
+            .padding(.leading, kind == .main && symbol == nil ? 16 : 10).padding(.trailing, kind == .main ? 16 : 12)
+            .frame(height: 28)
+            .background { if flat { paper } else { glass } }
+            .contentShape(.capsule)
         }
         .buttonStyle(PressDown())
-        #if os(macOS)
-        .onHover { hovering = $0 }
-        #endif
     }
 
-    private var fill: Color {
-        if flat { return hovering ? YYColor.inset : YYColor.card }
-        return YYColor.t1.opacity(hovering ? 0.09 : 0.055)
+    /// `.imp`: the card's white, `--zsh` round it (a hairline and the faintest shadow).
+    private var paper: some View {
+        Capsule()
+            .fill(YYColor.card)
+            .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
+            .shadow(color: Color(red: 51 / 255, green: 46 / 255, blue: 41 / 255).opacity(scheme == .dark ? 0 : 0.04), radius: 1, y: 1)
+    }
+
+    @ViewBuilder private var glass: some View {
+        let dark = scheme == .dark
+        Capsule()
+            .fill(LinearGradient(colors: dark ? [.white.opacity(0.16), .white.opacity(0.05)] : [.white.opacity(0.78), .white.opacity(0.38)],
+                                 startPoint: .top, endPoint: .bottom))
+            .background(.ultraThinMaterial, in: .capsule)
+            .overlay(alignment: .top) {
+                Capsule().strokeBorder(LinearGradient(colors: [.white.opacity(dark ? 0.25 : 0.95), .clear], startPoint: .top, endPoint: .center), lineWidth: 1)
+            }
+            .overlay(Capsule().strokeBorder(dark ? Color.white.opacity(0.1) : Color.black.opacity(0.08), lineWidth: 0.5))
+            .shadow(color: Color(red: 30 / 255, green: 40 / 255, blue: 60 / 255).opacity(dark ? 0.2 : 0.05), radius: 2, y: 1)
     }
 
     private struct PressDown: ButtonStyle {
         func makeBody(configuration: Configuration) -> some View {
-            configuration.label.opacity(configuration.isPressed ? 0.7 : 1)
+            configuration.label.scaleEffect(configuration.isPressed ? 0.96 : 1).opacity(configuration.isPressed ? 0.85 : 1)
         }
     }
 }
