@@ -2,28 +2,6 @@
 import SwiftUI
 import YuyueCore
 
-/// A book whose voice carries on after its pages close.
-protocol NowPlaying: AnyObject {
-    var bookID: String { get }
-    var player: Player? { get }
-    var isPlaying: Bool { get }
-    func togglePlay()
-    func stopAndClose()
-}
-
-extension ReaderModel: NowPlaying {
-    func stopAndClose() { close() }
-}
-
-extension PdfModel: NowPlaying {
-    func stopAndClose() { close() }
-}
-
-extension AudiobookPlayer: NowPlaying {
-    var player: Player? { nil }
-    func stopAndClose() { close() }
-}
-
 /// The phone: 书架 · 笔记 · 我的, and 搜索 in its own circle (iOS 26 draws them as a floating
 /// glass bar). A book opens over all of them, full screen; while one is read aloud with its
 /// pages closed, a 播放条 sits above the tabs.

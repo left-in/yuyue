@@ -53,6 +53,14 @@ struct ReaderScreen: View {
                 held.stopAndClose()
                 library.nowPlaying = nil
             }
+            #else
+            // 播客: the episode the 播放条 is playing opens on the voice as it is, and stays the
+            // 播放条's. Another book opening doesn't stop it.
+            if let held = library.nowPlaying as? ReaderModel, held.bookID == bookID {
+                model = held
+                library.openModels.add(held)
+                return
+            }
             #endif
             let book = library.books.first(where: { $0.id == bookID })
             let format = book?.format
@@ -70,6 +78,9 @@ struct ReaderScreen: View {
                 pdf = PdfModel(library: library, bookID: bookID)
             } else {
                 model = ReaderModel(library: library, bookID: bookID)
+                #if os(macOS)
+                if let model { library.openModels.add(model) }
+                #endif
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .bookRebuilt)) { n in
@@ -94,7 +105,13 @@ struct ReaderScreen: View {
                 audio?.close()
             }
             #else
-            model?.close()
+            if let model { library.openModels.remove(model) }
+            // An episode playing, or paused, in the 播放条 goes on there without its window.
+            if let model, library.nowPlaying === model {
+                model.flush()
+            } else {
+                model?.close()
+            }
             pdf?.close()
             audio?.close()
             #endif

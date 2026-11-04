@@ -476,6 +476,10 @@ final class ReaderModel {
         guard let library else { return }
         if playing {
             if library.listening != bookID { library.listening = bookID }
+            #if os(macOS)
+            // An episode that starts playing is the 播客 播放条's (and stops whichever was).
+            if detail?.summary.format == .podcast, library.nowPlaying !== self { library.nowPlaying = self }
+            #endif
         } else if library.listening == bookID {
             library.listening = nil
         }

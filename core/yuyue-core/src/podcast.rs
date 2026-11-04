@@ -789,13 +789,13 @@ fn bad_answer(what: &str) -> CoreError {
 /// The section: a heading, then each segment as a `<section>` with its source line and one
 /// `<p>` per line. `<p data-who>` says who speaks it, for the player to pick that host's voice
 /// and the reader to show the speaker; the source line's link opens the article.
-fn script_body(show: &Show, script: &EpisodeScript) -> Element {
+fn script_body(hosts: &[ShowHost], script: &EpisodeScript) -> Element {
     let mut body = Element::new("body");
     body.children.push(Node::Element(Element::new("h1").with_text(script.title.clone())));
     if !script.summary.is_empty() {
         body.children.push(Node::Element(Element::new("p").with_attr("class", "yy-pod-summary").with_text(script.summary.clone())));
     }
-    let host_index = |who: &str| show.hosts.iter().position(|h| h.name == who).unwrap_or(0);
+    let host_index = |who: &str| hosts.iter().position(|h| h.name == who).unwrap_or(0);
     for seg in &script.segments {
         let mut sec = Element::new("section").with_attr("class", "yy-pod-seg");
         if !seg.topic.is_empty() && !seg.articles.is_empty() {
@@ -833,7 +833,7 @@ fn build_episode(tmp: &Path, id: &str, show: &Show, date: &str, script: &Episode
     let no_resource = |_: &str| None;
     let link = |href: &str| if href.starts_with("http://") || href.starts_with("https://") { Link::External(href.to_string()) } else { Link::Dead };
     let ctx = Context { lang: &language, resource: &no_resource, link: &link };
-    let normalized = normalize::normalize(script_body(show, script), &ctx);
+    let normalized = normalize::normalize(script_body(&show.hosts, script), &ctx);
     let stats = normalized.stats;
     let info = SectionInfo {
         title: Some(script.title.clone()),
@@ -870,6 +870,82 @@ fn build_episode(tmp: &Path, id: &str, show: &Show, date: &str, script: &Episode
     };
     fs::write(tmp.join("book.json"), serde_json::to_string_pretty(&manifest)?)?;
     Ok(manifest)
+}
+
+/// One 条 of an episode, for the 播放条 and the 节目单: what it's about, the articles it tells,
+/// and the sentences (in section 0) it runs over.
+#[derive(Debug, Clone, PartialEq, uniffi::Record)]
+pub struct EpisodeSegment {
+    pub topic: String,
+    /// Indexes into the episode's `articles`.
+    pub articles: Vec<u32>,
+    /// Its first and last sentence, both counted.
+    pub first: u32,
+    pub last: u32,
+    /// How much there is to say (`Stats::units`), to place it on a bar timed by length.
+    pub units: u32,
+}
+
+/// The sentences each `.yy-pod-seg` holds, in order.
+fn segment_spans(content: &[Node]) -> Vec<(u32, u32)> {
+    fn indexes(nodes: &[Node], out: &mut Vec<u32>) {
+        for n in nodes {
+            let Node::Element(e) = n else { continue };
+            if e.has_class("s")
+                && let Some(i) = e.attr("data-s").and_then(|s| s.parse::<u32>().ok()) {
+                    out.push(i);
+                }
+            indexes(&e.children, out);
+        }
+    }
+    fn walk(nodes: &[Node], out: &mut Vec<(u32, u32)>) {
+        for n in nodes {
+            let Node::Element(e) = n else { continue };
+            if e.has_class("yy-pod-seg") {
+                let mut ix = Vec::new();
+                indexes(&e.children, &mut ix);
+                if let (Some(&a), Some(&b)) = (ix.iter().min(), ix.iter().max()) {
+                    out.push((a, b));
+                }
+            } else {
+                walk(&e.children, out);
+            }
+        }
+    }
+    let mut out = Vec::new();
+    walk(content, &mut out);
+    out
+}
+
+#[uniffi::export]
+impl YuyueCore {
+    /// An episode's 条, in order, with where each starts and ends. Read from the episode's own
+    /// file, so it works for one that came from another device too. Empty for a book.
+    pub fn episode_segments(&self, book: String) -> Result<Vec<EpisodeSegment>> {
+        let dir = self.book_dir(&book)?;
+        let Ok(bytes) = fs::read(dir.join("original.podcast")) else { return Ok(Vec::new()) };
+        let v: Value = serde_json::from_slice(&bytes).map_err(|_| CoreError::bad_book("not an episode"))?;
+        let Some(script) = script_from_json(&v["script"]) else { return Ok(Vec::new()) };
+        let manifest = self.manifest(&book)?;
+        let no_resource = |_: &str| None;
+        let link = |_: &str| Link::Dead;
+        let ctx = Context { lang: &manifest.language, resource: &no_resource, link: &link };
+        // Which host is on which side doesn't change where sentences fall.
+        let normalized = normalize::normalize(script_body(&[], &script), &ctx);
+        let spans = segment_spans(&normalized.content);
+        Ok(script
+            .segments
+            .iter()
+            .zip(spans)
+            .map(|(seg, (first, last))| {
+                let units = (first..=last)
+                    .filter_map(|i| normalized.sentences.get(i as usize))
+                    .map(|t| text::Stats::of(t).units())
+                    .sum::<u32>();
+                EpisodeSegment { topic: seg.topic.clone(), articles: seg.articles.clone(), first, last, units }
+            })
+            .collect())
+    }
 }
 
 /// Who speaks each sentence: the `data-who` of the `<p>` it's in, or none (the title, a

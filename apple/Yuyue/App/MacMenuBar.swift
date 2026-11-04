@@ -81,10 +81,9 @@ final class MacMenuBar: NSObject, NSMenuDelegate {
         return String(localized: "下一集 \(day) \(next.formatted(date: .omitted, time: .shortened))")
     }
 
+    /// Plays where 播客's 播放条 plays: no window needed, so the menu bar alone can be the radio.
     private func play(_ e: Episode) {
-        if let book = library.books.first(where: { $0.id == e.book }) { library.open(book, .listen) }
-        Self.openWindow?(id: "reader", value: e.book)
-        NSApp.activate()
+        library.playEpisode(e.book)
     }
 
     private func action(_ title: String, _ run: @escaping () -> Void) -> NSMenuItem {

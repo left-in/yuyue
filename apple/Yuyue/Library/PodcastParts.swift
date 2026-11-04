@@ -3,68 +3,81 @@ import YuyueCore
 
 /// 播客's own pieces, the same on the Mac and the phone (docs/design/播客.html).
 
-/// `.lg25`: the 液态玻璃 button chosen for 播客 (播客-按钮.html · A). Half see-through, a bright
-/// line along the top and a soft shadow under; the action in ink, the one playing in the theme's
-/// colour.
+/// 播客's button, drawn the way the rest of 语阅 draws its buttons — the shelf's 接着读 / 听 on
+/// a reading card: a rounded rectangle (9) with a faint wash of ink, no glass and no shadow;
+/// how far an episode has been heard is a thin line along its bottom, as 接着读 shows 42%.
+/// The glass capsule it replaced was the only one of its kind in the app (2026-11-05: “和软件一点
+/// 也不搭”).
 struct PodcastGlassButton: View {
-    /// `main`: the screen's one action (建好了), in the theme's colour without the moving bars.
+    /// `main`: the screen's one action (建好了, 现在写一集), its words in the theme's colour.
     enum Kind { case plain, main, playing, writing }
     let title: String
     var symbol: String?
     var kind = Kind.plain
-    /// No glass: the prototype's white capsule with a hairline (`.imp`), sitting on the paper.
+    /// On the window's paper rather than on a white card: the card's white with a hairline
+    /// (`YYButtonStyle.raised`), so it doesn't sink into the paper.
     var flat = false
     /// The key that presses it, written small after the title (配节目-排版.html: 建好了 ⌘↩).
     var key: String?
+    /// Heard so far, 0–1: the line along the bottom. Nil or 0 draws none.
+    var progress: Double?
     let action: () -> Void
-    @Environment(\.colorScheme) private var scheme
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @State private var hovering = false
 
     var body: some View {
         Button(action: action) {
             HStack(spacing: 6) {
                 switch kind {
-                case .playing: EqualizerBars().frame(width: 10, height: 10)
+                case .playing:
+                    Image(systemName: "waveform").symbolEffect(.variableColor.iterative, options: .repeating)
+                        .font(.yy(size: 11, weight: .semibold))
                 case .writing: ProgressView().controlSize(.mini).scaleEffect(0.8).frame(width: 10, height: 10)
-                case .plain, .main: if let symbol { Image(systemName: symbol).font(.system(size: 8.5, weight: .bold)) }
+                case .plain, .main: if let symbol { Image(systemName: symbol).font(.yy(size: 10.5, weight: .semibold)) }
                 }
                 Text(title).font(.yy(size: 11.5, weight: kind == .writing ? .regular : .semibold)).monospacedDigit().lineLimit(1)
                 if let key { Text(key).font(.yy(size: 10)).foregroundStyle(YYColor.t3).padding(.leading, -2) }
             }
             .foregroundStyle(kind == .playing || kind == .main ? tint.accent : kind == .writing ? YYColor.t2 : YYColor.t1)
-            .padding(.leading, kind == .main && symbol == nil ? 16 : 10).padding(.trailing, kind == .main ? 16 : 12)
-            .frame(height: 28)
-            .background { if flat { paper } else { glass } }
-            .contentShape(.capsule)
+            .padding(.horizontal, 11)
+            .frame(height: 30)
+            .background(fill, in: .rect(cornerRadius: 9))
+            .overlay {
+                if flat { RoundedRectangle(cornerRadius: 9).strokeBorder(YYColor.line, lineWidth: 0.5) }
+            }
+            .overlay(alignment: .bottomLeading) {
+                if let progress, progress > 0.01, progress < 1 {
+                    GeometryReader { g in
+                        ZStack(alignment: .leading) {
+                            Rectangle().fill(YYColor.t1.opacity(0.06))
+                            UnevenRoundedRectangle(bottomTrailingRadius: 1.5, topTrailingRadius: 1.5)
+                                .fill(kind == .playing ? tint.accent : YYColor.t1.opacity(0.7))
+                                .frame(width: min(g.size.width, max(8, g.size.width * progress)))
+                        }
+                        .frame(height: 2.5)
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                    }
+                }
+            }
+            .clipShape(.rect(cornerRadius: 9))
+            .contentShape(.rect(cornerRadius: 9))
+            .animation(YYMotion.quick, value: hovering)
         }
         .buttonStyle(PressDown())
+        #if os(macOS)
+        .onHover { hovering = $0 }
+        #endif
     }
 
-    /// `.imp`: the card's white, `--zsh` round it (a hairline and the faintest shadow).
-    private var paper: some View {
-        Capsule()
-            .fill(YYColor.card)
-            .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
-            .shadow(color: Color(red: 51 / 255, green: 46 / 255, blue: 41 / 255).opacity(scheme == .dark ? 0 : 0.04), radius: 1, y: 1)
-    }
-
-    @ViewBuilder private var glass: some View {
-        let dark = scheme == .dark
-        Capsule()
-            .fill(LinearGradient(colors: dark ? [.white.opacity(0.16), .white.opacity(0.05)] : [.white.opacity(0.78), .white.opacity(0.38)],
-                                 startPoint: .top, endPoint: .bottom))
-            .background(.ultraThinMaterial, in: .capsule)
-            .overlay(alignment: .top) {
-                Capsule().strokeBorder(LinearGradient(colors: [.white.opacity(dark ? 0.25 : 0.95), .clear], startPoint: .top, endPoint: .center), lineWidth: 1)
-            }
-            .overlay(Capsule().strokeBorder(dark ? Color.white.opacity(0.1) : Color.black.opacity(0.08), lineWidth: 0.5))
-            .shadow(color: Color(red: 30 / 255, green: 40 / 255, blue: 60 / 255).opacity(dark ? 0.2 : 0.05), radius: 2, y: 1)
+    private var fill: Color {
+        if flat { return hovering ? YYColor.inset : YYColor.card }
+        return YYColor.t1.opacity(hovering ? 0.09 : 0.055)
     }
 
     private struct PressDown: ButtonStyle {
         func makeBody(configuration: Configuration) -> some View {
-            configuration.label.scaleEffect(configuration.isPressed ? 0.96 : 1).opacity(configuration.isPressed ? 0.85 : 1)
+            configuration.label.opacity(configuration.isPressed ? 0.7 : 1)
         }
     }
 }
@@ -86,6 +99,35 @@ struct PodcastTextButton: View {
         #if os(macOS)
         .onHover { hovering = $0 }
         #endif
+    }
+}
+
+/// Where an episode's articles came from: a small square each, one per site, as 配一档节目
+/// marks its sources (Y for Hacker News). Hover lists the articles.
+struct SourceMarks: View {
+    let articles: [ScriptArticle]
+
+    var body: some View {
+        var seen: [String] = []
+        for a in articles where !seen.contains(a.source) { seen.append(a.source) }
+        let shown = Array(seen.prefix(4))
+        return HStack(spacing: 3) {
+            ForEach(shown, id: \.self) { s in Self.mark(s) }
+            if seen.count > shown.count {
+                Text("+\(seen.count - shown.count)").font(.yy(size: 10)).foregroundStyle(YYColor.t3)
+            }
+        }
+        .help(articles.map { $0.source.isEmpty ? $0.title : "\($0.source) · \($0.title)" }.joined(separator: "\n"))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(String(localized: "来源：\(seen.joined(separator: "、"))")))
+    }
+
+    static func mark(_ source: String) -> some View {
+        let hn = source.localizedCaseInsensitiveContains("hacker news")
+        let letter = hn ? "Y" : String(source.prefix(1)).uppercased()
+        let color = hn ? Color(red: 0.95, green: 0.4, blue: 0.13) : Color(white: 0.2)
+        return Text(letter).font(.system(size: 8, weight: .bold)).foregroundStyle(.white)
+            .frame(width: 15, height: 15).background(color, in: .rect(cornerRadius: 4))
     }
 }
 
@@ -116,9 +158,13 @@ struct ShowCover: View {
             .fill(c.fill)
             .frame(width: size, height: size)
             .overlay(alignment: .topLeading) {
+                // Only where it can be read: a small cover in a list sits beside the show's name
+                // anyway, and 6-point 宋体 was a smudge.
+                if size >= 64 {
                 Text(name).font(.custom("Songti SC", size: max(6.5, size * 0.14)).weight(.semibold)).tracking(size * 0.007)
                     .foregroundStyle(c.ink.opacity(0.92)).lineLimit(2)
                     .padding(.top, size * 0.1).padding(.leading, size * 0.11).padding(.trailing, size * 0.1)
+                }
             }
             .overlay(alignment: .bottomTrailing) {
                 if size >= 40 {

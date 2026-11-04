@@ -44,7 +44,12 @@ struct MacShowEditor: View {
         // The sheet gives the name the keyboard on its own, with all of it selected: the
         // title opened as a grey highlighted block. Nothing has it until the reader clicks.
         .onAppear {
-            DispatchQueue.main.async { NSApp.keyWindow?.makeFirstResponder(nil) }
+            // The sheet's window takes the field a beat after it appears; let go after that.
+            for delay in [0.0, 0.15, 0.4] {
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    for w in NSApp.windows where w.isSheet && w.isVisible { w.makeFirstResponder(nil) }
+                }
+            }
         }
     }
 

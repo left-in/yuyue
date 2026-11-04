@@ -131,6 +131,10 @@ final class Player {
         engine.attach(speed)
         engine.connect(node, to: speed, format: Speech.format)
         engine.connect(speed, to: engine.mainMixerNode, format: Speech.format)
+        #if DEBUG
+        // `-debugMute 1`: plays without a sound, for trying the player while someone works nearby.
+        if UserDefaults.standard.bool(forKey: "debugMute") { node.volume = 0 }
+        #endif
         let center = NotificationCenter.default
         observers.append(center.addObserver(forName: .AVAudioEngineConfigurationChange, object: engine, queue: .main) { [weak self] _ in
             // The output changed (headphones, AirPlay): the engine stopped, so start again where we were.

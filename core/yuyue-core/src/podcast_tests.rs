@@ -470,3 +470,30 @@ fn an_episode_travels_as_its_file() {
     assert_eq!(phone.sentences(e.book.clone(), 0).unwrap(), mac.sentences(e.book.clone(), 0).unwrap());
     assert_eq!(phone.section_speakers(e.book.clone(), 0).unwrap(), mac.section_speakers(e.book, 0).unwrap());
 }
+
+/// The 播放条 and the 节目单 know where each 条 starts: the segments, in order, cover the
+/// script's lines and nothing before the first (the title and summary).
+#[test]
+fn an_episode_knows_its_segments() {
+    let core = YuyueCore::open(temp("ep-segs"), "Mac".into(), "macos".into()).unwrap();
+    let s = show(&core);
+    let script = parse_script(answer(), s.clone(), articles()).unwrap();
+    let n = script.segments.len();
+    let e = core.save_episode(s.id.clone(), "2026-11-01".into(), script.clone()).unwrap();
+    let segs = core.episode_segments(e.book.clone()).unwrap();
+    assert_eq!(segs.len(), n);
+    let speakers = core.section_speakers(e.book.clone(), 0).unwrap();
+    // The first sentence of the first 条 is the first a host says (its topic line has no speaker).
+    assert!(speakers[..segs[0].first as usize].iter().all(|w| w.is_none()) || segs[0].first > 0);
+    for (seg, g) in segs.iter().zip(&script.segments) {
+        assert_eq!(seg.topic, g.topic);
+        assert_eq!(seg.articles, g.articles);
+        assert!(seg.first <= seg.last && seg.units > 0);
+    }
+    for w in segs.windows(2) {
+        assert!(w[0].last < w[1].first);
+    }
+    assert_eq!(segs.last().unwrap().last as usize, speakers.len() - 1);
+    // A book has none.
+    assert!(core.episode_segments("nope".into()).is_err() || core.episode_segments("nope".into()).unwrap().is_empty());
+}

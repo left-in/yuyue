@@ -156,10 +156,66 @@ final class Library {
     #if os(iOS)
     /// The book over the tabs on the phone; opening one puts it there.
     var presented: String?
+    #endif
     /// A book still being read aloud after its pages were closed: the 播放条 over the tabs
-    /// plays and pauses it, and opening the book again picks it up as it is.
+    /// plays and pauses it, and opening the book again picks it up as it is. On the Mac, the
+    /// episode the 播客 播放条 plays, its window open or not. One voice at a time: a new one
+    /// stops the old.
     var nowPlaying: (any NowPlaying)? {
-        didSet { if let oldValue, nowPlaying != nil, oldValue !== nowPlaying { oldValue.stopAndClose() } }
+        didSet {
+            guard let oldValue, nowPlaying != nil, oldValue !== nowPlaying else { return }
+            #if os(macOS)
+            // Still in its window: it only goes quiet there; the window keeps its player.
+            if let m = oldValue as? ReaderModel, openModels.contains(m) {
+                m.player?.pause()
+                return
+            }
+            #endif
+            oldValue.stopAndClose()
+        }
+    }
+    #if os(macOS)
+    /// Each open book window's model, so the 播放条 plays an episode in the window it's open in
+    /// instead of making a second one.
+    @ObservationIgnored let openModels = NSHashTable<ReaderModel>.weakObjects()
+    #endif
+
+    #if os(macOS)
+    /// 播客's play button: plays or pauses the episode where it is — in the 播放条, in its
+    /// window — or starts it in the 播放条 without opening a window (文稿 opens that).
+    func playEpisode(_ bookID: String) {
+        if let m = nowPlaying as? ReaderModel, m.bookID == bookID {
+            return toggle(m)
+        }
+        if let m = openModels.allObjects.first(where: { $0.bookID == bookID }) {
+            nowPlaying = m
+            return toggle(m)
+        }
+        guard let book = books.first(where: { $0.id == bookID }) else { return }
+        open(book, .listen)
+        let m = ReaderModel(library: self, bookID: bookID)
+        nowPlaying = m
+    }
+
+    /// Lets the 播放条 go: the voice stops and, with no window, the episode is closed.
+    func stopEpisode() {
+        guard let m = nowPlaying as? ReaderModel else { return }
+        if openModels.contains(m) { m.player?.pause() } else { m.close() }
+        nowPlaying = nil
+    }
+
+    private func toggle(_ m: ReaderModel) {
+        guard let player = m.player else { return }
+        switch player.state {
+        case .playing, .loading: player.pause()
+        case .paused: player.resume()
+        case .stopped:
+            // Never started: from where it was left. Heard to the end: from the top again.
+            let left = (try? core.progress(bookId: m.bookID))?.position
+            let count = (try? core.sentences(bookId: m.bookID, section: 0))?.count ?? 0
+            let atEnd = left.map { Int($0.sentence) >= count - 1 } ?? false
+            player.play(from: atEnd ? Position(section: 0, sentence: 0) : left ?? Position(section: 0, sentence: 0))
+        }
     }
     #endif
 
