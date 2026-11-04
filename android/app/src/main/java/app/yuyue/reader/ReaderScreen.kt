@@ -88,6 +88,7 @@ val Paper.tokens: YYPaper
         Paper.DARK -> YYPapers.Dark
         Paper.KAMI -> YYPapers.Kami
         Paper.KAMI_NIGHT -> YYPapers.Kaminight
+        Paper.SAGE -> YYPapers.Sage
         Paper.EINK -> YYPapers.Eink
     }
 
@@ -186,6 +187,7 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
     if (model.tocShown) TocSheet(model) { model.tocShown = false }
     if (model.settingsShown) TypesetSheet(model) { model.settingsShown = false }
     if (model.listenShown) ListenSheet(model) { model.listenShown = false }
+    if (model.castShown) CastSheet(model) { model.castShown = false }
     if (model.immersiveShown) ImmersiveSheet(model) { model.immersiveShown = false }
     if (model.rulesShown) ReplaceRulesSheet(library.core, bookID, changed = { model.player?.textsChanged(); model.pager.reload() }) { model.rulesShown = false }
     if (model.txtShown) TxtLayoutSheet(library, bookID, model.detail?.summary?.title ?: "", rebuilt = {

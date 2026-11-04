@@ -59,6 +59,8 @@ class Player(private val context: Context, private val core: YuyueCore, val deta
     }
 
     private val script: Script = script ?: Script.book(core, detail)
+    /** 分角色: the characters' own voices, where the reader has given any (a book's, not a PDF's). */
+    private val roles: BookRoles? = if (script == null) BookRoles(core, detail.summary.id) else null
 
     enum class State { Stopped, Loading, Playing, Paused }
 
@@ -255,14 +257,14 @@ class Player(private val context: Context, private val core: YuyueCore, val deta
                     }
                 }
                 val language = lang(s.section)
-                val voice = voice(language)
+                val voice = roles?.voice(s.section, s.sentence, language) { voice(language) } ?: voice(language)
                 if (voice == null) {
                     val name = java.util.Locale.forLanguageTag(language).getDisplayLanguage(java.util.Locale.getDefault()).ifEmpty { language }
                     failed(t("下载一个%@声音就能朗读这本书，系统会带你去它的下载页。", name))
                     missingVoice = name
                     return@launch
                 }
-                if (voice is CloudVoice) fetchAhead(voice, s, language)
+                if (voice is CloudVoice && roles?.any != true) fetchAhead(voice, s, language)
                 val speech = try {
                     voice.render(text(s), language)
                 } catch (e: Exception) {
@@ -508,6 +510,13 @@ class Player(private val context: Context, private val core: YuyueCore, val deta
 
     init {
         SystemVoice.Engine.init(context)
+        ClonedVoices.init(context)
+    }
+
+    /** 分角色: someone's voice, pace or pitch changed; read on from this sentence with it. */
+    fun rolesChanged() {
+        roles?.reload()
+        restartHere()
     }
 
     fun startService() {

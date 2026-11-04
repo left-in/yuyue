@@ -111,6 +111,7 @@ data class YYTint(
     val playKami: Color,
     val playDark: Color,
     val playKaminight: Color,
+    val playSage: Color,
 ) {
     /** The play button colour on a paper. The e-ink paper keeps its own. */
     fun play(paper: YYPaper): Color = when (paper.id) {
@@ -118,6 +119,7 @@ data class YYTint(
         "kami" -> playKami
         "dark" -> playDark
         "kaminight" -> playKaminight
+        "sage" -> playSage
         else -> paper.main
     }
 }
@@ -134,6 +136,7 @@ object YYTints {
         playKami = Color(0xFF1B365DL),
         playDark = Color(0xFF8FA8C8L),
         playKaminight = Color(0xFF8FA8C8L),
+        playSage = Color(0xFF2B4C7EL),
     )
     val Ink = YYTint(
         id = "ink",
@@ -146,6 +149,7 @@ object YYTints {
         playKami = Color(0xFF1B365DL),
         playDark = Color(0xFFD6D6D8L),
         playKaminight = Color(0xFF8FA8C8L),
+        playSage = Color(0xFF101214L),
     )
     val Default = Blue
     val All = listOf(Blue, Ink)
@@ -285,9 +289,29 @@ object YYPapers {
         title = YYPaperTitle(YYFont.Serif, 25.0f, 700, 1.4f, 0.05f, true),
         meta = YYPaperMeta(YYFont.Serif, 10.5f, false, 0.06f, 0.0f, 4.0f),
     )
+    val Sage = YYPaper(
+        id = "sage",
+        name = "鼠尾草",
+        isDark = false,
+        hasNoiseTexture = false,
+        bg = Color(0xFFE6E7DCL),
+        ink = Color(0xFF2A2C24L),
+        ink2 = Color(0xFF63665AL),
+        line = Color(0xFFD3D5C6L),
+        accent = Color(0xFF2A2C24L),
+        hl = Color(0xFFF3E3A4L),
+        wave = Color(0xFFC9604FL),
+        glass = Color(0xD6EAEBE1L),
+        main = Color(0xFF2B4C7EL),
+        onMain = Color(0xFFFFFFFFL),
+        paperAccent = Color(0xFF2B4C7EL),
+        text = YYPaperText(YYFont.Serif, 2.05f, 0.3f, 2.0f, true, 0.01f, 14.5f),
+        title = YYPaperTitle(YYFont.Serif, 25.0f, 700, 1.4f, 0.05f, true),
+        meta = YYPaperMeta(YYFont.Serif, 10.5f, false, 0.06f, 0.0f, 4.0f),
+    )
     val Eink = YYPaper(
         id = "eink",
-        name = "墨水屏",
+        name = "铅印",
         isDark = false,
         hasNoiseTexture = true,
         bg = Color(0xFFE9E8E3L),
@@ -305,7 +329,7 @@ object YYPapers {
         title = YYPaperTitle(YYFont.Serif, 24.0f, 700, 1.4f, 0.05f, false),
         meta = YYPaperMeta(YYFont.Sans, 10.5f, true, 0.0f, 10.0f, 14.0f),
     )
-    val All = listOf(Plain, Dark, Kami, Kaminight, Eink)
+    val All = listOf(Plain, Dark, Kami, Kaminight, Sage, Eink)
 }
 
 /** English body text replaces the paper's font, line height, letter spacing, alignment and size. */

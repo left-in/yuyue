@@ -26,7 +26,9 @@ pub enum Paper {
     Kami,
     /// 纸本·夜
     KamiNight,
-    /// 墨水屏
+    /// 鼠尾草: a grey-green paper, laid out like 纸本
+    Sage,
+    /// 铅印 (the e-ink paper; also what 墨水屏模式 puts every book on)
     Eink,
 }
 
@@ -37,6 +39,7 @@ impl Paper {
             Paper::Dark => "dark",
             Paper::Kami => "kami",
             Paper::KamiNight => "kaminight",
+            Paper::Sage => "sage",
             Paper::Eink => "eink",
         }
     }

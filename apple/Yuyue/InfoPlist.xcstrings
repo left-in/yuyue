@@ -105,6 +105,24 @@
           }
         }
       }
+    },
+    "NSMicrophoneUsageDescription" : {
+      "comment" : "克隆声音",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To clone a voice, Yuyue records a short passage of you reading. The recording stays on this device."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "克隆声音时，录一小段你念书的声音。录音只存在这台设备上。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

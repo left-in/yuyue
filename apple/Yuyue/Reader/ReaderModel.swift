@@ -56,6 +56,18 @@ final class ReaderModel {
     var settingsShown = false
     /// 替换规则, from 更多 or the menu bar.
     var rulesShown = false
+    /// 气泡模式 (docs/design/听书-气泡与有声书.html): the dialogue as bubbles, kept per book.
+    var bubbles = false {
+        didSet {
+            guard bubbles != oldValue else { return }
+            pager.bubbles = bubbles
+            try? core.setBookBubbles(bookId: bookID, on: bubbles)
+        }
+    }
+    /// Whether the book has enough dialogue for 气泡 and 人物: books without (essays, papers)
+    /// don't offer them.
+    private(set) var hasDialogue = false
+    @ObservationIgnored private var castObserver: NSObjectProtocol?
     /// 编码和目录, for a TXT.
     var txtShown = false
     /// Why the TXT may have been read wrong, for the hint that leads to 编码和目录.
@@ -194,6 +206,20 @@ final class ReaderModel {
            UserDefaults.standard.string(forKey: Self.doubtKey(bookID)) != doubt {
             txtDoubt = doubt
         }
+        bubbles = (try? core.bookBubbles(bookId: bookID)) ?? false
+        pager.bubbles = bubbles
+        castObserver = NotificationCenter.default.addObserver(forName: CastContext.changed, object: nil, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated { self?.pager.bubblesChanged() }
+        }
+        Task { [core, bookID, weak self] in
+            // A few quotes in the first chapters with them: a book with dialogue.
+            let n = await Task.detached { () -> Int in
+                var count = 0
+                for s in UInt32(0) ..< 12 { count += ((try? core.sectionScript(bookId: bookID, section: s))?.lines.count) ?? 0; if count >= 6 { break } }
+                return count
+            }.value
+            self?.hasDialogue = n >= 6
+        }
         rebuildObserver = NotificationCenter.default.addObserver(forName: .bookWillRebuild, object: nil, queue: nil) { [weak self] n in
             let id = n.object as? String
             MainActor.assumeIsolated {
@@ -284,6 +310,7 @@ final class ReaderModel {
         setListening(false)
         watching.forEach { $0.cancel() }
         rebuildObserver.map(NotificationCenter.default.removeObserver)
+        castObserver.map(NotificationCenter.default.removeObserver)
         rebuildObserver = nil
     }
 
@@ -747,6 +774,7 @@ extension Paper {
         case .dark: .dark
         case .kami: .kami
         case .kamiNight: .kaminight
+        case .sage: .sage
         case .eink: .eink
         }
     }
@@ -757,6 +785,7 @@ extension Paper {
         case "dark": self = .dark
         case "kami": self = .kami
         case "kaminight": self = .kamiNight
+        case "sage": self = .sage
         case "eink": self = .eink
         default: return nil
         }

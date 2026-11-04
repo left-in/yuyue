@@ -3,7 +3,7 @@ import YuyueCore
 
 /// What the floating panel on the right of the Mac window shows.
 enum ReaderPanel: String {
-    case toc, notes, search, companion
+    case toc, notes, search, companion, cast
 }
 
 /// Text selected on the page: where, and the lines it covers (in the pager's coordinates).

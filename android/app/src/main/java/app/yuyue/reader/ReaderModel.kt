@@ -90,6 +90,24 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         it.narrator = library.recordings.voice(bookID)
     }
     var listenShown by mutableStateOf(false)
+    /** 人物 (R2): the cast page. */
+    var castShown by mutableStateOf(false)
+    private var bubblesState = mutableStateOf(runCatching { core.bookBubbles(bookID) }.getOrDefault(false))
+    /** 气泡模式: the dialogue as bubbles, kept per book (synced). */
+    var bubbles: Boolean
+        get() = bubblesState.value
+        set(v) {
+            if (v == bubblesState.value) return
+            bubblesState.value = v
+            pager.bubbles = v
+            runCatching { core.setBookBubbles(bookID, v) }
+        }
+    /** Enough dialogue for 气泡 and 人物: books without (essays, papers) don't offer them. */
+    var hasDialogue by mutableStateOf(false)
+        private set
+
+    /** Someone's voice or side changed: the bubbles are drawn again. */
+    fun castChanged() = pager.bubblesChanged()
     var immersiveShown by mutableStateOf(false)
     var infoShown by mutableStateOf(false)
     var rulesShown by mutableStateOf(false)
@@ -131,6 +149,19 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         pager.fontSize = s.fontSize
         pager.mode = s.mode
         pager.calm = s.paper == Paper.EINK
+        pager.bubbles = bubbles
+        // A few quotes in the first chapters: a book with dialogue.
+        kotlinx.coroutines.MainScope().launch {
+            val n = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                var count = 0
+                for (sec in 0u until 12u) {
+                    count += runCatching { core.sectionScript(bookID, sec) }.getOrNull()?.lines?.size ?: 0
+                    if (count >= 6) break
+                }
+                count
+            }
+            hasDialogue = n >= 6
+        }
         Prefs.string(STYLE_KEY).let { saved -> MarkStyle.entries.firstOrNull { it.name == saved }?.let { lastStyle = it } }
         reloadNotes()
         // 我的 › 沉浸阅读 on: every book opens with only its words.
@@ -442,7 +473,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         val p = settings.paper
         val night = p == Paper.DARK || p == Paper.KAMI_NIGHT
         val made = uniffi.yuyue_core.paperPalette(night).swatches
-        val start = if (night) made[0] else made[when (p) { Paper.KAMI -> 1; Paper.EINK -> 5; else -> 0 }]
+        val start = if (night) made[0] else made[when (p) { Paper.KAMI -> 1; Paper.SAGE -> 2; Paper.EINK -> 5; else -> 0 }]
         return uniffi.yuyue_core.CustomPaper("", "", start.color, null,
             if (p == Paper.PLAIN || p == Paper.DARK) Paper.PLAIN else Paper.KAMI,
             if (p == Paper.EINK) uniffi.yuyue_core.PaperTexture.GRAIN else uniffi.yuyue_core.PaperTexture.NONE)
@@ -764,7 +795,7 @@ val MarkStyle.css: String
 
 /** The reader's `applySettings` for these settings (contract §4). */
 fun ReaderSettings.script(g: uniffi.yuyue_core.PageGeometry): JSONObject = JSONObject().apply {
-    put("paper", when (paper) { Paper.PLAIN -> "plain"; Paper.DARK -> "dark"; Paper.KAMI -> "kami"; Paper.KAMI_NIGHT -> "kaminight"; Paper.EINK -> "eink" })
+    put("paper", when (paper) { Paper.PLAIN -> "plain"; Paper.DARK -> "dark"; Paper.KAMI -> "kami"; Paper.KAMI_NIGHT -> "kaminight"; Paper.SAGE -> "sage"; Paper.EINK -> "eink" })
     val mine = Papers.paper(customPaper)
     put("paperStyle", mine?.let { uniffi.yuyue_core.paperStyle(it) } ?: JSONObject.NULL)
     put("texture", mine?.texture?.css ?: JSONObject.NULL)

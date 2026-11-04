@@ -122,5 +122,18 @@
   "书": "Books",
   "往上挪": "Move Up",
   "往下挪": "Move Down",
-  "移除": "Remove"
+  "移除": "Remove",
+  "%@ 句": "%@ lines",
+  "%@ 人": "%@ people",
+  "%@ 人单独设": "%@ with own voice",
+  "存下…": "Saving…",
+  "导入的声音": "Imported voice",
+  "读到这里共 %@ 人": "%@ people so far",
+  "高低 %@": "Pitch %@",
+  "快慢 %@×": "Pace %@×",
+  "录音存在这台设备上，克隆时会传到你自己的 ElevenLabs 账号。": "The recording stays on this device; cloning sends it to your own ElevenLabs account.",
+  "录音只存在这台设备上。": "The recording stays on this device.",
+  "语阅没有用麦克风的权限。在系统设置里给语阅打开麦克风。": "Yuyue can't use the microphone. Allow it in system settings.",
+  "长度 %@ 秒": "%@ seconds long",
+  "只有 %@ 秒": "Only %@ seconds"
 }

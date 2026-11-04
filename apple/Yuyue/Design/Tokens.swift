@@ -143,7 +143,7 @@ public struct YYTint: Sendable, Hashable, Identifiable {
     /// Accent drawn on light papers (素白、纸本) and on dark papers (暗黑、纸本 · 夜).
     public let paperAccentLight: Color
     public let paperAccentDark: Color
-    public let playPlain: Color, playKami: Color, playDark: Color, playKaminight: Color
+    public let playPlain: Color, playKami: Color, playDark: Color, playKaminight: Color, playSage: Color
 
     /// The play button colour on a paper. The e-ink paper keeps its own.
     public func play(on paper: YYPaper) -> Color {
@@ -152,6 +152,7 @@ public struct YYTint: Sendable, Hashable, Identifiable {
         case "kami": return playKami
         case "dark": return playDark
         case "kaminight": return playKaminight
+        case "sage": return playSage
         default: return paper.main
         }
     }
@@ -171,7 +172,8 @@ public struct YYTint: Sendable, Hashable, Identifiable {
         playPlain: Color(yy: YYRGBA(43, 76, 126)),
         playKami: Color(yy: YYRGBA(27, 54, 93)),
         playDark: Color(yy: YYRGBA(143, 168, 200)),
-        playKaminight: Color(yy: YYRGBA(143, 168, 200))
+        playKaminight: Color(yy: YYRGBA(143, 168, 200)),
+        playSage: Color(yy: YYRGBA(43, 76, 126))
     )
     public static let ink = YYTint(
         id: "ink",
@@ -188,7 +190,8 @@ public struct YYTint: Sendable, Hashable, Identifiable {
         playPlain: Color(yy: YYRGBA(16, 18, 20)),
         playKami: Color(yy: YYRGBA(27, 54, 93)),
         playDark: Color(yy: YYRGBA(214, 214, 216)),
-        playKaminight: Color(yy: YYRGBA(143, 168, 200))
+        playKaminight: Color(yy: YYRGBA(143, 168, 200)),
+        playSage: Color(yy: YYRGBA(16, 18, 20))
     )
     public static let all: [YYTint] = [.blue, .ink]
     /// The tint chosen in 设置 · 外观 (`appearance.tint`), or the default.
@@ -278,8 +281,17 @@ public struct YYPaper: Sendable, Hashable, Identifiable {
         title: YYPaperTitle(font: .serif, sizePx: 25, weight: 700, lineHeight: 1.4, letterSpacingEm: 0.05, rule: true),
         meta: YYPaperMeta(font: .serif, sizePx: 10.5, border: false, letterSpacingEm: 0.06, marginTopPx: 0, paddingBottomPx: 4)
     )
+    public static let sage = YYPaper(
+        id: "sage", name: "鼠尾草", isDark: false, hasNoiseTexture: false,
+        bg: Color(yy: YYRGBA(230, 231, 220)), ink: Color(yy: YYRGBA(42, 44, 36)), ink2: Color(yy: YYRGBA(99, 102, 90)), line: Color(yy: YYRGBA(211, 213, 198)), accent: Color(yy: YYRGBA(42, 44, 36)),
+        hl: Color(yy: YYRGBA(243, 227, 164)), wave: Color(yy: YYRGBA(201, 96, 79)), glass: Color(yy: YYRGBA(234, 235, 225, 0.84)), main: Color(yy: YYRGBA(43, 76, 126)), onMain: Color(yy: YYRGBA(255, 255, 255)),
+        paperAccent: Color(yy: YYRGBA(43, 76, 126)),
+        text: YYPaperText(font: .serif, lineHeight: 2.05, paragraphSpacingEm: 0.3, indentEm: 2, justify: true, letterSpacingEm: 0.01, sizePx: 14.5),
+        title: YYPaperTitle(font: .serif, sizePx: 25, weight: 700, lineHeight: 1.4, letterSpacingEm: 0.05, rule: true),
+        meta: YYPaperMeta(font: .serif, sizePx: 10.5, border: false, letterSpacingEm: 0.06, marginTopPx: 0, paddingBottomPx: 4)
+    )
     public static let eink = YYPaper(
-        id: "eink", name: "墨水屏", isDark: false, hasNoiseTexture: true,
+        id: "eink", name: "铅印", isDark: false, hasNoiseTexture: true,
         bg: Color(yy: YYRGBA(233, 232, 227)), ink: Color(yy: YYRGBA(20, 20, 20)), ink2: Color(yy: YYRGBA(85, 85, 85)), line: Color(yy: YYRGBA(201, 200, 194)), accent: Color(yy: YYRGBA(20, 20, 20)),
         hl: Color(yy: YYRGBA(0, 0, 0, 0)), wave: Color(yy: YYRGBA(20, 20, 20)), glass: Color(yy: YYRGBA(233, 232, 227)), main: Color(yy: YYRGBA(20, 20, 20)), onMain: Color(yy: YYRGBA(233, 232, 227)),
         paperAccent: Color(yy: YYRGBA(20, 20, 20)),
@@ -287,7 +299,7 @@ public struct YYPaper: Sendable, Hashable, Identifiable {
         title: YYPaperTitle(font: .serif, sizePx: 24, weight: 700, lineHeight: 1.4, letterSpacingEm: 0.05, rule: false),
         meta: YYPaperMeta(font: .sans, sizePx: 10.5, border: true, letterSpacingEm: 0, marginTopPx: 10, paddingBottomPx: 14)
     )
-    public static let all: [YYPaper] = [.plain, .dark, .kami, .kaminight, .eink]
+    public static let all: [YYPaper] = [.plain, .dark, .kami, .kaminight, .sage, .eink]
 }
 
 /// English body text replaces the paper's font, line height, letter spacing, alignment and size.

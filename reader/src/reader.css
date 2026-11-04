@@ -25,7 +25,7 @@ html {
   --yy-p-title-font-en: var(--yy-sans);
   --yy-colh: calc(var(--yy-ph, 100vh) - var(--yy-top) - var(--yy-bottom));
 }
-html[data-yy-paper="kami"], html[data-yy-paper="kaminight"], html[data-yy-paper="eink"] {
+html[data-yy-paper="kami"], html[data-yy-paper="kaminight"], html[data-yy-paper="sage"], html[data-yy-paper="eink"] {
   --yy-p-title-font-en: var(--yy-latin-serif);
 }
 /* 纹理 on 我的纸, drawn over its colour (core paper.rs). */
@@ -605,3 +605,58 @@ html[data-yy-paper="dark"], html[data-yy-paper="kaminight"] {
 }
 #yy-content p.yy-pod-line.yy-pod-first { margin-top: .9em !important; }
 html[data-yy-paper="eink"] #yy-content p.yy-pod-line { background: transparent; box-shadow: 0 0 0 1px #141414; }
+
+/* 气泡模式 (docs/design/听书-气泡与有声书.html · B1–B3): narration stays a paragraph, each quote a
+   bubble with whoever says it. Each speaker's colour --yy-c is mixed with the paper, so changing
+   paper needs nothing else; 墨水屏 only draws lines. */
+#yy-content .yy-bq {
+  display: flex;
+  gap: .5em;
+  align-items: flex-start;
+  margin: .15em 0 .7em;
+  break-inside: avoid;
+  text-indent: 0;
+}
+#yy-content .yy-bq.yy-bq-r { flex-direction: row-reverse; }
+#yy-content .yy-bq.yy-bq-cont { margin-top: -.35em; }
+#yy-content .yy-bq-av {
+  flex: none;
+  width: 1.75em;
+  height: 1.75em;
+  margin-top: 1.1em;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font: 600 .78em/1 var(--yy-sans, system-ui);
+  background: color-mix(in srgb, var(--yy-c) 26%, var(--yy-p-bg));
+  color: color-mix(in srgb, var(--yy-c) 80%, var(--yy-p-ink));
+  -webkit-user-select: none;
+  user-select: none;
+}
+#yy-content .yy-bq-cont .yy-bq-av { visibility: hidden; margin-top: 0; }
+#yy-content .yy-bq-bx { max-width: 82%; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: .2em; }
+#yy-content .yy-bq-r .yy-bq-bx { align-items: flex-end; }
+#yy-content .yy-bq-nm {
+  font-family: var(--yy-sans, system-ui);
+  font-size: .72em;
+  line-height: 1.4;
+  color: var(--yy-p-ink-2);
+  padding: 0 .25em;
+}
+#yy-content .yy-bq-nm b { font-weight: 600; color: color-mix(in srgb, var(--yy-c) 75%, var(--yy-p-ink)); margin-right: .2em; }
+#yy-content .yy-bq-bu {
+  padding: .4em .8em;
+  border-radius: .2em 1em 1em 1em;
+  background: color-mix(in srgb, var(--yy-c) 13%, var(--yy-p-bg));
+  line-height: 1.75;
+  text-align: left;
+}
+#yy-content .yy-bq-r .yy-bq-bu { border-radius: 1em .2em 1em 1em; }
+#yy-content .yy-bq-unk .yy-bq-av { background: color-mix(in srgb, var(--yy-p-ink) 7%, var(--yy-p-bg)); color: var(--yy-p-ink-2); }
+#yy-content .yy-bq-unk .yy-bq-nm b { color: var(--yy-p-ink-2); font-weight: 500; }
+#yy-content .yy-bq-unk .yy-bq-bu { background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--yy-p-ink) 22%, transparent); }
+html[data-yy-bubbles] #yy-content p.yy-bn { text-indent: 0; }
+html[data-yy-paper="eink"] #yy-content .yy-bq-av { background: none; color: #141414; box-shadow: inset 0 0 0 1px #141414; }
+html[data-yy-paper="eink"] #yy-content .yy-bq-nm b { color: #141414; }
+html[data-yy-paper="eink"] #yy-content .yy-bq-bu { background: none; box-shadow: inset 0 0 0 1px #141414; }
+html[data-yy-paper="eink"] #yy-content .yy-bq-unk .yy-bq-bu { box-shadow: none; border: 1px dashed #555; }

@@ -407,6 +407,9 @@ struct MacReaderView: View {
                 }
             }
             tool(String(localized: "书伴"), "sparkle", help: String(localized: "书伴"), on: panel == .companion) { panel = panel == .companion ? nil : .companion }
+            if model.hasDialogue {
+                tool(String(localized: "人物"), "person.2", help: String(localized: "人物：谁说了话，各用什么声音"), on: panel == .cast) { panel = panel == .cast ? nil : .cast }
+            }
             tool(String(localized: "笔记"), "sidebar.right", help: String(localized: "笔记栏 ⌘⌥N"), on: panel == .notes) { panel = panel == .notes ? nil : .notes }
         }
         .padding(.horizontal, 3)
@@ -699,6 +702,7 @@ struct MacReaderView: View {
             case .notes: NotesPanel(model: model) { thought = $0 }
             case .search: SearchPanel(model: model)
             case .companion: CompanionPanel(model: model)
+            case .cast: CastPanel(model: model)
             }
         }
         .frame(maxHeight: .infinity, alignment: .top)

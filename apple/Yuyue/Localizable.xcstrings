@@ -968,6 +968,36 @@
         }
       }
     },
+    "%@在用" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ uses it"
+          }
+        }
+      }
+    },
+    "%@的一句 · 点一下试听" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A line of %@'s · tap to hear"
+          }
+        }
+      }
+    },
+    "%@的声音" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@'s Voice"
+          }
+        }
+      }
+    },
     "%@读完 %lld 本" : {
       "localizations" : {
         "en" : {
@@ -1168,6 +1198,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld added to the library"
+          }
+        }
+      }
+    },
+    "%lld 人" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld people"
+          }
+        }
+      }
+    },
+    "%lld 人单独设" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld with own voice"
           }
         }
       }
@@ -2196,6 +2246,16 @@
     },
     "%llu 个词条" : {},
     "%u" : {},
+    "%u 句" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%u lines"
+          }
+        }
+      }
+    },
     "%u 本" : {
       "localizations" : {
         "en" : {
@@ -2306,6 +2366,17 @@
       }
     },
     "⌘K" : {},
+    "✓" : {},
+    "✓ 8 秒够用了；多录到 30 秒更像。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "✓ 8 seconds is enough; up to 30 sounds more like you."
+          }
+        }
+      }
+    },
     "1 – %lld 月" : {
       "localizations" : {
         "en" : {
@@ -2327,6 +2398,16 @@
       }
     },
     "5 分钟" : {},
+    "8 秒就够，30 秒更像。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "8 seconds is enough; 30 sounds more like you."
+          }
+        }
+      }
+    },
     "10 分钟" : {},
     "15 分钟" : {
       "localizations" : {
@@ -2509,6 +2590,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CSV Spreadsheet…"
+          }
+        }
+      }
+    },
+    "ElevenLabs 没有给回声音" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ElevenLabs didn't send back a voice"
           }
         }
       }
@@ -3640,6 +3731,7 @@
       }
     },
     "书架是空的" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3782,6 +3874,16 @@
         }
       }
     },
+    "云端" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cloud"
+          }
+        }
+      }
+    },
     "云端 · 读过的存在本机" : {
       "localizations" : {
         "en" : {
@@ -3828,6 +3930,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Linen"
+          }
+        }
+      }
+    },
+    "人物" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Characters"
+          }
+        }
+      }
+    },
+    "人物：谁说了话，各用什么声音" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Characters: who speaks, and in which voice"
+          }
+        }
+      }
+    },
+    "人物声音" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Character Voices"
           }
         }
       }
@@ -4231,7 +4363,16 @@
       }
     },
     "做产品的，好奇心重，爱打比方" : {},
-    "停下" : {},
+    "停下" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        }
+      }
+    },
     "停下了 · " : {
       "localizations" : {
         "en" : {
@@ -4353,6 +4494,46 @@
         }
       }
     },
+    "先放着" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Now"
+          }
+        }
+      }
+    },
+    "克隆" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cloned"
+          }
+        }
+      }
+    },
+    "克隆 · 还不能念，先用旁白的" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cloned · can't read yet; the narrator reads for now"
+          }
+        }
+      }
+    },
+    "克隆一个声音" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clone a Voice"
+          }
+        }
+      }
+    },
     "免费，没有服务器，不收集任何数据。" : {
       "localizations" : {
         "en" : {
@@ -4403,12 +4584,32 @@
         }
       }
     },
+    "全书（旁白）" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Whole Book (Narrator)"
+          }
+        }
+      }
+    },
     "全书还剩 %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ left in book"
+          }
+        }
+      }
+    },
+    "全书默认" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Book default"
           }
         }
       }
@@ -4702,6 +4903,16 @@
         }
       }
     },
+    "关着时，听完 30 天的节目自动清掉；划过线、加过书签的留着" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When off, episodes played more than 30 days ago are cleared; ones with highlights or bookmarks stay"
+          }
+        }
+      }
+    },
     "关闭" : {
       "localizations" : {
         "en" : {
@@ -4793,6 +5004,16 @@
       }
     },
     "最新" : {},
+    "最爱" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorites"
+          }
+        }
+      }
+    },
     "最近用过" : {
       "localizations" : {
         "en" : {
@@ -4824,6 +5045,16 @@
       }
     },
     "写了二十年代码，说话慢，讲清楚来龙去脉" : {},
+    "写作" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Writing"
+          }
+        }
+      }
+    },
     "写好要查找的字，这里马上显示改前改后" : {
       "localizations" : {
         "en" : {
@@ -5087,6 +5318,26 @@
         }
       }
     },
+    "删掉了 %lld 条规则" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removed %lld rules"
+          }
+        }
+      }
+    },
+    "删掉了“%@ → %@”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removed “%1$@ → %2$@”"
+          }
+        }
+      }
+    },
     "删掉想法" : {
       "localizations" : {
         "en" : {
@@ -5221,6 +5472,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Forward 30 seconds"
+          }
+        }
+      }
+    },
+    "前面出场过" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Earlier"
           }
         }
       }
@@ -5403,6 +5664,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Coming soon"
+          }
+        }
+      }
+    },
+    "历史" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "History"
           }
         }
       }
@@ -5781,6 +6052,16 @@
         }
       }
     },
+    "只有 %lld 秒" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only %lld seconds"
+          }
+        }
+      }
+    },
     "只标生词本里的词" : {
       "localizations" : {
         "en" : {
@@ -5907,6 +6188,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "May spoil"
+          }
+        }
+      }
+    },
+    "右边" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Right"
           }
         }
       }
@@ -6313,6 +6604,26 @@
         }
       }
     },
+    "听过的节目一直保留" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep Played Episodes"
+          }
+        }
+      }
+    },
+    "听过的节目都留着" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Played episodes are all kept"
+          }
+        }
+      }
+    },
     "听这两句" : {},
     "周" : {
       "localizations" : {
@@ -6662,6 +6973,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show in Library"
+          }
+        }
+      }
+    },
+    "在全书速度上再快或慢一点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A little faster or slower than the book"
           }
         }
       }
@@ -7048,12 +7369,52 @@
         }
       }
     },
+    "声音、气泡放哪边" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voices, bubble sides"
+          }
+        }
+      }
+    },
+    "声音太大，有的地方破了" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Too loud; some of it is clipped"
+          }
+        }
+      }
+    },
     "声音数据读不出来" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The audio couldn't be read"
+          }
+        }
+      }
+    },
+    "声音有点小" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A little quiet"
+          }
+        }
+      }
+    },
+    "声音高一点或低一点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A little higher or lower"
           }
         }
       }
@@ -7109,6 +7470,16 @@
       }
     },
     "多一点少一点" : {},
+    "多念几句，8 秒以上更像" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read a little more; over 8 seconds sounds more like you"
+          }
+        }
+      }
+    },
     "多讲一点第一条" : {},
     "多讲开源工具，少讲融资" : {},
     "夜里" : {
@@ -7137,6 +7508,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "好，按新的顺序重写。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK, rewriting it in the new order."
           }
         }
       }
@@ -7212,6 +7593,36 @@
         }
       }
     },
+    "存下" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        }
+      }
+    },
+    "存下了，只在这台设备上。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved, on this device only."
+          }
+        }
+      }
+    },
+    "存下了。要在设置里接上 ElevenLabs 才能用它念；在那之前，用它的人物先用旁白的声音。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved. It can read once ElevenLabs is connected in Settings; until then, characters using it read in the narrator's voice."
+          }
+        }
+      }
+    },
     "存下的回答" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -7279,6 +7690,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Save Image"
+          }
+        }
+      }
+    },
+    "孩子" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kids"
           }
         }
       }
@@ -7483,7 +7904,6 @@
         }
       }
     },
-    "导入 EPUB、PDF、MOBI、TXT 就能开始读" : {},
     "导入 MDict 词典" : {
       "localizations" : {
         "en" : {
@@ -7510,6 +7930,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import…"
+          }
+        }
+      }
+    },
+    "导入一段录音" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import a Recording"
           }
         }
       }
@@ -7553,6 +7983,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Imported %lld"
+          }
+        }
+      }
+    },
+    "导入别人的录音时一定要勾" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Required when importing someone else's recording"
           }
         }
       }
@@ -7859,6 +8299,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Page turn"
+          }
+        }
+      }
+    },
+    "左边" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left"
           }
         }
       }
@@ -8358,6 +8808,26 @@
         }
       }
     },
+    "录一段" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record"
+          }
+        }
+      }
+    },
+    "录的是别人时也要勾" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Also required when recording someone else"
+          }
+        }
+      }
+    },
     "录音" : {
       "localizations" : {
         "en" : {
@@ -8368,12 +8838,42 @@
         }
       }
     },
+    "录音只存在这台设备上。点右上角“存下”后，问你用在哪。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The recording stays on this device. After Save, you choose where to use it."
+          }
+        }
+      }
+    },
+    "录音存在这台设备上，克隆时会传到你自己的 ElevenLabs 账号。点右上角“存下”后，问你用在哪。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The recording stays on this device; cloning sends it to your own ElevenLabs account. After Save, you choose where to use it."
+          }
+        }
+      }
+    },
     "录音开头是出品方的介绍，书里没有。听的时候从正文开始。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The recording opens with a publisher's intro that isn't in the book. Playback starts at the text."
+          }
+        }
+      }
+    },
+    "录音读不出来" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can't read the recording"
           }
         }
       }
@@ -8394,6 +8894,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Used when the recording is missing a part; it's read with your chosen voice instead."
+          }
+        }
+      }
+    },
+    "往上挪" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move Up"
+          }
+        }
+      }
+    },
+    "往下挪" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move Down"
           }
         }
       }
@@ -8479,6 +8999,16 @@
       }
     },
     "快好了" : {},
+    "快慢" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pace"
+          }
+        }
+      }
+    },
     "快照存在“文件”App 的“语阅”文件夹里。" : {
       "localizations" : {
         "en" : {
@@ -8586,6 +9116,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Me"
+          }
+        }
+      }
+    },
+    "我的声音" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Voices"
           }
         }
       }
@@ -8933,6 +9473,16 @@
         }
       }
     },
+    "按名字自动选" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick by Name"
+          }
+        }
+      }
+    },
     "按时间" : {
       "localizations" : {
         "en" : {
@@ -9040,6 +9590,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Try different words"
+          }
+        }
+      }
+    },
+    "换图标" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Icon"
           }
         }
       }
@@ -9192,6 +9752,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continue"
+          }
+        }
+      }
+    },
+    "推理" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mystery"
           }
         }
       }
@@ -9425,6 +9995,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "What changes"
+          }
+        }
+      }
+    },
+    "改回跟旁白" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back to Narrator"
           }
         }
       }
@@ -9667,6 +10247,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Square"
+          }
+        }
+      }
+    },
+    "旁白" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Narrator"
+          }
+        }
+      }
+    },
+    "旁白的声音" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Narrator's Voice"
           }
         }
       }
@@ -10909,6 +11509,16 @@
         }
       }
     },
+    "正文" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text"
+          }
+        }
+      }
+    },
     "段距" : {
       "localizations" : {
         "en" : {
@@ -11051,6 +11661,36 @@
         }
       }
     },
+    "比如：小林" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. Lin"
+          }
+        }
+      }
+    },
+    "气泡" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bubbles"
+          }
+        }
+      }
+    },
+    "气泡放在" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bubbles on"
+          }
+        }
+      }
+    },
     "沉浸阅读" : {
       "localizations" : {
         "en" : {
@@ -11072,6 +11712,16 @@
       }
     },
     "没写成" : {},
+    "没单独设声音的人物也用这个" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Also for characters without a voice of their own"
+          }
+        }
+      }
+    },
     "没发出去" : {
       "localizations" : {
         "en" : {
@@ -11088,6 +11738,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Didn't sync"
+          }
+        }
+      }
+    },
+    "没存下" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Saved"
           }
         }
       }
@@ -11427,6 +12087,7 @@
       }
     },
     "没能导入" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -11704,12 +12365,32 @@
         }
       }
     },
+    "点一下开始录" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to record"
+          }
+        }
+      }
+    },
     "点一下放进这个合集" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tap to add to this collection"
+          }
+        }
+      }
+    },
+    "点一个人：声音、快慢高低、气泡放左边还是右边。改了从下一段起生效，跟着同步到你的其他设备。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap someone for their voice, pace, pitch and bubble side. Changes apply from the next passage and sync to your other devices."
           }
         }
       }
@@ -11805,6 +12486,26 @@
         }
       }
     },
+    "照平常读书的样子念，不用念完。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read as you normally would; no need to finish."
+          }
+        }
+      }
+    },
+    "照着念一小段，或者导入一段录音" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read a short passage, or import a recording"
+          }
+        }
+      }
+    },
     "父亲说：“事已如此，不必难过，" : {
       "localizations" : {
         "en" : {
@@ -11868,6 +12569,22 @@
       }
     },
     "现在写一集" : {},
+    "现在旁白是%@，旁白换了%@也跟着换" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "现在旁白是%1$@，旁白换了%2$@也跟着换"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The narrator is %@ now; %@ follows if the narrator changes"
+          }
+        }
+      }
+    },
     "现在清掉" : {
       "localizations" : {
         "en" : {
@@ -12050,6 +12767,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Back to Automatic"
+          }
+        }
+      }
+    },
+    "用在哪" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use It For"
           }
         }
       }
@@ -12457,6 +13184,16 @@
         }
       }
     },
+    "睡前" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedtime"
+          }
+        }
+      }
+    },
     "睡前自动停止" : {
       "localizations" : {
         "en" : {
@@ -12518,6 +13255,16 @@
         }
       }
     },
+    "离手机近一点，或者大声一点" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move closer, or speak up"
+          }
+        }
+      }
+    },
     "离线" : {
       "localizations" : {
         "en" : {
@@ -12538,7 +13285,37 @@
         }
       }
     },
+    "离远一点再录" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move back a little and record again"
+          }
+        }
+      }
+    },
+    "科幻" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sci-fi"
+          }
+        }
+      }
+    },
     "科技早报" : {},
+    "科普" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Science"
+          }
+        }
+      }
+    },
     "移除" : {
       "localizations" : {
         "en" : {
@@ -13498,6 +14275,26 @@
         }
       }
     },
+    "给%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For %@"
+          }
+        }
+      }
+    },
+    "给书里的人物换声音、调快慢高低" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Give the book's characters their own voice, pace and pitch"
+          }
+        }
+      }
+    },
     "给这一集起个名字" : {
       "localizations" : {
         "en" : {
@@ -13803,6 +14600,26 @@
         }
       }
     },
+    "背景很安静" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quiet background"
+          }
+        }
+      }
+    },
+    "背景有点吵" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A little noisy"
+          }
+        }
+      }
+    },
     "胶囊、播放条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃。" : {
       "localizations" : {
         "en" : {
@@ -13819,6 +14636,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Works · answered in %@ s"
+          }
+        }
+      }
+    },
+    "能用；换个安静的地方再录会更像" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usable; a quieter place will sound more like you"
           }
         }
       }
@@ -14332,12 +15159,42 @@
         }
       }
     },
+    "试听、起名字" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listen & Name"
+          }
+        }
+      }
+    },
+    "试听要等克隆好：现在克隆用你在设置里接的 ElevenLabs（录音会传到你自己的 ElevenLabs 账号）。没接也能先存下，接上后再用。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can listen once it's cloned. Cloning uses the ElevenLabs you connect in Settings (the recording goes to your own ElevenLabs account). You can save it now and use it after connecting."
+          }
+        }
+      }
+    },
     "试听这句" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Play This Sentence"
+          }
+        }
+      }
+    },
+    "诗词" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poetry"
           }
         }
       }
@@ -14468,6 +15325,16 @@
         }
       }
     },
+    "语阅没有用麦克风的权限。在系统设置的“隐私与安全性 › 麦克风”里打开。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yuyue can't use the microphone. Turn it on in System Settings › Privacy & Security › Microphone."
+          }
+        }
+      }
+    },
     "语阅生词 Anki.txt" : {
       "localizations" : {
         "en" : {
@@ -14549,6 +15416,7 @@
       }
     },
     "读 %u 分钟 · 听 %u 分钟" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -14675,6 +15543,7 @@
       }
     },
     "读到 %lld%%" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -14760,6 +15629,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You're here"
+          }
+        }
+      }
+    },
+    "读到这里 · %lld 人" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So far · %lld people"
+          }
+        }
+      }
+    },
+    "读到这里共 %lld 人" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld people so far"
+          }
+        }
+      }
+    },
+    "读到这里还没认出谁在说话。对话多的书读几章后，这里会列出说过话的人。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No one has been recognized speaking yet. In books with dialogue, the people who speak appear here after a few chapters."
           }
         }
       }
@@ -14972,6 +15871,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Book's own"
+          }
+        }
+      }
+    },
+    "跟旁白" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Narrator"
           }
         }
       }
@@ -15548,7 +16457,27 @@
         }
       }
     },
+    "这一集已经在写稿了，你说的赶不上这一稿。要按你说的重写吗？只重写稿子，摘要都留着，多花一两分钟。" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This episode's script is already being written, so your change missed it. Rewrite it your way? Only the script is redone and the summaries are kept; it takes a minute or two more."
+          }
+        }
+      }
+    },
     "这一集的标题" : {},
+    "这一章" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Chapter"
+          }
+        }
+      }
+    },
     "这一章讲了什么？" : {
       "localizations" : {
         "en" : {
@@ -15627,6 +16556,16 @@
       }
     },
     "这个 PDF 读不出来，文件可能坏了" : {},
+    "这个克隆的声音还不能念：要先在设置里接上 ElevenLabs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This cloned voice can't read yet: connect ElevenLabs in Settings first"
+          }
+        }
+      }
+    },
     "这个压缩包设了密码，打不开" : {
       "localizations" : {
         "en" : {
@@ -15911,6 +16850,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This week"
+          }
+        }
+      }
+    },
+    "这是我的声音，或者我得到了本人同意" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is my voice, or I have the person's consent"
           }
         }
       }
@@ -16298,7 +17247,18 @@
         }
       }
     },
+    "选 .mdx 文件。点词时从上往下查这里的词典，查不到再用系统的；右键一本可以挪先后、移除" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose .mdx files. Words are looked up in these dictionaries from the top down, then in the system's. Right-click one to move or remove it."
+          }
+        }
+      }
+    },
     "选 .mdx 文件。点词时先查这里的词典，查不到再用系统的；右键一本可以移除" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -16560,6 +17520,16 @@
         }
       }
     },
+    "都跟旁白" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All narrator"
+          }
+        }
+      }
+    },
     "配一档节目" : {},
     "配置" : {
       "extractionState" : "stale",
@@ -16592,6 +17562,16 @@
         }
       }
     },
+    "重写这一集" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rewrite This Episode"
+          }
+        }
+      }
+    },
     "重命名" : {
       "localizations" : {
         "en" : {
@@ -16608,6 +17588,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rename Collection"
+          }
+        }
+      }
+    },
+    "重录" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Re-record"
+          }
+        }
+      }
+    },
+    "重录一段试试" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try recording again"
           }
         }
       }
@@ -16632,6 +17632,16 @@
         }
       }
     },
+    "重来" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Over"
+          }
+        }
+      }
+    },
     "重试" : {
       "localizations" : {
         "en" : {
@@ -16652,12 +17662,33 @@
         }
       }
     },
+    "铅印" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letterpress"
+          }
+        }
+      }
+    },
     "链接" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Link"
+          }
+        }
+      }
+    },
+    "长度 %lld 秒" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld seconds long"
           }
         }
       }
@@ -16738,6 +17769,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ask about this book…"
+          }
+        }
+      }
+    },
+    "闲读" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leisure"
           }
         }
       }
@@ -16923,6 +17964,16 @@
         }
       }
     },
+    "音量合适" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good volume"
+          }
+        }
+      }
+    },
     "章" : {
       "localizations" : {
         "en" : {
@@ -17044,6 +18095,16 @@
       }
     },
     "首页热门" : {},
+    "高低" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pitch"
+          }
+        }
+      }
+    },
     "高级" : {
       "localizations" : {
         "en" : {
@@ -17126,232 +18187,13 @@
         }
       }
     },
-    "重写这一集" : {
+    "鼠尾草" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rewrite This Episode"
-          }
-        }
-      }
-    },
-    "这一集已经在写稿了，你说的赶不上这一稿。要按你说的重写吗？只重写稿子，摘要都留着，多花一两分钟。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This episode's script is already being written, so your change missed it. Rewrite it your way? Only the script is redone and the summaries are kept; it takes a minute or two more."
-          }
-        }
-      }
-    },
-    "好，按新的顺序重写。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK, rewriting it in the new order."
-          }
-        }
-      }
-    },
-    "听过的节目一直保留" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep Played Episodes"
-          }
-        }
-      }
-    },
-    "听过的节目都留着" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Played episodes are all kept"
-          }
-        }
-      }
-    },
-    "关着时，听完 30 天的节目自动清掉；划过线、加过书签的留着" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "When off, episodes played more than 30 days ago are cleared; ones with highlights or bookmarks stay"
-          }
-        }
-      }
-    },
-    "删掉了“%@ → %@”" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Removed “%1$@ → %2$@”"
-          }
-        }
-      }
-    },
-    "删掉了 %lld 条规则" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Removed %lld rules"
-          }
-        }
-      }
-    },
-    "换图标" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change Icon"
-          }
-        }
-      }
-    },
-    "按名字自动选" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pick by Name"
-          }
-        }
-      }
-    },
-    "睡前" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bedtime"
-          }
-        }
-      }
-    },
-    "科幻" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sci-fi"
-          }
-        }
-      }
-    },
-    "闲读" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leisure"
-          }
-        }
-      }
-    },
-    "推理" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mystery"
-          }
-        }
-      }
-    },
-    "诗词" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Poetry"
-          }
-        }
-      }
-    },
-    "孩子" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kids"
-          }
-        }
-      }
-    },
-    "最爱" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favorites"
-          }
-        }
-      }
-    },
-    "历史" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "History"
-          }
-        }
-      }
-    },
-    "科普" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Science"
-          }
-        }
-      }
-    },
-    "写作" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Writing"
-          }
-        }
-      }
-    },
-    "往上挪" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Move Up"
-          }
-        }
-      }
-    },
-    "往下挪" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Move Down"
-          }
-        }
-      }
-    },
-    "选 .mdx 文件。点词时从上往下查这里的词典，查不到再用系统的；右键一本可以挪先后、移除" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose .mdx files. Words are looked up in these dictionaries from the top down, then in the system's. Right-click one to move or remove it."
+            "value" : "Sage"
           }
         }
       }

@@ -399,6 +399,8 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
             "log" -> android.util.Log.d("yuyue-reader", m.json.optString("level") + " " + m.json.optString("message"))
             "ready", "layout" -> {
                 if (m.type == "ready") {
+                    // First: it rebuilds the section's boxes; the rest are drawn on them.
+                    if (bubbles) sendBubbles(page)
                     sendMarks(page)
                     sendHits(page)
                     sendSource(page)
@@ -441,6 +443,27 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
         val layout = cur.layout ?: return null
         val sentence = if (mode == LayoutMode.SCROLLED) scrolledTo ?: 0 else layout.firstSentence(cur.page)
         return Position(section.toUInt(), sentence.toUInt())
+    }
+
+    // MARK: 气泡模式
+
+    /** The book's dialogue as bubbles (docs/design/听书-气泡与有声书.html). */
+    var bubbles = false
+        set(v) { if (v != field) { field = v; slots.forEach(::sendBubbles) } }
+
+    fun bubblesChanged() {
+        if (bubbles) slots.forEach(::sendBubbles)
+    }
+
+    private fun sendBubbles(page: SectionPage) {
+        val section = page.section ?: return
+        if (!bubbles) return page.call("yy.setBubbles(null)")
+        val list = org.json.JSONArray()
+        for (l in runCatching { core.sectionBubbles(bookID, section.toUInt()) }.getOrDefault(emptyList())) {
+            list.put(org.json.JSONObject().put("first", l.first.toInt()).put("last", l.last.toInt()).put("start", l.start.toInt()).put("end", l.end.toInt())
+                .put("who", l.who ?: org.json.JSONObject.NULL).put("avatar", l.avatar).put("color", l.color).put("right", l.right))
+        }
+        page.call("yy.setBubbles($list)")
     }
 
     // MARK: Drawn in the text

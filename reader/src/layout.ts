@@ -29,6 +29,15 @@ let bySentence: HTMLElement[][] = [];
 export function initLayout(c: HTMLElement): void {
   root = document.documentElement;
   content = c;
+  reindex();
+  pagesEl = document.createElement('yy-pages');
+  pagesEl.setAttribute('aria-hidden', 'true');
+  root.appendChild(pagesEl);
+}
+
+/** Finds the sentences' fragments again, after the content was rebuilt (气泡). */
+export function reindex(): void {
+  const c = content;
   frags = Array.prototype.slice.call(c.querySelectorAll('.s'));
   fragS = frags.map((f) => parseInt(f.getAttribute('data-s') || '', 10));
   let max = -1;
@@ -40,9 +49,6 @@ export function initLayout(c: HTMLElement): void {
     const s = fragS[i];
     if (s >= 0) bySentence[s].push(f);
   });
-  pagesEl = document.createElement('yy-pages');
-  pagesEl.setAttribute('aria-hidden', 'true');
-  root.appendChild(pagesEl);
 }
 
 export function mode(): Mode {

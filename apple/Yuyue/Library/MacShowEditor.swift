@@ -19,38 +19,56 @@ struct MacShowEditor: View {
     private var draft: Binding<ShowDraft> { $edit.draft }
 
     var body: some View {
-        HStack(spacing: 0) {
-            VStack(spacing: 0) {
+        // 配节目-排版.html · 重排后: the two columns, and under both one bar for 取消 / 建好了.
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 18) {
                         title
                         step(1, String(localized: "听什么")) { sources }
                         step(2, String(localized: "谁来讲")) { hosts }
                         step(3, String(localized: "什么时候、多长")) { when }
                     }
-                    .padding(24)
+                    // Room under step 3, so all of it shows above the bar.
+                    .padding(.horizontal, 24).padding(.top, 22).padding(.bottom, 24)
                 }
-                // Under the steps, not over them: a long list scrolls above 取消 / 建好了.
-                HStack(spacing: 10) {
-                    if let failure { Text(failure).font(.yy(size: 11.5)).foregroundStyle(YYColor.danger).lineLimit(2) }
-                    Spacer(minLength: 0)
-                    PodcastGlassButton(title: String(localized: "取消")) { close() }
-                    PodcastGlassButton(title: edit.id == nil ? String(localized: "建好了") : String(localized: "好了"), kind: .main) { save() }
-                }
-                .padding(.horizontal, 24).padding(.top, 12).padding(.bottom, 20)
+                .frame(width: 520)
+                Rectangle().fill(YYColor.line).frame(width: 0.5)
+                preview.frame(width: 300)
             }
-            .frame(width: 520)
-            Rectangle().fill(YYColor.line).frame(width: 0.5)
-            preview.frame(width: 300)
+            .frame(maxHeight: .infinity)
+            footer
         }
         .frame(height: 600)
         .background(YYColor.bg)
     }
 
+    /// `.mk2-ft`: a hairline over it, across both columns. Which model writes on the left; 取消
+    /// (only words) and 建好了 (the white capsule, in the theme's colour, ⌘↩) on the right.
+    private var footer: some View {
+        HStack(spacing: 10) {
+            if let failure {
+                Text(failure).font(.yy(size: 11)).foregroundStyle(YYColor.danger).lineLimit(1)
+            } else {
+                (Text("写稿用 ") + Text(CompanionConfig.current.label).foregroundStyle(YYColor.t2).fontWeight(.medium))
+                    .font(.yy(size: 11)).foregroundStyle(YYColor.t3).lineLimit(1).truncationMode(.tail)
+            }
+            Spacer(minLength: 8)
+            PodcastTextButton(title: String(localized: "取消")) { close() }
+                .keyboardShortcut(.cancelAction)
+            PodcastGlassButton(title: edit.id == nil ? String(localized: "建好了") : String(localized: "好了"), kind: .main, flat: true, key: "⌘↩") { save() }
+                .keyboardShortcut(.return, modifiers: .command)
+        }
+        .padding(.leading, 24).padding(.trailing, 20)
+        .frame(height: 56)
+        .background(YYColor.bg)
+        .overlay(alignment: .top) { Rectangle().fill(YYColor.line).frame(height: 0.5) }
+    }
+
     private var title: some View {
         HStack(spacing: 10) {
             TextField(String(localized: "节目名"), text: draft.name)
-                .textFieldStyle(.plain).font(.yy(size: 20, weight: .bold)).foregroundStyle(YYColor.t1)
+                .textFieldStyle(.plain).font(.yy(size: 19, weight: .bold)).foregroundStyle(YYColor.t1)
                 .focusEffectDisabled()
                 .fixedSize()
             if edit.id == nil {
@@ -69,11 +87,11 @@ struct MacShowEditor: View {
     }
 
     private func step(_ n: Int, _ name: String, @ViewBuilder content: () -> some View) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 10) {
                 Text("\(n)").font(.yy(size: 11.5, weight: .bold)).foregroundStyle(YYColor.bg)
                     .frame(width: 22, height: 22).background(YYColor.t1, in: .circle)
-                Text(name).font(.yy(size: 13.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                Text(name).font(.yy(size: 13, weight: .semibold)).foregroundStyle(YYColor.t1)
             }
             content().padding(.leading, 32)
         }
@@ -251,7 +269,7 @@ struct MacShowEditor: View {
                 Text("这台 Mac 来写 · 模板已经替你定好").font(.yy(size: 11)).foregroundStyle(YYColor.t3)
             }
             Spacer()
-            PodcastGlassButton(title: String(localized: "更改")) { changingTime = true }
+            PodcastGlassButton(title: String(localized: "更改"), flat: true) { changingTime = true }
                 .popover(isPresented: $changingTime, arrowEdge: .bottom) { timePanel }
         }
         .padding(.horizontal, 14).padding(.vertical, 12)
@@ -319,21 +337,33 @@ struct MacShowEditor: View {
                 }
             }
             .padding(.top, 6)
-            Spacer()
-            HStack {
-                PodcastGlassButton(title: String(localized: "听这两句"), symbol: "headphones") {
+            // 听这两句, right under the two lines it reads, saying whose voices they are.
+            HStack(spacing: 10) {
+                PodcastGlassButton(title: String(localized: "听这两句"), symbol: "headphones", flat: true) {
                     let showID = edit.id ?? "new"
                     if let h = edit.draft.hosts.first, let v = HostVoices.voice(show: showID, host: h.name, index: 0, language: edit.draft.language) {
                         Voices.preview(v, text: String(localized: "早上好。先从一个有点反常识的事说起。"))
                     }
                 }
-                Spacer()
-                Text("写稿用 \(CompanionConfig.current.label)").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).multilineTextAlignment(.trailing).lineLimit(2).frame(maxWidth: 150, alignment: .trailing)
+                if !voiceNames.isEmpty {
+                    Text(String(localized: "用\(voiceNames)的声音")).font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).lineLimit(2)
+                }
             }
+            .padding(.top, 2)
+            Spacer()
         }
         .padding(20)
         .frame(maxHeight: .infinity)
         .background(Color(red: 0.96, green: 0.957, blue: 0.93).opacity(0.6))
+    }
+
+    /// 婷婷和 Eddy: the voices the hosts read with on this Mac.
+    private var voiceNames: String {
+        let showID = edit.id ?? "new"
+        let names = edit.draft.hosts.enumerated().compactMap { i, h in
+            HostVoices.voice(show: showID, host: h.name, index: i, language: edit.draft.language)?.name
+        }
+        return names.joined(separator: String(localized: "和"))
     }
 
     private func save() {

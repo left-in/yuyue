@@ -116,6 +116,7 @@ paper default in the reader CSS: `auto` or an absent variable means "use the pap
 | `setHits(query, current)` | mark every place `query` turns up; `current` (`{s, nth}`) gets the solid colour; returns the count. `null` clears |
 | `clearSelection()` / `select(start, end)` | drop the text selection / select a range (a tapped highlight) |
 | `markRect(id)` | where a highlight is drawn on this page (`{x, y, width, height}` or null) |
+| `setBubbles(lines)` | 气泡模式: `lines` = core's `section_bubbles` (`[{first, last, start, end, who, avatar, color, right}]`; `start`/`end` in characters into sentence `first`). Each quote becomes `div.yy-bq` (avatar, a name line, the bubble); narration stays a paragraph (`.yy-bn`); short narration that only says who speaks (“宝钗因笑道：”) moves into the name line. Every sentence keeps its text and `data-s` (fragments split where a quote starts or ends), so ink, marks and taps are unchanged. A quote that runs out of its paragraph stays text. `null` puts the section back as it came. Re-lays out and keeps the first visible sentence |
 
 ## 5. Messages (reader → native)
 

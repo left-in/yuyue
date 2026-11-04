@@ -16,5 +16,8 @@
 	<!-- 用 OpenRouter 登录: its page sends the browser back to localhost (OpenRouterSignIn). -->
 	<key>com.apple.security.network.server</key>
 	<true/>
+	<!-- 克隆声音: 录一小段念书的声音。 -->
+	<key>com.apple.security.device.audio-input</key>
+	<true/>
 </dict>
 </plist>

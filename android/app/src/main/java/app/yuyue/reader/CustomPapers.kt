@@ -82,7 +82,7 @@ import uniffi.yuyue_core.paperPalette
 import uniffi.yuyue_core.paperStyle
 import kotlin.random.Random
 
-/** 我的纸, as on Apple: the papers the reader made, after the five presets. Their colours come
+/** 我的纸, as on Apple: the papers the reader made, after the six presets. Their colours come
  *  from the core, so every device draws the same page. */
 object Papers {
     var list by mutableStateOf<List<CustomPaper>>(emptyList())
@@ -177,7 +177,7 @@ fun hexColor(hex: String): Color {
 
 fun Color.hex(): String = String.format("#%06X", toArgb() and 0xFFFFFF)
 
-private val presets = listOf(Paper.PLAIN, Paper.DARK, Paper.KAMI, Paper.KAMI_NIGHT, Paper.EINK)
+private val presets = listOf(Paper.PLAIN, Paper.DARK, Paper.KAMI, Paper.KAMI_NIGHT, Paper.SAGE, Paper.EINK)
 
 /** The presets, then 我的纸 (long-press: 调整颜色、重命名、复制一张、删除), scrolling when there are
  *  too many; ＋ stays pinned at the right so making one is always in sight. */

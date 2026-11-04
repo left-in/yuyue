@@ -67,9 +67,12 @@ class SystemVoice(private val voice: Voice, number: Int = 0) : BookVoice {
 
     override fun speaks(tag: String) = SpokenLanguage.matches(voice.locale.toLanguageTag(), tag)
 
-    override suspend fun render(text: String, language: String): Speech? {
+    override suspend fun render(text: String, language: String): Speech? = render(text, language, 1f, 1f)
+
+    /** 分角色: one character a little faster or slower, higher or lower. */
+    suspend fun render(text: String, language: String, rate: Float, pitch: Float): Speech? {
         if (text.none { it.isLetterOrDigit() }) return null
-        return Engine.render(text, voice)
+        return Engine.render(text, voice, rate, pitch)
     }
 
     /** The one TextToSpeech the app keeps, and its voices. */
@@ -94,7 +97,7 @@ class SystemVoice(private val voice: Voice, number: Int = 0) : BookVoice {
                 .let { all -> all.mapIndexed { i, v -> SystemVoice(v, all.take(i).count { it.locale == v.locale }) } }
         }
 
-        suspend fun render(text: String, voice: Voice): Speech? = lock.withLock {
+        suspend fun render(text: String, voice: Voice, speechRate: Float = 1f, speechPitch: Float = 1f): Speech? = lock.withLock {
             if (!ready.await()) return null
             val engine = tts ?: return null
             val id = UUID.randomUUID().toString()
@@ -125,7 +128,8 @@ class SystemVoice(private val voice: Voice, number: Int = 0) : BookVoice {
                 }
             })
             engine.voice = voice
-            engine.setSpeechRate(1f)
+            engine.setSpeechRate(speechRate)
+            engine.setPitch(speechPitch)
             engine.synthesizeToFile(text, Bundle(), file, id)
             // A sentence that never finishes must not stall the book.
             val speech = withTimeoutOrNull(20_000L + text.length * 300L) { done.await() }
@@ -192,7 +196,11 @@ object Voices {
         SystemVoice.Engine.voices().filter { it.speaks(tag) }.sortedByDescending { it.isOffline } + CloudVoice.all().filter { it.speaks(tag) }
 
     suspend fun find(id: String): BookVoice? =
-        if (id.startsWith("cloud.")) CloudVoice.all().firstOrNull { it.id == id } else SystemVoice.Engine.voices().firstOrNull { it.id == id }
+        when {
+            id.startsWith("cloud.") -> CloudVoice.all().firstOrNull { it.id == id }
+            id.startsWith("cloned.") -> ClonedVoices.find(id)
+            else -> SystemVoice.Engine.voices().firstOrNull { it.id == id }
+        }
 
     /** The best voice for text in `tag`: offline, high quality, the language's main region first. */
     suspend fun best(tag: String): BookVoice? {

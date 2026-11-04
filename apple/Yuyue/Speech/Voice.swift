@@ -80,6 +80,7 @@ enum Voices {
 
     static func find(_ id: String) -> (any Voice)? {
         if id.hasPrefix("cloud.") { return CloudVoice.all().first { $0.id == id } }
+        if id.hasPrefix("cloned.") { return ClonedVoices.find(id) }
         return SystemVoice.all().first { $0.id == id }
     }
 

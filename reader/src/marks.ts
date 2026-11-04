@@ -239,6 +239,12 @@ function lineBoxes(r: Range): Box[] {
   return lines;
 }
 
+/** Draws the marks again from their places, after the content was rebuilt (气泡). */
+export function redraw(): void {
+  draw();
+  if (source != null) setSource(source);
+}
+
 export function setMarks(list: MarkSpec[] | null): void {
   marks = (list || []).filter((m) => m && m.start && m.end && STYLES.indexOf(m.style) >= 0);
   draw();

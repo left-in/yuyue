@@ -28,7 +28,7 @@ export interface Settings {
 type Kind = 'tri' | 'bool' | 'enum';
 
 const ATTRS: { [k: string]: { attr: string; kind: Kind; values?: string[]; def: string | null } } = {
-  paper: { attr: 'data-yy-paper', kind: 'enum', values: ['plain', 'dark', 'kami', 'kaminight', 'eink'], def: 'plain' },
+  paper: { attr: 'data-yy-paper', kind: 'enum', values: ['plain', 'dark', 'kami', 'kaminight', 'sage', 'eink'], def: 'plain' },
   mode: { attr: 'data-yy-mode', kind: 'enum', values: ['paginated', 'scrolled'], def: 'paginated' },
   paging: { attr: 'data-yy-paging', kind: 'enum', values: ['native', 'snap'], def: 'native' },
   justify: { attr: 'data-yy-justify', kind: 'tri', def: 'auto' },

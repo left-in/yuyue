@@ -14,6 +14,8 @@ struct PodcastGlassButton: View {
     var kind = Kind.plain
     /// No glass: the prototype's white capsule with a hairline (`.imp`), sitting on the paper.
     var flat = false
+    /// The key that presses it, written small after the title (配节目-排版.html: 建好了 ⌘↩).
+    var key: String?
     let action: () -> Void
     @Environment(\.colorScheme) private var scheme
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
@@ -28,9 +30,10 @@ struct PodcastGlassButton: View {
                 case .plain, .main: if let symbol { Image(systemName: symbol).font(.system(size: 8.5, weight: .bold)) }
                 }
                 Text(title).font(.yy(size: 11.5, weight: kind == .writing ? .regular : .semibold)).monospacedDigit().lineLimit(1)
+                if let key { Text(key).font(.yy(size: 10)).foregroundStyle(YYColor.t3).padding(.leading, -2) }
             }
             .foregroundStyle(kind == .playing || kind == .main ? tint.accent : kind == .writing ? YYColor.t2 : YYColor.t1)
-            .padding(.leading, 10).padding(.trailing, 12)
+            .padding(.leading, kind == .main && symbol == nil ? 16 : 10).padding(.trailing, kind == .main ? 16 : 12)
             .frame(height: 28)
             .background { if flat { paper } else { glass } }
             .contentShape(.capsule)
@@ -63,6 +66,26 @@ struct PodcastGlassButton: View {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label.scaleEffect(configuration.isPressed ? 0.96 : 1).opacity(configuration.isPressed ? 0.85 : 1)
         }
+    }
+}
+
+/// `.pb.t`: only words (取消) — a faint grey pad under the pointer.
+struct PodcastTextButton: View {
+    let title: String
+    let action: () -> Void
+    @State private var hovering = false
+
+    var body: some View {
+        Button(action: action) {
+            Text(title).font(.yy(size: 11.5, weight: .medium)).foregroundStyle(hovering ? YYColor.t1 : YYColor.t2)
+                .padding(.horizontal, 8).frame(height: 28)
+                .background(hovering ? YYColor.t1.opacity(0.05) : .clear, in: .capsule)
+                .contentShape(.capsule)
+        }
+        .buttonStyle(.plain)
+        #if os(macOS)
+        .onHover { hovering = $0 }
+        #endif
     }
 }
 

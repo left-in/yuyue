@@ -17,6 +17,7 @@ struct TypesetCard: View {
     /// 重命名 asked for this paper.
     @State private var renaming: CustomPaper?
     @State private var newName = ""
+    @State private var castShown = false
     private let tint = YYTint.standard
 
     static let sizes = 12.0 ... 34.0
@@ -41,6 +42,11 @@ struct TypesetCard: View {
         .animation(.snappy(duration: 0.2), value: more)
         .animation(.snappy(duration: 0.2), value: all)
         .animation(.snappy(duration: 0.2), value: editing == nil)
+        .sheet(isPresented: $castShown) {
+            CastSheet(core: model.core, bookID: model.bookID, section: model.player?.spot?.section ?? model.section ?? 0, player: model.player,
+                      language: model.player?.language ?? model.detail?.summary.language ?? "zh") { castShown = false }
+                .presentationBackground(YYColor.bg)
+        }
         .alert(String(localized: "重命名"), isPresented: Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } })) {
             TextField(String(localized: "名字"), text: $newName)
             Button(String(localized: "取消"), role: .cancel) { renaming = nil }
@@ -53,6 +59,12 @@ struct TypesetCard: View {
 
     private var main: some View {
         VStack(alignment: .leading, spacing: 12) {
+            if model.hasDialogue {
+                // 切到气泡 (B2): 正文 / 气泡, kept per book.
+                Segments(items: [(false, String(localized: "正文")), (true, String(localized: "气泡"))], selection: Binding(get: { model.bubbles }, set: { model.bubbles = $0 })) { on, title in
+                    Label(title, systemImage: on ? "bubble.left.and.bubble.right" : "text.alignleft").labelStyle(TightLabel())
+                }
+            }
             papers
             Segments(items: [(ReaderFont?.none, String(localized: "系统")), (.serif, String(localized: "宋体")), (.kai, String(localized: "楷体")), (.wenKai, String(localized: "霞鹜文楷"))],
                      selection: binding(\.font)) { font, title in
@@ -106,6 +118,24 @@ struct TypesetCard: View {
                 switchRow(String(localized: "只用于这本书"), Binding(get: { model.ownSettings }, set: { model.setOwnSettings($0) }))
                     .frame(height: 38)
                     .overlay(alignment: .top) { Rectangle().fill(YYColor.line).frame(height: 0.5) }
+                if model.hasDialogue {
+                    Button { castShown = true } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "person.2").font(.yy(size: 12)).foregroundStyle(YYColor.t1)
+                            Text("人物").font(.yy(size: 12)).foregroundStyle(YYColor.t1)
+                            Spacer()
+                            HStack(spacing: 3) {
+                                Text("声音、气泡放哪边")
+                                Image(systemName: "chevron.right").font(.yy(size: 9, weight: .semibold))
+                            }
+                            .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
+                        }
+                        .frame(height: 38)
+                        .overlay(alignment: .top) { Rectangle().fill(YYColor.line).frame(height: 0.5) }
+                        .contentShape(.rect)
+                    }
+                    .buttonStyle(.plain)
+                }
                 Button { more = true } label: {
                     HStack(spacing: 8) {
                         Text("更多").font(.yy(size: 12)).foregroundStyle(YYColor.t1)
@@ -468,7 +498,7 @@ struct TypesetCard: View {
         let preset = model.settings.paper
         let night = preset == .dark || preset == .kamiNight
         let made = paperPalette(night: night).swatches
-        let start = night ? made[0] : made[preset == .kami ? 1 : preset == .eink ? 5 : 0]
+        let start = night ? made[0] : made[preset == .kami ? 1 : preset == .sage ? 2 : preset == .eink ? 5 : 0]
         return CustomPaper(id: "", name: "", bg: start.color, ink: nil,
                            layout: preset == .plain || preset == .dark ? .plain : .kami, texture: preset == .eink ? .grain : .none)
     }
@@ -547,6 +577,10 @@ struct ListenCard: View {
     var listenOnly: Binding<Bool>?
     /// What a section is here: 章, or 页 in a PDF.
     var unit = String(localized: "章")
+    /// 人物声音: the book and the chapter, for the cast page (a PDF has none).
+    var castBook: (core: YuyueCore, bookID: String, section: UInt32)?
+    @State private var castShown = false
+    @State private var ownVoices = 0
     private let tint = YYTint.standard
 
     init(model: ReaderModel) {
@@ -554,6 +588,7 @@ struct ListenCard: View {
         _rate = Binding(get: { model.rate }, set: { model.rate = $0 })
         minutesLeft = Self.minutesLeft(model)
         listenOnly = Binding(get: { model.listenOnly }, set: { model.listenOnly = $0 })
+        if let section = model.player?.spot?.section ?? model.section { castBook = (model.core, model.bookID, section) }
     }
 
     init(player: Player?, rate: Binding<Float>, minutesLeft: Int, unit: String) {
@@ -588,9 +623,18 @@ struct ListenCard: View {
                 speed(player)
                 sleep(player)
                 HStack(spacing: 6) {
-                    Tile(icon: "translate", title: String(localized: "逐句翻译"), detail: String(localized: "以后"), on: false) {}
-                        .disabled(true)
-                        .help("读一句外文，接着读一句译文（还没做好）")
+                    if castBook != nil {
+                        // 分角色: 人物声音 takes 逐句翻译's place (R1).
+                        Tile(icon: "person.2", title: String(localized: "人物声音"),
+                             detail: ownVoices == 0 ? String(localized: "都跟旁白") : String(localized: "\(ownVoices) 人单独设"), on: false) {
+                            castShown = true
+                        }
+                        .help("给书里的人物换声音、调快慢高低")
+                    } else {
+                        Tile(icon: "translate", title: String(localized: "逐句翻译"), detail: String(localized: "以后"), on: false) {}
+                            .disabled(true)
+                            .help("读一句外文，接着读一句译文（还没做好）")
+                    }
                     Tile(icon: "repeat.1", title: String(localized: "单句循环"), detail: player.loop ? String(localized: "开") : String(localized: "关"), on: player.loop) {
                         player.loop.toggle()
                     }
@@ -606,6 +650,23 @@ struct ListenCard: View {
         #if os(macOS)
         .frame(width: 460)
         #endif
+        .task(id: castShown) { countOwnVoices() }
+        .task {
+            // `-debugCast 1`: the cast page straight away (with `-debugListen 1`).
+            if UserDefaults.standard.bool(forKey: "debugCast") { try? await Task.sleep(for: .seconds(0.8)); castShown = true }
+        }
+        .sheet(isPresented: $castShown) {
+            if let castBook {
+                CastSheet(core: castBook.core, bookID: castBook.bookID, section: castBook.section, player: player,
+                          language: player?.language ?? "zh") { castShown = false }
+                    .presentationBackground(YYColor.bg)
+            }
+        }
+    }
+
+    private func countOwnVoices() {
+        guard let castBook else { return }
+        ownVoices = ((try? castBook.core.bookRoles(bookId: castBook.bookID)) ?? []).filter { $0.voice.voice != nil }.count
     }
 
     private func voice(_ player: Player) -> some View {

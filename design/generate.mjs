@@ -246,7 +246,7 @@ ${FONTS.map((f) => `        case .${f}: return .${{ sans: 'default', serif: 'ser
   L.push('    /// Accent drawn on light papers (素白、纸本) and on dark papers (暗黑、纸本 · 夜).');
   L.push('    public let paperAccentLight: Color');
   L.push('    public let paperAccentDark: Color');
-  L.push('    public let playPlain: Color, playKami: Color, playDark: Color, playKaminight: Color');
+  L.push('    public let playPlain: Color, playKami: Color, playDark: Color, playKaminight: Color, playSage: Color');
   L.push('');
   L.push('    /// The play button colour on a paper. The e-ink paper keeps its own.');
   L.push('    public func play(on paper: YYPaper) -> Color {');
@@ -255,6 +255,7 @@ ${FONTS.map((f) => `        case .${f}: return .${{ sans: 'default', serif: 'ser
   L.push('        case "kami": return playKami');
   L.push('        case "dark": return playDark');
   L.push('        case "kaminight": return playKaminight');
+  L.push('        case "sage": return playSage');
   L.push('        default: return paper.main');
   L.push('        }');
   L.push('    }');
@@ -265,7 +266,7 @@ ${FONTS.map((f) => `        case .${f}: return .${{ sans: 'default', serif: 'ser
     for (const k of TINT_KEYS) args.push(`${k}: ${swDyn(x.light[k], x.dark[k])}`);
     args.push(`paperAccentLight: Color(yy: ${swRGBA(x.paperAccent.lightPaper)})`);
     args.push(`paperAccentDark: Color(yy: ${swRGBA(x.paperAccent.darkPaper)})`);
-    for (const p of ['plain', 'kami', 'dark', 'kaminight']) args.push(`play${pascal(p)}: Color(yy: ${swRGBA(x.play[p])})`);
+    for (const p of ['plain', 'kami', 'dark', 'kaminight', 'sage']) args.push(`play${pascal(p)}: Color(yy: ${swRGBA(x.play[p])})`);
     L.push(`    public static let ${t} = YYTint(\n        ${args.join(',\n        ')}\n    )`);
   }
   L.push(`    public static let all: [YYTint] = [${TINTS.map((t) => '.' + t).join(', ')}]`);
@@ -450,6 +451,7 @@ function genKotlin() {
     val playKami: Color,
     val playDark: Color,
     val playKaminight: Color,
+    val playSage: Color,
 ) {
     /** The play button colour on a paper. The e-ink paper keeps its own. */
     fun play(paper: YYPaper): Color = when (paper.id) {
@@ -457,6 +459,7 @@ function genKotlin() {
         "kami" -> playKami
         "dark" -> playDark
         "kaminight" -> playKaminight
+        "sage" -> playSage
         else -> paper.main
     }
 }
@@ -472,7 +475,7 @@ function genKotlin() {
     L.push(`        dark = ${tc('dark')},`);
     L.push(`        paperAccentLight = ${ktColor(x.paperAccent.lightPaper)},`);
     L.push(`        paperAccentDark = ${ktColor(x.paperAccent.darkPaper)},`);
-    for (const p of ['plain', 'kami', 'dark', 'kaminight']) L.push(`        play${pascal(p)} = ${ktColor(x.play[p])},`);
+    for (const p of ['plain', 'kami', 'dark', 'kaminight', 'sage']) L.push(`        play${pascal(p)} = ${ktColor(x.play[p])},`);
     L.push('    )');
   }
   L.push(`    val Default = ${pascal(T.tint.default)}`);

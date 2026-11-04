@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 克隆声音: 录一小段念书的声音。 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- 听书: the voice carries on with the screen off; the notification shows what is read. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />

@@ -72,6 +72,10 @@ private val spacings = listOf(1.6, null, 2.2)
 @Composable
 private fun Main(model: ReaderModel, openMore: () -> Unit, edit: (uniffi.yuyue_core.CustomPaper) -> Unit) {
     val s = model.settings
+    if (model.hasDialogue) {
+        // 切到气泡 (B2): 正文 / 气泡, kept per book.
+        YYSegments(listOf(false to t("正文"), true to t("气泡")), model.bubbles, { model.bubbles = it })
+    }
     PaperRow(model, edit)
     // Android phones have no 楷体 of their own, so 楷体 is 霞鹜文楷 here, downloaded when chosen.
     YYSegments(
@@ -99,6 +103,13 @@ private fun Main(model: ReaderModel, openMore: () -> Unit, edit: (uniffi.yuyue_c
     )
     Column {
         SwitchRow(t("只用于这本书"), model.ownSettings) { model.setOwn(it) }
+        if (model.hasDialogue) {
+            Row(Modifier.fillMaxWidth().height(44.dp).clickable { model.settingsShown = false; model.castShown = true }, verticalAlignment = Alignment.CenterVertically) {
+                Text(t("人物"), fontSize = 13.sp, color = YY.c.t1, modifier = Modifier.weight(1f))
+                Text(t("声音、气泡放哪边"), fontSize = 12.sp, color = YY.c.t3)
+                Icon(Icons.chevronRight, null, tint = YY.c.t3, modifier = Modifier.size(16.dp))
+            }
+        }
         Row(Modifier.fillMaxWidth().height(44.dp).clickable(onClick = openMore), verticalAlignment = Alignment.CenterVertically) {
             Text(t("更多"), fontSize = 13.sp, color = YY.c.t1, modifier = Modifier.weight(1f))
             Text(t("段距、页边、翻页方式"), fontSize = 12.sp, color = YY.c.t3)

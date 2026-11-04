@@ -237,6 +237,11 @@ export function setPlaying(p: boolean): void {
 }
 
 /** After a relayout or a paper/motion change: same sentence and timing, new geometry. */
+/** Builds the line again on the sentence's new fragments, after the content was rebuilt (气泡). */
+export function rebuild(): void {
+  if (active != null) build(active, total, elapsed(), playing);
+}
+
 export function refresh(): void {
   if (active == null) return;
   const e = elapsed();

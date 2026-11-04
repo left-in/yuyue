@@ -8,7 +8,7 @@ import AppKit
 
 // MARK: - 我的纸
 
-/// The papers the reader made, after the five presets. The colours of each come from the core,
+/// The papers the reader made, after the six presets. The colours of each come from the core,
 /// so every device draws the same page.
 @MainActor @Observable
 final class Papers {

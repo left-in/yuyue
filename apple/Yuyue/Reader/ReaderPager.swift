@@ -200,6 +200,8 @@ final class ReaderPager: PlatformView {
         switch m.type {
         case .ready, .layout:
             if m.type == .ready {
+                // First: it rebuilds the section's boxes, the rest are drawn on them.
+                if bubbles { sendBubbles(to: page) }
                 sendMarks(to: page)
                 sendHits(to: page)
                 sendSource(to: page)
@@ -433,6 +435,28 @@ final class ReaderPager: PlatformView {
         let elapsed = ink.elapsedMs + (ink.playing ? Date().timeIntervalSince(ink.at) * 1000 : 0)
         let options: [String: Any] = ["durationMs": ink.durationMs, "elapsedMs": min(elapsed, ink.durationMs), "playing": ink.playing]
         page.call("yy.setActive(s, o)", ["s": ink.sentence, "o": options])
+    }
+
+    // MARK: 气泡模式
+
+    /// The book's dialogue as bubbles (docs/design/听书-气泡与有声书.html).
+    var bubbles = false {
+        didSet { if bubbles != oldValue { slots.forEach(sendBubbles) } }
+    }
+
+    /// Someone's side or name changed: draw the bubbles again.
+    func bubblesChanged() {
+        if bubbles { slots.forEach(sendBubbles) }
+    }
+
+    private func sendBubbles(to page: SectionPage) {
+        guard let section = page.section else { return }
+        guard bubbles else { return page.call("yy.setBubbles(null)") }
+        let lines = ((try? core.sectionBubbles(bookId: bookID, section: section)) ?? []).map { l -> [String: Any] in
+            ["first": Int(l.first), "last": Int(l.last), "start": Int(l.start), "end": Int(l.end), "who": l.who ?? NSNull(),
+             "avatar": l.avatar, "color": l.color, "right": l.right]
+        }
+        page.call("yy.setBubbles(l)", ["l": lines])
     }
 
     // MARK: Highlights, search hits, selection

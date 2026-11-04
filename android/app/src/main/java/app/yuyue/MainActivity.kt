@@ -127,6 +127,8 @@ class MainActivity : ComponentActivity() {
         // Debug builds: `-e listen <书 id>,<章>,<句>` reads the book aloud from there.
         if (BuildConfig.DEBUG) intent.getStringExtra("listen")?.split(',')?.takeIf { it.size == 3 }?.let { (b, sec, n) ->
             runCatching { library.core.saveProgress(b, uniffi.yuyue_core.Position(sec.toUInt(), n.toUInt())) }
+            // `-e bubbles 1`: in 气泡模式.
+            intent.getStringExtra("bubbles")?.let { on -> runCatching { library.core.setBookBubbles(b, on == "1") } }
             library.books.firstOrNull { it.id == b }?.let { library.open(it, Library.OpenIntent.Listen) }
         }
         // Debug builds: `-e pair <有声书 id>,<电子书 id>` lays the one against the other (合成).

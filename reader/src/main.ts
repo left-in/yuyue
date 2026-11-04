@@ -10,6 +10,7 @@ import { initTaps } from './taps';
 import { fitCompression } from './compress';
 import * as marks from './marks';
 import * as foreign from './foreign';
+import * as bubbles from './bubbles';
 
 const VERSION = '0.1.0';
 
@@ -270,6 +271,18 @@ const api = {
     if (first == null || !(first >= 0)) return;
     const end = last != null && last >= first ? last : first;
     for (let s = first; s <= end; s++) foreign.blockOf(s)?.classList.add('yy-flag');
+  },
+  /** 气泡模式: the section's dialogue as bubbles (§4, setBubbles); null puts it back. */
+  setBubbles(lines: bubbles.BubbleLine[] | null): void {
+    // The text nodes are rebuilt, so keep the place by sentence.
+    const at = L.firstVisibleSentence();
+    if (!bubbles.setBubbles(lines)) return;
+    L.reindex();
+    lastAnchor = null;
+    ink.rebuild();
+    marks.redraw();
+    relayout(null, true);
+    if (at != null) L.scrollToSentence(at, false, 'top');
   },
   setVocab(words: string[] | null): void {
     foreign.setVocab(words);

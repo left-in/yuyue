@@ -28,6 +28,7 @@ pub mod podcast;
 pub mod punct;
 pub mod reading;
 pub mod records;
+pub mod roles;
 pub mod rules;
 pub mod script;
 pub mod mdict;

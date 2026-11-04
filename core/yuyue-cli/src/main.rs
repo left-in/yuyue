@@ -218,6 +218,23 @@ fn run(args: &[String]) -> Result<(), String> {
             }
             Ok(())
         }
+        ["lines-json", library, book, section] => {
+            // 剧本 as the reader's setBubbles takes it (without colours), for tests.
+            let core = open(library)?;
+            let id = find(&core, book)?.id;
+            let lines: Vec<String> = core
+                .section_script(id, number(section)?)
+                .map_err(err)?
+                .lines
+                .into_iter()
+                .map(|l| {
+                    let who = l.who.map(|w| format!("{w:?}")).unwrap_or_else(|| "null".into());
+                    format!(r#"{{"first":{},"last":{},"start":{},"end":{},"who":{who}}}"#, l.first, l.last, l.start, l.end)
+                })
+                .collect();
+            println!("[{}]", lines.join(","));
+            Ok(())
+        }
         ["pinyin", file] => {
             for line in fs::read_to_string(file).map_err(|e| e.to_string())?.lines() {
                 println!("{}", yuyue_core::reading::for_alignment(line).into_iter().map(|s| s.pinyin).collect::<Vec<_>>().join(" "));
