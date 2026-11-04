@@ -13,6 +13,8 @@ struct MacShowEditor: View {
     @State private var finding = false
     @State private var addError: String?
     @State private var changingTime = false
+    /// The template this started from, by its own name: renaming the show doesn't rename it.
+    @State private var template: String?
     @State private var failure: String?
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
@@ -44,6 +46,7 @@ struct MacShowEditor: View {
         // The sheet gives the name the keyboard on its own, with all of it selected: the
         // title opened as a grey highlighted block. Nothing has it until the reader clicks.
         .onAppear {
+            if template == nil, edit.id == nil { template = edit.draft.name }
             // The sheet's window takes the field a beat after it appears; let go after that.
             for delay in [0.0, 0.15, 0.4] {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
@@ -84,10 +87,10 @@ struct MacShowEditor: View {
             if edit.id == nil {
                 Menu {
                     ForEach(Array(Podcasts.templates().enumerated()), id: \.offset) { _, t in
-                        Button(t.name) { edit.draft = t }
+                        Button(t.name) { edit.draft = t; template = t.name }
                     }
                 } label: {
-                    Text("从“\(edit.draft.name)”开始").font(.yy(size: 10.5)).foregroundStyle(YYColor.t2)
+                    Text("从“\(template ?? edit.draft.name)”开始").font(.yy(size: 10.5)).foregroundStyle(YYColor.t2)
                         .padding(.horizontal, 7).frame(height: 20).background(YYColor.inset, in: .rect(cornerRadius: 5))
                 }
                 .menuStyle(.button).buttonStyle(.plain).fixedSize()
@@ -321,6 +324,14 @@ struct MacShowEditor: View {
 
     // MARK: 右边：明早大概是这样
 
+    /// Where source `i` would start in an episode of `minutes`: each gets time by its 五格 weight.
+    private static func start(of i: Int, in sources: [ShowSource], minutes: Int) -> String {
+        let total = max(1, sources.reduce(0) { $0 + Int($1.weight) })
+        let before = sources.prefix(i).reduce(0) { $0 + Int($1.weight) }
+        let seconds = max(1, minutes) * 60 * before / total
+        return String(format: "%02d:%02d", seconds / 60, seconds % 60)
+    }
+
     private var preview: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("按现在这样，\(edit.draft.schedule.days.isEmpty ? String(localized: "下一集") : String(localized: "明早 \(edit.draft.schedule.line.split(separator: " ").last.map(String.init) ?? "")")) 大概是这样")
@@ -328,9 +339,10 @@ struct MacShowEditor: View {
             Text(edit.draft.name.isEmpty ? String(localized: "这一集的标题") : String(localized: "\(edit.draft.name) · 今天讲这几件事"))
                 .font(.custom("Songti SC", size: 18).weight(.bold)).foregroundStyle(YYColor.t1)
             VStack(alignment: .leading, spacing: 8) {
-                ForEach(Array(edit.draft.sources.filter { !$0.paused }.prefix(4).enumerated()), id: \.offset) { i, s in
+                let live = Array(edit.draft.sources.filter { !$0.paused }.prefix(4))
+                ForEach(Array(live.enumerated()), id: \.offset) { i, s in
                     HStack(spacing: 8) {
-                        Text(String(format: "%02d:%02d", i * 2, i * 37 % 60)).font(.yy(size: 11)).monospacedDigit().foregroundStyle(YYColor.t3)
+                        Text(Self.start(of: i, in: live, minutes: Int(edit.draft.minutes))).font(.yy(size: 11)).monospacedDigit().foregroundStyle(YYColor.t3)
                         sourceMark(s)
                         Text(String(localized: "\(s.name) 上最新的一条")).font(.yy(size: 12, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
                     }
