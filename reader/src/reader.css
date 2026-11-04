@@ -558,7 +558,10 @@ html[data-yy-paper="dark"], html[data-yy-paper="kaminight"] {
   margin: 0 0 1.4em !important;
   text-indent: 0 !important;
 }
-#yy-content .yy-pod-seg { display: flow-root; margin: 0 0 1.2em; }
+#yy-content { counter-reset: yy-seg; }
+#yy-content .yy-pod-seg { display: flow-root; margin: 0 0 1.2em; counter-increment: yy-seg; }
+/* Which 条 it is, as the 播放条 and the 节目单 number them: "2 · Rust 1.91". */
+#yy-content .yy-pod-seg > h2::before { content: counter(yy-seg) " · "; color: var(--yy-p-accent); }
 #yy-content .yy-pod-seg > h2 {
   font-size: calc(var(--yy-fs) * .78) !important;
   font-weight: 600 !important;
@@ -573,7 +576,9 @@ html[data-yy-paper="dark"], html[data-yy-paper="kaminight"] {
   margin: 0 0 .9em !important;
   line-height: 1.5 !important;
 }
-#yy-content .yy-pod-src a { color: inherit !important; text-decoration: underline; text-decoration-color: var(--yy-p-line); text-underline-offset: .2em; }
+/* The article: a link that looks like one (it opens the original), not a footnote. */
+#yy-content .yy-pod-src a { color: var(--yy-p-accent) !important; text-decoration: none; }
+#yy-content .yy-pod-src a::after { content: " ↗"; font-size: .9em; }
 #yy-content p.yy-pod-line {
   position: relative;
   text-indent: 0 !important;
@@ -604,7 +609,10 @@ html[data-yy-paper="dark"], html[data-yy-paper="kaminight"] {
   margin-bottom: .1em;
 }
 #yy-content p.yy-pod-line.yy-pod-first { margin-top: .9em !important; }
+/* The bubble being read: a ring in the theme's colour, as the prototype's 文稿 has it. */
+#yy-content p.yy-pod-line:has(.s.yy-ink) { box-shadow: 0 0 0 1.5px var(--yy-p-accent); }
 html[data-yy-paper="eink"] #yy-content p.yy-pod-line { background: transparent; box-shadow: 0 0 0 1px #141414; }
+html[data-yy-paper="eink"] #yy-content p.yy-pod-line:has(.s.yy-ink) { box-shadow: 0 0 0 2.5px #141414; }
 
 /* 气泡模式 (docs/design/听书-气泡与有声书.html · B1–B3): narration stays a paragraph, each quote a
    bubble with whoever says it. Each speaker's colour --yy-c is mixed with the paper, so changing
