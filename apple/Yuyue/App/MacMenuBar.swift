@@ -22,9 +22,10 @@ final class MacMenuBar: NSObject, NSMenuDelegate {
         follow()
     }
 
-    /// Shown while some show is written here at set times.
+    /// Shown while some show is written here at set times, or an episode is playing.
     private func follow() {
-        let on = withObservationTracking { podcasts.scheduledHere } onChange: { [weak self] in
+        // Also while an episode is in the 播放条, so it can be paused with the windows closed.
+        let on = withObservationTracking { podcasts.scheduledHere || library.nowPlaying != nil } onChange: { [weak self] in
             Task { @MainActor in self?.follow() }
         }
         if on, item == nil {
@@ -46,6 +47,20 @@ final class MacMenuBar: NSObject, NSMenuDelegate {
 
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
+        // 正在放: the 播放条's episode, playable from here with every window closed.
+        if let m = library.nowPlaying as? ReaderModel, m.detail?.summary.format == .podcast, let player = m.player {
+            let e = podcasts.latest.first { $0.book == m.bookID }
+            menu.addItem(.sectionHeader(title: m.isPlaying ? String(localized: "正在放") : String(localized: "暂停在")))
+            menu.addItem(NSMenuItem(title: e?.title ?? m.detail?.summary.title ?? "", action: nil, keyEquivalent: ""))
+            if let at = nowTopic(m) { menu.addItem(NSMenuItem(title: at, action: nil, keyEquivalent: "")) }
+            menu.addItem(action(m.isPlaying ? String(localized: "暂停") : String(localized: "接着放")) { [weak self] in
+                self?.library.playEpisode(m.bookID)
+            })
+            if player.state != .stopped {
+                menu.addItem(action(String(localized: "下一条")) { [weak self] in self?.nextSegment(m) })
+            }
+            menu.addItem(.separator())
+        }
         for show in podcasts.shows where podcasts.writtenHere(show) && !show.schedule.days.isEmpty {
             menu.addItem(.sectionHeader(title: show.name))
             menu.addItem(NSMenuItem(title: line(show), action: nil, keyEquivalent: ""))
@@ -79,6 +94,27 @@ final class MacMenuBar: NSObject, NSMenuDelegate {
             : Calendar.current.isDateInTomorrow(next) ? String(localized: "明天")
             : next.formatted(.dateTime.weekday(.wide))
         return String(localized: "下一集 \(day) \(next.formatted(date: .omitted, time: .shortened))")
+    }
+
+    /// "第 2 / 7 条 · Rust 1.91", where the voice is.
+    private func nowTopic(_ m: ReaderModel) -> String? {
+        guard let s = m.player?.spot?.sentence,
+              let segs = try? library.core.episodeSegments(book: m.bookID), !segs.isEmpty,
+              let i = segs.lastIndex(where: { Int($0.first) <= s }) else { return nil }
+        let topic = segs[i].topic
+        return topic.isEmpty ? String(localized: "第 \(i + 1) / \(segs.count) 条") : String(localized: "第 \(i + 1) / \(segs.count) 条 · \(topic)")
+    }
+
+    private func nextSegment(_ m: ReaderModel) {
+        guard let player = m.player, let s = player.spot?.sentence,
+              let segs = try? library.core.episodeSegments(book: m.bookID),
+              let next = segs.first(where: { Int($0.first) > s }) else {
+            library.episodeFinished(m.bookID)
+            return
+        }
+        let paused = player.state == .paused
+        player.play(from: Position(section: 0, sentence: next.first))
+        if paused { player.pause() }
     }
 
     /// Plays where 播客's 播放条 plays: no window needed, so the menu bar alone can be the radio.
