@@ -196,6 +196,12 @@ final class ReaderModel {
                 self?.setListening(false)
             }
             player.onSleep = { [weak self] spot in self?.fellAsleep(at: spot) }
+            #if os(macOS)
+            player.onFinish = { [weak self] in
+                guard let self else { return }
+                self.library?.episodeFinished(self.bookID)
+            }
+            #endif
             player.onMarkHeard = { [weak self] spot in self?.markHeard(spot) }
         }
         // 我的 › 沉浸阅读 on: every book opens with only its words.

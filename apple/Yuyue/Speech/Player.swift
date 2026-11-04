@@ -88,6 +88,8 @@ final class Player {
     /// the current speed), and whether it is moving.
     @ObservationIgnored var onSentence: ((Spot, Double, Double, Bool) -> Void)?
     @ObservationIgnored var onStop: (() -> Void)?
+    /// The book was read to its last sentence (after `onStop`): 连着听 moves on to the next episode.
+    @ObservationIgnored var onFinish: (() -> Void)?
     /// The sleep timer stopped the voice, paused on this sentence.
     @ObservationIgnored var onSleep: ((Spot) -> Void)?
     /// 双击耳机 (下一曲 to the headphones): the sentence just heard, to highlight.
@@ -366,7 +368,11 @@ final class Player {
             // The node is already playing the next one.
             began()
         } else if nextToRender == nil && rendering == nil {
-            return stop()
+            // Read to the very end, not stopped by hand or by the timer.
+            let finish = onFinish
+            stop()
+            finish?()
+            return
         } else {
             // Rendering fell behind; the next sentence starts as soon as it's ready.
             state = .loading

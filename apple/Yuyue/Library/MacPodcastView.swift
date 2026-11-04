@@ -78,6 +78,8 @@ struct MacPodcastView: View {
             case "episode": opened = podcasts.latest.first?.book
             // `play`: the newest episode in the 播放条, as its play button would.
             case "play": if let e = podcasts.latest.first { library.playEpisode(e.book) }
+            // `radio`: 连着听, every episode not heard.
+            case "radio": library.playUnheard()
             case "make": making = ShowDraftEdit(id: nil, draft: Podcasts.templates()[0])
             // `write`: makes 科技早报 if there's no show, and writes an episode now.
             case "write":
@@ -103,9 +105,17 @@ struct MacPodcastView: View {
             } else if opened != nil || showPage != nil {
                 EmptyView()
             } else {
-                let fresh = podcasts.latest.count { !$0.heard }
-                if fresh > 0 {
-                    Text("\(fresh) 集没听").font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)
+                let unheard = podcasts.latest.filter { !$0.heard }
+                if !unheard.isEmpty {
+                    Text("\(unheard.count) 集没听").font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)
+                    // 连着听: the radio way — every one not heard, one after another.
+                    let minutes = unheard.reduce(0) { n, e in n + Int(library.books.first { $0.id == e.book }?.listenMinutes ?? 0) }
+                    PodcastGlassButton(title: unheard.count > 1 ? String(localized: "连着听 · 约 \(max(1, minutes)) 分钟") : String(localized: "听"),
+                                       symbol: "play.fill", kind: library.upNext.isEmpty ? .plain : .playing) {
+                        library.playUnheard()
+                    }
+                    .alignmentGuide(.firstTextBaseline) { $0[VerticalAlignment.center] + 4 }
+                    .help("没听的几集一集接一集放完，老的在前")
                 }
             }
             Spacer()
@@ -227,6 +237,8 @@ struct MacPodcastView: View {
             PodcastGlassButton(title: remaining(e, book), symbol: e.heard ? "checkmark" : "play.fill", kind: playing ? .playing : .plain,
                                progress: e.heard ? nil : book?.progress) {
                 // Plays in the 播放条; 文稿 (double-click, the menu, the bar) opens the window.
+                // Picking one by hand ends 连着听.
+                library.upNext = []
                 library.playEpisode(e.book)
             }
         }

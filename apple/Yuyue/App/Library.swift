@@ -197,8 +197,36 @@ final class Library {
         nowPlaying = m
     }
 
+    /// 连着听: the episodes still to come after the one playing, played one after another.
+    var upNext: [String] = []
+
+    /// 连着听: every episode not heard yet, the oldest day first and within a day in the order
+    /// the shows were made — like a radio running through the morning.
+    func playUnheard() {
+        let order = Dictionary(podcasts.shows.enumerated().map { ($1.id, $0) }, uniquingKeysWith: { a, _ in a })
+        let list = podcasts.latest.filter { !$0.heard }
+            .sorted { ($0.date, order[$0.show] ?? 0) < ($1.date, order[$1.show] ?? 0) }
+            .map(\.book)
+        guard let first = list.first else { return }
+        upNext = Array(list.dropFirst())
+        if let m = nowPlaying as? ReaderModel, m.bookID == first, m.isPlaying { return }
+        playEpisode(first)
+    }
+
+    /// An episode was heard to its end: the next in 连着听, if there is one.
+    func episodeFinished(_ bookID: String) {
+        guard (nowPlaying as? ReaderModel)?.bookID == bookID, !upNext.isEmpty else { return }
+        let next = upNext.removeFirst()
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.podcasts.reload()
+            self.playEpisode(next)
+        }
+    }
+
     /// Lets the 播放条 go: the voice stops and, with no window, the episode is closed.
     func stopEpisode() {
+        upNext = []
         guard let m = nowPlaying as? ReaderModel else { return }
         if openModels.contains(m) { m.player?.pause() } else { m.close() }
         nowPlaying = nil

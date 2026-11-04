@@ -98,6 +98,9 @@ struct MacPodcastBar: View {
         if hovered == nil, speakers.indices.contains(sentence), let who = speakers[sentence] {
             parts.append(String(localized: "\(who)在说"))
         }
+        if hovered == nil, !library.upNext.isEmpty {
+            parts.append(String(localized: "后面还有 \(library.upNext.count) 集"))
+        }
         return parts.joined(separator: " · ")
     }
 
@@ -173,6 +176,10 @@ struct MacPodcastBar: View {
         }
         var target = c + step
         if step < 0, sentence > Int(segments[c].first) + 1 { target = c }
+        // On from the last 条: the next episode, when 连着听 has one.
+        if step > 0, target >= segments.count, !library.upNext.isEmpty {
+            return library.episodeFinished(model.bookID)
+        }
         guard segments.indices.contains(target) else { return }
         jump(to: target)
     }
