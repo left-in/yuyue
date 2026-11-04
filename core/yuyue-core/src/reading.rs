@@ -64,7 +64,10 @@ pub fn syllables(text: &str) -> Vec<Syllable> {
                 i += 1;
             }
             let number: String = chars[start..i].iter().collect();
-            for p in number_words(&number) {
+            // 1978 年 is read 一九七八年, digit by digit, not as how many.
+            let year = number.len() == 4 && chars[i..].iter().find(|c| **c != ' ').is_some_and(|&c| c == '年');
+            let words = if year { number.chars().map(|c| DIGITS[c.to_digit(10).unwrap() as usize].to_string()).collect() } else { number_words(&number) };
+            for p in words {
                 out.push(Syllable { at: start as u32, pinyin: p });
             }
             continue;
@@ -236,6 +239,13 @@ mod tests {
         assert_eq!(read("银行行长"), "yin2 hang2 hang2 zhang3");
         assert_eq!(read("我还是觉得"), "wo3 hai2 shi4 jue2 de5");
         assert_eq!(read("他去睡觉了"), "ta1 qu4 shui4 jiao4 le5");
+    }
+
+    #[test]
+    fn years_digit_by_digit() {
+        assert_eq!(read("1978 年"), "yi1 jiu3 qi1 ba1 nian2");
+        assert_eq!(read("1978年"), "yi1 jiu3 qi1 ba1 nian2");
+        assert_eq!(read("4892 米"), read("四千八百九十二米"));
     }
 
     #[test]
