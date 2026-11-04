@@ -38,6 +38,12 @@ const STAR_PENALTY: f32 = 0.2;
 const PIECE_SECONDS: f64 = 600.0;
 /// States on each side of the best one that the search keeps.
 const WINDOW: usize = 1000;
+/// How far behind the best state the window reaches. More than a jump can go (`MAX_JUMP`): when
+/// a jump ahead is the best for a moment, where the reader really is stays in the window.
+const BEHIND: usize = WINDOW * 6 / 5;
+/// The furthest a jump goes, in states (two a letter): about 400 letters, four or five English
+/// sentences or a hundred-odd Chinese characters.
+const MAX_JUMP: usize = WINDOW * 4 / 5;
 /// What one jump over sentences not in the recording costs: about what a few frames of a letter
 /// the model doesn't hear cost, so a jump wins only where reading on would cost more.
 const SKIP_PENALTY: f32 = 12.0;
@@ -164,7 +170,7 @@ fn jumps(tokens: &[usize], owner: &[Option<usize>]) -> (Vec<u32>, Vec<Vec<(usize
             let last = ends[k].1;
             let from = 2 * last + 1;
             // Out of the search's reach anyway.
-            if into - from > WINDOW {
+            if into - from > MAX_JUMP {
                 break;
             }
             let cost = SKIP_PENALTY + SKIP_EACH * (whose[m] - whose[k] - 1) as f32;
@@ -224,7 +230,7 @@ fn viterbi(em: &[f32], frames: usize, tokens: &[usize], owner: &[Option<usize>])
     let mut next = vec![NEG; width];
     for t in 1..frames {
         let best = low + alpha.iter().enumerate().max_by(|a, b| a.1.total_cmp(b.1)).map(|(i, _)| i).unwrap_or(0);
-        let new_low = best.saturating_sub(WINDOW / 2).min(states - width).max(low);
+        let new_low = best.saturating_sub(BEHIND).min(states - width).max(low);
         let at = |s: usize| if s >= low && s < low + width { alpha[s - low] } else { NEG };
         for k in 0..width {
             let s = new_low + k;
