@@ -69,6 +69,140 @@ struct PodcastGlassButton: View {
     }
 }
 
+/// 播客列表一行右边那一颗 (docs/design/播客-列表按钮.html · A 一条一道): a line of words over one
+/// short mark a 条. Heard 条 in ink, the one being told in the theme's colour and breathing, the
+/// rest faint. Writing uses the same marks — one lights as each 条 is written — and a failure
+/// stops on a red one. No frame; a faint wash under the pointer.
+struct EpisodeTicksButton: View {
+    enum State: Equatable {
+        /// Not started: the whole length and how many 条.
+        case fresh(minutes: Int)
+        /// Listened into and left.
+        case partway(minutesLeft: Int)
+        case playing(minutesLeft: Int)
+        case heard
+        case writing(String)
+        case failed
+    }
+    let state: State
+    /// How many 条, and how many are done (heard, or written).
+    let count: Int
+    let done: Int
+    let action: () -> Void
+    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @State private var hovering = false
+
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .trailing, spacing: 5) {
+                HStack(spacing: 5) {
+                    glyph
+                    Text(words).lineLimit(1)
+                }
+                .font(.yy(size: 11.5, weight: weight))
+                .monospacedDigit()
+                .foregroundStyle(ink)
+                if count > 0 { ticks }
+            }
+            .frame(minWidth: 96, alignment: .trailing)
+            .padding(.horizontal, 8).padding(.vertical, 6)
+            .background(YYColor.t1.opacity(hovering ? 0.04 : 0), in: .rect(cornerRadius: 9))
+            .padding(.horizontal, -8).padding(.vertical, -6)
+            .contentShape(.rect)
+            .animation(.easeOut(duration: 0.15), value: hovering)
+        }
+        .buttonStyle(.plain)
+        #if os(macOS)
+        .onHover { hovering = $0 }
+        #endif
+        .accessibilityLabel(Text(words))
+    }
+
+    private var words: String {
+        switch state {
+        case .fresh(let m): count > 0 ? String(localized: "\(m) 分钟 · \(count) 条") : String(localized: "\(m) 分钟")
+        case .partway(let m): String(localized: "还剩 \(m) 分")
+        case .playing(let m): count > 0 ? String(localized: "第 \(min(done + 1, count)) 条 · 还剩 \(m) 分") : String(localized: "还剩 \(m) 分")
+        case .heard: String(localized: "听完了")
+        case .writing(let line): line
+        case .failed: String(localized: "再试一次")
+        }
+    }
+
+    @ViewBuilder private var glyph: some View {
+        switch state {
+        case .fresh, .partway: Image(systemName: "play.fill").font(.system(size: 8, weight: .bold))
+        case .playing: EqualizerBars().frame(width: 10, height: 10)
+        case .heard: Image(systemName: "checkmark").font(.system(size: 8.5, weight: .bold))
+        case .writing: EmptyView()
+        case .failed: Image(systemName: "arrow.clockwise").font(.system(size: 9, weight: .bold))
+        }
+    }
+
+    private var weight: SwiftUI.Font.Weight {
+        switch state {
+        case .heard, .writing: .medium
+        default: .semibold
+        }
+    }
+
+    private var ink: Color {
+        switch state {
+        case .playing: tint.accent
+        case .heard: YYColor.t3
+        case .writing: YYColor.t2
+        case .failed: YYColor.danger
+        default: YYColor.t1
+        }
+    }
+
+    /// One mark a 条; narrower when there are many, so the row keeps its width.
+    private var ticks: some View {
+        let width = max(4, min(10, (110 - 3 * CGFloat(count - 1)) / CGFloat(count)))
+        return HStack(spacing: 3) {
+            ForEach(0 ..< count, id: \.self) { i in
+                Tick(color: color(i), breathing: breathing(i)).frame(width: width, height: 3)
+            }
+        }
+    }
+
+    private func color(_ i: Int) -> Color {
+        switch state {
+        case .heard: return YYColor.t1.opacity(0.62)
+        case .failed where i == done: return YYColor.danger
+        case .playing where i == done, .writing where i == done: return tint.accent
+        default: return i < done ? YYColor.t1.opacity(0.62) : YYColor.t1.opacity(0.13)
+        }
+    }
+
+    private func breathing(_ i: Int) -> Bool {
+        switch state {
+        case .playing, .writing: i == done
+        default: false
+        }
+    }
+
+    private struct Tick: View {
+        let color: Color
+        let breathing: Bool
+        @State private var dim = false
+        @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+        var body: some View {
+            RoundedRectangle(cornerRadius: 1.5).fill(color)
+                .opacity(breathing && dim ? 0.35 : 1)
+                .onAppear { start() }
+                .onChange(of: breathing) { start() }
+        }
+
+        private func start() {
+            guard breathing, !reduceMotion else { dim = false; return }
+            withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) { dim = true }
+        }
+    }
+}
+
 /// `.pb.t`: only words (取消) — a faint grey pad under the pointer.
 struct PodcastTextButton: View {
     let title: String

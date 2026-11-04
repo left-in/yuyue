@@ -22,6 +22,9 @@ final class Podcasts {
     private(set) var writing: [String: Progress] = [:]
     /// Why the last one failed, by show.
     var failure: [String: String] = [:]
+    /// How far a show's last write got before it failed (条 written of 条 picked), for the
+    /// list's marks to stop on a red one.
+    var failedAt: [String: (done: Int, total: Int)] = [:]
     /// 编辑部: what the editor and the reader have said, by show, for the episode being written.
     private(set) var talk: [String: [Message]] = [:]
 
@@ -203,6 +206,7 @@ final class Podcasts {
     func write(_ show: Show, auto: Bool = false) {
         guard tasks[show.id] == nil else { return }
         failure[show.id] = nil
+        failedAt[show.id] = nil
         let run = UUID()
         runs[show.id] = run
         if auto { Self.askToNotify() }
@@ -219,6 +223,7 @@ final class Podcasts {
             } catch is CancellationError {
             } catch {
                 self.failure[show.id] = Self.message(for: error)
+                self.failedAt[show.id] = self.writing[show.id].map { ($0.done, max($0.total, $0.picked.count)) }
                 Self.log("failed: \(error)")
                 if auto {
                     Self.notify(String(localized: "《\(show.name)》这一集没写成"), Self.message(for: error))

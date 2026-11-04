@@ -234,7 +234,8 @@ struct MacPodcastView: View {
             }
             Spacer(minLength: 12)
             SourceMarks(articles: e.articles).opacity(e.heard ? 0.5 : 1)
-            PodcastGlassButton(title: remaining(e, book), symbol: e.heard ? "checkmark" : "play.fill", kind: playing ? .playing : .plain) {
+            EpisodeTicksButton(state: tickState(e, book, playing: playing), count: segments[e.book]?.count ?? 0,
+                               done: heardSegments(e, playing: playing)) {
                 // Plays in the 播放条; 文稿 (double-click, the menu, the bar) opens the window.
                 // Picking one by hand ends 连着听.
                 library.upNext = []
@@ -273,6 +274,31 @@ struct MacPodcastView: View {
         return topic.isEmpty ? String(localized: "停在第 \(i + 1) 条") : String(localized: "停在第 \(i + 1) 条 · \(topic)")
     }
 
+    /// 一条一道: what the words under the pointer say.
+    private func tickState(_ e: Episode, _ book: BookSummary?, playing: Bool) -> EpisodeTicksButton.State {
+        let total = max(1, Int(book?.listenMinutes ?? 1))
+        let left = max(1, Int((1 - (book?.progress ?? 0)) * Double(total)))
+        if playing { return .playing(minutesLeft: left) }
+        if e.heard { return .heard }
+        if (book?.progress ?? 0) > 0.01 { return .partway(minutesLeft: left) }
+        return .fresh(minutes: total)
+    }
+
+    /// The 条 before the one being told (or where it was left): the marks in ink.
+    private func heardSegments(_ e: Episode, playing: Bool) -> Int {
+        guard let segs = segments[e.book], !segs.isEmpty else { return 0 }
+        let sentence: Int
+        if playing, let s = (library.nowPlaying as? ReaderModel)?.player?.spot?.sentence {
+            sentence = s
+        } else if let p = (try? library.core.progress(bookId: e.book))?.position {
+            sentence = Int(p.sentence)
+        } else {
+            return 0
+        }
+        if sentence == 0, !playing { return 0 }
+        return segs.lastIndex(where: { Int($0.first) <= sentence }) ?? 0
+    }
+
     private func remaining(_ e: Episode, _ book: BookSummary?) -> String {
         guard let book else { return String(localized: "听") }
         if library.nowPlaying?.bookID == e.book, library.listening == e.book { return String(localized: "正在听") }
@@ -300,9 +326,14 @@ struct MacPodcastView: View {
             Button(String(localized: "看它怎么挑的 ›")) { desk = show.id }
                 .buttonStyle(.plain).font(.yy(size: 11)).foregroundStyle(YYColor.t3)
             if podcasts.failure[show.id] != nil {
-                PodcastGlassButton(title: String(localized: "再试一次"), symbol: "arrow.clockwise") { podcasts.write(show) }
+                let at = podcasts.failedAt[show.id]
+                EpisodeTicksButton(state: .failed, count: at?.total ?? 0, done: at?.done ?? 0) { podcasts.write(show) }
             } else {
-                PodcastGlassButton(title: podcasts.writing[show.id]?.short ?? "", kind: .writing) { desk = show.id }
+                let p = podcasts.writing[show.id]
+                // Marks once the 条 are picked: one lights as each is written.
+                let total = max(p?.total ?? 0, p?.picked.count ?? 0)
+                let done = p.map { $0.step > .summarize ? total : $0.step == .summarize ? $0.done : 0 } ?? 0
+                EpisodeTicksButton(state: .writing(p?.short ?? ""), count: (p?.step ?? .fetch) >= .summarize ? total : 0, done: done) { desk = show.id }
             }
         }
         .padding(.vertical, 12)
