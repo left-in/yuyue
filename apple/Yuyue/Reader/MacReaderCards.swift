@@ -584,6 +584,10 @@ struct ListenCard: View {
     /// 播客: an episode, not a book — 听, 本集, and no 人物声音 (each host has a voice already,
     /// chosen in 配一档节目).
     var episode = false
+    /// 播客: the show whose hosts read this episode, each in their own voice.
+    var show: Show?
+    /// Bumped when a host's voice is changed, so the rows read it again.
+    @State private var hostVoicesChanged = 0
     private let tint = YYTint.standard
 
     init(model: ReaderModel) {
@@ -592,7 +596,10 @@ struct ListenCard: View {
         minutesLeft = Self.minutesLeft(model)
         listenOnly = Binding(get: { model.listenOnly }, set: { model.listenOnly = $0 })
         episode = model.detail?.summary.format == .podcast
-        if episode { unit = String(localized: "集") }
+        if episode {
+            unit = String(localized: "集")
+            show = ((try? model.core.episode(book: model.bookID)) ?? nil).flatMap { try? model.core.show(id: $0.show) }
+        }
         if !episode, let section = model.player?.spot?.section ?? model.section { castBook = (model.core, model.bookID, section) }
     }
 
@@ -624,7 +631,11 @@ struct ListenCard: View {
             #endif
             if let player {
                 if player.recording != nil { narrator(player) }
-                voice(player)
+                if let show, !show.hosts.isEmpty {
+                    hostVoices(player, show)
+                } else {
+                    voice(player)
+                }
                 speed(player)
                 sleep(player)
                 HStack(spacing: 6) {
@@ -673,6 +684,67 @@ struct ListenCard: View {
     private func countOwnVoices() {
         guard let castBook else { return }
         ownVoices = ((try? castBook.core.bookRoles(bookId: castBook.bookID)) ?? []).filter { $0.voice.voice != nil }.count
+    }
+
+    /// 播客: a row a host — their mark, name and voice, 试听 and 换声音 — instead of the one voice
+    /// a book has. The choice is this device's, the same one 配一档节目 · 谁来讲 makes.
+    private func hostVoices(_ player: Player, _ show: Show) -> some View {
+        let language = player.language
+        let _ = hostVoicesChanged
+        return VStack(spacing: 6) {
+            ForEach(Array(show.hosts.enumerated()), id: \.offset) { i, host in
+                let current = HostVoices.voice(show: show.id, host: host.name, index: i, language: language)
+                HStack(spacing: 10) {
+                    Text(String(host.name.prefix(1)))
+                        .font(.yy(size: 13, weight: .semibold))
+                        .foregroundStyle(YYColor.t1)
+                        .frame(width: 32, height: 32)
+                        .background(YYColor.card, in: .rect(cornerRadius: 9))
+                        .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(YYColor.line, lineWidth: 0.5))
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(host.name).font(.yy(size: 12.5, weight: .semibold)).foregroundStyle(YYColor.t1)
+                        Text([current.map(Voices.title) ?? String(localized: "没有能读的声音"),
+                              current?.isOffline == false ? String(localized: "云端") : String(localized: "离线")].joined(separator: " · "))
+                            .font(.yy(size: 10.5)).foregroundStyle(YYColor.t2)
+                    }
+                    .lineLimit(1)
+                    Spacer(minLength: 4)
+                    if let current {
+                        Button { player.preview(current, text: sample(language)) } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "play.fill").font(.yy(size: 8.5))
+                                Text("试听")
+                            }
+                            .font(.yy(size: 11, weight: .semibold)).foregroundStyle(YYColor.t1)
+                            .padding(.leading, 8).padding(.trailing, 10).frame(height: 26)
+                            .background(YYColor.card, in: .capsule)
+                            .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
+                            .shadow(color: .black.opacity(0.05), radius: 1, y: 1)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    Menu {
+                        ForEach(Voices.all(for: language), id: \.id) { v in
+                            Button {
+                                HostVoices.choose(v, show: show.id, host: host.name)
+                                hostVoicesChanged += 1
+                            } label: {
+                                if v.id == current?.id { Label(Voices.title(v), systemImage: "checkmark") } else { Text(Voices.title(v)) }
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 1) {
+                            Text("换声音")
+                            Image(systemName: "chevron.right").font(.yy(size: 9, weight: .semibold))
+                        }
+                        .font(.yy(size: 11)).foregroundStyle(YYColor.t2)
+                    }
+                    .menuStyle(.button).buttonStyle(.plain).menuIndicator(.hidden).fixedSize()
+                }
+                .padding(.leading, 9).padding(.trailing, 8).padding(.vertical, 9)
+                .background(YYColor.inset, in: .rect(cornerRadius: 14))
+            }
+        }
     }
 
     private func voice(_ player: Player) -> some View {
