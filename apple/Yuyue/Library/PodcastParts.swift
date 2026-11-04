@@ -146,6 +146,29 @@ struct ShowCover: View {
     }
 }
 
+extension Show {
+    var draft: ShowDraft {
+        ShowDraft(name: name, sources: sources, schedule: schedule, minutes: minutes, form: form, hosts: hosts,
+                  language: language, brief: brief, avoid: avoid, device: device)
+    }
+
+    /// "工作日早上 7:00", "每天 7:00", "点了才写".
+    var scheduleLine: String { schedule.line }
+}
+
+extension ShowSchedule {
+    var line: String {
+        let time = String(format: "%d:%02d", minute / 60, minute % 60)
+        let d = Set(days)
+        if d.isEmpty { return String(localized: "点了才写") }
+        if d == [1, 2, 3, 4, 5] { return String(localized: "工作日 \(time)") }
+        if d.count == 7 { return String(localized: "每天 \(time)") }
+        let names = [String(localized: "一"), String(localized: "二"), String(localized: "三"), String(localized: "四"),
+                     String(localized: "五"), String(localized: "六"), String(localized: "日")]
+        return String(localized: "每周\(days.sorted().map { names[Int($0) - 1] }.joined(separator: "、")) \(time)")
+    }
+}
+
 extension Episode {
     /// "今天", "昨天", "10 月 27 日".
     var day: String {

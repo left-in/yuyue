@@ -10,8 +10,9 @@ struct SyncSettings: View {
     @State private var editingWebDAV = false
     @State private var signingIn = false
     @State private var googleProblem: String?
-    /// What 书文件和有声书 take, worked out when the page opens.
+    /// What 书文件 and 有声书录音 take, worked out when the page opens.
     @State private var filesSize: Int64?
+    @State private var recordingsSize: Int64?
     @Environment(\.colorScheme) private var scheme
     @Environment(\.webAuthenticationSession) private var webAuthenticationSession
 
@@ -63,8 +64,11 @@ struct SyncSettings: View {
                 SettingsRow(String(localized: "进度和书签"), compact: true) { included(.reading) }
                 SettingsRow(String(localized: "笔记和生词"), compact: true) { included(.notes) }
                 SettingsRow(String(localized: "设置和替换规则"), compact: true) { included(.settings) }
-                SettingsRow(String(localized: "书文件和有声书"), detail: filesDetail, compact: true) {
+                SettingsRow(String(localized: "书文件"), detail: filesDetail, compact: true) {
                     SettingsSwitch(isOn: Binding(get: { sync.syncsFiles }, set: { sync.syncFiles($0) }))
+                }
+                SettingsRow(String(localized: "有声书录音"), detail: recordingsDetail, compact: true) {
+                    SettingsSwitch(isOn: Binding(get: { sync.syncsRecordings }, set: { sync.syncRecordings($0) }))
                 }
             }
             Label("不用注册账号，数据只在你的设备和你自己的网盘之间走", systemImage: "lock")
@@ -75,18 +79,28 @@ struct SyncSettings: View {
         .onAppear {
             sync.loadDevices()
             filesSize = sync.filesSize()
+            recordingsSize = sync.recordingsSize()
         }
     }
 
-    /// 3.2 GB，占你自己的 iCloud 空间；在这台 Mac 上合成的听读书也跟着过去
-    private var filesDetail: String {
-        let place = switch sync.method {
+    private var place: String {
+        switch sync.method {
         case .webdav: String(localized: "网盘")
         case .googleDrive: "Google Drive "
         default: "iCloud "
         }
+    }
+
+    /// 3.2 GB，占你自己的 iCloud 空间；播客每一集不管开没开都同步
+    private var filesDetail: String {
         let size = filesSize.map { ByteCountFormatter.string(fromByteCount: $0, countStyle: .file) + "，" } ?? ""
-        return String(localized: "\(size)占你自己的 \(place)空间；在这台 Mac 上合成的听读书也跟着过去")
+        return String(localized: "\(size)占你自己的 \(place)空间。播客每一集都很小，不管开没开都同步")
+    }
+
+    /// The recordings are big; where each sentence is goes with 进度和书签 anyway.
+    private var recordingsDetail: String {
+        let size = recordingsSize.flatMap { $0 > 0 ? ByteCountFormatter.string(fromByteCount: $0, countStyle: .file) + "，" : nil } ?? ""
+        return String(localized: "\(size)整个录音传过去。关着时只同步对齐结果：别的设备导入同一份录音，不用再合成就能听")
     }
 
     private func included(_ part: SyncPart) -> some View {

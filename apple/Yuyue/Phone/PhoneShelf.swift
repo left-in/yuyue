@@ -47,7 +47,9 @@ struct PhoneShelf: View {
                             .padding(.bottom, 14)
                             .animation(YYMotion.layout, value: kind)
                     }
-                    if library.shelfBooks.isEmpty, filter == .all {
+                    if kind == .podcasts {
+                        PhonePodcasts(library: library)
+                    } else if library.shelfBooks.isEmpty, filter == .all {
                     } else if shown.isEmpty {
                         empty
                     } else {
@@ -128,8 +130,21 @@ struct PhoneShelf: View {
 
     /// 全部 · 书 · 有声, within what the title picked.
     @State private var kind = Kind.all
-    private enum Kind: CaseIterable { case all, books, audio
-        var name: String { switch self { case .all: String(localized: "全部"); case .books: String(localized: "书"); case .audio: String(localized: "有声") } }
+    private enum Kind: CaseIterable { case all, books, audio, podcasts
+        var name: String {
+            switch self {
+            case .all: String(localized: "全部")
+            case .books: String(localized: "书")
+            case .audio: String(localized: "有声")
+            case .podcasts: String(localized: "播客")
+            }
+        }
+    }
+
+    /// 播客 only once there's a show (made on the Mac) or an episode.
+    private var kindsShown: [Kind] {
+        let podcasts = !library.podcasts.shows.isEmpty || !library.podcasts.latest.isEmpty
+        return Kind.allCases.filter { $0 != .podcasts || podcasts || kind == .podcasts }
     }
 
     private var shown: [BookSummary] {
@@ -143,6 +158,7 @@ struct PhoneShelf: View {
         case .all: break
         case .books: break
         case .audio: books = books.filter(library.hasAudio)
+        case .podcasts: return []
         }
         return sort.sorted(books)
     }
@@ -155,6 +171,7 @@ struct PhoneShelf: View {
             case .all: true
             case .books: true
             case .audio: library.hasAudio(b)
+            case .podcasts: false
             }
         }
     }
@@ -235,7 +252,7 @@ struct PhoneShelf: View {
 
     private var kinds: some View {
         HStack(spacing: 8) {
-            ForEach(Kind.allCases, id: \.self) { k in
+            ForEach(kindsShown, id: \.self) { k in
                 Button { kind = k } label: {
                     Text(k.name)
                         .font(.footnote.weight(kind == k ? .semibold : .regular))

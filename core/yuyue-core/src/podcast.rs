@@ -675,6 +675,40 @@ fn script_json(s: &EpisodeScript) -> Value {
     })
 }
 
+/// A script as `script_json` wrote it, from an episode's file.
+fn script_from_json(v: &Value) -> Option<EpisodeScript> {
+    let str_of = |v: &Value, k: &str| v[k].as_str().unwrap_or_default().to_string();
+    Some(EpisodeScript {
+        title: v["title"].as_str()?.to_string(),
+        summary: str_of(v, "summary"),
+        articles: v["articles"].as_array()?.iter().map(|a| ScriptArticle { title: str_of(a, "title"), url: str_of(a, "url"), source: str_of(a, "source") }).collect(),
+        segments: v["segments"]
+            .as_array()?
+            .iter()
+            .map(|g| ScriptSegment {
+                topic: str_of(g, "topic"),
+                articles: g["articles"].as_array().into_iter().flatten().filter_map(Value::as_u64).map(|n| n as u32).collect(),
+                lines: g["lines"].as_array().into_iter().flatten().map(|l| ScriptLine { who: str_of(l, "who"), text: str_of(l, "text") }).collect(),
+            })
+            .collect(),
+    })
+}
+
+impl YuyueCore {
+    /// An episode's file brought from another device (同步 · 书文件): built into the same book
+    /// here, by its show as the log has it. Not a TXT, though the file is text.
+    pub(crate) fn import_episode(&self, bytes: &[u8]) -> Result<Manifest> {
+        let v: Value = serde_json::from_slice(bytes).map_err(|_| CoreError::bad_book("not an episode"))?;
+        let (Some(show), Some(date), Some(script)) = (v["show"].as_str(), v["date"].as_str(), script_from_json(&v["script"])) else {
+            return Err(CoreError::bad_book("not an episode"));
+        };
+        let s = self.show(show.to_string())?;
+        let id = book::book_id(bytes);
+        let manifest = book::build_into(&self.books_dir, &id, |tmp| build_episode(tmp, &id, &s, date, &script, bytes))?;
+        Ok(manifest)
+    }
+}
+
 /// Checks the answer to `script_prompt` and reads it. Hosts' names are matched loosely (a
 /// model writes "老周：" or "Lao Zhou"); a line no host can be found for, an empty segment, or
 /// an article index that wasn't given is an error saying which, so the app can ask again once.

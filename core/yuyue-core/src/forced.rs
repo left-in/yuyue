@@ -19,6 +19,11 @@
 //! more for each sentence left out. Without it one sentence the reader didn't read pulls every
 //! sentence after it out of place. The sentences jumped over come back as not in the recording.
 //!
+//! What's in the recording but not in the book inside a chapter (an ad, “本节目由……”, a word
+//! from the reader) is taken by the pause between the two sentences around it, which may hold
+//! speech at `GAP_PENALTY` a letter heard. Taken that way it's left out of both sentences, so
+//! playing one after the other passes over it; before, the sentence next to it took it in.
+//!
 //! A recording in several files is placed file by file (`align_files`), a long file a piece at a
 //! time.
 
@@ -51,6 +56,14 @@ const SKIP_PENALTY: f32 = 12.0;
 const SKIP_EACH: f32 = 2.0;
 /// The most sentences one jump leaves out.
 const MAX_SKIP: usize = 12;
+/// The pause between two sentences of a chapter can also hold speech that isn't in the book (an
+/// ad, “本节目由……”, a word from the reader), scoring this much under the best letter each frame:
+/// dearer than the wildcard around titles, so it takes only what reading the book can't explain.
+const GAP_PENALTY: f32 = 2.0;
+/// Speech taken by a pause, this long (frames) or more and with this many letters heard in it,
+/// is left out of both sentences around it.
+const GAP_FRAMES: usize = 50;
+const GAP_LETTERS: usize = 8;
 
 fn letter(c: char) -> Option<usize> {
     LETTERS.chars().position(|l| l == c).filter(|&i| i != BLANK)
@@ -190,7 +203,7 @@ fn jumps(tokens: &[usize], owner: &[Option<usize>]) -> (Vec<u32>, Vec<Vec<(usize
 }
 
 /// Each token's first and last frame (end exclusive), or None when the path skipped it.
-fn viterbi(em: &[f32], frames: usize, tokens: &[usize], owner: &[Option<usize>]) -> Vec<Option<(usize, usize)>> {
+fn viterbi(em: &[f32], frames: usize, tokens: &[usize], owner: &[Option<usize>]) -> (Vec<Option<(usize, usize)>>, Vec<(usize, usize)>) {
     let (jump_at, jump_lists) = jumps(tokens, owner);
     // Where a jump was taken, in the order the search goes (frame, then state), packed as
     // frame << 32 | state, and which of that state's jumps it was. Kept as two plain lists, not
@@ -205,6 +218,10 @@ fn viterbi(em: &[f32], frames: usize, tokens: &[usize], owner: &[Option<usize>])
     // States: blank, token 0, blank, token 1, …, blank.
     let states = 2 * tokens.len() + 1;
     let label = |s: usize| if s.is_multiple_of(2) { BLANK } else { tokens[s / 2] };
+    // The pauses between two sentences, which may hold speech not in the book.
+    let gap = |s: usize| s.is_multiple_of(2) && s >= 2 && s / 2 < tokens.len() && matches!((owner[s / 2 - 1], owner[s / 2]), (Some(a), Some(b)) if a != b);
+    let best_of = |t: usize| em[t * classes..(t + 1) * classes].iter().copied().fold(f32::MIN, f32::max);
+    let state_score = |t: usize, s: usize| if gap(s) { score(t, BLANK).max(best_of(t) - GAP_PENALTY) } else { score(t, label(s)) };
     // A state may be reached from two back when it's a token unlike the one before (CTC).
     let can_skip = |s: usize| s % 2 == 1 && s >= 3 && tokens[s / 2] != tokens[s / 2 - 1];
     let width = (2 * WINDOW).min(states);
@@ -222,9 +239,9 @@ fn viterbi(em: &[f32], frames: usize, tokens: &[usize], owner: &[Option<usize>])
         (back[i / 4] >> ((i % 4) * 2)) & 3
     };
     let mut alpha = vec![NEG; width];
-    alpha[0] = score(0, label(0));
+    alpha[0] = state_score(0, 0);
     if width > 1 {
-        alpha[1] = score(0, label(1));
+        alpha[1] = state_score(0, 1);
     }
     let mut low = 0;
     let mut next = vec![NEG; width];
@@ -253,7 +270,7 @@ fn viterbi(em: &[f32], frames: usize, tokens: &[usize], owner: &[Option<usize>])
                     jumped_which.push(i);
                 }
             }
-            next[k] = if v <= NEG { NEG } else { v + score(t, label(s)) };
+            next[k] = if v <= NEG { NEG } else { v + state_score(t, s) };
             set(&mut back, t, k, from);
         }
         std::mem::swap(&mut alpha, &mut next);
@@ -263,7 +280,16 @@ fn viterbi(em: &[f32], frames: usize, tokens: &[usize], owner: &[Option<usize>])
     // From the best state at the end: the book needn't be read to its last letter.
     let mut s = low + alpha.iter().enumerate().max_by(|a, b| a.1.total_cmp(b.1)).map(|(i, _)| i).unwrap_or(0);
     let mut spans = vec![None; tokens.len()];
+    // Each stretch the path spent in a pause between sentences, last first, as (state, first
+    // frame, last frame + 1), and how many of its frames heard a letter more than the quiet.
+    let mut pauses: Vec<(usize, usize, usize)> = Vec::new();
     for t in (0..frames).rev() {
+        if gap(s) {
+            match pauses.last_mut() {
+                Some((st, a, _)) if *st == s && *a == t + 1 => *a = t,
+                _ => pauses.push((s, t, t + 1)),
+            }
+        }
         if s % 2 == 1 {
             let k = s / 2;
             spans[k] = Some(match spans[k] {
@@ -281,7 +307,19 @@ fn viterbi(em: &[f32], frames: usize, tokens: &[usize], owner: &[Option<usize>])
             };
         }
     }
-    spans
+    // Speech in a pause: from its first letter heard to its last, when there are enough of them
+    // to be words rather than a breath or a cough.
+    let mut runs: Vec<(usize, usize)> = Vec::new();
+    for &(_, a, b) in pauses.iter().rev() {
+        let heard: Vec<usize> = (a..b).filter(|&t| best_of(t) > score(t, BLANK)).collect();
+        if let (Some(&x), Some(&y)) = (heard.first(), heard.last())
+            && heard.len() >= GAP_LETTERS
+            && y + 1 - x >= GAP_FRAMES
+        {
+            runs.push((x, y + 1));
+        }
+    }
+    (spans, runs)
 }
 
 /// The book's sentences by section against the model's output for one recording: `em` is
@@ -295,7 +333,7 @@ pub fn align(book: &[(u32, Vec<String>)], chinese: bool, em: &[f32], frames: usi
 /// group starts at, and the sentences keep their numbers.
 fn align_from(book: &[(u32, Vec<String>)], firsts: &[u32], chinese: bool, em: &[f32], frames: usize, seconds: f64) -> Alignment {
     let (tokens, owner) = tokens(book, chinese, firsts);
-    let spans = if frames > 0 { viterbi(em, frames, &tokens, &owner) } else { vec![None; tokens.len()] };
+    let (spans, extra) = if frames > 0 { viterbi(em, frames, &tokens, &owner) } else { (vec![None; tokens.len()], Vec::new()) };
     let fps = frames as f64 / seconds.max(0.001);
     let classes = if frames > 0 { em.len() / frames } else { 0 };
     let list: Vec<(u32, u32)> = book.iter().zip(firsts).flat_map(|((sec, s), &f)| (0..s.len() as u32).map(move |i| (*sec, f + i))).collect();
@@ -330,10 +368,19 @@ fn align_from(book: &[(u32, Vec<String>)], firsts: &[u32], chinese: bool, em: &[
     // A letter lights up only for a moment: the first late, the last early. The pause between two
     // sentences is cut in the middle and shared.
     let timed: Vec<usize> = (0..sentences.len()).filter(|&k| sentences[k].start >= 0.0).collect();
+    // Speech not in the book between two sentences stays out of both: each gets half the quiet
+    // on its side of it, and playing the one after the other passes over it.
     for w in timed.windows(2) {
-        let mid = (sentences[w[0]].end + sentences[w[1]].start) / 2.0;
-        sentences[w[0]].end = mid;
-        sentences[w[1]].start = mid;
+        let (a, b) = (sentences[w[0]].end, sentences[w[1]].start);
+        let inside = extra.iter().find(|&&(x, y)| x as f64 / fps >= a - 0.05 && y as f64 / fps <= b + 0.05);
+        if let Some(&(x, y)) = inside {
+            sentences[w[0]].end = (a + x as f64 / fps) / 2.0;
+            sentences[w[1]].start = (y as f64 / fps + b) / 2.0;
+        } else {
+            let mid = (a + b) / 2.0;
+            sentences[w[0]].end = mid;
+            sentences[w[1]].start = mid;
+        }
     }
     if let (Some(&f), Some(&l)) = (timed.first(), timed.last()) {
         sentences[f].start = (sentences[f].start - 0.15).max(0.0);
@@ -707,6 +754,40 @@ mod tests {
         let at = (20 + before * 4) as f64 / 50.0;
         assert!((s[3].start - at).abs() < 0.3, "rain stopped at {} not {at}", s[3].start);
         assert_eq!(a.sections[0].missing, 1);
+    }
+
+    /// Words in the recording that aren't in the book (an ad between two sentences) are left
+    /// out of both sentences around them, and everything after is still found.
+    #[test]
+    fn speech_not_in_the_book_is_left_out() {
+        let book = vec![(
+            0u32,
+            vec![
+                "Chapter one.".to_string(),
+                "It was a dark night.".into(),
+                "The rain stopped.".into(),
+                "Morning came slowly over the hills.".into(),
+                "The end.".into(),
+            ],
+        )];
+        let (mut em, _) = recording("chapter one it was a dark night", 0);
+        let from = em.len() / 28;
+        // The ad as the model gives speech: each letter a frame, quiet between.
+        for l in letters("this part is brought to you by a coffee shop", false) {
+            em.extend((0..28).map(|c| if c == l { -0.3 } else { -6.0 }));
+            for _ in 0..3 {
+                em.extend((0..28).map(|c| if c == BLANK { -0.05 } else { -6.0 }));
+            }
+        }
+        let to = em.len() / 28;
+        em.extend(recording("the rain stopped morning came slowly over the hills the end", 0).0);
+        let frames = em.len() / 28;
+        let a = align(&book, false, &em, frames, frames as f64 / 50.0);
+        let s = &a.sentences;
+        assert!(s.iter().all(|t| t.start >= 0.0), "{s:?}");
+        let (from, to) = (from as f64 / 50.0, to as f64 / 50.0);
+        assert!(s[1].end < from + 0.3, "the night ends at {} (ad from {from})", s[1].end);
+        assert!(s[2].start > to - 0.3, "the rain starts at {} (ad to {to})", s[2].start);
     }
 
     /// Every sentence read: nothing jumped over.

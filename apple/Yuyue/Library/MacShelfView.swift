@@ -128,6 +128,7 @@ struct MacShelfView: View {
         .tint(tint.accent)
         .onAppear {
             AppAppearance.apply()
+            MacMenuBar.openWindow = openWindow
             // 打开语阅时接着读上次那本: once, when the app starts.
             guard reopenLast, !reopened else { return }
             reopened = true

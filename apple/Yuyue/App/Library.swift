@@ -46,6 +46,10 @@ final class Library {
     let audiobooks: Audiobooks
     /// 播客.
     let podcasts: Podcasts
+    #if os(macOS)
+    /// 语阅 in the menu bar, while shows are written here at set times.
+    @ObservationIgnored private var menuBar: MacMenuBar?
+    #endif
     @ObservationIgnored private var madeNoteSender: NoteSender?
     /// 笔记 › 导出's sends, told in the library's notes.
     var noteSender: NoteSender {
@@ -78,6 +82,7 @@ final class Library {
         podcasts = Podcasts(core: core, dataDir: dir)
         #if os(macOS)
         podcasts.startSchedule()
+        menuBar = MacMenuBar(library: self)
         #endif
         // Deleted books can be put back for 30 days; after that their files go.
         _ = try? core.purgeDeleted(olderThanMs: 30 * 24 * 3600 * 1000)

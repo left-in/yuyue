@@ -1282,6 +1282,9 @@ struct PhoneSync: View {
                 YYRow(title: String(localized: "书文件"), value: String(localized: "只在 Wi-Fi 下")) {
                     YYSwitch(isOn: Binding(get: { sync.syncsFiles }, set: { sync.syncFiles($0) }), label: String(localized: "书文件"))
                 }
+                YYRow(title: String(localized: "有声书录音"), value: String(localized: "只在 Wi-Fi 下")) {
+                    YYSwitch(isOn: Binding(get: { sync.syncsRecordings }, set: { sync.syncRecordings($0) }), label: String(localized: "有声书录音"))
+                }
             }
             .padding(.bottom, YYUI.s(14))
             if sync.isOn {

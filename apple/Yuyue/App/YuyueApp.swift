@@ -74,6 +74,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// Opened before the shelf was there to take them.
     @MainActor static var waiting: [URL] = []
 
+    /// Started by macOS as a login item (开机时打开语阅): no window, only the menu bar.
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        guard LoginItem.launchedAtLogin else { return }
+        DispatchQueue.main.async {
+            for w in NSApp.windows where w.identifier?.rawValue.hasPrefix("library") == true { w.close() }
+        }
+    }
+
+    /// Closing the shelf leaves 语阅 running (the menu bar, a show's time to be written).
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
+
     func application(_ application: NSApplication, open urls: [URL]) {
         MainActor.assumeIsolated {
             Self.waiting += urls

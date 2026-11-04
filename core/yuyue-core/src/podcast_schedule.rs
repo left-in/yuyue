@@ -2,7 +2,8 @@
 //! which device. A show is written by one device only (`Show::device`, by default the one it was
 //! made on), so two don't write the same episode; the others get the script through sync.
 //!
-//! A slot is a scheduled day at the show's minute, local time. One is due once it has passed and
+//! A slot is a scheduled day at the show's minute, local time. Writing starts `LEAD` before it, so
+//! the episode is ready when the reader sits down to it. One is due once that time has come and
 //! no episode came after it (or shortly before: one written by hand at 6:50 serves 7:00). A slot
 //! missed while the device was off is still written when it's back, but not one from long ago:
 //! that would only be yesterday's news.
@@ -17,6 +18,9 @@ const DAY: i64 = 24 * 60 * MINUTE;
 const CATCH_UP: i64 = 20 * 60 * MINUTE;
 /// An episode written up to this long before a slot serves it.
 const EARLY: i64 = 2 * 60 * MINUTE;
+/// Writing starts this long before the slot, so the episode is there to listen to at 7:00, not
+/// a few minutes after: a dozen questions to the model take a while.
+pub const LEAD: i64 = 20 * MINUTE;
 
 /// 1 = Monday … 7 = Sunday, of a day counted from 1970-01-01 (a Thursday).
 fn weekday(day: i64) -> u32 {
@@ -57,8 +61,8 @@ impl YuyueCore {
             if show.device.as_deref().is_some_and(|d| d != me) {
                 continue;
             }
-            let Some(slot) = last_slot(&show.schedule, now_ms, utc_offset_minutes) else { continue };
-            if now_ms - slot > CATCH_UP {
+            let Some(slot) = last_slot(&show.schedule, now_ms + LEAD, utc_offset_minutes) else { continue };
+            if now_ms + LEAD - slot > CATCH_UP {
                 continue;
             }
             // A show made after the slot hasn't missed it.
@@ -74,10 +78,17 @@ impl YuyueCore {
         Ok(out)
     }
 
-    /// When the soonest of this device's shows is next due, for the app to wake up then.
+    /// When the soonest of this device's shows is next due (writing starts then, `LEAD` before
+    /// its slot), for the app to wake up then.
     pub fn next_show_slot(&self, now_ms: i64, utc_offset_minutes: i32) -> Result<Option<i64>> {
         let me = self.device_id();
-        Ok(self.shows()?.iter().filter(|s| s.device.as_deref().is_none_or(|d| d == me)).filter_map(|s| next_slot(&s.schedule, now_ms, utc_offset_minutes)).min())
+        Ok(self.shows()?.iter().filter(|s| s.device.as_deref().is_none_or(|d| d == me)).filter_map(|s| next_slot(&s.schedule, now_ms + LEAD, utc_offset_minutes)).map(|t| t - LEAD).min())
+    }
+
+    /// When this show's next episode is to be ready, for 下一集 7:00; None when it's written only
+    /// when asked.
+    pub fn show_next_slot(&self, show: String, now_ms: i64, utc_offset_minutes: i32) -> Result<Option<i64>> {
+        Ok(self.shows()?.iter().find(|s| s.id == show).and_then(|s| next_slot(&s.schedule, now_ms, utc_offset_minutes)))
     }
 }
 

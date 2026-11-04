@@ -206,6 +206,12 @@ final class Audiobooks {
     /// 以后同名的书都这样配.
     static let autoPairKey = "audiobooks.autoPair"
 
+    /// Removed on this device: what the log says of them isn't taken in again.
+    private var removedHere: Set<String> {
+        get { Set(UserDefaults.standard.stringArray(forKey: "audiobooks.removedHere") ?? []) }
+        set { UserDefaults.standard.set(newValue.sorted(), forKey: "audiobooks.removedHere") }
+    }
+
     init(core: YuyueCore, dataDir: URL) {
         self.core = core
         self.dataDir = dataDir
@@ -239,7 +245,8 @@ final class Audiobooks {
         guard let pairs = try? core.listeningPairs() else { return }
         var changed = false
         // One being made here is this device's to write.
-        for pair in pairs where job?.audiobook != pair.recording {
+        let removed = removedHere
+        for pair in pairs where job?.audiobook != pair.recording && !removed.contains(pair.recording) {
             guard let l = try? core.listening(recording: pair.recording) else { continue }
             var a: Audiobook
             if let mine = all.first(where: { $0.id == pair.recording }) {
@@ -358,6 +365,7 @@ final class Audiobooks {
     /// no second copy), under the shelf book's id.
     func add(shelf book: BookSummary) throws -> Audiobook {
         if let a = all.first(where: { $0.id == book.id }) { return a }
+        removedHere.remove(book.id)
         let r = try core.audioRecording(bookId: book.id)
         let folder = folder(book.id)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
@@ -382,10 +390,13 @@ final class Audiobooks {
         return FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) ? url : nil
     }
 
+    /// Off this device. Where its sentences are stays in the sync log: the other devices keep
+    /// their own copies of the recording. It isn't taken in again here from the log, until it's
+    /// laid out again by hand.
     func remove(_ a: Audiobook) {
         if job?.audiobook == a.id { job?.cancel() }
         try? FileManager.default.removeItem(at: folder(a.id))
-        try? core.forgetListening(recording: a.id)
+        removedHere.insert(a.id)
         recordings[a.id] = nil
         all.removeAll { $0.id == a.id }
     }

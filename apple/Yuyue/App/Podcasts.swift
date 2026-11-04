@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import UserNotifications
 import YuyueCore
 #if os(macOS)
 import AppKit
@@ -159,39 +160,69 @@ final class Podcasts {
             guard let show = shows.first(where: { $0.id == due.show }) else { continue }
             tried[due.show] = due.slotMs
             Self.log("due: \(show.name) for slot \(due.slotMs)")
-            write(show)
+            write(show, auto: true)
         }
         // Shows that are gone needn't be remembered.
         tried = tried.filter { k, _ in shows.contains { $0.id == k } }
         UserDefaults.standard.set(tried, forKey: Self.triedKey)
         dueTimer?.invalidate()
+        scheduledHere = shows.contains { !$0.schedule.days.isEmpty && ($0.device == nil || $0.device == core.deviceId()) }
         guard let next = try? core.nextShowSlot(nowMs: now, utcOffsetMinutes: offset) else { dueTimer = nil; return }
         // At most an hour, so a clock or time zone change is caught up with.
         let wait = min(max(Double(next - now) / 1000 + 5, 30), 3600)
-        dueTimer = Timer.scheduledTimer(withTimeInterval: wait, repeats: false) { [weak self] _ in
+        let timer = Timer(timeInterval: wait, repeats: false) { [weak self] _ in
             Task { @MainActor in self?.writeDue() }
         }
+        // Fired on time even while 语阅 is in the background (App Nap would put it off).
+        timer.tolerance = 1
+        RunLoop.main.add(timer, forMode: .common)
+        dueTimer = timer
     }
     #endif
+
+    /// Some show is written on this Mac at set times: the menu bar shows 语阅, so it can be left
+    /// running without a window.
+    private(set) var scheduledHere = false
+
+    /// When `show`'s next episode is to be ready.
+    func nextSlot(_ show: Show) -> Date? {
+        let now = Int64(Date().timeIntervalSince1970 * 1000)
+        let offset = Int32(TimeZone.current.secondsFromGMT() / 60)
+        return (try? core.showNextSlot(show: show.id, nowMs: now, utcOffsetMinutes: offset))?.flatMap { $0 }.map { Date(timeIntervalSince1970: Double($0) / 1000) }
+    }
+
+    /// Whether `show` is written on this device (the others get its episodes through sync).
+    func writtenHere(_ show: Show) -> Bool { show.device == nil || show.device == core.deviceId() }
 
     // MARK: Writing an episode
 
     func isWriting(_ show: String) -> Bool { tasks[show] != nil }
 
-    /// 现在写一集.
-    func write(_ show: Show) {
+    /// 现在写一集; `auto` when it's the show's time and nobody asked: then a notification says
+    /// how it went, as nobody's watching.
+    func write(_ show: Show, auto: Bool = false) {
         guard tasks[show.id] == nil else { return }
         failure[show.id] = nil
         let run = UUID()
         runs[show.id] = run
+        if auto { Self.askToNotify() }
         tasks[show.id] = Task { [weak self] in
             guard let self else { return }
+            // A dozen questions to the model in a row: not slowed down for being in the background.
+            let activity = ProcessInfo.processInfo.beginActivity(options: [.userInitiated], reason: "播客：写新一集")
+            defer { ProcessInfo.processInfo.endActivity(activity) }
             do {
-                try await self.run(show)
+                let episode = try await self.run(show)
+                if auto {
+                    Self.notify(String(localized: "《\(show.name)》新一集写好了"), episode.title)
+                }
             } catch is CancellationError {
             } catch {
                 self.failure[show.id] = Self.message(for: error)
                 Self.log("failed: \(error)")
+                if auto {
+                    Self.notify(String(localized: "《\(show.name)》这一集没写成"), Self.message(for: error))
+                }
             }
             // Cancelled and started again meanwhile: the new run is the show's now.
             guard self.runs[show.id] == run else { return }
@@ -280,7 +311,8 @@ final class Podcasts {
         }
     }
 
-    private func run(_ show: Show) async throws {
+    @discardableResult
+    private func run(_ show: Show) async throws -> Episode {
         var config = CompanionConfig.current
         #if DEBUG
         // A test run can bring its own OpenAI-shaped service (YUYUE_PODCAST_URL, _KEY, _MODEL),
@@ -415,12 +447,25 @@ final class Podcasts {
         // 6 存成一集
         Self.log("script ok, \(script.segments.count) segments")
         writing[show.id]?.step = .save
-        _ = try core.saveEpisode(show: show.id, date: work.date, script: script)
+        let episode = try core.saveEpisode(show: show.id, date: work.date, script: script)
         try core.markTold(show: show.id, keys: picked.map { work.items[$0].key })
         clear(show.id)
         repick[show.id] = nil
         talk[show.id] = nil
         Self.log("done")
+        return episode
+    }
+
+    private static func askToNotify() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+    }
+
+    private static func notify(_ title: String, _ body: String) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.threadIdentifier = "podcast"
+        UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil))
     }
 
     private static func log(_ s: String) {

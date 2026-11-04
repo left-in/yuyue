@@ -28,6 +28,12 @@ struct MacPodcastView: View {
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
+                        // Found out now, not at 7:00 when the episode can't be written.
+                        if podcasts.scheduledHere, !CompanionConfig.current.isReady {
+                            Label("节目到点要写，但还没选写稿用的模型。设置 › 书伴 里选一个服务商", systemImage: "exclamationmark.circle")
+                                .font(.yy(size: 12)).foregroundStyle(YYColor.danger)
+                                .padding(.top, 8)
+                        }
                         covers
                         latest
                     }
@@ -246,37 +252,39 @@ extension ShowDraftEdit: Hashable {
     func hash(into h: inout Hasher) { h.combine(id) }
 }
 
-extension Show {
-    var draft: ShowDraft {
-        ShowDraft(name: name, sources: sources, schedule: schedule, minutes: minutes, form: form, hosts: hosts,
-                  language: language, brief: brief, avoid: avoid, device: device)
-    }
-
-    /// "工作日早上 7:00", "每天 7:00", "点了才写".
-    var scheduleLine: String { schedule.line }
-}
-
-extension ShowSchedule {
-    var line: String {
-        let time = String(format: "%d:%02d", minute / 60, minute % 60)
-        let d = Set(days)
-        if d.isEmpty { return String(localized: "点了才写") }
-        if d == [1, 2, 3, 4, 5] { return String(localized: "工作日 \(time)") }
-        if d.count == 7 { return String(localized: "每天 \(time)") }
-        let names = [String(localized: "一"), String(localized: "二"), String(localized: "三"), String(localized: "四"),
-                     String(localized: "五"), String(localized: "六"), String(localized: "日")]
-        return String(localized: "每周\(days.sorted().map { names[Int($0) - 1] }.joined(separator: "、")) \(time)")
-    }
-}
-
 /// 设置 · 播客: the shows are on their own page now.
 struct MacPodcastSettingsNote: View {
+    /// Shows are written at their time only while 语阅 runs.
+    private var loginDetail: String {
+        if let loginProblem { return loginProblem }
+        if LoginItem.needsApproval { return String(localized: "还要在 系统设置 › 通用 › 登录项 里允许语阅") }
+        return String(localized: "节目到点自己写，要语阅开着。开机后只在菜单栏，不开窗口；关掉窗口语阅也还在菜单栏")
+    }
+
     /// U6: heard episodes are cleared after 30 days unless this is on.
     @AppStorage(Podcasts.keepHeardKey) private var keepHeard = false
+    @State private var atLogin = LoginItem.isOn || LoginItem.needsApproval
+    @State private var loginProblem: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             SettingsCard {
+                SettingsRow(String(localized: "开机时打开语阅"), detail: loginDetail) {
+                    HStack(spacing: 8) {
+                        if LoginItem.needsApproval {
+                            Button("去允许") { LoginItem.openSettings() }
+                        }
+                        SettingsSwitch(isOn: Binding(get: { atLogin }, set: { on in
+                            do {
+                                try LoginItem.set(on)
+                                atLogin = on
+                                loginProblem = nil
+                            } catch {
+                                loginProblem = error.localizedDescription
+                            }
+                        }))
+                    }
+                }
                 SettingsRow(String(localized: "节目"), detail: String(localized: "在书架窗口左边的“播客”里配节目、写新一集")) { EmptyView() }
                 SettingsRow(String(localized: "写稿用的模型"), detail: String(localized: "和书伴用同一个：设置 › 书伴")) { EmptyView() }
                 SettingsRow(String(localized: "主持人的声音"), detail: String(localized: "每台设备自己选，在配节目的“谁来讲”里试听")) { EmptyView() }

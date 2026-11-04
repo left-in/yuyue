@@ -279,7 +279,13 @@ impl YuyueCore {
 
     /// Imports an EPUB or TXT file. Importing the same file again returns the same book.
     pub fn import_book(&self, path: String) -> Result<BookSummary> {
-        let manifest = book::import(&self.books_dir, Path::new(&path))?;
+        let p = Path::new(&path);
+        // 播客's episodes travel as their script (`<id>.book.podcast`): rebuilt, not read as text.
+        let manifest = if p.extension().is_some_and(|e| e.eq_ignore_ascii_case("podcast")) {
+            self.import_episode(&std::fs::read(p)?)?
+        } else {
+            book::import(&self.books_dir, p)?
+        };
         let id = manifest.id.clone();
         self.record_import(&manifest)?;
         lock(&self.manifests).insert(id.clone(), Arc::new(manifest));

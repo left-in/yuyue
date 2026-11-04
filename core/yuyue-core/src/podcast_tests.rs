@@ -425,10 +425,48 @@ fn shows_come_due_on_their_own_device() {
     core.update_show(s.id.clone(), late).unwrap();
     assert!(core.due_shows(now, 0).unwrap().is_empty(), "the last slot was 22 hours ago");
     core.update_show(s.id.clone(), d.clone()).unwrap();
+    // Started 20 minutes ahead, so it's ready at its time: due 10 minutes before, not 30.
+    let mut soon = d.clone();
+    soon.schedule.minute = ((now + 10 * minute).rem_euclid(86_400_000) / minute) as u32;
+    core.update_show(s.id.clone(), soon.clone()).unwrap();
+    let due = core.due_shows(now, 0).unwrap();
+    assert_eq!(due.len(), 1);
+    assert_eq!(due[0].slot_ms, now + 10 * minute - (now + 10 * minute).rem_euclid(minute));
+    soon.schedule.minute = ((now + 30 * minute).rem_euclid(86_400_000) / minute) as u32;
+    core.update_show(s.id.clone(), soon).unwrap();
+    let slot = now + 30 * minute - (now + 30 * minute).rem_euclid(minute);
+    assert!(core.due_shows(now, 0).unwrap().is_empty());
+    assert_eq!(core.next_show_slot(now, 0).unwrap(), Some(slot - 20 * minute));
+    assert_eq!(core.show_next_slot(s.id.clone(), now, 0).unwrap(), Some(slot));
+    core.update_show(s.id.clone(), d.clone()).unwrap();
     // Written by another device: not this one's to write.
     let mut other = d.clone();
     other.device = Some("someone-else".into());
     core.update_show(s.id.clone(), other).unwrap();
     assert!(core.due_shows(now, 0).unwrap().is_empty());
     assert_eq!(core.next_show_slot(now, 0).unwrap(), None);
+}
+
+/// An episode written on the Mac reaches the phone as its file (同步 · 书文件), and comes out
+/// the same episode there, not a TXT of its script.
+#[test]
+fn an_episode_travels_as_its_file() {
+    let mac = YuyueCore::open(temp("ep-mac"), "Mac".into(), "macos".into()).unwrap();
+    let phone = YuyueCore::open(temp("ep-phone"), "iPhone".into(), "ios".into()).unwrap();
+    let s = show(&mac);
+    let script = parse_script(answer(), s.clone(), articles()).unwrap();
+    let e = mac.save_episode(s.id.clone(), "2026-11-01".into(), script).unwrap();
+    phone.import_changes(mac.export_changes(phone.sync_version().unwrap()).unwrap()).unwrap();
+    assert!(!phone.summary(&e.book).unwrap().available);
+
+    let file = mac.original_file(e.book.clone()).unwrap();
+    let copy = std::path::Path::new(&temp("ep-copy")).join(format!("{}.podcast", e.book));
+    std::fs::create_dir_all(copy.parent().unwrap()).unwrap();
+    std::fs::copy(&file, &copy).unwrap();
+    let b = phone.import_book(copy.to_string_lossy().into_owned()).unwrap();
+    assert_eq!(b.id, e.book);
+    assert_eq!(b.format, BookFormat::Podcast);
+    assert!(b.available);
+    assert_eq!(phone.sentences(e.book.clone(), 0).unwrap(), mac.sentences(e.book.clone(), 0).unwrap());
+    assert_eq!(phone.section_speakers(e.book.clone(), 0).unwrap(), mac.section_speakers(e.book, 0).unwrap());
 }

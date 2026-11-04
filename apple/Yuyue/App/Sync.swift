@@ -61,8 +61,8 @@ final class Sync {
         now()
     }
 
-    /// 书文件和有声书: each book's own file, and the recordings made into 听读书 here, go into the
-    /// folder too, so a device that has only heard of a book gets it. On by default.
+    /// 书文件: each book's own file goes into the folder too, so a device that has only heard of a
+    /// book gets it. On by default. (播客's episodes go whatever this says: they're a few KB.)
     private(set) var syncsFiles = UserDefaults.standard.object(forKey: Keys.files) as? Bool ?? true
 
     func syncFiles(_ on: Bool) {
@@ -71,25 +71,41 @@ final class Sync {
         now()
     }
 
-    /// Whether this round moves files: on, and on the phone only over Wi-Fi.
-    private var filesNow: Bool {
+    /// 有声书录音: the recordings made into 听读书 here, whole (hundreds of MB each). Off by
+    /// default: where each sentence is goes with 进度和书签 anyway, so a device that brings in
+    /// its own copy of the recording listens straight away (听书开发方案 §4.1).
+    private(set) var syncsRecordings = UserDefaults.standard.bool(forKey: Keys.recordings)
+
+    func syncRecordings(_ on: Bool) {
+        syncsRecordings = on
+        UserDefaults.standard.set(on, forKey: Keys.recordings)
+        now()
+    }
+
+    /// Big files go on the phone only over Wi-Fi.
+    private var bigFilesNow: Bool {
         #if os(iOS)
         let path = network.currentPath
-        return syncsFiles && path.status == .satisfied && !path.isExpensive && !path.usesInterfaceType(.cellular)
+        return path.status == .satisfied && !path.isExpensive && !path.usesInterfaceType(.cellular)
         #else
-        return syncsFiles
+        return true
         #endif
     }
 
-    /// What the files would take in the folder: every book's file here and the 听读书 made here.
+    /// What the book files would take in the folder.
     func filesSize() -> Int64 {
         let books = ((try? core.books()) ?? []).filter(\.available).compactMap { try? core.originalFile(bookId: $0.id) }
+        let fm = FileManager.default
+        return books.reduce(0) { $0 + ((try? fm.attributesOfItem(atPath: $1)[.size] as? Int64) ?? 0) }
+    }
+
+    /// What the 听读书 made here would take in the folder.
+    func recordingsSize() -> Int64 {
         let audio = Audiobooks.shared.map { a in a.all.filter { $0.book != nil && $0.made != nil }.map { a.folder($0.id) } } ?? []
         let fm = FileManager.default
         var total: Int64 = 0
-        for path in books { total += (try? fm.attributesOfItem(atPath: path)[.size] as? Int64) ?? 0 }
         for dir in audio {
-            for name in (try? fm.contentsOfDirectory(atPath: dir.path(percentEncoded: false))) ?? [] {
+            for name in (try? fm.contentsOfDirectory(atPath: dir.path(percentEncoded: false))) ?? [] where !name.hasPrefix("emissions-") {
                 total += (try? fm.attributesOfItem(atPath: dir.appending(path: name).path(percentEncoded: false))[.size] as? Int64) ?? 0
             }
         }
@@ -113,18 +129,16 @@ final class Sync {
         guard running == nil, let folder else { return }
         state = .syncing
         let core = core
-        let audio = filesNow ? Audiobooks.shared?.dir : nil
-        let books = filesNow
+        let audio = syncsRecordings && bigFilesNow ? Audiobooks.shared?.dir : nil
+        let books = syncsFiles && bigFilesNow
         running = Task {
             do {
                 var applied = try await Self.exchange(core: core, folder: folder)
-                var missed = 0
-                if books {
-                    let (gotBooks, notGot, gotAudio) = await Self.exchangeFiles(core: core, folder: folder, audiobooks: audio)
-                    applied += gotBooks
-                    missed = notGot
-                    if gotAudio { Audiobooks.shared?.reload() }
-                }
+                // Book files when they're on, and 播客's episodes always.
+                let (gotBooks, notGot, gotAudio) = await Self.exchangeFiles(core: core, folder: folder, books: books, audiobooks: audio)
+                applied += gotBooks
+                let missed = notGot
+                if gotAudio { Audiobooks.shared?.reload() }
                 lastSynced = Date()
                 UserDefaults.standard.set(lastSynced, forKey: Keys.last)
                 // Notes and progress went across; a book file that didn't come down isn't 已同步.
@@ -264,6 +278,7 @@ final class Sync {
         static let googleEmail = "sync.google.email"
         static let leftOut = "sync.leftOut"
         static let files = "sync.files"
+        static let recordings = "sync.recordings"
     }
 
     // MARK: Exchanging
@@ -306,10 +321,11 @@ final class Sync {
     /// with `info.json` written last, so a device takes it only once all of it is there. One file
     /// failing doesn't stop the rest; it's tried again next time. Returns the books taken, and
     /// whether any 听读书 came.
-    @concurrent private static func exchangeFiles(core: YuyueCore, folder: any SyncFolder, audiobooks: URL?) async -> (UInt32, Int, Bool) {
+    @concurrent private static func exchangeFiles(core: YuyueCore, folder: any SyncFolder, books all: Bool, audiobooks: URL?) async -> (UInt32, Int, Bool) {
         guard let files = try? await folder.list() else { return (0, 0, false) }
         let fm = FileManager.default
-        let books = (try? core.books()) ?? []
+        // 书文件 off (or the phone not on Wi-Fi): only 播客's episodes, a few KB each.
+        let books = ((try? core.books()) ?? []).filter { all || $0.format == .podcast }
         var took: UInt32 = 0
         var missed = 0
         // Up: each book here the folder doesn't have yet.
