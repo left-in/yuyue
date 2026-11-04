@@ -114,6 +114,7 @@ struct MacShelfView: View {
         }
         .onAppear(perform: takeOpenedFiles)
         .onReceive(NotificationCenter.default.publisher(for: .filesOpened)) { _ in takeOpenedFiles() }
+        .onReceive(NotificationCenter.default.publisher(for: .showPodcasts)) { _ in filter = .podcasts }
         .openingSnapshots(library)
         .audiobookSheets(library)
         .recordingImportSheet(library)

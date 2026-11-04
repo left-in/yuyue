@@ -169,6 +169,7 @@ final class ReaderModel {
         self.settings = settings
         self.ownSettings = own != nil
         pager = ReaderPager(core: core, bookID: bookID, mode: settings.mode, background: settings.paperTokens.platformBackground)
+        pager.chat = detail?.summary.format == .podcast
         player = detail.map { d in
             // 播客: each host in their own voice.
             if d.summary.format == .podcast, let episode = (try? core.episode(book: bookID)) ?? nil, let show = try? core.show(id: episode.show) {

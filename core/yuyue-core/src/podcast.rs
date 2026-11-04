@@ -234,7 +234,9 @@ impl YuyueCore {
             .filter_map(|(e, f)| episode_from(e.strip_prefix("episode/")?, &f))
             .filter(|e| live.contains(&e.show))
             .collect();
-        out.sort_by_key(|e| std::cmp::Reverse(e.at));
+        // By the day it's for, as one show's list is: a missed morning written late, or an
+        // older day written again, goes where its date puts it, not to the top.
+        out.sort_by(|a, b| b.date.cmp(&a.date).then(b.at.cmp(&a.at)));
         out.truncate(limit as usize);
         Ok(out)
     }

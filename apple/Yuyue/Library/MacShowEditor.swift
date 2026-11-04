@@ -41,6 +41,11 @@ struct MacShowEditor: View {
         }
         .frame(height: 600)
         .background(YYColor.bg)
+        // The sheet gives the name the keyboard on its own, with all of it selected: the
+        // title opened as a grey highlighted block. Nothing has it until the reader clicks.
+        .onAppear {
+            DispatchQueue.main.async { NSApp.keyWindow?.makeFirstResponder(nil) }
+        }
     }
 
     /// `.mk2-ft`: a hairline over it, across both columns. Which model writes on the left; 取消

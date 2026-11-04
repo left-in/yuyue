@@ -693,7 +693,18 @@ struct LocalFolder: SyncFolder {
 nonisolated enum Keychain {
     private static let service = "app.yuyue.Yuyue"
 
+    /// `-debugNoKeychain 1`: a scratch run never touches the keychain, so a fresh ad-hoc build
+    /// doesn't put 钥匙串 的密码框 in front of whatever the user is doing.
+    private static var off: Bool {
+        #if DEBUG
+        UserDefaults.standard.bool(forKey: "debugNoKeychain")
+        #else
+        false
+        #endif
+    }
+
     static func read(_ key: String) -> String? {
+        if off { return nil }
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
                                     kSecAttrAccount as String: key, kSecReturnData as String: true]
         var item: CFTypeRef?
@@ -702,6 +713,7 @@ nonisolated enum Keychain {
     }
 
     static func write(_ key: String, _ value: String) {
+        if off { return }
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
                                     kSecAttrAccount as String: key]
         SecItemDelete(query as CFDictionary)
@@ -711,6 +723,7 @@ nonisolated enum Keychain {
     }
 
     static func delete(_ key: String) {
+        if off { return }
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
                                     kSecAttrAccount as String: key]
         SecItemDelete(query as CFDictionary)

@@ -581,6 +581,9 @@ struct ListenCard: View {
     var castBook: (core: YuyueCore, bookID: String, section: UInt32)?
     @State private var castShown = false
     @State private var ownVoices = 0
+    /// 播客: an episode, not a book — 听, 本集, and no 人物声音 (each host has a voice already,
+    /// chosen in 配一档节目).
+    var episode = false
     private let tint = YYTint.standard
 
     init(model: ReaderModel) {
@@ -588,7 +591,9 @@ struct ListenCard: View {
         _rate = Binding(get: { model.rate }, set: { model.rate = $0 })
         minutesLeft = Self.minutesLeft(model)
         listenOnly = Binding(get: { model.listenOnly }, set: { model.listenOnly = $0 })
-        if let section = model.player?.spot?.section ?? model.section { castBook = (model.core, model.bookID, section) }
+        episode = model.detail?.summary.format == .podcast
+        if episode { unit = String(localized: "集") }
+        if !episode, let section = model.player?.spot?.section ?? model.section { castBook = (model.core, model.bookID, section) }
     }
 
     init(player: Player?, rate: Binding<Float>, minutesLeft: Int, unit: String) {
@@ -606,7 +611,7 @@ struct ListenCard: View {
         VStack(alignment: .leading, spacing: 12) {
             #if os(macOS)
             HStack(spacing: 4) {
-                Text("听书").font(.yy(size: 13.5, weight: .bold)).foregroundStyle(YYColor.t1)
+                Text(episode ? String(localized: "听") : String(localized: "听书")).font(.yy(size: 13.5, weight: .bold)).foregroundStyle(YYColor.t1)
                 Spacer()
                 Key(String(localized: "空格"))
                 Text("暂停").padding(.trailing, 6)
@@ -630,7 +635,8 @@ struct ListenCard: View {
                             castShown = true
                         }
                         .help("给书里的人物换声音、调快慢高低")
-                    } else {
+                    } else if !episode {
+                        // An episode has no foreign text to translate: no dead-end tile.
                         Tile(icon: "translate", title: String(localized: "逐句翻译"), detail: String(localized: "以后"), on: false) {}
                             .disabled(true)
                             .help("读一句外文，接着读一句译文（还没做好）")
@@ -819,7 +825,7 @@ struct ListenCard: View {
             HStack(spacing: 2) {
                 sleepChoice(player, String(localized: "关"), nil, .off)
                 sleepChoice(player, String(localized: "本句读完"), nil, .sentence)
-                sleepChoice(player, unit == String(localized: "章") ? String(localized: "本章结束") : String(localized: "本\(unit)读完"), String(localized: "约 \(minutesLeft) 分钟"), .chapter)
+                sleepChoice(player, unit == String(localized: "章") ? String(localized: "本章结束") : unit == String(localized: "集") ? String(localized: "本集结束") : String(localized: "本\(unit)读完"), String(localized: "约 \(minutesLeft) 分钟"), .chapter)
                 ForEach([15, 30, 60], id: \.self) { m in
                     let left = minutesLeft(player, of: m)
                     sleepChoice(player, String(localized: "\(m) 分钟"), left.map { String(localized: "还剩 \($0) 分") }, .until(Date().addingTimeInterval(Double(m) * 60), minutes: m))

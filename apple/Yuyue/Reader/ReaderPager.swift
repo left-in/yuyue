@@ -678,10 +678,15 @@ final class ReaderPager: PlatformView {
     var prefersTwoColumns = true {
         didSet { if prefersTwoColumns != oldValue { geometryChanged() } }
     }
+    /// 播客: an episode's script is a chat, one host on the left and one on the right; two
+    /// pages side by side would halve each bubble's width and lose that. Always one column.
+    var chat = false {
+        didSet { if chat != oldValue { geometryChanged() } }
+    }
 
     func geometry() -> PageGeometry {
         let width = Double(bounds.width)
-        let columns: UInt8 = prefersTwoColumns && width >= 880 && mode == .paginated ? 2 : 1
+        let columns: UInt8 = prefersTwoColumns && !chat && width >= 880 && mode == .paginated ? 2 : 1
         // About 30 characters to a line at most (`.v-mac-col`: 460 wide at 15); wider pages get
         // wider margins instead.
         let measure = fontSize * 31

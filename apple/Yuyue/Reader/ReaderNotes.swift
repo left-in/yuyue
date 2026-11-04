@@ -326,6 +326,10 @@ extension ReaderModel {
            let left = player.recording?.secondsLeft(section: section, sentence: sentence) {
             return String(localized: "原声 · 本章还剩 \(max(1, Int((left / 60 / Double(rate)).rounded()))) 分钟")
         }
+        // An episode is one 集, not a chapter of a book.
+        if detail?.summary.format == .podcast {
+            return String(localized: "\(Int((bookFraction * 100).rounded()))% · 本集还剩 \(chapterMinutesLeft) 分钟")
+        }
         return String(localized: "\(Int((bookFraction * 100).rounded()))% · 本章还剩 \(chapterMinutesLeft) 分钟")
     }
 

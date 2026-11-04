@@ -354,8 +354,11 @@ struct MacReaderView: View {
 
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
-        ShelfButtonToolbar(liquid: liquid, ink: paper.ink, glass: paper.glass, line: paper.line) {
+        let episode = model.detail?.summary.format == .podcast
+        ShelfButtonToolbar(liquid: liquid, ink: paper.ink, glass: paper.glass, line: paper.line,
+                           title: episode ? String(localized: "播客") : String(localized: "书架")) {
             openWindow(id: "library")
+            if episode { NotificationCenter.default.post(name: .showPodcasts, object: nil) }
         }
         if model.searchShown {
             if liquid {
@@ -430,7 +433,10 @@ struct MacReaderView: View {
         if let chapter = model.chapterTitle, model.detail?.toc.count ?? 0 > 1 {
             parts.append(ChapterTitle(chapter).number ?? chapter)
         }
-        if let page = model.bookPage { parts.append(String(localized: "第 \(page) 页")) }
+        if model.detail?.summary.format == .podcast {
+            // An episode isn't paged for the listener: the show (its author) and how long it runs.
+            if let m = model.detail?.summary.listenMinutes, m > 0 { parts.append(String(localized: "约 \(Int(m)) 分钟")) }
+        } else if let page = model.bookPage { parts.append(String(localized: "第 \(page) 页")) }
         return parts.joined(separator: " · ")
     }
 

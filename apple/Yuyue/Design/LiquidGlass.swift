@@ -161,22 +161,24 @@ struct ShelfButtonToolbar: ToolbarContent {
     let ink: Color
     let glass: Color
     let line: Color
+    /// 书架, or 播客 in an episode's window: where the button goes back to.
+    var title = String(localized: "书架")
     let open: () -> Void
 
     var body: some ToolbarContent {
         if liquid {
             ToolbarItem(placement: .navigation) {
                 Button(action: open) {
-                    Label("书架", systemImage: "chevron.left").labelStyle(.titleAndIcon)
+                    Label(title, systemImage: "chevron.left").labelStyle(.titleAndIcon)
                 }
-                .help("回到书架")
+                .help(String(localized: "回到\(title)"))
             }
         } else {
             ToolbarItem(placement: .navigation) {
                 Button(action: open) {
                     HStack(spacing: 2) {
                         Image(systemName: "chevron.left").font(.yy(size: 11, weight: .semibold))
-                        Text("书架").font(.yy(size: 12))
+                        Text(title).font(.yy(size: 12))
                     }
                     .foregroundStyle(ink)
                     .padding(.leading, 7)
@@ -186,7 +188,7 @@ struct ShelfButtonToolbar: ToolbarContent {
                     .contentShape(.capsule)
                 }
                 .buttonStyle(.plain)
-                .help("回到书架")
+                .help(String(localized: "回到\(title)"))
             }
             .withoutGlass()
         }

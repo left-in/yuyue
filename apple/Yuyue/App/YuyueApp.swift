@@ -95,5 +95,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
 extension Notification.Name {
     static let filesOpened = Notification.Name("yuyue.filesOpened")
+    /// An episode's ‹ 播客: the shelf window opens on 播客, not on 全部.
+    static let showPodcasts = Notification.Name("yuyue.showPodcasts")
 }
 #endif
