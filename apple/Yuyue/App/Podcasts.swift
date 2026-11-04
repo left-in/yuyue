@@ -1,6 +1,9 @@
 import Foundation
 import Observation
 import YuyueCore
+#if os(macOS)
+import AppKit
+#endif
 
 /// 播客 (docs/播客开发方案.md §3.3): writes an episode on this device, step by step.
 ///
@@ -71,6 +74,9 @@ final class Podcasts {
         }
         shows = (try? core.shows()) ?? []
         latest = (try? core.latestEpisodes(limit: 60)) ?? []
+        #if os(macOS)
+        writeDue()
+        #endif
     }
 
     static let keepHeardKey = "podcast.keepHeard"
@@ -122,6 +128,51 @@ final class Podcasts {
                       brief: "", avoid: [], device: nil),
         ]
     }
+
+    // MARK: 到点自己写 (§3.4)
+
+    #if os(macOS)
+    @ObservationIgnored private var dueTimer: Timer?
+    @ObservationIgnored private var wakeWatch: NSObjectProtocol?
+    /// The slot each show was last written for on its own, so a slot that failed (no network,
+    /// no model) isn't tried over and over; 现在写一集 still works.
+    private static let triedKey = "podcast.triedSlots"
+
+    /// The Mac writes its shows when they're due while 语阅 is open: now, when it wakes from
+    /// sleep, and at each show's next time. A slot missed while it was off or asleep is written
+    /// when it's back, up to 20 hours late (the core decides).
+    func startSchedule() {
+        guard wakeWatch == nil else { return }
+        wakeWatch = NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { [weak self] _ in
+            Task { @MainActor in self?.writeDue() }
+        }
+        writeDue()
+    }
+
+    /// Starts every episode due on this device, then sets the timer for the next.
+    func writeDue() {
+        guard wakeWatch != nil else { return }
+        let now = Int64(Date().timeIntervalSince1970 * 1000)
+        let offset = Int32(TimeZone.current.secondsFromGMT() / 60)
+        var tried = UserDefaults.standard.dictionary(forKey: Self.triedKey) as? [String: Int64] ?? [:]
+        for due in (try? core.dueShows(nowMs: now, utcOffsetMinutes: offset)) ?? [] where tried[due.show] != due.slotMs && !isWriting(due.show) {
+            guard let show = shows.first(where: { $0.id == due.show }) else { continue }
+            tried[due.show] = due.slotMs
+            Self.log("due: \(show.name) for slot \(due.slotMs)")
+            write(show)
+        }
+        // Shows that are gone needn't be remembered.
+        tried = tried.filter { k, _ in shows.contains { $0.id == k } }
+        UserDefaults.standard.set(tried, forKey: Self.triedKey)
+        dueTimer?.invalidate()
+        guard let next = try? core.nextShowSlot(nowMs: now, utcOffsetMinutes: offset) else { dueTimer = nil; return }
+        // At most an hour, so a clock or time zone change is caught up with.
+        let wait = min(max(Double(next - now) / 1000 + 5, 30), 3600)
+        dueTimer = Timer.scheduledTimer(withTimeInterval: wait, repeats: false) { [weak self] _ in
+            Task { @MainActor in self?.writeDue() }
+        }
+    }
+    #endif
 
     // MARK: Writing an episode
 

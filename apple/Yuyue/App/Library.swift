@@ -76,11 +76,15 @@ final class Library {
         audiobooks = Audiobooks(core: core, dataDir: dir)
         Audiobooks.shared = audiobooks
         podcasts = Podcasts(core: core, dataDir: dir)
+        #if os(macOS)
+        podcasts.startSchedule()
+        #endif
         // Deleted books can be put back for 30 days; after that their files go.
         _ = try? core.purgeDeleted(olderThanMs: 30 * 24 * 3600 * 1000)
         reload()
         sync.changed = { [weak self] in
             self?.reload()
+            self?.audiobooks.reload()
             self?.podcasts.reload()
         }
     }

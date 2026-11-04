@@ -53,7 +53,7 @@ pub enum SyncPart {
 impl SyncPart {
     fn prefixes(self) -> &'static [&'static str] {
         match self {
-            SyncPart::Reading => &["progress/", "bookmark/", "time/", "days/"],
+            SyncPart::Reading => &["progress/", "bookmark/", "time/", "days/", "listen/"],
             SyncPart::Notes => &["mark/", "word/"],
             SyncPart::Settings => &["settings/", "rule/"],
         }

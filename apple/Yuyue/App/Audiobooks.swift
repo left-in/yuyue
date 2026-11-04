@@ -81,6 +81,24 @@ nonisolated struct Timings: Codable, Equatable, Sendable {
         sentences.firstIndex { $0.section == section && $0.sentence == UInt32(sentence) }
     }
 
+    /// From the sync log, as another device (or this one) kept it.
+    init(_ l: Listening) {
+        sentences = l.sentences.map { Sentence(section: $0.section, sentence: $0.sentence, start: $0.start, end: $0.end, heard: $0.heard, adjusted: $0.adjusted) }
+        sections = l.sections.map { Section(section: $0.section, sentences: $0.sentences, heard: $0.heard, missing: $0.missing, unsure: $0.unsure) }
+        intro = l.intro
+        through = l.through
+    }
+
+    /// For the sync log.
+    func listening(recording: String, book: String, audiobook a: Audiobook) -> Listening {
+        Listening(
+            recording: recording, book: book,
+            sentences: sentences.map { ListenSentence(section: $0.section, sentence: $0.sentence, start: $0.start, end: $0.end, heard: $0.heard, adjusted: $0.adjusted) },
+            sections: sections.map { SectionFit(section: $0.section, sentences: $0.sentences, heard: $0.heard, missing: $0.missing, unsure: $0.unsure) },
+            intro: intro, through: through, introSkipped: a.introSkipped,
+            madeMs: a.made.map { Int64($0.timeIntervalSince1970 * 1000) }, took: a.took)
+    }
+
     /// Whether the sentence was heard well enough to trust where it is.
     static func unsure(_ s: Sentence) -> Bool { s.start >= 0 && s.heard < 0.5 && !s.adjusted }
 }
@@ -194,6 +212,7 @@ final class Audiobooks {
         dir = dataDir.appending(path: "audiobooks", directoryHint: .isDirectory)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         load()
+        adopt()
     }
 
     private func load() {
@@ -208,11 +227,68 @@ final class Audiobooks {
     func reload() {
         recordings = [:]
         load()
+        adopt()
+    }
+
+    // MARK: 同步 (听书开发方案 §4.3)
+
+    /// What another device laid out comes in through the sync log: where each sentence is and
+    /// which e-book the recording goes with. Here it's taken in for every recording this device
+    /// has (its own copy, same id), and what this device made before the log kept it goes out.
+    private func adopt() {
+        guard let pairs = try? core.listeningPairs() else { return }
+        var changed = false
+        // One being made here is this device's to write.
+        for pair in pairs where job?.audiobook != pair.recording {
+            guard let l = try? core.listening(recording: pair.recording) else { continue }
+            var a: Audiobook
+            if let mine = all.first(where: { $0.id == pair.recording }) {
+                a = mine
+            } else {
+                // An 有声书 on this shelf that another device laid out: link its files in.
+                guard let shelf = try? core.book(id: pair.recording).summary, shelf.available, shelf.format == .audio,
+                      let added = try? add(shelf: shelf) else { continue }
+                a = added
+            }
+            let t = Timings(l)
+            if timings(a) != t {
+                if let data = try? JSONEncoder().encode(t) { try? data.write(to: folder(a.id).appending(path: "timings.json"), options: .atomic) }
+                recordings[a.id]?.update(t)
+                NotificationCenter.default.post(name: Self.timingsChanged, object: a.id)
+                changed = true
+            }
+            let made = l.madeMs.map { Date(timeIntervalSince1970: Double($0) / 1000) }
+            if a.book != l.book || a.made != made || a.took != l.took || a.introSkipped != l.introSkipped {
+                a.book = l.book
+                a.made = made
+                a.took = l.took
+                a.introSkipped = l.introSkipped
+                write(a)
+                changed = true
+            }
+        }
+        // Made here before the log kept them: out they go.
+        let known = Set(pairs.map(\.recording))
+        for a in all where !known.contains(a.id) && a.book != nil && a.made != nil {
+            if let t = timings(a) { push(a, t) }
+        }
+        if changed { recordings = [:] }
+    }
+
+    /// This device's lay-out into the sync log.
+    private func push(_ a: Audiobook, _ t: Timings) {
+        guard let book = a.book else { return }
+        try? core.saveListening(listening: t.listening(recording: a.id, book: book, audiobook: a))
     }
 
     func folder(_ id: String) -> URL { dir.appending(path: id, directoryHint: .isDirectory) }
 
     func save(_ a: Audiobook) {
+        write(a)
+        if a.book != nil, let t = timings(a) { push(a, t) }
+    }
+
+    private func write(_ a: Audiobook) {
         if let data = try? JSONEncoder().encode(a) { try? data.write(to: folder(a.id).appending(path: "info.json"), options: .atomic) }
         if let i = all.firstIndex(where: { $0.id == a.id }) { all[i] = a } else { all.append(a) }
     }
@@ -230,6 +306,7 @@ final class Audiobooks {
         if let data = try? JSONEncoder().encode(t) { try? data.write(to: folder(a.id).appending(path: "timings.json"), options: .atomic) }
         recordings[a.id]?.update(t)
         NotificationCenter.default.post(name: Self.timingsChanged, object: a.id)
+        push(all.first { $0.id == a.id } ?? a, t)
     }
 
     /// Posted with the audiobook's id after 微调 saves its timings, for the pages showing them.
@@ -308,6 +385,7 @@ final class Audiobooks {
     func remove(_ a: Audiobook) {
         if job?.audiobook == a.id { job?.cancel() }
         try? FileManager.default.removeItem(at: folder(a.id))
+        try? core.forgetListening(recording: a.id)
         recordings[a.id] = nil
         all.removeAll { $0.id == a.id }
     }

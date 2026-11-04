@@ -13,9 +13,14 @@
 //! The book's end needn't be reached (notes at the back nobody reads). The search follows the
 //! best place with a window, so memory grows with the recording, not with recording × book.
 //!
-//! A recording in several files is placed file by file (`align_files`). Not yet: skipping a
-//! stretch inside a chapter (a picture's caption nobody reads), and a single file of many hours
-//! cut into pieces.
+//! What's in the book but not in the recording, inside a chapter (a picture's caption, a note,
+//! a paragraph the reader missed), is jumped over: from the end of one sentence the search may go
+//! straight to the start of one a few sentences on, paying `SKIP_PENALTY` a jump and a little
+//! more for each sentence left out. Without it one sentence the reader didn't read pulls every
+//! sentence after it out of place. The sentences jumped over come back as not in the recording.
+//!
+//! A recording in several files is placed file by file (`align_files`), a long file a piece at a
+//! time.
 
 use crate::align::{Alignment, SectionFit, SentenceTime, UNSURE_BELOW};
 use crate::api::YuyueCore;
@@ -33,6 +38,13 @@ const STAR_PENALTY: f32 = 0.2;
 const PIECE_SECONDS: f64 = 600.0;
 /// States on each side of the best one that the search keeps.
 const WINDOW: usize = 1000;
+/// What one jump over sentences not in the recording costs: about what a few frames of a letter
+/// the model doesn't hear cost, so a jump wins only where reading on would cost more.
+const SKIP_PENALTY: f32 = 12.0;
+/// And each sentence jumped over, so the search jumps no further than it has to.
+const SKIP_EACH: f32 = 2.0;
+/// The most sentences one jump leaves out.
+const MAX_SKIP: usize = 12;
 
 fn letter(c: char) -> Option<usize> {
     LETTERS.chars().position(|l| l == c).filter(|&i| i != BLANK)
@@ -125,8 +137,60 @@ fn tokens(book: &[(u32, Vec<String>)], chinese: bool, firsts: &[u32]) -> (Vec<us
     (tokens, owner)
 }
 
+/// The jumps over sentences not in the recording: for the state of a sentence's first letter,
+/// the states it may be reached from (the end of a sentence 2..=MAX_SKIP+1 back, its last letter
+/// or the blank after it) and what the jump costs.
+/// Indexed by state: `u32::MAX` where no jump lands, else the place of its list.
+fn jumps(tokens: &[usize], owner: &[Option<usize>]) -> (Vec<u32>, Vec<Vec<(usize, f32)>>) {
+    // Each sentence's first and last token.
+    let mut ends: Vec<(usize, usize)> = Vec::new();
+    let mut whose: Vec<usize> = Vec::new();
+    for (j, o) in owner.iter().enumerate() {
+        let Some(k) = *o else { continue };
+        if whose.last() == Some(&k) {
+            ends.last_mut().unwrap().1 = j;
+        } else {
+            whose.push(k);
+            ends.push((j, j));
+        }
+    }
+    let mut at = vec![u32::MAX; 2 * tokens.len() + 1];
+    let mut lists: Vec<Vec<(usize, f32)>> = Vec::new();
+    for m in 0..ends.len() {
+        let into = 2 * ends[m].0 + 1;
+        let mut list = Vec::new();
+        for back in 2..=MAX_SKIP + 1 {
+            let Some(k) = m.checked_sub(back) else { break };
+            let last = ends[k].1;
+            let from = 2 * last + 1;
+            // Out of the search's reach anyway.
+            if into - from > WINDOW {
+                break;
+            }
+            let cost = SKIP_PENALTY + SKIP_EACH * (whose[m] - whose[k] - 1) as f32;
+            // From the blank after the last letter; from the letter itself only when the two
+            // letters differ (CTC: the same letter twice needs a blank between).
+            list.push((from + 1, cost));
+            if tokens[last] != tokens[ends[m].0] {
+                list.push((from, cost));
+            }
+        }
+        if !list.is_empty() {
+            at[into] = lists.len() as u32;
+            lists.push(list);
+        }
+    }
+    (at, lists)
+}
+
 /// Each token's first and last frame (end exclusive), or None when the path skipped it.
-fn viterbi(em: &[f32], frames: usize, tokens: &[usize]) -> Vec<Option<(usize, usize)>> {
+fn viterbi(em: &[f32], frames: usize, tokens: &[usize], owner: &[Option<usize>]) -> Vec<Option<(usize, usize)>> {
+    let (jump_at, jump_lists) = jumps(tokens, owner);
+    // Where a jump was taken, in the order the search goes (frame, then state), packed as
+    // frame << 32 | state, and which of that state's jumps it was. Kept as two plain lists, not
+    // a map: there can be hundreds of thousands in a long piece.
+    let mut jumped: Vec<u64> = Vec::new();
+    let mut jumped_which: Vec<u8> = Vec::new();
     let classes = em.len() / frames;
     let score = |t: usize, c: usize| -> f32 {
         let row = &em[t * classes..(t + 1) * classes];
@@ -167,7 +231,22 @@ fn viterbi(em: &[f32], frames: usize, tokens: &[usize]) -> Vec<Option<(usize, us
             let stay = at(s);
             let one = if s >= 1 { at(s - 1) } else { NEG };
             let two = if can_skip(s) { at(s - 2) } else { NEG };
-            let (from, v) = if two > one && two > stay { (2, two) } else if one > stay { (1, one) } else { (0, stay) };
+            let (mut from, mut v) = if two > one && two > stay { (2, two) } else if one > stay { (1, one) } else { (0, stay) };
+            if jump_at[s] != u32::MAX {
+                let mut which = None;
+                for (i, &(src, cost)) in jump_lists[jump_at[s] as usize].iter().enumerate() {
+                    let j = at(src);
+                    if j > NEG && j - cost > v {
+                        v = j - cost;
+                        which = Some(i as u8);
+                    }
+                }
+                if let Some(i) = which {
+                    from = 3;
+                    jumped.push((t as u64) << 32 | s as u64);
+                    jumped_which.push(i);
+                }
+            }
             next[k] = if v <= NEG { NEG } else { v + score(t, label(s)) };
             set(&mut back, t, k, from);
         }
@@ -187,7 +266,13 @@ fn viterbi(em: &[f32], frames: usize, tokens: &[usize]) -> Vec<Option<(usize, us
             });
         }
         if t > 0 {
-            s -= get(&back, t, s - lows[t]) as usize;
+            s = match get(&back, t, s - lows[t]) {
+                3 => {
+                    let i = jumped.binary_search(&((t as u64) << 32 | s as u64)).expect("a jump taken is recorded");
+                    jump_lists[jump_at[s] as usize][jumped_which[i] as usize].0
+                }
+                d => s - d as usize,
+            };
         }
     }
     spans
@@ -204,7 +289,7 @@ pub fn align(book: &[(u32, Vec<String>)], chinese: bool, em: &[f32], frames: usi
 /// group starts at, and the sentences keep their numbers.
 fn align_from(book: &[(u32, Vec<String>)], firsts: &[u32], chinese: bool, em: &[f32], frames: usize, seconds: f64) -> Alignment {
     let (tokens, owner) = tokens(book, chinese, firsts);
-    let spans = if frames > 0 { viterbi(em, frames, &tokens) } else { vec![None; tokens.len()] };
+    let spans = if frames > 0 { viterbi(em, frames, &tokens, &owner) } else { vec![None; tokens.len()] };
     let fps = frames as f64 / seconds.max(0.001);
     let classes = if frames > 0 { em.len() / frames } else { 0 };
     let list: Vec<(u32, u32)> = book.iter().zip(firsts).flat_map(|((sec, s), &f)| (0..s.len() as u32).map(move |i| (*sec, f + i))).collect();
@@ -588,6 +673,43 @@ mod tests {
         // The second file's sentences come after the first file.
         assert!(s[2].start >= fa as f64 / 50.0, "{s:?}");
         assert_eq!(out.sections.iter().map(|x| x.sentences).collect::<Vec<_>>(), [2, 3]);
+    }
+
+    /// A caption in the middle of the chapter nobody reads: jumped over, and the sentences after
+    /// it still found where they're read.
+    #[test]
+    fn a_sentence_not_read_is_skipped() {
+        let book = vec![(
+            0u32,
+            vec![
+                "Chapter one.".to_string(),
+                "It was a dark night.".into(),
+                "Figure two shows the lighthouse keeper with his lamp.".into(),
+                "The rain stopped.".into(),
+                "Morning came slowly over the hills.".into(),
+                "The end.".into(),
+            ],
+        )];
+        let read = "chapter one it was a dark night the rain stopped morning came slowly over the hills the end";
+        let (em, frames) = recording(read, 20);
+        let a = align(&book, false, &em, frames, frames as f64 / 50.0);
+        let s = &a.sentences;
+        assert!(s[2].start < 0.0, "the caption should be left out: {s:?}");
+        assert!([0, 1, 3, 4, 5].iter().all(|&k| s[k].start >= 0.0), "{s:?}");
+        // "the rain stopped" starts where it's read: after "chapter one it was a dark night".
+        let before = letters("chapter one it was a dark night", false).len();
+        let at = (20 + before * 4) as f64 / 50.0;
+        assert!((s[3].start - at).abs() < 0.3, "rain stopped at {} not {at}", s[3].start);
+        assert_eq!(a.sections[0].missing, 1);
+    }
+
+    /// Every sentence read: nothing jumped over.
+    #[test]
+    fn nothing_skipped_when_all_is_read() {
+        let book = vec![(0u32, vec!["Chapter one.".to_string(), "It was a dark night.".into(), "The rain stopped.".into(), "The end.".into()])];
+        let (em, frames) = recording("chapter one it was a dark night the rain stopped the end", 20);
+        let a = align(&book, false, &em, frames, frames as f64 / 50.0);
+        assert!(a.sentences.iter().all(|t| t.start >= 0.0), "{:?}", a.sentences);
     }
 
     #[test]

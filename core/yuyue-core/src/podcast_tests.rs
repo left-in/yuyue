@@ -394,3 +394,41 @@ fn seed_demo() {
     core.save_episode(s.id.clone(), "2026-11-01".into(), script).unwrap();
     println!("show {}", s.id);
 }
+
+/// 到点自己出新一集: due once a slot has passed on the device that writes the show, not on others,
+/// not for a slot from long ago, and not once an episode came after it.
+#[test]
+fn shows_come_due_on_their_own_device() {
+    let dir = temp("due");
+    let core = YuyueCore::open(dir.clone(), "Mac".into(), "macos".into()).unwrap();
+    let minute = 60_000i64;
+    let made = core.add_show(duo()).unwrap();
+    // Every day, an hour before three days from now.
+    let now = made.created_at + 3 * 86_400_000;
+    let at = ((now - 60 * minute).rem_euclid(86_400_000) / minute) as u32;
+    let mut d = duo();
+    d.schedule = ShowSchedule { days: (1..=7).collect(), minute: at };
+    let s = core.update_show(made.id.clone(), d.clone()).unwrap();
+    let due = core.due_shows(now, 0).unwrap();
+    assert_eq!(due.len(), 1);
+    assert_eq!(due[0].show, s.id);
+    assert!(now - due[0].slot_ms >= 59 * minute && now - due[0].slot_ms <= 61 * minute);
+    // Only when asked: never due.
+    let mut asked = d.clone();
+    asked.schedule.days = vec![];
+    core.update_show(s.id.clone(), asked).unwrap();
+    assert!(core.due_shows(now, 0).unwrap().is_empty());
+    core.update_show(s.id.clone(), d.clone()).unwrap();
+    // A slot from long ago isn't caught up.
+    let mut late = d.clone();
+    late.schedule.minute = ((now + 2 * 60 * minute).rem_euclid(86_400_000) / minute) as u32;
+    core.update_show(s.id.clone(), late).unwrap();
+    assert!(core.due_shows(now, 0).unwrap().is_empty(), "the last slot was 22 hours ago");
+    core.update_show(s.id.clone(), d.clone()).unwrap();
+    // Written by another device: not this one's to write.
+    let mut other = d.clone();
+    other.device = Some("someone-else".into());
+    core.update_show(s.id.clone(), other).unwrap();
+    assert!(core.due_shows(now, 0).unwrap().is_empty());
+    assert_eq!(core.next_show_slot(now, 0).unwrap(), None);
+}

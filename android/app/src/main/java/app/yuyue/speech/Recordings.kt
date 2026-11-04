@@ -16,6 +16,8 @@ import org.json.JSONObject
 import uniffi.yuyue_core.Alignment
 import uniffi.yuyue_core.BookSummary
 import uniffi.yuyue_core.Emissions
+import uniffi.yuyue_core.ListenSentence
+import uniffi.yuyue_core.Listening
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -46,6 +48,10 @@ class Recordings(private val context: Context, private val library: Library) {
 
     private fun folder(ebook: String) = File(dir, ebook)
 
+    init {
+        adopt()
+    }
+
     /** The 有声书 laid against `ebook`, when there is one. */
     fun audioFor(ebook: String): String? = File(folder(ebook), "audio").takeIf { it.isFile }?.readText()?.trim()
 
@@ -67,6 +73,7 @@ class Recordings(private val context: Context, private val library: Library) {
         making = m
         val f = folder(ebook.id).apply { mkdirs() }
         File(f, "audio").writeText(audio.id)
+        val started = System.currentTimeMillis()
         m.job = library.scope.launch {
             try {
                 if (!Aligner.installed(library.dataDir)) {
@@ -93,8 +100,10 @@ class Recordings(private val context: Context, private val library: Library) {
                     files += em
                     offset += file.seconds
                     m.heard = offset
-                    save(ebook.id, library.core.alignRecordingFiles(ebook.id, files))
+                    save(ebook.id, audio.id, library.core.alignRecordingFiles(ebook.id, files), offset, null)
                 }
+                // Finished: kept as made, so other devices know it's whole.
+                library.core.listening(audio.id)?.let { library.core.saveListening(it.copy(madeMs = System.currentTimeMillis(), took = (System.currentTimeMillis() - started) / 1000.0)) }
                 m.done = true
                 making = null
                 library.note(Library.Toast.Icon.Check, t("《%@》的有声书合成好了", ebook.title), t("打开书，点朗读就是主播的声音"))
@@ -117,16 +126,71 @@ class Recordings(private val context: Context, private val library: Library) {
 
     class Timing(val section: Int, val sentence: Int, val start: Double, val end: Double)
 
-    private fun save(ebook: String, a: Alignment) {
-        val arr = JSONArray()
-        for (s in a.sentences) {
-            if (s.start < 0) continue
-            arr.put(JSONArray().put(s.section.toInt()).put(s.sentence.toInt()).put(s.start).put(s.end))
+    private fun save(ebook: String, audio: String, a: Alignment, through: Double, madeMs: Long?) {
+        write(ebook, a.sentences.map { Triple(it.section.toInt() to it.sentence.toInt(), it.start, it.end) })
+        // Into the sync log, so other devices use it without running the model (§4.3).
+        runCatching {
+            library.core.saveListening(
+                Listening(
+                    recording = audio, book = ebook,
+                    sentences = a.sentences.map { ListenSentence(it.section, it.sentence, it.start, it.end, it.heard, false) },
+                    sections = a.sections, intro = a.intro, through = through, introSkipped = false, madeMs = madeMs, took = null,
+                ),
+            )
         }
-        val tmp = File(folder(ebook), "timings.json.part")
+    }
+
+    private fun write(ebook: String, sentences: List<Triple<Pair<Int, Int>, Double, Double>>) {
+        val arr = JSONArray()
+        for ((at, start, end) in sentences) {
+            if (start < 0) continue
+            arr.put(JSONArray().put(at.first).put(at.second).put(start).put(end))
+        }
+        val tmp = File(folder(ebook).apply { mkdirs() }, "timings.json.part")
         tmp.writeText(JSONObject().put("sentences", arr).toString())
         tmp.renameTo(File(folder(ebook), "timings.json"))
         cache.remove(ebook)
+    }
+
+    /**
+     * 同步 (听书开发方案 §4.3): what another device laid out comes in through the sync log. For
+     * every recording on this shelf (each device brings in its own copy; the id says it's the same
+     * one), its e-book and where each sentence is are taken in; what was made here before the log
+     * kept it goes out. Called when the app starts and after each sync.
+     */
+    fun adopt() {
+        val pairs = runCatching { library.core.listeningPairs() }.getOrNull() ?: return
+        val onShelf = library.books.filter { it.available }.map { it.id }.toSet()
+        for (pair in pairs) {
+            if (making?.audio == pair.recording) continue
+            if (pair.recording !in onShelf || pair.book !in onShelf) continue
+            val l = runCatching { library.core.listening(pair.recording) }.getOrNull() ?: continue
+            // Another recording laid against this e-book here gives way to the one in the log.
+            val f = folder(pair.book).apply { mkdirs() }
+            val audio = File(f, "audio")
+            if (audio.takeIf { it.isFile }?.readText()?.trim() != pair.recording) audio.writeText(pair.recording)
+            val want = l.sentences.map { Triple(it.section.toInt() to it.sentence.toInt(), it.start, it.end) }
+            val have = timings(pair.book)
+            val same = have != null && have.size == want.count { it.second >= 0 } &&
+                want.all { (at, start, end) -> start < 0 || have[at]?.let { kotlin.math.abs(it.start - start) < 0.002 && kotlin.math.abs(it.end - end) < 0.002 } == true }
+            if (!same) write(pair.book, want)
+        }
+        // Made here before the log kept them.
+        val known = pairs.map { it.recording }.toSet()
+        for (ebook in dir.list().orEmpty()) {
+            val audio = audioFor(ebook) ?: continue
+            if (audio in known || making?.ebook == ebook) continue
+            val times = timings(ebook) ?: continue
+            runCatching {
+                library.core.saveListening(
+                    Listening(
+                        recording = audio, book = ebook,
+                        sentences = times.values.sortedWith(compareBy({ it.section }, { it.sentence })).map { ListenSentence(it.section.toUInt(), it.sentence.toUInt(), it.start, it.end, 1f, false) },
+                        sections = emptyList(), intro = 0.0, through = 0.0, introSkipped = false, madeMs = System.currentTimeMillis(), took = null,
+                    ),
+                )
+            }
+        }
     }
 
     private val cache = mutableMapOf<String, Map<Pair<Int, Int>, Timing>>()

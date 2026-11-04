@@ -158,7 +158,10 @@ class Sync(private val context: Context, private val core: YuyueCore, private va
                 Prefs.set(LAST, lastSynced!!)
                 // Notes and progress went across; a book file that didn't come down isn't 已同步.
                 state = if (missed > 0) State.Failed(t("有 %lld 本书的文件没下载下来，下次同步再试", missed)) else State.Idle
-                if (applied > 0) library.reload()
+                if (applied > 0) {
+                    library.reload()
+                    library.recordings.adopt()
+                }
             } catch (e: CancellationException) {
                 state = State.Idle
             } catch (e: Exception) {
