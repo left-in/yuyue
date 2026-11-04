@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>播客列表按钮</title>
+<!-- 2026-11-05：只改播客列表每一行右边那一颗（再试一次 / 听完了 / ▶ 1 分钟）。行的其他部分照现在的 App。
+     颜色、字号取自 apple/Yuyue/Design/Tokens.swift 和 MacPodcastView.swift。 -->
+<style>
+:root{
+  --bg:#F6F5F3;--card:#FFFFFF;--inset:#EFEEEB;--line:#E7E5E1;--t1:#2A2B2E;--t2:#6E6B68;--t3:#8A8682;
+  --accent:#2B4C7E;--soft:rgba(43,76,126,.12);--danger:#C2473A;--ok:#3F7A4F;
+  --zsh:0 0 0 .5px rgba(51,46,41,.10),0 1px 2px rgba(51,46,41,.06);
+  --c1:#6B5A82;--c2:#E6DCCB;--ink2:#1E1C18;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101112;--card:#1B1C1E;--inset:#26272A;--line:#2C2D30;--t1:#EDEDEE;--t2:#9A9895;--t3:#8E8C89;
+  --accent:#8FA8C8;--soft:rgba(143,168,200,.16);--danger:#E5806F;--ok:#8FC09A;--zsh:0 0 0 .5px rgba(255,255,255,.08)}}
+:root[data-theme="dark"]{
+  --bg:#101112;--card:#1B1C1E;--inset:#26272A;--line:#2C2D30;--t1:#EDEDEE;--t2:#9A9895;--t3:#8E8C89;
+  --accent:#8FA8C8;--soft:rgba(143,168,200,.16);--danger:#E5806F;--ok:#8FC09A;--zsh:0 0 0 .5px rgba(255,255,255,.08)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t1);font:13px/1.5 -apple-system,"PingFang SC","Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:44px 16px 96px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{font-size:22px;margin:0 0 6px}
+.lead{color:var(--t2);max-width:680px;margin:0}
+.seg{display:flex;gap:2px;background:var(--inset);border-radius:9px;padding:2px}
+.seg button{border:0;background:none;color:var(--t2);font:12px -apple-system,"PingFang SC",sans-serif;padding:5px 10px;border-radius:7px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--t1);box-shadow:var(--zsh)}
+h2{font-size:16px;margin:48px 0 2px;display:flex;align-items:baseline;gap:10px}
+h2 .rec{font-size:11px;font-weight:600;color:var(--accent);background:var(--soft);border-radius:6px;padding:2px 7px}
+.why{color:var(--t2);margin:0 0 14px;max-width:760px}
+/* the list card, as MacPodcastView draws it */
+.card{background:var(--card);border-radius:16px;box-shadow:var(--zsh);padding:0 20px}
+.row{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:.5px solid var(--line);position:relative}
+.row:first-child{border-top:0}
+.row.on::before{content:"";position:absolute;inset:4px -10px;background:var(--soft);opacity:.55;border-radius:10px;z-index:0}
+.row>*{position:relative;z-index:1}
+.cv{width:48px;height:48px;border-radius:8px;background:var(--c1);flex:none;position:relative}
+.cv.lt{background:var(--c2)}
+.cv::after{content:"";position:absolute;right:5px;bottom:5px;width:11px;height:11px;border-radius:50%;border:1.5px solid rgba(255,255,255,.6)}
+.cv.lt::after{border-color:rgba(30,28,24,.45)}
+.row.heard .cv{opacity:.5}
+.tx{flex:1;min-width:0}
+.tx small{display:block;font-size:10.5px;color:var(--t3)}
+.tx b{display:block;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx p{margin:0;font-size:11.5px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx p.stop{color:var(--accent);font-weight:500}
+.tx p.err{color:var(--danger)}
+.row.heard .tx b{color:var(--t3)}.row.heard .tx p{color:var(--t3)}
+.src{display:flex;gap:3px;flex:none}
+.src i{width:15px;height:15px;border-radius:4px;background:#333;color:#fff;font:700 8px/15px -apple-system,sans-serif;text-align:center;font-style:normal}
+.src i.y{background:#F26622}
+.row.heard .src{opacity:.5}
+.act{flex:none;display:flex;justify-content:flex-end;white-space:nowrap}
+.act svg{width:9px;height:9px;flex:none}
+.note{font-size:11.5px;color:var(--t3);margin:8px 0 0}
+
+/* ---------- 现在：液态玻璃胶囊（对照） ---------- */
+.v0 .b{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px 0 10px;border-radius:14px;font-size:11.5px;font-weight:600;color:var(--t1);
+  background:linear-gradient(rgba(255,255,255,.78),rgba(255,255,255,.38));box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 0 0 .5px rgba(0,0,0,.08),0 1px 2px rgba(30,40,60,.05)}
+.v0 .b.pl{color:var(--accent)}
+
+/* ---------- A 节目单刻度：一条一道 ---------- */
+.ta{display:grid;justify-items:end;gap:5px;min-width:96px;cursor:pointer;padding:6px 8px;margin:-6px -8px;border-radius:9px;transition:background-color .15s}
+.ta:hover{background:color-mix(in srgb,var(--t1) 4%,transparent)}
+.ta .w{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--t1);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ta .w svg{width:9px;height:9px}
+.ta .ticks{display:flex;gap:3px}
+.ta .ticks i{width:10px;height:3px;border-radius:2px;background:color-mix(in srgb,var(--t1) 13%,transparent);transition:background-color .2s}
+.ta .ticks i.h{background:color-mix(in srgb,var(--t1) 62%,transparent)}
+.ta .ticks i.n{background:var(--accent);animation:breathe 1.6s ease-in-out infinite}
+.ta .ticks i.x{background:var(--danger)}
+.ta.pl .w{color:var(--accent)}
+.ta.hd .w{color:var(--t3);font-weight:500}
+.ta.wr .w{color:var(--t2);font-weight:500}
+.ta.er .w{color:var(--danger)}
+.ta.wr .ticks i.n{animation:breathe 1s ease-in-out infinite}
+@keyframes breathe{50%{opacity:.35}}
+
+/* ---------- B 白底小块（从你喜欢的“✓ 文稿 · 气泡”来） ---------- */
+.tb{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 12px;border-radius:10px;background:var(--card);box-shadow:var(--zsh),0 1px 3px rgba(51,46,41,.06);
+  font-size:11.5px;font-weight:600;color:var(--t1);font-variant-numeric:tabular-nums;cursor:pointer;transition:scale .15s ease-out}
+.tb:active{scale:.96}
+.tb em{font-style:normal;font-weight:700}
+.tb.pl em{color:var(--accent)}.tb.hd{color:var(--t3);font-weight:500;box-shadow:none;background:transparent}.tb.hd em{color:var(--ok)}
+.tb.er em,.tb.er{color:var(--danger)}
+.tb.wr{color:var(--t2);font-weight:500}
+.tb .sep{width:.5px;height:12px;background:var(--line)}
+
+/* ---------- C 只有字 ---------- */
+.tc{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 4px;font-size:12px;font-weight:600;color:var(--t1);cursor:pointer;font-variant-numeric:tabular-nums;
+  border-bottom:1px solid transparent;transition:border-color .15s}
+.tc:hover{border-bottom-color:currentColor}
+.tc svg{width:9px;height:9px}
+.tc.pl{color:var(--accent)}.tc.hd{color:var(--t3);font-weight:500}.tc.wr{color:var(--t2);font-weight:500}.tc.er{color:var(--danger)}
+
+/* ---------- D 小气泡（和文稿、编辑部同一种话） ---------- */
+.td{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:14px 14px 14px 5px;background:var(--inset);
+  font-size:11.5px;font-weight:600;color:var(--t1);cursor:pointer;font-variant-numeric:tabular-nums;transition:background-color .15s}
+.td:hover{background:color-mix(in srgb,var(--t1) 9%,var(--card))}
+.td svg{width:9px;height:9px}
+.td.pl{background:var(--soft);color:var(--accent);border-radius:14px 14px 5px 14px}
+.td.hd{background:transparent;color:var(--t3);font-weight:500}
+.td.er{color:var(--danger)}
+.td.wr{color:var(--t2);font-weight:500}
+
+/* shared bits */
+.bars{display:inline-flex;align-items:flex-end;gap:1.5px;height:10px}
+.bars i{width:2px;background:currentColor;border-radius:1px;animation:bar .9s ease-in-out infinite}
+.bars i:nth-child(2){animation-delay:-.3s}.bars i:nth-child(3){animation-delay:-.6s}
+@keyframes bar{0%,100%{height:3px}50%{height:10px}}
+.dots{display:inline-flex;gap:3px}
+.dots i{width:4px;height:4px;border-radius:50%;background:currentColor;animation:dot 1.2s ease-in-out infinite}
+.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
+@keyframes dot{0%,100%{opacity:.3}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.bars i,.dots i,.ta .ticks i.n{animation:none}}
+@media (max-width:720px){.src{display:none}.tx p{white-space:normal}}
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>播客列表 · 右边那一颗</h1>
+      <p class="lead">只改你圈的那一列，其他按钮已经改回原来的样子。每一套都把六种情况摆出来：没听、听了一半、正在听、听完了、正在写、没写成。行里其他东西和现在的 App 一样。点按钮能在“播放 / 暂停”之间切。</p>
+    </div>
+    <div class="seg" role="group" aria-label="颜色"><button data-t="light">浅色</button><button data-t="dark">深色</button><button data-t="" aria-pressed="true">跟随系统</button></div>
+  </div>
+
+  <h2>现在</h2>
+  <p class="why">液态玻璃胶囊。整个 App 里只有播客在用，书架、设置、书页都不是这种质感，所以显得不搭。</p>
+  <div class="card v0" id="v0"></div>
+
+  <h2>A · 一条一道 <span class="rec">推荐</span></h2>
+  <p class="why">一集是由几“条”组成的，这是别的播客没有的。按钮就画出这几条：上面一行字，下面一条一道短线。听过的条是墨色，正在讲的那条是主题色、会轻轻呼吸，没听的很淡。<b>写稿时用的也是同一排线</b>：写好一条亮一道，写到第几条一眼就知道；没写成就停在那一道上，变成红的。没有边框和底色，鼠标移上去才有一层很淡的底。</p>
+  <div class="card" id="vA"></div>
+
+  <h2>B · 白底小块</h2>
+  <p class="why">从你喜欢的“✓ 文稿 · 气泡”那块来：白底、圆角 10、只有极淡的影子，左边一个有意思的符号，右边一句话。听完了不再是按钮，只剩一个绿色的 ✓ 和字。</p>
+  <div class="card" id="vB"></div>
+
+  <h2>C · 只有字</h2>
+  <p class="why">把按钮这个形式拿掉，只留一行字和一个小符号，和“看它怎么挑的 ›”一样是文字链接。鼠标移上去出一条下划线。最安静，但不太像能点。</p>
+  <div class="card" id="vC"></div>
+
+  <h2>D · 小气泡</h2>
+  <p class="why">播客里文稿是聊天气泡，编辑部也是气泡，按钮也说同一种话：一个缺一个角的小气泡。正在听时气泡翻到另一边、变成主题色，像在回话；正在写时里面就是编辑部那三个点。</p>
+  <div class="card" id="vD"></div>
+
+  <p class="note">字号、颜色都取自 Tokens.swift；正在放的那一行铺的淡墨蓝和现在一样。定下一套后我只改这一颗，其他按钮不动。</p>
+</div>
+
+<script>
+(function(){
+  var play='<svg viewBox="0 0 10 10"><path d="M2 1.2v7.6L8.6 5z" fill="currentColor"/></svg>';
+  var pause='<svg viewBox="0 0 10 10"><path d="M2 1h2.2v8H2zM5.8 1H8v8H5.8z" fill="currentColor"/></svg>';
+  var retry='<svg viewBox="0 0 10 10"><path d="M8.2 5A3.2 3.2 0 1 1 7 2.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M7.4.8v2.2H5.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var check='<svg viewBox="0 0 10 10"><path d="M1.8 5.2l2.1 2.1L8.3 2.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var bars='<span class="bars"><i></i><i></i><i></i></span>';
+  var dots='<span class="dots"><i></i><i></i><i></i></span>';
+
+  // the six rows: what the row says, and the state of its button
+  var rows=[
+    {k:'new', show:'科技早报 · 今天', title:'SQLite 当消息队列用了三年，还有 Rust 的新版本', p:'一个小团队一天两千万条消息没换过数据库；Rust 1.91 大项目编译快了两成。', src:['y','R','少'], n:7, h:0, min:12},
+    {k:'half', show:'科技早报 · 昨天', title:'为什么新电脑开机越来越快', p:'停在第 3 条 · 固态硬盘的缓存', pc:'stop', src:['y','少'], n:5, h:2, left:6},
+    {k:'play', show:'开源动态 · 今天', title:'Deno 2.6、tokio 1.48 和 Bun 改名', p:'三个项目的发布更新，哪一条值得马上升级。', src:['G'], n:3, h:1, left:4, on:true},
+    {k:'heard', show:'本周划线 · 10 月 27 日', title:'这周你在《红楼梦》里划了 23 句', p:'小林把你划的句子串起来，老周讲每句在书里的前后。', src:['划'], n:4, h:4},
+    {k:'write', show:'科技早报 · 今天', title:'正在写第 4 / 7 条', p:'Rust 1.91、SQLite 队列、纸笔周计划', src:[], n:7, h:3, writing:true},
+    {k:'fail', show:'开源动态 · 今天', title:'没写成', p:'书伴里还没选写稿用的模型。设置 › 书伴 里选一个服务商', pc:'err', src:[], n:3, h:1, fail:true}
+  ];
+
+  function ticks(r){
+    var s='<span class="ticks">';
+    for(var i=0;i<r.n;i++){
+      var c='';
+      if(r.k==='heard'||i<r.h) c='h';
+      if(i===r.h && (r.k==='play'||r.writing)) c='n';
+      if(i===r.h && r.fail) c='x';
+      s+='<i class="'+c+'"></i>';
+    }
+    return s+'</span>';
+  }
+
+  var draw={
+    v0:function(r,on){
+      if(r.fail) return '<span class="b">'+retry+'再试一次</span>';
+      if(r.writing) return '<span class="b" style="color:var(--t2);font-weight:500">'+dots+'正在写 4 / 7</span>';
+      if(r.k==='heard') return '<span class="b">'+check+'听完了</span>';
+      if(on) return '<span class="b pl">'+bars+'还剩 '+r.left+' 分</span>';
+      return '<span class="b">'+play+(r.left?'还剩 '+r.left+' 分':r.min+' 分钟')+'</span>';
+    },
+    vA:function(r,on){
+      var w, cls='';
+      if(r.fail){cls='er'; w=retry+'再试一次';}
+      else if(r.writing){cls='wr'; w='正在写 '+(r.h+1)+' / '+r.n;}
+      else if(r.k==='heard'){cls='hd'; w=check+'听完了';}
+      else if(on){cls='pl'; w=bars+'第 '+(r.h+1)+' 条 · 还剩 '+r.left+' 分';}
+      else w=play+(r.left?'还剩 '+r.left+' 分':r.min+' 分钟 · '+r.n+' 条');
+      return '<span class="ta '+cls+'" role="button" tabindex="0"><span class="w">'+w+'</span>'+ticks(r)+'</span>';
+    },
+    vB:function(r,on){
+      if(r.fail) return '<span class="tb er"><em>'+retry+'</em>再试一次</span>';
+      if(r.writing) return '<span class="tb wr">'+dots+'正在写 4 / 7</span>';
+      if(r.k==='heard') return '<span class="tb hd"><em>✓</em>听完了</span>';
+      if(on) return '<span class="tb pl"><em>'+bars+'</em>正在听<span class="sep"></span>还剩 '+r.left+' 分</span>';
+      return '<span class="tb"><em>▶</em>'+(r.left?'接着听<span class="sep"></span>还剩 '+r.left+' 分':r.min+' 分钟')+'</span>';
+    },
+    vC:function(r,on){
+      if(r.fail) return '<span class="tc er">'+retry+'再试一次</span>';
+      if(r.writing) return '<span class="tc wr">正在写 4 / 7 '+dots+'</span>';
+      if(r.k==='heard') return '<span class="tc hd">'+check+'听完了</span>';
+      if(on) return '<span class="tc pl">'+bars+'正在听 · 还剩 '+r.left+' 分</span>';
+      return '<span class="tc">'+play+(r.left?'接着听 · 还剩 '+r.left+' 分':r.min+' 分钟')+'</span>';
+    },
+    vD:function(r,on){
+      if(r.fail) return '<span class="td er">'+retry+'再试一次</span>';
+      if(r.writing) return '<span class="td wr">'+dots+'正在写 4 / 7</span>';
+      if(r.k==='heard') return '<span class="td hd">'+check+'听完了</span>';
+      if(on) return '<span class="td pl">'+bars+'正在听 · 还剩 '+r.left+' 分</span>';
+      return '<span class="td">'+play+(r.left?'接着听 · 还剩 '+r.left+' 分':r.min+' 分钟')+'</span>';
+    }
+  };
+
+  function srcs(r){
+    var s='<span class="src">';
+    r.src.forEach(function(x){s+='<i class="'+(x==='y'?'y':'')+'">'+(x==='y'?'Y':x)+'</i>';});
+    return s+'</span>';
+  }
+
+  function render(id){
+    var el=document.getElementById(id), html='';
+    rows.forEach(function(r,i){
+      var on=!!r.on;
+      html+='<div class="row'+(on?' on':'')+(r.k==='heard'?' heard':'')+'" data-i="'+i+'">'+
+        '<span class="cv'+(i%3===2?' lt':'')+'"></span>'+
+        '<div class="tx"><small>'+r.show+'</small><b>'+r.title+'</b><p class="'+(r.pc||'')+'">'+r.p+'</p></div>'+
+        srcs(r)+'<div class="act">'+draw[id](r,on)+'</div></div>';
+    });
+    el.innerHTML=html;
+    el.querySelectorAll('.act > *').forEach(function(b,i){
+      b.addEventListener('click',function(){
+        var r=rows[i];
+        if(r.k==='heard'||r.writing||r.fail) return;
+        rows.forEach(function(x){ if(x!==r) x.on=false; });
+        r.on=!r.on; if(!r.left) r.left=r.min;
+        ['v0','vA','vB','vC','vD'].forEach(render);
+      });
+    });
+  }
+  ['v0','vA','vB','vC','vD'].forEach(render);
+
+  var root=document.documentElement, bs=document.querySelectorAll('.seg button');
+  bs.forEach(function(x){x.addEventListener('click',function(){
+    var t=x.dataset.t; if(t) root.setAttribute('data-theme',t); else root.removeAttribute('data-theme');
+    bs.forEach(function(y){y.setAttribute('aria-pressed',y===x?'true':'false');});
+  });});
+})();
+</script>
