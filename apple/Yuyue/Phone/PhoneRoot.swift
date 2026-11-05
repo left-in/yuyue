@@ -2,7 +2,7 @@
 import SwiftUI
 import YuyueCore
 
-/// The phone: 书架 · 笔记 · 我的, and 搜索 in its own circle (iOS 26 draws them as a floating
+/// The phone: 书架 · 笔记 · 我的, and 搜索 in its own circle (iOS 26 and later draw them as a floating
 /// glass bar). A book opens over all of them, full screen; while one is read aloud with its
 /// pages closed, a 播放条 sits above the tabs.
 struct PhoneRoot: View {
@@ -19,18 +19,20 @@ struct PhoneRoot: View {
 
     var body: some View {
         TabView(selection: $tab) {
-            Tab("书架", image: PhoneTabIcon.shelf, value: .shelf) {
+            Tab(value: .shelf) {
                 PhoneShelf(library: library).nowPlayingBar(library)
-            }
-            Tab("笔记", systemImage: "highlighter", value: .notes) {
+            } label: { tabLabel("书架", .shelf, line: "tab-shelf-line", fill: PhoneTabIcon.shelf) }
+            Tab(value: .notes) {
                 PhoneNotes(library: library).nowPlayingBar(library)
-            }
-            Tab("我的", systemImage: "person", value: .me) {
+            } label: { tabLabel("笔记", .notes, line: "tab-notes", fill: "tab-notes-fill") }
+            Tab(value: .me) {
                 PhoneMe(library: library).nowPlayingBar(library)
-            }
-            Tab(value: .search, role: .search) {
+            } label: { tabLabel("我的", .me, line: "tab-me", fill: "tab-me-fill") }
+            // 搜索 in its own circle on the right, only the icon. iOS 27 no longer sets the search
+            // tab apart by itself; the tab that stands apart is the `.prominent` one.
+            Tab(value: .search, role: Self.searchRole) {
                 PhoneSearch(library: library).nowPlayingBar(library)
-            }
+            } label: { tabLabel("搜索", .search, line: "tab-search", fill: "tab-search-fill") }
         }
         .tint(tint.accent)
         .preferredColorScheme(mode.scheme)
@@ -72,6 +74,15 @@ struct PhoneRoot: View {
     }
 
     private struct Presented: Identifiable { let id: String }
+
+    /// The prototype's own line icons: outlined, and the `-f` filled one on the chosen tab.
+    private func tabLabel(_ title: LocalizedStringKey, _ value: PhoneTab, line: String, fill: String) -> some View {
+        Label(title, image: tab == value ? fill : line)
+    }
+
+    private static var searchRole: TabRole {
+        if #available(iOS 27.0, *) { .prominent } else { .search }
+    }
 }
 
 extension View {
