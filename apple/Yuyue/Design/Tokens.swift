@@ -159,7 +159,7 @@ public struct YYTint: Sendable, Hashable, Identifiable {
 
     public static let blue = YYTint(
         id: "blue",
-        name: "墨蓝",
+        name: String(localized: "墨蓝"),
         black: Color.yyDynamic(light: YYRGBA(43, 76, 126), dark: YYRGBA(143, 168, 200)),
         onBlack: Color.yyDynamic(light: YYRGBA(255, 255, 255), dark: YYRGBA(16, 18, 20)),
         accent: Color.yyDynamic(light: YYRGBA(43, 76, 126), dark: YYRGBA(143, 168, 200)),
@@ -177,7 +177,7 @@ public struct YYTint: Sendable, Hashable, Identifiable {
     )
     public static let ink = YYTint(
         id: "ink",
-        name: "墨黑",
+        name: String(localized: "墨黑"),
         black: Color.yyDynamic(light: YYRGBA(16, 18, 20), dark: YYRGBA(237, 237, 238)),
         onBlack: Color.yyDynamic(light: YYRGBA(255, 255, 255), dark: YYRGBA(16, 18, 20)),
         accent: Color.yyDynamic(light: YYRGBA(43, 76, 126), dark: YYRGBA(143, 168, 200)),
@@ -246,7 +246,7 @@ public struct YYPaper: Sendable, Hashable, Identifiable {
     public let meta: YYPaperMeta
 
     public static let plain = YYPaper(
-        id: "plain", name: "素白", isDark: false, hasNoiseTexture: false,
+        id: "plain", name: String(localized: "素白"), isDark: false, hasNoiseTexture: false,
         bg: Color(yy: YYRGBA(255, 255, 255)), ink: Color(yy: YYRGBA(42, 43, 46)), ink2: Color(yy: YYRGBA(119, 117, 113)), line: Color(yy: YYRGBA(239, 238, 235)), accent: Color(yy: YYRGBA(42, 43, 46)),
         hl: Color(yy: YYRGBA(251, 231, 160)), wave: Color(yy: YYRGBA(239, 127, 113)), glass: Color(yy: YYRGBA(255, 255, 255, 0.82)), main: Color(yy: YYRGBA(43, 76, 126)), onMain: Color(yy: YYRGBA(255, 255, 255)),
         paperAccent: Color(yy: YYRGBA(43, 76, 126)),
@@ -255,7 +255,7 @@ public struct YYPaper: Sendable, Hashable, Identifiable {
         meta: YYPaperMeta(font: .sans, sizePx: 10.5, border: true, letterSpacingEm: 0, marginTopPx: 10, paddingBottomPx: 14)
     )
     public static let dark = YYPaper(
-        id: "dark", name: "暗黑", isDark: true, hasNoiseTexture: false,
+        id: "dark", name: String(localized: "暗黑"), isDark: true, hasNoiseTexture: false,
         bg: Color(yy: YYRGBA(18, 19, 20)), ink: Color(yy: YYRGBA(214, 214, 216)), ink2: Color(yy: YYRGBA(126, 126, 131)), line: Color(yy: YYRGBA(38, 39, 42)), accent: Color(yy: YYRGBA(214, 214, 216)),
         hl: Color(yy: YYRGBA(81, 70, 31)), wave: Color(yy: YYRGBA(229, 122, 110)), glass: Color(yy: YYRGBA(34, 35, 38, 0.82)), main: Color(yy: YYRGBA(143, 168, 200)), onMain: Color(yy: YYRGBA(18, 19, 20)),
         paperAccent: Color(yy: YYRGBA(143, 168, 200)),
@@ -264,7 +264,7 @@ public struct YYPaper: Sendable, Hashable, Identifiable {
         meta: YYPaperMeta(font: .sans, sizePx: 10.5, border: true, letterSpacingEm: 0, marginTopPx: 10, paddingBottomPx: 14)
     )
     public static let kami = YYPaper(
-        id: "kami", name: "纸本", isDark: false, hasNoiseTexture: false,
+        id: "kami", name: String(localized: "纸本"), isDark: false, hasNoiseTexture: false,
         bg: Color(yy: YYRGBA(245, 244, 237)), ink: Color(yy: YYRGBA(38, 37, 31)), ink2: Color(yy: YYRGBA(113, 110, 98)), line: Color(yy: YYRGBA(226, 223, 211)), accent: Color(yy: YYRGBA(27, 54, 93)),
         hl: Color(yy: YYRGBA(233, 224, 194)), wave: Color(yy: YYRGBA(27, 54, 93)), glass: Color(yy: YYRGBA(250, 249, 244, 0.84)), main: Color(yy: YYRGBA(27, 54, 93)), onMain: Color(yy: YYRGBA(245, 244, 237)),
         paperAccent: Color(yy: YYRGBA(43, 76, 126)),
@@ -273,7 +273,7 @@ public struct YYPaper: Sendable, Hashable, Identifiable {
         meta: YYPaperMeta(font: .serif, sizePx: 10.5, border: false, letterSpacingEm: 0.06, marginTopPx: 0, paddingBottomPx: 4)
     )
     public static let kaminight = YYPaper(
-        id: "kaminight", name: "纸本 · 夜", isDark: true, hasNoiseTexture: false,
+        id: "kaminight", name: String(localized: "纸本 · 夜"), isDark: true, hasNoiseTexture: false,
         bg: Color(yy: YYRGBA(27, 26, 23)), ink: Color(yy: YYRGBA(227, 222, 208)), ink2: Color(yy: YYRGBA(140, 135, 121)), line: Color(yy: YYRGBA(46, 44, 39)), accent: Color(yy: YYRGBA(143, 168, 200)),
         hl: Color(yy: YYRGBA(70, 63, 44)), wave: Color(yy: YYRGBA(143, 168, 200)), glass: Color(yy: YYRGBA(40, 38, 34, 0.84)), main: Color(yy: YYRGBA(143, 168, 200)), onMain: Color(yy: YYRGBA(27, 26, 23)),
         paperAccent: Color(yy: YYRGBA(143, 168, 200)),
@@ -282,7 +282,7 @@ public struct YYPaper: Sendable, Hashable, Identifiable {
         meta: YYPaperMeta(font: .serif, sizePx: 10.5, border: false, letterSpacingEm: 0.06, marginTopPx: 0, paddingBottomPx: 4)
     )
     public static let sage = YYPaper(
-        id: "sage", name: "鼠尾草", isDark: false, hasNoiseTexture: false,
+        id: "sage", name: String(localized: "鼠尾草"), isDark: false, hasNoiseTexture: false,
         bg: Color(yy: YYRGBA(230, 231, 220)), ink: Color(yy: YYRGBA(42, 44, 36)), ink2: Color(yy: YYRGBA(99, 102, 90)), line: Color(yy: YYRGBA(211, 213, 198)), accent: Color(yy: YYRGBA(42, 44, 36)),
         hl: Color(yy: YYRGBA(243, 227, 164)), wave: Color(yy: YYRGBA(201, 96, 79)), glass: Color(yy: YYRGBA(234, 235, 225, 0.84)), main: Color(yy: YYRGBA(43, 76, 126)), onMain: Color(yy: YYRGBA(255, 255, 255)),
         paperAccent: Color(yy: YYRGBA(43, 76, 126)),
@@ -291,7 +291,7 @@ public struct YYPaper: Sendable, Hashable, Identifiable {
         meta: YYPaperMeta(font: .serif, sizePx: 10.5, border: false, letterSpacingEm: 0.06, marginTopPx: 0, paddingBottomPx: 4)
     )
     public static let eink = YYPaper(
-        id: "eink", name: "铅印", isDark: false, hasNoiseTexture: true,
+        id: "eink", name: String(localized: "铅印"), isDark: false, hasNoiseTexture: true,
         bg: Color(yy: YYRGBA(233, 232, 227)), ink: Color(yy: YYRGBA(20, 20, 20)), ink2: Color(yy: YYRGBA(85, 85, 85)), line: Color(yy: YYRGBA(201, 200, 194)), accent: Color(yy: YYRGBA(20, 20, 20)),
         hl: Color(yy: YYRGBA(0, 0, 0, 0)), wave: Color(yy: YYRGBA(20, 20, 20)), glass: Color(yy: YYRGBA(233, 232, 227)), main: Color(yy: YYRGBA(20, 20, 20)), onMain: Color(yy: YYRGBA(233, 232, 227)),
         paperAccent: Color(yy: YYRGBA(20, 20, 20)),
