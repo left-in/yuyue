@@ -1,0 +1,75 @@
+/* 语阅 Yuyue site. Colours from design/tokens.json (paper bg, ink text).
+   One accent: the read-aloud highlighter yellow (hlY). */
+:root {
+  --bg: #F6F5F3; --card: #FFFFFF; --line: #E7E5E1;
+  --t1: #2A2B2E; --t2: #6E6B68; --hl: #FBE7A0; --hl-ink: #2A2B2E;
+  --tile: #FBFAF7; --tile-ink: #1C1D20;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101112; --card: #1B1C1E; --line: #2C2D30;
+    --t1: #EDEDEE; --t2: #9A9895; --hl: rgba(251,231,160,.30); --hl-ink: #EDEDEE;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--t1);
+  font: 17px/1.7 -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
+        "Hiragino Sans GB", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
+}
+main { max-width: 720px; margin: 0 auto; padding: 56px 20px 40px; }
+a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--t1); outline-offset: 3px; border-radius: 4px; }
+p { margin: 0 0 12px; max-width: 62ch; }
+.muted { color: var(--t2); }
+
+/* The 阅 tile, same mark as the app icon: serif glyph over an ink rule. */
+.mark {
+  width: 56px; height: 56px; border-radius: 14px; background: var(--tile); color: var(--tile-ink);
+  display: grid; place-items: center; position: relative;
+  font: 700 28px/1 "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", serif;
+  box-shadow: 0 6px 16px rgba(30,28,24,.14);
+}
+.mark::after { content: ""; position: absolute; left: 17px; right: 17px; bottom: 11px; height: 2px; border-radius: 2px; background: #2B4C7E; }
+.home { display: inline-block; text-decoration: none; margin-bottom: 28px; }
+
+h1 { font-size: clamp(2.4rem, 7vw, 3.6rem); line-height: 1.08; font-weight: 750; letter-spacing: -0.035em; margin: 0 0 16px; }
+h1 .zh { display: block; font-size: .62em; letter-spacing: 0; margin-top: 10px; font-weight: 700; }
+.sub { font-size: 19px; color: var(--t2); }
+h2 { font-size: 20px; line-height: 1.35; margin: 0 0 6px; font-weight: 700; letter-spacing: -0.01em; }
+
+/* Signature: a page of a book being read aloud, one sentence highlighted. */
+.page {
+  margin: 36px 0 8px; background: var(--card); border: 0.5px solid var(--line); border-radius: 18px;
+  padding: 24px 24px 18px; font: 18px/1.85 "Iowan Old Style", "Palatino", "Georgia", serif;
+}
+.page p { max-width: none; margin: 0; }
+.page mark {
+  background: linear-gradient(var(--hl), var(--hl)) no-repeat 0 100% / 0% 100%;
+  color: var(--hl-ink); padding: 1px 0; border-radius: 3px;
+  animation: read 3.2s ease-out .6s forwards;
+}
+@keyframes read { to { background-size: 100% 100%; } }
+.page .bar { display: flex; justify-content: space-between; margin-top: 14px; font: 13px/1.4 -apple-system, system-ui, sans-serif; color: var(--t2); }
+@media (prefers-reduced-motion: reduce) { .page mark { animation: none; background-size: 100% 100%; } }
+
+.features { list-style: none; padding: 0; margin: 40px 0 0; display: grid; gap: 28px; }
+.features li { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.features li > div p { font-size: 16px; color: var(--t2); margin: 0; }
+@media (max-width: 560px) { .features li { grid-template-columns: 1fr; gap: 10px; } }
+
+.get { margin: 48px 0 0; padding-top: 24px; border-top: 0.5px solid var(--line); }
+.get strong { font-size: 18px; }
+
+section.doc { background: var(--card); border: 0.5px solid var(--line); border-radius: 16px; padding: 20px 22px 10px; margin-top: 20px; }
+section.doc h2 { margin-top: 18px; }
+section.doc h2:first-child { margin-top: 0; }
+section.doc ul { padding-left: 20px; margin: 0 0 12px; }
+.doc-title { font-size: clamp(2rem, 6vw, 2.6rem); }
+.date { font-size: 14px; color: var(--t2); }
+
+footer { max-width: 720px; margin: 0 auto; padding: 24px 20px 48px; font-size: 14px; color: var(--t2); display: flex; flex-wrap: wrap; gap: 8px 20px; }
+footer a { color: var(--t2); }
