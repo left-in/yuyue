@@ -66,24 +66,6 @@
         }
       }
     },
-    "NSSpeechRecognitionUsageDescription" : {
-      "comment" : "Privacy - Speech Recognition Usage Description",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To line up an audiobook with its e-book, the recording is transcribed on this device. Nothing is uploaded."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "有声书和电子书对齐时，要在这台设备上把录音转成文字，不上传。"
-          }
-        }
-      }
-    },
     "有声书" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -113,13 +95,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "To clone a voice, Yuyue records a short passage of you reading. The recording stays on this device."
+            "value" : "To clone a voice, Yuyue records a short passage of you reading. The recording is kept on this device and sent to the ElevenLabs account you connect in Settings when you clone."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "克隆声音时，录一小段你念书的声音。录音只存在这台设备上。"
+            "value" : "克隆声音时，录一小段你念书的声音。录音存在这台设备上，克隆时会传到你在设置里接的 ElevenLabs 账号。"
           }
         }
       }

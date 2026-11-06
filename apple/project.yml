@@ -78,8 +78,8 @@ targets:
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
         NSLocalNetworkUsageDescription: 电脑浏览器给语阅传书时，要经过你的 Wi‑Fi 连到这台设备。
-        # 有声书: the recording is transcribed on the device to lay it against the e-book.
-        NSSpeechRecognitionUsageDescription: 有声书和电子书对齐时，要在这台设备上把录音转成文字，不上传。
+        # 克隆声音: a short recording of the user reading, sent to their own ElevenLabs account.
+        NSMicrophoneUsageDescription: 克隆声音时，录一小段你念书的声音。录音存在这台设备上，克隆时会传到你在设置里接的 ElevenLabs 账号。
         CFBundleDocumentTypes:
           - CFBundleTypeName: EPUB
             CFBundleTypeRole: Viewer
