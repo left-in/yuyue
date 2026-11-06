@@ -234,6 +234,9 @@ private struct ReaderContent: View {
     #endif
 
     private var paper: YYPaper { model.paperTokens }
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    #endif
 
     var body: some View {
         pages
@@ -251,9 +254,9 @@ private struct ReaderContent: View {
 
     #if os(iOS)
     private var pages: some View {
-        PagerView(pager: model.pager)
-            .ignoresSafeArea()
+        pager
             .background(paper.bg.ignoresSafeArea())
+            .overlay { if InnerDisplay.isOn(sizeClass) { SpreadNumbers(model: model) } }
             .overlay(alignment: .top) { pullMark }
             .overlay(alignment: .topTrailing) {
                 if pull == 0, model.bookmarkHere != nil, !model.chromeShown, !model.searchShown {
@@ -347,6 +350,18 @@ private struct ReaderContent: View {
             }
     }
 
+    /// iPhone Duo's inner display: two pages side by side, kept clear of the fold when half
+    /// folded. The reader measures from the same full-screen rectangle as the pages.
+    private var pager: some View {
+        GeometryReader { g in
+            let wide = InnerDisplay.isOn(sizeClass)
+            // The pager lays out in unmirrored UIKit coordinates.
+            PagerView(pager: model.pager, spread: wide, fold: wide ? InnerDisplay.fold(in: g, layoutDirectionBehavior: .fixed) : nil)
+                .ignoresSafeArea()
+        }
+        .ignoresSafeArea()
+    }
+
     /// 下拉加书签 (prototype): in the space the page leaves, a bookmark and what letting go does.
     @ViewBuilder private var pullMark: some View {
         if pull > 0 {
@@ -428,8 +443,92 @@ private struct ReaderContent: View {
 #if os(iOS)
 struct PagerView: UIViewRepresentable {
     let pager: ReaderPager
+    /// iPhone Duo's inner display: two pages side by side.
+    var spread = false
+    /// Half folded: the fold, in the pager's coordinates.
+    var fold: CGRect?
     func makeUIView(context: Context) -> ReaderPager { pager }
-    func updateUIView(_ view: ReaderPager, context: Context) {}
+    func updateUIView(_ view: ReaderPager, context: Context) {
+        view.spread = spread
+        view.fold = fold
+    }
+}
+
+/// iPhone Duo's inner display: the spread's page numbers, one under each page (12, secondary).
+/// The core counts a spread as one page; the left one is its odd half.
+private struct SpreadNumbers: View {
+    let model: ReaderModel
+    @AppStorage(ImmersivePrefs.progressKey) private var hidesProgress = true
+
+    var body: some View {
+        if model.settings.mode == .paginated, !model.pager.chat, !(model.immersive && hidesProgress),
+           let page = model.bookPage {
+            let paper = model.paperTokens
+            HStack(spacing: 0) {
+                ForEach([page * 2 - 1, page * 2], id: \.self) { n in
+                    Text(verbatim: "\(n)")
+                        .font(.yy(size: 12).monospacedDigit())
+                        .foregroundStyle(paper.ink2)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+            .frame(maxHeight: .infinity, alignment: .bottom)
+            // One row, 8 above the read-along bar (24 above the safe area, 40 tall), so the
+            // right page's number isn't under it; the text ends above at spreadBottom (90).
+            .padding(.bottom, 72)
+            // Halves of the whole screen, as the pages are.
+            .ignoresSafeArea(edges: .horizontal)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+        }
+    }
+}
+
+/// iPhone Duo's inner display: two panes, one each side. Half folded, the line between them is
+/// the fold and each pane keeps 24 from it; flat, the line is the screen's middle with a 32 gap.
+/// Measured over the whole screen, so the tab bar's lopsided safe area doesn't move the line.
+/// The panes keep the safe area at the outer edges.
+struct FoldSplit<Leading: View, Trailing: View>: View {
+    @ViewBuilder var leading: Leading
+    @ViewBuilder var trailing: Trailing
+
+    var body: some View {
+        GeometryReader { g in
+            let full = g.size.width + g.safeAreaInsets.leading + g.safeAreaInsets.trailing
+            let fold = InnerDisplay.fold(in: g, layoutDirectionBehavior: .fixed)
+                .map { $0.offsetBy(dx: g.safeAreaInsets.leading, dy: 0) }
+            // In whole-screen coordinates: where the left pane ends and the right one starts.
+            let leftEnd = fold.map { $0.minX - 24 } ?? (full / 2 - 16)
+            let rightStart = fold.map { $0.maxX + 24 } ?? (full / 2 + 16)
+            HStack(spacing: 0) {
+                leading
+                    .frame(width: max(0, leftEnd - g.safeAreaInsets.leading))
+                Color.clear.frame(width: max(0, rightStart - leftEnd))
+                trailing
+                    .frame(width: max(0, full - g.safeAreaInsets.trailing - rightStart))
+            }
+            .frame(maxHeight: .infinity)
+        }
+    }
+}
+
+/// iPhone Duo's inner display: an iPhone at regular width. iPad keeps its own pages.
+@MainActor enum InnerDisplay {
+    static func isOn(_ sizeClass: UserInterfaceSizeClass?) -> Bool {
+        sizeClass == .regular && UIDevice.current.userInterfaceIdiom == .phone
+    }
+
+    /// Half folded like a book: the fold, in the coordinates of the view `proxy` measures. nil
+    /// flat open, folded like a laptop, and on every other iPhone.
+    static func fold(in proxy: GeometryProxy, layoutDirectionBehavior: LayoutDirectionBehavior = .mirrors) -> CGRect? {
+        if #available(iOS 27.1, *) {
+            guard let frame = proxy.reservedRegions(kind: .division, layoutDirectionBehavior: layoutDirectionBehavior).first?.frame,
+                  frame.height > frame.width
+            else { return nil }
+            return frame
+        }
+        return nil
+    }
 }
 #else
 struct PagerView: NSViewRepresentable {

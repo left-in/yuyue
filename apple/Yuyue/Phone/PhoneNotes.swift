@@ -111,6 +111,10 @@ struct PhoneNotes: View {
     @State private var selecting = false
     @State private var selected: Set<String> = []
     @State private var path = NavigationPath()
+    /// Regular width (iPhone Duo open, iPad): the list on the left, a book's notes on the right.
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    /// The book on the right; nil until one is picked, which shows the first.
+    @State private var chosen: String?
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
 
     private var filter: NoteFilter { kind == .thoughts ? .thoughts : .all }
@@ -124,52 +128,42 @@ struct PhoneNotes: View {
     }
 
     var body: some View {
-        NavigationStack(path: $path) {
-            Group {
-                if kind == .words {
-                    PhoneWords(library: library)
-                } else if shown.isEmpty {
-                    empty
-                } else if byBook {
-                    bookList
-                } else {
-                    timeline
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(YYColor.bg)
-            .navigationTitle("笔记")
-            .safeAreaInset(edge: .top, spacing: 0) {
-                if !selecting { picker }
-            }
-            .toolbar {
-                if kind != .words, !shown.isEmpty {
-                    if selecting {
-                        ToolbarItem(placement: .confirmationAction) { Button("完成") { stopSelecting() } }
-                    } else {
-                        ToolbarItem(placement: .primaryAction) {
-                            NoteExportMenu(sender: library.noteSender,
-                                           markdown: NotedBook.markdown(shown, title: kind == .thoughts ? String(localized: "语阅 · 想法") : String(localized: "语阅笔记")),
-                                           name: String(localized: "语阅笔记.md"), books: { shown.map(\.export) }) {
-                                Label("导出", systemImage: "square.and.arrow.up")
+        Group {
+            if InnerDisplay.isOn(sizeClass) {
+                // iPhone Duo's inner display: the list left of the fold, a book's notes right of it.
+                // 生词 keeps the whole width.
+                NavigationStack(path: $path) {
+                    Group {
+                        if kind == .words {
+                            page(split: false)
+                        } else {
+                            FoldSplit {
+                                page(split: true, fold: true)
+                            } trailing: {
+                                detailColumn(inPane: true)
                             }
-                        }
-                        if !byBook {
-                            ToolbarItem(placement: .primaryAction) {
-                                Button("选择", systemImage: "checkmark.circle") { selecting = true }
-                            }
+                            .background(YYColor.bg)
                         }
                     }
+                    .navigationDestination(for: String.self) { id in
+                        PhoneBookNotes(library: library, bookID: id, thoughtsOnly: kind == .thoughts)
+                    }
                 }
-            }
-            .toolbar(selecting ? .hidden : .automatic, for: .tabBar)
-            .safeAreaInset(edge: .bottom) {
-                if selecting { selectionBar }
-            }
-            .overlay(alignment: .top) { toast }
-            .yyToastMotion(value: library.toast?.id)
-            .navigationDestination(for: String.self) { id in
-                PhoneBookNotes(library: library, bookID: id, thoughtsOnly: kind == .thoughts)
+            } else if sizeClass == .regular, kind != .words, !notes.isEmpty {
+                // iPad. No notes in any book: the phone page, its empty state across the whole
+                // screen, rather than an empty sidebar beside it.
+                NavigationSplitView {
+                    page(split: true)
+                } detail: {
+                    detailColumn(inPane: false)
+                }
+            } else {
+                NavigationStack(path: $path) {
+                    page(split: false)
+                        .navigationDestination(for: String.self) { id in
+                            PhoneBookNotes(library: library, bookID: id, thoughtsOnly: kind == .thoughts)
+                        }
+                }
             }
         }
         .task(id: library.books.map(\.id)) { load() }
@@ -192,6 +186,76 @@ struct PhoneNotes: View {
         notes = NotedBook.load(library)
         deck = Review(core: library.core)
         selected = selected.filter { id in notes.contains { n in n.marks.contains { n.id + "/" + $0.id == id } } }
+    }
+
+    /// The list as the phone shows it; in the split, the sidebar (a book list picks the right side).
+    /// `fold`: iPhone Duo's left pane, where the rows pick the book on the right as buttons.
+    private func page(split: Bool, fold: Bool = false) -> some View {
+        Group {
+            if kind == .words {
+                PhoneWords(library: library)
+            } else if shown.isEmpty {
+                if !split { empty }
+            } else if byBook {
+                bookList(selection: split && !fold ? chosenBinding : nil, fold: fold)
+            } else {
+                timeline
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(YYColor.bg)
+        .navigationTitle("笔记")
+        .safeAreaInset(edge: .top, spacing: 0) {
+            if !selecting { picker }
+        }
+        .toolbar {
+            if kind != .words, !shown.isEmpty {
+                if selecting {
+                    ToolbarItem(placement: .confirmationAction) { Button("完成") { stopSelecting() } }
+                } else {
+                    ToolbarItem(placement: .primaryAction) {
+                        NoteExportMenu(sender: library.noteSender,
+                                       markdown: NotedBook.markdown(shown, title: kind == .thoughts ? String(localized: "语阅 · 想法") : String(localized: "语阅笔记")),
+                                       name: String(localized: "语阅笔记.md"), books: { shown.map(\.export) }) {
+                            Label("导出", systemImage: "square.and.arrow.up")
+                        }
+                    }
+                    if !byBook {
+                        ToolbarItem(placement: .primaryAction) {
+                            Button("选择", systemImage: "checkmark.circle") { selecting = true }
+                        }
+                    }
+                }
+            }
+        }
+        .toolbar(selecting ? .hidden : .automatic, for: .tabBar)
+        .safeAreaInset(edge: .bottom) {
+            if selecting { selectionBar }
+        }
+        .overlay(alignment: .top) { toast }
+        .yyToastMotion(value: library.toast?.id)
+    }
+
+    /// The right side of the split: the book picked, else the first; the empty note when none.
+    /// `inPane`: iPhone Duo's right pane, under the list's own title.
+    @ViewBuilder private func detailColumn(inPane: Bool) -> some View {
+        if let id = chosenID {
+            PhoneBookNotes(library: library, bookID: id, thoughtsOnly: kind == .thoughts, titled: !inPane)
+                .id(id)
+        } else {
+            empty
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(YYColor.bg)
+        }
+    }
+
+    private var chosenID: String? {
+        if let chosen, shown.contains(where: { $0.id == chosen }) { return chosen }
+        return shown.first?.id
+    }
+
+    private var chosenBinding: Binding<String?> {
+        Binding(get: { chosenID }, set: { chosen = $0 })
     }
 
     // MARK: Header
@@ -282,21 +346,20 @@ struct PhoneNotes: View {
 
     // MARK: 按书
 
-    private var bookList: some View {
-        List {
+    /// `selection` only in the split, where a tap shows the book on the right instead of pushing it.
+    /// `fold`: iPhone Duo's left pane; the row is a button that picks the book on the right.
+    private func bookList(selection: Binding<String?>?, fold: Bool = false) -> some View {
+        List(selection: selection) {
             Section {
                 ForEach(shown) { n in
-                    NavigationLink(value: n.id) {
-                        HStack(spacing: 12) {
-                            BookCover(book: n.book).frame(width: 38)
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(n.book.title).font(.yy(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
-                                Text(Notes.counts(n.marks)).font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t3)
-                            }
-                            Spacer(minLength: 8)
-                            Text(Notes.shortDay(Notes.date(n.latest))).font(.yy(size: 12)).foregroundStyle(YYColor.t3)
-                        }
-                        .padding(.vertical, 3)
+                    if fold {
+                        let on = chosenID == n.id
+                        Button { chosen = n.id } label: { bookRow(n).contentShape(.rect) }
+                            .buttonStyle(.plain)
+                            .listRowBackground(on ? tint.accentSoft : nil)
+                            .accessibilityAddTraits(on ? .isSelected : [])
+                    } else {
+                        NavigationLink(value: n.id) { bookRow(n) }
                     }
                 }
             } header: {
@@ -314,6 +377,19 @@ struct PhoneNotes: View {
         .animation(YYMotion.layout, value: shown.map(\.id))
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
+    }
+
+    private func bookRow(_ n: NotedBook) -> some View {
+        HStack(spacing: 12) {
+            BookCover(book: n.book).frame(width: 38)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(n.book.title).font(.yy(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
+                Text(Notes.counts(n.marks)).font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t3)
+            }
+            Spacer(minLength: 8)
+            Text(Notes.shortDay(Notes.date(n.latest))).font(.yy(size: 12)).foregroundStyle(YYColor.t3)
+        }
+        .padding(.vertical, 3)
     }
 
     // MARK: 选择
@@ -413,12 +489,30 @@ struct PhoneNotes: View {
 
 // MARK: - 一本书的笔记
 
+/// The book's name as the title, inline; left off in iPhone Duo's right pane.
+private struct BookNotesTitle: ViewModifier {
+    let title: String
+    let on: Bool
+
+    func body(content: Content) -> some View {
+        if on {
+            content
+                .navigationTitle(title)
+                .navigationBarTitleDisplayMode(.inline)
+        } else {
+            content
+        }
+    }
+}
+
 /// One book's notes in book order, under their chapters (prototype 一本书的笔记). The dots keep one
 /// colour; 导出 takes this book; 回顾这本书 goes through its highlights.
 struct PhoneBookNotes: View {
     let library: Library
     let bookID: String
     let thoughtsOnly: Bool
+    /// false in iPhone Duo's right pane, where the notes list's title stays.
+    var titled = true
     @State private var noted: NotedBook?
     @State private var only: NoteFilter = .all
     @State private var reviewing: Review?
@@ -480,8 +574,7 @@ struct PhoneBookNotes: View {
             }
         }
         .background(YYColor.bg)
-        .navigationTitle(noted?.book.title ?? "")
-        .navigationBarTitleDisplayMode(.inline)
+        .modifier(BookNotesTitle(title: noted?.book.title ?? "", on: titled))
         .task { load() }
         .onReceive(NotificationCenter.default.publisher(for: .notesChanged)) { _ in load() }
         .noteSheets(library: library, sharing: $sharing, writing: $writing)

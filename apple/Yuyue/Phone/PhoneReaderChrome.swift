@@ -16,74 +16,14 @@ struct PhoneReaderChrome: View {
     @AppStorage(ImmersivePrefs.progressKey) private var hidesProgress = true
     @State private var exported: URL?
     @FocusState private var typing: Bool
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
     private var paper: YYPaper { model.paperTokens }
     /// 沉浸阅读 hides the capsule until the middle is tapped.
     private var capsuleShown: Bool { !model.immersive || model.chromeShown || model.searchShown }
 
     var body: some View {
-        VStack(spacing: 0) {
-            if model.searchShown {
-                searchField.transition(.move(edge: .top).combined(with: .opacity))
-            } else if model.chromeShown {
-                top.transition(.move(edge: .top).combined(with: .opacity))
-            }
-            Spacer(minLength: 0)
-            if let e = model.elsewhere {
-                ElsewhereCard(elsewhere: e, tint: .standard, stay: { model.elsewhere = nil }, jump: { model.jumpElsewhere() })
-                    .padding(.bottom, 10)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
-            if let open = model.openNote {
-                FootnoteCard(open: open, bookTitle: model.detail?.summary.title ?? "", tint: .standard,
-                             toNotes: { model.goToNotes() }, done: { model.openNote = nil })
-                    .padding(.bottom, 10)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
-            if let recap = model.recap, !model.searchShown {
-                RecapCard(recap: recap, tint: .standard) { model.recap = nil }
-                    .padding(.bottom, 10)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
-            if let flag = model.narrationFlag, !model.searchShown {
-                NarrationFlagCard(flag: flag, letBe: { model.letFlagBe() }, adjust: { model.adjustFlag() })
-                    .padding(.horizontal, 2)
-                    .padding(.bottom, 10)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
-            if let back = model.returnTo, capsuleShown, !model.searchShown {
-                ReturnPill(page: back.page, paper: paper) { model.goBack() }
-                    .padding(.bottom, 8)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            } else if let doubt = model.txtDoubt, capsuleShown, !model.searchShown {
-                DoubtPill(doubt: doubt, paper: paper, open: { model.txtShown = true }, dismiss: { model.dismissDoubt() })
-                    .padding(.bottom, 8)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
-            if capsuleShown {
-                Group {
-                    if model.searchShown { searchCapsule } else { capsule }
-                }
-                .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.bottom, 4)
-        .frame(maxWidth: 560)
-        .frame(maxWidth: .infinity)
-        .overlay(alignment: .bottom) {
-            if model.immersive, !capsuleShown {
-                if !hidesProgress {
-                    Text(model.capsuleNote)
-                        .font(.yy(size: 10).monospacedDigit())
-                        .foregroundStyle(paper.ink2)
-                        .padding(.bottom, 2)
-                        .allowsHitTesting(false)
-                } else if ImmersivePrefs.keepsLine {
-                    hairline
-                }
-            }
-        }
+        layout
         .foregroundStyle(paper.ink)
         .buttonStyle(.plain)
         .animation(.snappy(duration: 0.22), value: model.chromeShown)
@@ -146,6 +86,131 @@ struct PhoneReaderChrome: View {
         }
     }
 
+    // MARK: Layout
+
+    /// On the phone: the top bar, and the capsule with the cards above it, in one column at the
+    /// bottom. On iPhone Duo's inner display the bottom goes under the right page (§3 of the Duo
+    /// spec), so it never sits on the fold.
+    @ViewBuilder private var layout: some View {
+        if InnerDisplay.isOn(sizeClass) {
+            spreadLayout
+        } else {
+            VStack(spacing: 0) {
+                topBar
+                Spacer(minLength: 0)
+                bottom
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 4)
+            .frame(maxWidth: 560)
+            .frame(maxWidth: .infinity)
+            .overlay(alignment: .bottom) { immersiveNote }
+        }
+    }
+
+    /// The inner display: the top bar as on the phone; the capsule and its cards on the right
+    /// page, trailing, as wide as the page less 16 each side and 24 above the safe area. Half
+    /// folded, they start clear of the fold. Measured over the whole screen, as the pages are.
+    private var spreadLayout: some View {
+        GeometryReader { g in
+            let width = g.size.width
+            let trailing = g.safeAreaInsets.trailing
+            // The right page starts past the gutter; half folded, at least 16 past the fold.
+            let pageStart = max(width / 2 + CGFloat(ReaderPager.spreadMargin), (InnerDisplay.fold(in: g)?.maxX ?? 0) + 16)
+            let barWidth = max(0, width - trailing - 16 - (pageStart + 16))
+            // The left page ends before the gutter; half folded, at least 16 before the fold.
+            let leftPageEnd = min(width / 2 - CGFloat(ReaderPager.spreadMargin), (InnerDisplay.fold(in: g)?.minX ?? width) - 16)
+            VStack(spacing: 0) {
+                // On the left page, so half folded it never crosses the fold.
+                topBar
+                    .padding(.horizontal, 12)
+                    .frame(width: max(0, leftPageEnd - g.safeAreaInsets.leading - 16))
+                    .padding(.leading, g.safeAreaInsets.leading + 4)
+                    .padding(.top, g.safeAreaInsets.top)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Spacer(minLength: 0)
+                bottom
+                    .frame(width: barWidth)
+                    .overlay(alignment: .bottom) { immersiveNote }
+                    .padding(.trailing, trailing + 16)
+                    .padding(.bottom, g.safeAreaInsets.bottom + 24)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        // The pages' rectangle; the keyboard still pushes the search capsule up.
+        .ignoresSafeArea(.container)
+        .overlay(alignment: .bottom) {
+            if model.immersive, !capsuleShown, hidesProgress, ImmersivePrefs.keepsLine { hairline }
+        }
+    }
+
+    @ViewBuilder private var topBar: some View {
+        if model.searchShown {
+            searchField.transition(.move(edge: .top).combined(with: .opacity))
+        } else if model.chromeShown {
+            top.transition(.move(edge: .top).combined(with: .opacity))
+        }
+    }
+
+    /// The capsule, and the cards and pills that come up above it.
+    private var bottom: some View {
+        VStack(spacing: 0) {
+            if let e = model.elsewhere {
+                ElsewhereCard(elsewhere: e, tint: .standard, stay: { model.elsewhere = nil }, jump: { model.jumpElsewhere() })
+                    .padding(.bottom, 10)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+            if let open = model.openNote {
+                FootnoteCard(open: open, bookTitle: model.detail?.summary.title ?? "", tint: .standard,
+                             toNotes: { model.goToNotes() }, done: { model.openNote = nil })
+                    .padding(.bottom, 10)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+            if let recap = model.recap, !model.searchShown {
+                RecapCard(recap: recap, tint: .standard) { model.recap = nil }
+                    .padding(.bottom, 10)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+            if let flag = model.narrationFlag, !model.searchShown {
+                NarrationFlagCard(flag: flag, letBe: { model.letFlagBe() }, adjust: { model.adjustFlag() })
+                    .padding(.horizontal, 2)
+                    .padding(.bottom, 10)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+            if let back = model.returnTo, capsuleShown, !model.searchShown {
+                ReturnPill(page: back.page, paper: paper) { model.goBack() }
+                    .padding(.bottom, 8)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            } else if let doubt = model.txtDoubt, capsuleShown, !model.searchShown {
+                DoubtPill(doubt: doubt, paper: paper, open: { model.txtShown = true }, dismiss: { model.dismissDoubt() })
+                    .padding(.bottom, 8)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+            if capsuleShown {
+                Group {
+                    if model.searchShown { searchCapsule } else { capsule }
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+    }
+
+    /// 沉浸, with the capsule away: the progress line, or the hairline.
+    @ViewBuilder private var immersiveNote: some View {
+        if model.immersive, !capsuleShown {
+            if !hidesProgress {
+                Text(model.capsuleNote)
+                    .font(.yy(size: 10).monospacedDigit())
+                    .foregroundStyle(paper.ink2)
+                    .padding(.bottom, 2)
+                    .allowsHitTesting(false)
+            } else if ImmersivePrefs.keepsLine, !InnerDisplay.isOn(sizeClass) {
+                hairline
+            }
+        }
+    }
+
     // MARK: Top
 
     private var top: some View {
@@ -203,8 +268,10 @@ struct PhoneReaderChrome: View {
     }
 
     private var whereLine: String {
-        [model.chapterTitle == model.detail?.summary.title ? nil : model.chapterTitle,
-         model.bookPage.map { String(localized: "第 \($0) 页") }].compactMap { $0 }.joined(separator: " · ")
+        // On a spread, the left page's number, as printed under it.
+        let spread = InnerDisplay.isOn(sizeClass) && model.settings.mode == .paginated && !model.pager.chat
+        return [model.chapterTitle == model.detail?.summary.title ? nil : model.chapterTitle,
+                model.bookPage.map { String(localized: "第 \(spread ? $0 * 2 - 1 : $0) 页") }].compactMap { $0 }.joined(separator: " · ")
     }
 
     private func icon(_ name: String) -> some View {

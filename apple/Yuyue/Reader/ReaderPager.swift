@@ -684,18 +684,49 @@ final class ReaderPager: PlatformView {
         didSet { if chat != oldValue { geometryChanged() } }
     }
 
+    #if os(iOS)
+    /// iPhone Duo's inner display (an iPhone at regular width): pages open as a book, two side by
+    /// side with a 64 pt gutter between them, the read-along bar under the right one.
+    var spread = false {
+        didSet { if spread != oldValue { geometryChanged() } }
+    }
+    /// Half folded: the fold, in the pager's coordinates. No text runs into it.
+    var fold: CGRect? {
+        didSet { if fold != oldValue { geometryChanged() } }
+    }
+    /// The spread's gutter is twice the margin (reader.css: column-gap = 2 × --yy-margin).
+    static let spreadMargin = 32.0
+    /// Under the spread's pages: the read-along bar 24 pt above the safe area, and the page
+    /// numbers below it; the text stops above both.
+    static let spreadBottom = 90.0
+    #endif
+
     func geometry() -> PageGeometry {
         let width = Double(bounds.width)
-        let columns: UInt8 = prefersTwoColumns && !chat && width >= 880 && mode == .paginated ? 2 : 1
+        #if os(iOS)
+        let book = spread && !chat && mode == .paginated
+        #else
+        let book = false
+        #endif
+        let columns: UInt8 = book || (prefersTwoColumns && !chat && width >= 880 && mode == .paginated) ? 2 : 1
         // About 30 characters to a line at most (`.v-mac-col`: 460 wide at 15); wider pages get
         // wider margins instead.
         let measure = fontSize * 31
-        let margin = max(width < 500 ? 24 : 40, (width / Double(columns) - measure) / 2).rounded()
         #if os(iOS)
+        let margin: Double
+        if book {
+            margin = spreadMargin(width: width, measure: measure)
+        } else if spread, mode == .scrolled {
+            // Scrolling on the inner display: one column, no line longer than 640 pt, centred.
+            margin = max(40, (width - min(measure, 640)) / 2).rounded()
+        } else {
+            margin = max(width < 500 ? 24 : 40, (width / Double(columns) - measure) / 2).rounded()
+        }
         let top = Double(safeAreaInsets.top) + 28
-        let bottom = Double(safeAreaInsets.bottom) + 40
+        let bottom = Double(safeAreaInsets.bottom) + (book ? Self.spreadBottom : 40)
         let paging = Paging.native
         #else
+        let margin = max(width < 500 ? 24 : 40, (width / Double(columns) - measure) / 2).rounded()
         // The reading capsule floats over the bottom of the page.
         let top = 40.0
         let bottom = 96.0
@@ -703,6 +734,20 @@ final class ReaderPager: PlatformView {
         #endif
         return PageGeometry(paging: paging, margin: margin, top: top.rounded(), bottom: bottom.rounded(), columns: columns, reducedMotion: reduceMotion)
     }
+
+    #if os(iOS)
+    /// A book's spread: 32 at the outer edges, 64 between the pages, and no line longer than
+    /// 560 pt. Half folded, each page's text stops 16 pt short of the fold. The margin is the
+    /// only knob: the columns' gap is always twice it, so pages stay a whole screen apart.
+    private func spreadMargin(width: Double, measure: Double) -> Double {
+        var margin = max(Self.spreadMargin, (width / 2 - min(measure, 560)) / 2)
+        if let fold, fold.width > 0, fold.height > fold.width {
+            // The left page ends at width/2 - margin, the right one starts at width/2 + margin.
+            margin = max(margin, width / 2 - Double(fold.minX) + 16, Double(fold.maxX) - width / 2 + 16)
+        }
+        return margin.rounded(.up)
+    }
+    #endif
 
     private func geometryChanged() {
         guard bounds.width > 0 else { return }

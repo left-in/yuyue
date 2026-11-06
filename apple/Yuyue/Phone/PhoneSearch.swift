@@ -11,6 +11,8 @@ struct PhoneSearch: View {
     @State private var query = ""
     @State private var scope = Scope.all
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    /// Regular width (iPhone Duo open, iPad): the results at most 720 wide, in the middle.
+    @Environment(\.horizontalSizeClass) private var sizeClass
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
 
     enum Scope: Hashable { case all, books, lines, notes, words }
@@ -19,18 +21,40 @@ struct PhoneSearch: View {
 
     var body: some View {
         NavigationStack {
-            Group {
-                if let search {
-                    results(search)
-                } else {
-                    Color.clear
+            if InnerDisplay.isOn(sizeClass) {
+                // iPhone Duo's inner display: the field and the chips left of the fold, what they
+                // find right of it.
+                FoldSplit {
+                    VStack(alignment: .leading, spacing: 0) {
+                        field
+                        if let search, !q.isEmpty { chips(search) }
+                        Spacer(minLength: 0)
+                    }
+                } trailing: {
+                    Group {
+                        if let search {
+                            results(search)
+                        } else {
+                            Color.clear
+                        }
+                    }
                 }
-            }
-            .background(YYColor.bg)
-            .navigationTitle("搜索")
-            .searchable(text: $query, prompt: String(localized: "书名、原文、笔记、生词"))
-            .safeAreaInset(edge: .top, spacing: 0) {
-                if let search, !q.isEmpty { chips(search) }
+                .background(YYColor.bg)
+                .navigationTitle("搜索")
+            } else {
+                Group {
+                    if let search {
+                        results(search)
+                    } else {
+                        Color.clear
+                    }
+                }
+                .background(YYColor.bg)
+                .navigationTitle("搜索")
+                .searchable(text: $query, prompt: String(localized: "书名、原文、笔记、生词"))
+                .safeAreaInset(edge: .top, spacing: 0) {
+                    if let search, !q.isEmpty { chips(search) }
+                }
             }
         }
         .onAppear {
@@ -43,6 +67,33 @@ struct PhoneSearch: View {
             search?.query = query
             if q.isEmpty { scope = .all }
         }
+    }
+
+    // MARK: Field
+
+    /// iPhone Duo's left pane: the words to look for, in place of `.searchable`.
+    private var field: some View {
+        HStack(spacing: YYUI.s(6)) {
+            Image(systemName: "magnifyingglass").font(YYUI.font(12, .medium)).foregroundStyle(YYColor.t3)
+            TextField("", text: $query, prompt: Text("书名、原文、笔记、生词"))
+                .font(YYUI.font(13))
+                .foregroundStyle(YYColor.t1)
+                .submitLabel(.search)
+                .autocorrectionDisabled()
+            if !query.isEmpty {
+                Button { query = "" } label: {
+                    Image(systemName: "xmark.circle.fill").foregroundStyle(YYColor.t3)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("清空")
+            }
+        }
+        .padding(.horizontal, YYUI.s(12))
+        .frame(height: YYUI.s(36))
+        .yyCard()
+        .padding(.horizontal, YYUI.s(16))
+        .padding(.top, YYUI.s(8))
+        .padding(.bottom, YYUI.s(8))
     }
 
     // MARK: Chips
@@ -125,6 +176,8 @@ struct PhoneSearch: View {
             }
             .padding(.horizontal, YYUI.s(16))
             .padding(.bottom, YYUI.s(24))
+            .frame(maxWidth: sizeClass == .regular ? 720 : .infinity)
+            .frame(maxWidth: .infinity)
         }
         .scrollDismissesKeyboard(.immediately)
     }

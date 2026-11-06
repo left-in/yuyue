@@ -18,37 +18,36 @@ struct PhoneMe: View {
     @State private var words = 0
     @AppStorage(AppAppearance.key) private var mode = AppAppearance.system
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    /// Regular width (iPhone Duo open, iPad): the column at most 640 wide, in the middle.
+    @Environment(\.horizontalSizeClass) private var sizeClass
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
 
     var body: some View {
         NavigationStack {
-            YYPage {
-                NavigationLink { PhoneStats(library: library) } label: { weekCard }
-                    .buttonStyle(.plain)
-                    .padding(.top, YYUI.s(14))
-                    .padding(.bottom, YYUI.s(12))
-                group {
-                    link(String(localized: "同步"), "icloud", syncDetail) { PhoneSync(library: library) }
-                    link(String(localized: "书库来源"), "server.rack", library.sources.all.isEmpty ? nil : String(localized: "\(library.sources.all.count) 个")) { PhoneSources(library: library) }
-                    link(String(localized: "Wi‑Fi 传书"), "wifi", nil) { PhoneWifi(library: library) }
-                }
-                group {
-                    link(String(localized: "外观"), "sun.max", "\(mode.title) · \(tint.name)") { PhoneAppearance() }
-                    link(String(localized: "沉浸阅读"), "viewfinder", immersiveAlways ? String(localized: "开") : String(localized: "关")) { PhoneImmersiveSheet().navigationTitle("沉浸阅读").navigationBarTitleDisplayMode(.inline) }
-                    link(String(localized: "墨水屏"), "rectangle.portrait.on.rectangle.portrait", einkOn ? String(localized: "开") : String(localized: "关")) { PhoneEInk(library: library) }
-                    link(String(localized: "外文阅读"), "globe", nil) { PhoneForeign(library: library) }
-                }
-                group {
-                    link(String(localized: "朗读"), "headphones", nil) { PhoneListening() }
-                    link(String(localized: "引擎"), "cpu", String(localized: "书伴、朗读、翻译")) { PhoneEngines(library: library) }
-                }
-                group {
-                    link(String(localized: "存储空间"), "internaldrive", used.map(PhoneStorage.size)) { PhoneStorage(library: library) }
-                    link(String(localized: "数据快照"), "shippingbox", lastSnapshot.map(Snapshots.day) ?? String(localized: "换设备、备份")) { PhoneSnapshot(library: library) }
-                    link(String(localized: "笔记导出"), "square.and.arrow.up", "Obsidian · Notion · flomo") { PhoneNoteExport() }
-                }
-                group {
-                    link(String(localized: "关于"), "info.circle", Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) { PhoneAbout() }
+            Group {
+                if InnerDisplay.isOn(sizeClass) {
+                    // iPhone Duo's inner display: account and listening left of the fold, the rest
+                    // right of it; each column scrolls on its own.
+                    FoldSplit {
+                        column { leftGroups }
+                    } trailing: {
+                        column { rightGroups }
+                    }
+                    .background(YYColor.bg)
+                } else {
+                    YYPage {
+                        VStack(alignment: .leading, spacing: 0) {
+                            // The phone's order: 这周, 同步, 外观, 朗读, 存储, 关于.
+                            weekLink
+                            syncGroup
+                            lookGroup
+                            listenGroup
+                            storageGroup
+                            aboutGroup
+                        }
+                        .frame(maxWidth: sizeClass == .regular ? 640 : .infinity)
+                        .frame(maxWidth: .infinity)
+                    }
                 }
             }
             .navigationTitle("我的")
@@ -63,6 +62,76 @@ struct PhoneMe: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .notesChanged)) { _ in load() }
         .onReceive(NotificationCenter.default.publisher(for: .vocabChanged)) { _ in load() }
+    }
+
+    // MARK: Pieces
+
+    /// iPhone Duo's left column: 这周, 同步, 朗读 and 引擎.
+    @ViewBuilder private var leftGroups: some View {
+        weekLink
+        syncGroup
+        listenGroup
+    }
+
+    /// iPhone Duo's right column: 外观, 存储, 关于; its top in line with the week card's.
+    @ViewBuilder private var rightGroups: some View {
+        lookGroup.padding(.top, YYUI.s(14))
+        storageGroup
+        aboutGroup
+    }
+
+    /// One column of iPhone Duo's two: at most 480 wide, in the middle of its pane, scrolling on its own.
+    private func column<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        YYPage {
+            VStack(alignment: .leading, spacing: 0) { content() }
+                .frame(maxWidth: 480)
+                .frame(maxWidth: .infinity)
+        }
+    }
+
+    private var weekLink: some View {
+        NavigationLink { PhoneStats(library: library) } label: { weekCard }
+            .buttonStyle(.plain)
+            .padding(.top, YYUI.s(14))
+            .padding(.bottom, YYUI.s(12))
+    }
+
+    private var syncGroup: some View {
+        group {
+            link(String(localized: "同步"), "icloud", syncDetail) { PhoneSync(library: library) }
+            link(String(localized: "书库来源"), "server.rack", library.sources.all.isEmpty ? nil : String(localized: "\(library.sources.all.count) 个")) { PhoneSources(library: library) }
+            link(String(localized: "Wi‑Fi 传书"), "wifi", nil) { PhoneWifi(library: library) }
+        }
+    }
+
+    private var lookGroup: some View {
+        group {
+            link(String(localized: "外观"), "sun.max", "\(mode.title) · \(tint.name)") { PhoneAppearance() }
+            link(String(localized: "沉浸阅读"), "viewfinder", immersiveAlways ? String(localized: "开") : String(localized: "关")) { PhoneImmersiveSheet().navigationTitle("沉浸阅读").navigationBarTitleDisplayMode(.inline) }
+            link(String(localized: "墨水屏"), "rectangle.portrait.on.rectangle.portrait", einkOn ? String(localized: "开") : String(localized: "关")) { PhoneEInk(library: library) }
+            link(String(localized: "外文阅读"), "globe", nil) { PhoneForeign(library: library) }
+        }
+    }
+
+    private var listenGroup: some View {
+        group {
+            link(String(localized: "朗读"), "headphones", nil) { PhoneListening() }
+            link(String(localized: "引擎"), "cpu", String(localized: "书伴、朗读、翻译")) { PhoneEngines(library: library) }
+        }
+    }
+
+    private var storageGroup: some View {
+        group {
+            link(String(localized: "存储空间"), "internaldrive", used.map(PhoneStorage.size)) { PhoneStorage(library: library) }
+            link(String(localized: "数据快照"), "shippingbox", lastSnapshot.map(Snapshots.day) ?? String(localized: "换设备、备份")) { PhoneSnapshot(library: library) }
+            link(String(localized: "笔记导出"), "square.and.arrow.up", "Obsidian · Notion · flomo") { PhoneNoteExport() }
+        }
+    }
+
+    private var aboutGroup: some View {
+        group {
+            link(String(localized: "关于"), "info.circle", Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) { PhoneAbout() }
+        }
     }
 
     /// `.v-me-set`: one of the five groups of settings.

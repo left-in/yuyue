@@ -22,7 +22,17 @@ struct PhoneShelf: View {
     @State private var selecting = false
     @State private var selected: Set<String> = []
     @AppStorage("shelf.showProgress") private var showProgress = true
+    /// Regular width (iPhone Duo open, iPad): a fixed even grid, 继续 above it, the welcome in two columns.
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    /// The shelf's own width, for the grid's column count and the welcome's stacked rows.
+    @State private var width: CGFloat = 0
+    /// iPhone Duo half folded: the fold and the grid's area, both in global coordinates.
+    @State private var fold: CGRect?
+    @State private var gridArea: CGRect = .zero
     private let tint = YYTint.standard
+
+    private var regular: Bool { sizeClass == .regular }
+    private var inset: CGFloat { regular ? 32 : 20 }
 
     private var sort: ShelfSort {
         get { ShelfSort.allCases.first { "\($0)" == sortName } ?? .recent }
@@ -30,42 +40,30 @@ struct PhoneShelf: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    titleButton
-                        .padding(.horizontal, 20)
-                        .padding(.top, 4)
-                    if !reading.isEmpty, !selecting {
-                        readingRow.padding(.top, 18)
-                    }
-                    if library.shelfBooks.isEmpty, filter == .all {
-                        welcome
-                    } else {
-                        kinds
-                            .padding(.horizontal, 20)
-                            .padding(.top, 22)
-                            .padding(.bottom, 14)
-                            .animation(YYMotion.layout, value: kind)
-                    }
-                    if kind == .podcasts {
-                        PhonePodcasts(library: library)
-                    } else if library.shelfBooks.isEmpty, filter == .all {
-                    } else if shown.isEmpty {
-                        empty
-                    } else {
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 96, maximum: 130), spacing: 18, alignment: .top)], alignment: .leading, spacing: 22) {
-                            ForEach(shown) { book in
-                                cell(book).transition(.scale(scale: 0.9).combined(with: .opacity))
-                            }
+            Group {
+                if regular, library.shelfBooks.isEmpty, filter == .all, kind != .podcasts {
+                    welcomeSplit
+                        .safeAreaInset(edge: .top, spacing: 0) {
+                            titleButton
+                                .padding(.horizontal, inset)
+                                .padding(.top, 4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        // M2: sorted or filtered another way, each book moves to its new place.
-                        .animation(YYMotion.layout, value: shown.map(\.id))
-                        .padding(.horizontal, 20)
-                    }
+                } else {
+                    shelf
                 }
-                .padding(.bottom, 24)
             }
             .background(YYColor.bg)
+            .background {
+                GeometryReader { g in
+                    let f = InnerDisplay.isOn(sizeClass) ? InnerDisplay.fold(in: g, layoutDirectionBehavior: .fixed) : nil
+                    let global = f.map { $0.offsetBy(dx: g.frame(in: .global).minX, dy: 0) }
+                    Color.clear
+                        .onAppear { fold = global }
+                        .onChange(of: global) { _, v in fold = v }
+                }
+                .ignoresSafeArea()
+            }
             .toolbar { toolbar }
             .toolbar(selecting ? .hidden : .automatic, for: .tabBar)
             .safeAreaInset(edge: .bottom) {
@@ -112,6 +110,89 @@ struct PhoneShelf: View {
                 .presentationDragIndicator(.visible)
                 .presentationBackground(YYColor.bg)
         }
+    }
+
+    /// Everything but the regular-width welcome, in one scroll.
+    private var shelf: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                titleButton
+                    .padding(.horizontal, inset)
+                    .padding(.top, 4)
+                if let book = continuing {
+                    continueRow(book)
+                        .padding(.horizontal, inset)
+                        .padding(.top, 18)
+                }
+                if !readingShown.isEmpty, !selecting {
+                    readingRow.padding(.top, 18)
+                }
+                if library.shelfBooks.isEmpty, filter == .all {
+                    welcome
+                } else {
+                    kinds
+                        .padding(.horizontal, inset)
+                        .padding(.top, 22)
+                        .padding(.bottom, 14)
+                        .animation(YYMotion.layout, value: kind)
+                }
+                if kind == .podcasts {
+                    PhonePodcasts(library: library)
+                } else if library.shelfBooks.isEmpty, filter == .all {
+                } else if shown.isEmpty {
+                    empty
+                } else {
+                    grid
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .onGeometryChange(for: CGFloat.self, of: \.size.width) { width = $0 }
+            .padding(.bottom, 24)
+        }
+    }
+
+    /// The covers. Half folded (iPhone Duo), two grids of 2, one each side of the fold, each
+    /// with its own 32 pt sides; otherwise one grid.
+    @ViewBuilder private var grid: some View {
+        if regular, let fold, gridArea.width > 0, fold.minX > gridArea.minX, fold.maxX < gridArea.maxX {
+            let left = shown.enumerated().filter { $0.offset % 4 < 2 }.map(\.element)
+            let right = shown.enumerated().filter { $0.offset % 4 >= 2 }.map(\.element)
+            let half = [GridItem](repeating: GridItem(.flexible(), spacing: 28, alignment: .top), count: 2)
+            HStack(alignment: .top, spacing: 0) {
+                LazyVGrid(columns: half, alignment: .leading, spacing: 32) {
+                    ForEach(left) { cell($0) }
+                }
+                .padding(.horizontal, inset)
+                .frame(width: max(0, fold.minX - gridArea.minX))
+                Color.clear.frame(width: fold.width)
+                LazyVGrid(columns: half, alignment: .leading, spacing: 32) {
+                    ForEach(right) { cell($0) }
+                }
+                .padding(.horizontal, inset)
+                .frame(width: max(0, gridArea.maxX - fold.maxX))
+            }
+            .animation(YYMotion.layout, value: shown.map(\.id))
+            .measuringGridArea($gridArea)
+        } else {
+            LazyVGrid(columns: columns, alignment: .leading, spacing: regular ? 32 : 22) {
+                ForEach(shown) { book in
+                    cell(book).transition(.scale(scale: 0.9).combined(with: .opacity))
+                }
+            }
+            // M2: sorted or filtered another way, each book moves to its new place.
+            .animation(YYMotion.layout, value: shown.map(\.id))
+            .padding(.horizontal, inset)
+            .measuringGridArea($gridArea)
+        }
+    }
+
+    /// Compact: as many covers as fit. Regular: an even count, so the covers fall either side of
+    /// iPhone Duo's fold — 6 across a wide shelf, else 4.
+    private var columns: [GridItem] {
+        guard regular else {
+            return [GridItem(.adaptive(minimum: 96, maximum: 130), spacing: 18, alignment: .top)]
+        }
+        return Array(repeating: GridItem(.flexible(), spacing: 28, alignment: .top), count: width >= 900 ? 6 : 4)
     }
 
     // MARK: What is shown
@@ -176,6 +257,23 @@ struct PhoneShelf: View {
         }
     }
 
+    /// 继续 (regular width only): the book last opened that has been begun and isn't finished.
+    private var continuing: BookSummary? {
+        guard regular, filter == .all, !selecting, kind != .podcasts else { return nil }
+        return library.shelfBooks
+            .filter { b in
+                guard b.available, b.status != .finished, b.progress > 0 || b.openedAt != nil else { return false }
+                return kind != .audio || library.hasAudio(b)
+            }
+            .max { ($0.openedAt ?? 0) < ($1.openedAt ?? 0) }
+    }
+
+    /// 在读, without the book 继续 already shows.
+    private var readingShown: [BookSummary] {
+        guard let id = continuing?.id else { return reading }
+        return reading.filter { $0.id != id }
+    }
+
     // MARK: Top
 
     private var titleButton: some View {
@@ -228,12 +326,12 @@ struct PhoneShelf: View {
             HStack {
                 Text("在读").font(.subheadline.weight(.semibold)).foregroundStyle(YYColor.t1)
                 Spacer()
-                Text(String(localized: "\(reading.count) 本")).font(.footnote).foregroundStyle(YYColor.t3)
+                Text(String(localized: "\(readingShown.count) 本")).font(.footnote).foregroundStyle(YYColor.t3)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, inset)
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 12) {
-                    ForEach(reading) { book in
+                    ForEach(readingShown) { book in
                         ReadingCard(book: book, listening: library.listening == book.id || library.nowPlaying?.bookID == book.id) { intent in
                             open(book, intent)
                         }
@@ -242,7 +340,7 @@ struct PhoneShelf: View {
                     }
                 }
                 .scrollTargetLayout()
-                .padding(.horizontal, 20)
+                .padding(.horizontal, inset)
                 .padding(.vertical, 4)
             }
             .scrollTargetBehavior(.viewAligned)
@@ -288,31 +386,119 @@ struct PhoneShelf: View {
     }
 
     /// `.v-lib-wel` (prototype 第一次打开): what this is and where things are kept, then the
-    /// three ways to put books in.
+    /// three ways to put books in. Narrower than 420 pt (iPhone Duo closed, beside its side bar)
+    /// the three tiles would cut their names short, so they stack as rows instead.
     private var welcome: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("把书放进来，\n读或者听都行。")
-                .font(YYUI.serif(YYUI.s(21), .bold))
-                .tracking(YYUI.s(21) * 0.02)
-                .lineSpacing(YYUI.s(21) * 0.5)
-                .foregroundStyle(YYColor.t1)
-            Text("不用注册。书、进度和笔记都存在你自己的设备里。")
-                .font(YYUI.font(11)).lineSpacing(YYUI.s(11) * 0.7).foregroundStyle(YYColor.t2)
+            welcomeTitle(size: YYUI.s(21))
+            welcomeLine
+                .font(YYUI.font(11)).lineSpacing(YYUI.s(11) * 0.7)
                 .padding(.top, YYUI.s(6))
-            HStack(alignment: .top, spacing: YYUI.s(8)) {
-                way("folder", String(localized: "从文件导入"), String(localized: "本机或云盘里的")) { importerShown = true }
-                way("wifi", String(localized: "Wi‑Fi 传书"), String(localized: "用电脑浏览器传")) { wifiShown = true }
-                way("server.rack", String(localized: "远程书库"), "Calibre、NAS") { remoteShown = true }
+            if width < 420 {
+                VStack(spacing: 10) { ways(row: 64) }
+                    .padding(.top, YYUI.s(16))
+            } else {
+                HStack(alignment: .top, spacing: YYUI.s(8)) { ways(row: nil) }
+                    .padding(.top, YYUI.s(16))
+                    .padding(.horizontal, -YYUI.s(4))
             }
-            .padding(.top, YYUI.s(16))
-            .padding(.horizontal, -YYUI.s(4))
         }
         .padding(.horizontal, 20)
         .padding(.top, YYUI.s(14))
     }
 
+    private func welcomeTitle(size: CGFloat) -> some View {
+        Text("把书放进来，\n读或者听都行。")
+            .font(YYUI.serif(size, .bold))
+            .tracking(size * 0.02)
+            .lineSpacing(size * 0.5)
+            .foregroundStyle(YYColor.t1)
+    }
+
+    private var welcomeLine: some View {
+        Text("不用注册。书、进度和笔记都存在你自己的设备里。").foregroundStyle(YYColor.t2)
+    }
+
+    /// The three ways in: tiles (`row` nil), or full-width rows of that height.
+    @ViewBuilder private func ways(row: CGFloat?) -> some View {
+        way("folder", String(localized: "从文件导入"), String(localized: "本机或云盘里的"), row: row) { importerShown = true }
+        way("wifi", String(localized: "Wi‑Fi 传书"), String(localized: "用电脑浏览器传"), row: row) { wifiShown = true }
+        way("server.rack", String(localized: "远程书库"), "Calibre、NAS", row: row) { remoteShown = true }
+    }
+
+    /// Regular width with no books: what this is on the left (40%), the three ways in as rows on
+    /// the right. On iPhone Duo half folded, the arrangement puts each side on its own half.
+    @ViewBuilder private var welcomeSplit: some View {
+        if #available(iOS 27.1, *) {
+            ArrangementView {
+                welcomeIntro
+                    .splitArrangementLayoutRatio(0.4)
+            } secondary: {
+                welcomeWays
+            }
+            .arrangementViewStyle(.split)
+        } else {
+            GeometryReader { g in
+                HStack(spacing: 0) {
+                    welcomeIntro.frame(width: g.size.width * 0.4)
+                    welcomeWays
+                }
+            }
+        }
+    }
+
+    private var welcomeIntro: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            welcomeTitle(size: 34)
+            welcomeLine.font(.yy(size: 15))
+        }
+        .frame(maxWidth: 360, alignment: .leading)
+        .padding(.horizontal, 32)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    }
+
+    private var welcomeWays: some View {
+        VStack(spacing: 10) { ways(row: 72) }
+            .frame(maxWidth: 440)
+            .padding(.horizontal, 32)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    /// `row` nil: the tile. Otherwise a full-width row that tall: the icon in a circle, the name
+    /// and the grey line on one line each, a chevron.
+    @ViewBuilder private func way(_ symbol: String, _ title: String, _ detail: String, row: CGFloat? = nil, _ action: @escaping () -> Void) -> some View {
+        if let row {
+            Button(action: action) {
+                HStack(spacing: 12) {
+                    Image(systemName: symbol)
+                        .font(.yy(size: 20, weight: .medium))
+                        .foregroundStyle(YYColor.t1)
+                        .frame(width: 36, height: 36)
+                        .background(YYColor.inset, in: .circle)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(title).font(.yy(size: 15, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1)
+                        Text(detail).font(.yy(size: 13)).foregroundStyle(YYColor.t2).lineLimit(1)
+                    }
+                    Spacer(minLength: 8)
+                    Image(systemName: "chevron.right")
+                        .font(.yy(size: 13, weight: .semibold))
+                        .foregroundStyle(YYColor.t3)
+                }
+                .padding(.leading, 14)
+                .padding(.trailing, 16)
+                .frame(maxWidth: .infinity, minHeight: row, alignment: .leading)
+                .background(YYColor.card, in: .rect(cornerRadius: 16))
+                .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(YYColor.line, lineWidth: 0.5))
+                .contentShape(.rect(cornerRadius: 16))
+            }
+            .buttonStyle(YYPressStyle())
+        } else {
+            tile(symbol, title, detail, action)
+        }
+    }
+
     /// `.v-lib-imp > span`: a tile, then the name and a grey line.
-    private func way(_ symbol: String, _ title: String, _ detail: String, _ action: @escaping () -> Void) -> some View {
+    private func tile(_ symbol: String, _ title: String, _ detail: String, _ action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: YYUI.s(10)) {
                 Image(systemName: symbol)
@@ -356,6 +542,70 @@ struct PhoneShelf: View {
         .frame(maxWidth: .infinity, minHeight: 300)
     }
 
+    // MARK: 继续
+
+    /// Regular width: the book last opened, large, over the left half; the right half stays empty.
+    private func continueRow(_ book: BookSummary) -> some View {
+        let listening = library.listening == book.id || library.nowPlaying?.bookID == book.id
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("继续").font(.subheadline.weight(.semibold)).foregroundStyle(YYColor.t1)
+            HStack(alignment: .center, spacing: 16) {
+                BookCover(book: book)
+                    .frame(width: 104, height: 156)
+                    .onTapGesture { open(book, nil) }
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(book.title)
+                        .font(YYUI.serif(20, .semibold))
+                        .foregroundStyle(YYColor.t1)
+                        .lineLimit(2)
+                        .padding(.bottom, 4)
+                    if let author = book.author {
+                        Text(author).font(.yy(size: 14)).foregroundStyle(YYColor.t2).lineLimit(1)
+                    }
+                    Spacer(minLength: 10)
+                    ProgressLine(value: book.progress, height: 4)
+                        .padding(.bottom, 6)
+                    Text([book.percent, book.remaining].joined(separator: " · "))
+                        .font(.yy(size: 13)).monospacedDigit()
+                        .foregroundStyle(YYColor.t2)
+                        .lineLimit(1)
+                        .padding(.bottom, 10)
+                    HStack(spacing: 8) {
+                        // 有声书 has only 听, as on the 在读 cards.
+                        if book.format != .audio {
+                            continueButton(String(localized: "读"), filled: true) { open(book, nil) }
+                        }
+                        continueButton(listening ? String(localized: "听中") : String(localized: "听"), filled: book.format == .audio) {
+                            open(book, listening ? nil : .listen)
+                        }
+                    }
+                }
+                .padding(.vertical, 6)
+            }
+            .padding(.leading, 16)
+            .padding(.trailing, 16)
+            .padding(.vertical, 6)
+            .frame(width: max(0, width / 2 - inset - 14), alignment: .leading)
+            .frame(minHeight: 168)
+            .yyCard()
+            .contextMenu { actions(for: book) } preview: { BookPreview(book: book) }
+        }
+    }
+
+    private func continueButton(_ title: String, filled: Bool, _ action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.yy(size: 15, weight: .semibold))
+                .foregroundStyle(filled ? tint.onBlack : tint.accent)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity)
+                .frame(height: 40)
+                .background(filled ? tint.black : tint.accentSoft, in: .capsule)
+                .contentShape(.capsule)
+        }
+        .buttonStyle(YYPressStyle(scale: 0.96))
+    }
+
     // MARK: Books
 
     private func cell(_ book: BookSummary) -> some View {
@@ -389,7 +639,7 @@ struct PhoneShelf: View {
                     }
                     .padding(.bottom, 8)
                 Text(book.title)
-                    .font(.footnote.weight(.semibold))
+                    .font(regular ? Font.yy(size: 15, weight: .semibold) : Font.footnote.weight(.semibold))
                     .foregroundStyle(YYColor.t1)
                     .lineLimit(1)
                     .padding(.bottom, 2)
@@ -410,11 +660,11 @@ struct PhoneShelf: View {
         if library.listening == book.id || library.nowPlaying?.bookID == book.id {
             Label("听中 · \(book.percent)", systemImage: "headphones")
                 .labelStyle(TightLabel())
-                .font(.caption2)
+                .font(regular ? Font.yy(size: 13) : Font.caption2)
                 .foregroundStyle(tint.accent)
         } else {
             Text(library.shelfNote(book))
-                .font(.caption2)
+                .font(regular ? Font.yy(size: 13) : Font.caption2)
                 .foregroundStyle(YYColor.t3)
                 .lineLimit(1)
         }
@@ -675,3 +925,10 @@ struct ShelfChooser: View {
     }
 }
 #endif
+
+private extension View {
+    /// The grid's area in global coordinates, before its own sides.
+    func measuringGridArea(_ area: Binding<CGRect>) -> some View {
+        onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { area.wrappedValue = $0 }
+    }
+}

@@ -14305,6 +14305,16 @@
         }
       }
     },
+    "继续" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        }
+      }
+    },
     "继续问…" : {
       "localizations" : {
         "en" : {
