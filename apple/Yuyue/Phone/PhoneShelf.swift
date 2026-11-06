@@ -423,7 +423,7 @@ struct PhoneShelf: View {
     @ViewBuilder private func ways(row: CGFloat?) -> some View {
         way("folder", String(localized: "从文件导入"), String(localized: "本机或云盘里的"), row: row) { importerShown = true }
         way("wifi", String(localized: "Wi‑Fi 传书"), String(localized: "用电脑浏览器传"), row: row) { wifiShown = true }
-        way("server.rack", String(localized: "远程书库"), "Calibre、NAS", row: row) { remoteShown = true }
+        way("server.rack", String(localized: "远程书库"), String(localized: "Calibre、NAS"), row: row) { remoteShown = true }
     }
 
     /// Regular width with no books: what this is on the left (40%), the three ways in as rows on
@@ -575,7 +575,7 @@ struct PhoneShelf: View {
                         if book.format != .audio {
                             continueButton(String(localized: "读"), filled: true) { open(book, nil) }
                         }
-                        continueButton(listening ? String(localized: "听中") : String(localized: "听"), filled: book.format == .audio) {
+                        continueButton(listening ? String(localized: "正在听") : String(localized: "听"), filled: book.format == .audio) {
                             open(book, listening ? nil : .listen)
                         }
                     }
@@ -658,7 +658,7 @@ struct PhoneShelf: View {
 
     @ViewBuilder private func note(_ book: BookSummary) -> some View {
         if library.listening == book.id || library.nowPlaying?.bookID == book.id {
-            Label("听中 · \(book.percent)", systemImage: "headphones")
+            Label("正在听 · \(book.percent)", systemImage: "headphones")
                 .labelStyle(TightLabel())
                 .font(regular ? Font.yy(size: 13) : Font.caption2)
                 .foregroundStyle(tint.accent)

@@ -6493,7 +6493,7 @@
         }
       }
     },
-    "听中 · %@" : {
+    "正在听 · %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6759,12 +6759,22 @@
         }
       }
     },
-    "回顾这本书" : {
+    "Calibre、NAS" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Review This Book"
+            "value" : "Calibre, NAS"
+          }
+        }
+      }
+    },
+    "回顾" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
           }
         }
       }

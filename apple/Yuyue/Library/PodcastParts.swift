@@ -330,8 +330,7 @@ extension ShowSchedule {
         if d.isEmpty { return String(localized: "点了才写") }
         if d == [1, 2, 3, 4, 5] { return String(localized: "工作日 \(time)") }
         if d.count == 7 { return String(localized: "每天 \(time)") }
-        let names = [String(localized: "一"), String(localized: "二"), String(localized: "三"), String(localized: "四"),
-                     String(localized: "五"), String(localized: "六"), String(localized: "日")]
+        let names = PodcastSchedule.weekdayNames
         return String(localized: "每周\(days.sorted().map { names[Int($0) - 1] }.joined(separator: "、")) \(time)")
     }
 }
@@ -369,5 +368,15 @@ extension Podcasts.Progress {
         case .write, .save: String(localized: "正在写稿")
         default: String(localized: "正在准备")
         }
+    }
+}
+
+/// Monday-first weekday names for podcast schedules: 一…日 in Chinese, the system's short
+/// names (Mon…Sun) elsewhere. Not the 一/二 numeral strings, whose English is One/Two.
+enum PodcastSchedule {
+    static var weekdayNames: [String] {
+        if Locale.preferredLanguages.first?.hasPrefix("zh") ?? false { return ["一", "二", "三", "四", "五", "六", "日"] }
+        let s = Calendar.current.shortWeekdaySymbols // Sunday first
+        return Array(s[1...]) + [s[0]]
     }
 }

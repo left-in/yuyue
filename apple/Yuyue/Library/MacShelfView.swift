@@ -898,7 +898,7 @@ struct MacShelfView: View {
 
     @ViewBuilder private func note(_ book: BookSummary) -> some View {
         if library.listening == book.id {
-            Label("听中 · \(book.percent)", systemImage: "headphones")
+            Label("正在听 · \(book.percent)", systemImage: "headphones")
                 .labelStyle(TightLabel())
                 .font(.yy(size: 10.5))
                 .foregroundStyle(tint.accent)
@@ -1388,8 +1388,8 @@ struct ReadingCard: View {
             .animation(YYMotion.quick, value: listening)
         }
         .buttonStyle(CardPress())
-        .help(listening ? String(localized: "听中") : String(localized: "听"))
-        .accessibilityLabel(listening ? String(localized: "听中") : String(localized: "听"))
+        .help(listening ? String(localized: "正在听") : String(localized: "听"))
+        .accessibilityLabel(listening ? String(localized: "正在听") : String(localized: "听"))
     }
     #endif
 
@@ -1420,7 +1420,7 @@ struct ReadingCard: View {
                     } else {
                         pill(String(localized: "接着读"), fill: tint.black, text: tint.onBlack) { open(nil) }
                         if listening {
-                            pill(String(localized: "听中"), symbol: "waveform", fill: tint.accentSoft, text: tint.accent) { open(nil) }
+                            pill(String(localized: "正在听"), symbol: "waveform", fill: tint.accentSoft, text: tint.accent) { open(nil) }
                         } else {
                             pill(String(localized: "听"), fill: YYColor.inset, text: YYColor.t1) { open(.listen) }
                         }
@@ -1439,7 +1439,7 @@ struct ReadingCard: View {
     private var meta: String {
         if book.format == .pdf, book.page > 0 { return [book.author, String(localized: "第 \(book.page) 页"), book.percent].compactMap { $0 }.joined(separator: " · ") }
         // The percentage is on 接着读 already; here, how long is left.
-        return [book.author, book.remaining, listening ? String(localized: "听中") : nil].compactMap { $0 }.joined(separator: " · ")
+        return [book.author, book.remaining, listening ? String(localized: "正在听") : nil].compactMap { $0 }.joined(separator: " · ")
     }
 
     private func pill(_ title: String, symbol: String? = nil, fill: Color, text: Color, action: @escaping () -> Void) -> some View {

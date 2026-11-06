@@ -558,7 +558,7 @@ struct PhoneBookNotes: View {
                     ToolbarItem(placement: .primaryAction) {
                         Menu("更多", systemImage: "ellipsis") {
                             Button("打开书", systemImage: "book") { library.open(noted.book, nil) }
-                            Button("回顾这本书", systemImage: "arrow.trianglehead.2.clockwise") {
+                            Button("回顾", systemImage: "arrow.trianglehead.2.clockwise") {
                                 reviewing = Review(core: library.core, book: noted.book)
                             }
                             NoteExportMenu(sender: library.noteSender,
@@ -605,22 +605,28 @@ struct PhoneBookNotes: View {
         }
     }
 
-    /// 回顾这本书 · 导出, side by side under the book.
+    /// 回顾这本书 · 导出, side by side under the book; one per row, full width and 40 high,
+    /// when the column is too narrow for both titles (iPhone Duo's notes pane).
     private func actions(_ n: NotedBook) -> some View {
-        HStack(spacing: YYUI.s(8)) {
-            Button {
-                reviewing = Review(core: library.core, book: n.book)
-            } label: {
-                Label("回顾这本书", systemImage: "arrow.trianglehead.2.clockwise")
-            }
-            NoteExportMenu(sender: library.noteSender,
-                           markdown: NotedBook.markdown([n], title: String(localized: "《\(n.book.title)》的笔记")),
-                           name: String(localized: "\(n.book.title) 笔记.md"), books: { [n.export] }, book: n.book) {
-                Label("导出", systemImage: "square.and.arrow.up")
-            }
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: YYUI.s(8)) { actionButtons(n) }
+            VStack(spacing: YYUI.s(8)) { actionButtons(n).frame(minHeight: 40) }
         }
         .buttonStyle(YYButtonStyle(kind: .raised, size: .regular, wide: true))
         .labelStyle(.titleAndIcon)
+    }
+
+    @ViewBuilder private func actionButtons(_ n: NotedBook) -> some View {
+        Button {
+            reviewing = Review(core: library.core, book: n.book)
+        } label: {
+            Label("回顾", systemImage: "arrow.trianglehead.2.clockwise").lineLimit(1).fixedSize()
+        }
+        NoteExportMenu(sender: library.noteSender,
+                       markdown: NotedBook.markdown([n], title: String(localized: "《\(n.book.title)》的笔记")),
+                       name: String(localized: "\(n.book.title) 笔记.md"), books: { [n.export] }, book: n.book) {
+            Label("导出", systemImage: "square.and.arrow.up").lineLimit(1).fixedSize()
+        }
     }
 
     private func chips(_ marks: [Mark]) -> some View {

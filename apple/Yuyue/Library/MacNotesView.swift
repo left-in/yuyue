@@ -358,7 +358,7 @@ struct MacNotesView: View {
                 .font(.yy(size: 10.5)).monospacedDigit().foregroundStyle(YYColor.t3)
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                smallButton(String(localized: "回顾这本书"), "arrow.trianglehead.2.clockwise") { reviewing = Review(core: library.core, book: n.book) }
+                smallButton(String(localized: "回顾"), "arrow.trianglehead.2.clockwise") { reviewing = Review(core: library.core, book: n.book) }
                 smallButton(String(localized: "打开书"), "book") { open(n, nil) }
             }
             chips(for: n.marks)

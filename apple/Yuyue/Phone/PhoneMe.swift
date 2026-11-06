@@ -280,7 +280,12 @@ private struct WeekBars: View {
     }
 
     static func weekday(_ d: Date) -> String {
-        [String(localized: "日"), String(localized: "一"), String(localized: "二"), String(localized: "三"), String(localized: "四"), String(localized: "五"), String(localized: "六")][Calendar.current.component(.weekday, from: d) - 1]
+        // Chinese keeps the single characters 一…日; other languages use their own short names (Mon…Sun).
+        let i = Calendar.current.component(.weekday, from: d) - 1
+        if Locale.preferredLanguages.first?.hasPrefix("zh") ?? false {
+            return ["日", "一", "二", "三", "四", "五", "六"][i]
+        }
+        return Calendar.current.shortWeekdaySymbols[i]
     }
 }
 

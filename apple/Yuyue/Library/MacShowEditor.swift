@@ -299,8 +299,7 @@ struct MacShowEditor: View {
                 edit.draft.schedule.minute = UInt32((c.hour ?? 7) * 60 + (c.minute ?? 0))
             }), displayedComponents: .hourAndMinute)
             HStack(spacing: 6) {
-                let names = [String(localized: "一"), String(localized: "二"), String(localized: "三"), String(localized: "四"),
-                             String(localized: "五"), String(localized: "六"), String(localized: "日")]
+                let names = PodcastSchedule.weekdayNames
                 ForEach(1 ... 7, id: \.self) { d in
                     let on = edit.draft.schedule.days.contains(UInt32(d))
                     Button {
