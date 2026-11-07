@@ -102,7 +102,7 @@ struct PhoneNotes: View {
 
     @AppStorage("phone.notes.kind") private var kind = Kind.all
     @AppStorage("notes.byBook") private var byBook = false
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
     @State private var notes: [NotedBook] = []
     @State private var deck: Review?
     @State private var reviewing: Review?
@@ -115,7 +115,7 @@ struct PhoneNotes: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     /// The book on the right; nil until one is picked, which shows the first.
     @State private var chosen: String?
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     private var filter: NoteFilter { kind == .thoughts ? .thoughts : .all }
 
@@ -518,8 +518,8 @@ struct PhoneBookNotes: View {
     @State private var reviewing: Review?
     @State private var sharing: QuoteShare?
     @State private var writing: NoteItem?
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         Group {
@@ -686,8 +686,8 @@ struct NoteRow<Footer: View>: View {
     let selecting: Bool
     let act: (NoteAction) -> Void
     @ViewBuilder let footer: Footer
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -755,8 +755,8 @@ struct PhoneDeckCard: View {
     let library: Library
     let start: () -> Void
     @Environment(\.colorScheme) private var scheme
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -906,8 +906,8 @@ struct PhoneWords: View {
     @State private var details: [String: BookDetail] = [:]
     @State private var showKnown = false
     @State private var speaker = AVSpeechSynthesizer()
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     private var learning: [VocabWord] { words.filter { !$0.known } }
     private var known: [VocabWord] { words.filter(\.known) }

@@ -238,7 +238,8 @@ ${FONTS.map((f) => `        case .${f}: return .${{ sans: 'default', serif: 'ser
 }
 `);
   // Tints
-  L.push('/// 主题色. `black`/`onBlack`: main buttons; `fill`: switches and progress; `soft`/`onSoft`: soft chips.');
+  L.push('/// 主题色 (松绿, 茶色, 苔绿, 黛紫). `black`/`onBlack`: main buttons, a faint wash of the colour with the');
+  L.push('/// colour as text; `edge`: their hairline; `fill`: switches and progress; `soft`/`onSoft`: soft chips.');
   L.push('public struct YYTint: Sendable, Hashable, Identifiable {');
   L.push('    public let id: String');
   L.push('    public let name: String');

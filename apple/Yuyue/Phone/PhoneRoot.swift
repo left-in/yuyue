@@ -8,12 +8,12 @@ import YuyueCore
 struct PhoneRoot: View {
     @Bindable var library: Library
     @State private var tab = PhoneTab.shelf
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
     @AppStorage("phone.lastBook") private var lastBook = ""
     @AppStorage(AppAppearance.key) private var mode = AppAppearance.system
     @State private var reopened = false
     @Environment(\.scenePhase) private var phase
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     enum PhoneTab: Hashable { case shelf, notes, me, search }
 

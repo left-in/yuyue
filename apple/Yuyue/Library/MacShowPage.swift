@@ -63,7 +63,7 @@ struct MacShowPage: View {
                     .foregroundStyle(podcasts.failure[show.id] != nil ? YYColor.danger : YYColor.t2).lineLimit(2)
             }
             Spacer(minLength: 12)
-            PodcastTextButton(title: String(localized: "改设置…"), action: edit)
+            PodcastGlassButton(title: String(localized: "改设置…"), action: edit)
             PodcastGlassButton(title: String(localized: "编辑部"), symbol: "bubble.left") { openDesk() }
             if podcasts.isWriting(show.id) {
                 PodcastGlassButton(title: podcasts.writing[show.id]?.short ?? "", kind: .writing) { openDesk() }

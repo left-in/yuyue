@@ -254,7 +254,7 @@ private fun Chrome(model: ReaderModel, paper: YYPaper, close: () -> Unit) {
             Modifier.align(Alignment.BottomCenter).windowInsetsPadding(WindowInsets.navigationBars).padding(horizontal = 12.dp).padding(bottom = 4.dp).widthIn(max = 560.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            model.returnTo?.let { (_, page) ->
+            model.returnTo?.takeIf { !model.barsAway }?.let { (_, page) ->
                 Row(
                     Modifier.padding(bottom = 8.dp).glass(paper).clickable { model.goBack() }.padding(horizontal = 14.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -263,12 +263,12 @@ private fun Chrome(model: ReaderModel, paper: YYPaper, close: () -> Unit) {
                     Text(page?.let { t("回到第 %lld 页", it) } ?: t("回到原处"), fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = paper.ink)
                 }
             }
-            // 沉浸阅读 hides the capsule until the middle is tapped.
-            val capsule = !model.immersive || model.chromeShown || model.searchShown
+            // 沉浸阅读 hides the capsule until the middle is tapped; scrolling down the page, until back up it.
+            val capsule = (!model.immersive && !model.barsAway) || model.chromeShown || model.searchShown
             AnimatedVisibility(capsule, enter = app.yuyue.design.YYMotion.barIn(fromTop = false), exit = app.yuyue.design.YYMotion.barOut(toTop = false)) {
                 if (model.searchShown) SearchCapsule(model, paper) else Capsule(model, paper)
             }
-            if (!capsule) {
+            if (!capsule && model.immersive) {
                 if (!ImmersivePrefs.hidesProgress) {
                     Text(model.capsuleNote, fontSize = 12.sp, color = paper.ink2, modifier = Modifier.padding(bottom = 2.dp))
                 } else if (ImmersivePrefs.keepsLine) {

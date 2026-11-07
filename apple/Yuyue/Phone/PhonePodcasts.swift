@@ -9,8 +9,8 @@ import YuyueCore
 struct PhonePodcasts: View {
     @Bindable var library: Library
     private var podcasts: Podcasts { library.podcasts }
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {

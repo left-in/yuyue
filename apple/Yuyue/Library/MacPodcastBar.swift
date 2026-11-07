@@ -14,8 +14,8 @@ struct MacPodcastBar: View {
     let library: Library
     let model: ReaderModel
     @Environment(\.openWindow) private var openWindow
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
     @State private var segments: [EpisodeSegment] = []
     @State private var speakers: [String?] = []
     @State private var hovered: Int?

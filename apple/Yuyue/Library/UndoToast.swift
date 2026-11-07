@@ -72,8 +72,8 @@ private struct UndoBanner: View {
     let toast: Library.Toast
     let undo: () -> Void
     private let k = UndoToast.k
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
     @AppStorage(EInk.key) private var eink = false
     @State private var start = Date.now
     @State private var done = false

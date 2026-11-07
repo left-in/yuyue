@@ -340,7 +340,7 @@ private fun AppearancePage() {
             for (tint in YYTints.All) {
                 row {
                     YYRow(t(tint.name), value = if (tint.id == YYTints.Default.id) t("默认") else null, onClick = { tintID = tint.id }, trailing = {
-                        Box(Modifier.size(YY.s(18)).background(tint.light.black, CircleShape))
+                        Box(Modifier.size(YY.s(18)).background(tint.light.accent, CircleShape))
                         Icon(Icons.check, null, tint = if (tint.id == tintID) YY.tint.accent else Color.Transparent, modifier = Modifier.size(YY.s(13)))
                     })
                 }

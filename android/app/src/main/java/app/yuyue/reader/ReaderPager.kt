@@ -1,5 +1,6 @@
 package app.yuyue.reader
 
+import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
@@ -49,6 +50,8 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
         fun pulled(distance: Float, released: Boolean)
         /** A section was laid out for the first time: what is drawn in it goes in now. */
         fun sectionReady(page: SectionPage)
+        /** Scrolling: the reader moved on down the page (controls away), back up it, or reached an end of it. */
+        fun barsAway(away: Boolean)
     }
 
     var listener: Listener? = null
@@ -79,6 +82,7 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
      *  -1 the previous section's last, pageCount the next section's first. */
     private var position = 0f
     private var animator: ValueAnimator? = null
+    private var scrollAnimator: ValueAnimator? = null
 
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
     private val minFling = ViewConfiguration.get(context).scaledMinimumFlingVelocity
@@ -169,13 +173,39 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
         val p = spare.removeLastOrNull() ?: SectionPage(context, core, ::geometry, ::received).also {
             it.setBackground(background)
             addView(it.webView, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+            it.webView.scrolled = { dy -> trackBars(it, dy) }
         }
         p.webView.visibility = View.VISIBLE
         return p
     }
 
+    /** Scrolling: how far the hand has moved the page one way. */
+    private var barsTravel = 0
+
+    /** The controls follow the hand only: the ink line moving the page doesn't send them away.
+     *  At either end of a section they come back, for 下一章 is on them. */
+    private fun trackBars(page: SectionPage, dy: Int) {
+        if (mode != LayoutMode.SCROLLED || page !== current) return
+        val view = page.webView
+        if (!view.canScrollVertically(-1) || !view.canScrollVertically(1)) {
+            barsTravel = 0
+            listener?.barsAway(false)
+            return
+        }
+        if (!view.touched) {
+            barsTravel = 0
+            return
+        }
+        barsTravel = if (dy * barsTravel < 0) dy else barsTravel + dy
+        if (abs(barsTravel) >= 24 * resources.displayMetrics.density) {
+            listener?.barsAway(barsTravel > 0)
+            barsTravel = 0
+        }
+    }
+
     private fun recycle(p: SectionPage) {
         if (p === current) current = null
+        p.scrolledTo = null
         p.clear()
         p.webView.visibility = View.INVISIBLE
         spare += p
@@ -197,15 +227,17 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
         val w = width.toFloat()
         val n = (cur.layout?.pageCount ?: 1)
         val inside = position.coerceIn(0f, (n - 1).toFloat())
-        cur.webView.scrollTo((inside * pageWidthPx(cur)).roundToInt(), 0)
+        // Down a scrolled section the page's own place stands: nothing here may move it.
+        val paged = mode == LayoutMode.PAGINATED
+        if (paged) cur.webView.scrollTo((inside * pageWidthPx(cur)).roundToInt(), 0)
         cur.webView.translationX = (inside - position) * w
         previousSlot?.let { prev ->
             val last = (prev.layout?.pageCount ?: 1) - 1
-            prev.webView.scrollTo((last * pageWidthPx(prev)).roundToInt(), 0)
+            if (paged) prev.webView.scrollTo((last * pageWidthPx(prev)).roundToInt(), 0)
             prev.webView.translationX = (-1 - position) * w
         }
         nextSlot?.let { nx ->
-            nx.webView.scrollTo(0, 0)
+            if (paged) nx.webView.scrollTo(0, 0)
             nx.webView.translationX = (n - position) * w
         }
         for (s in slots) if (s !== cur && s !== previousSlot && s !== nextSlot) s.webView.translationX = 10f * w
@@ -217,10 +249,27 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
     fun turn(forward: Boolean) {
         val cur = current ?: return
         val n = cur.layout?.pageCount ?: return
-        val target = (cur.page + if (forward) 1 else -1)
+        val scrolled = mode == LayoutMode.SCROLLED
+        if (scrolled && cur.webView.canScrollVertically(if (forward) 1 else -1)) {
+            listener?.turnedByHand(this)
+            val view = cur.webView
+            val step = (view.height * 0.85f).roundToInt()
+            val to = (view.scrollY + if (forward) step else -step).coerceIn(0, view.maxScrollY)
+            scrollAnimator?.cancel()
+            if (calm) view.scrollTo(0, to)
+            else scrollAnimator = ObjectAnimator.ofInt(view, "scrollY", to).setDuration(240).apply {
+                interpolator = DecelerateInterpolator(1.6f)
+                start()
+            }
+            return
+        }
+        // Scrolled, at an end of the section: on into the neighbour, as past a last page.
+        val target = if (scrolled) (if (forward) n else -1) else cur.page + if (forward) 1 else -1
         if (target >= n && nextSlot?.isReady != true) return
         if (target < 0 && previousSlot?.isReady != true) return
         listener?.turnedByHand(this)
+        // The strip stands one step from the neighbour, wherever down the section the page is.
+        if (scrolled) position = if (forward) (n - 1).toFloat() else 0f
         settle(target.toFloat(), animated = !calm)
     }
 
@@ -276,6 +325,7 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
             position >= n -> nextSlot?.let { nx ->
                 current = nx
                 nx.page = 0
+                if (mode == LayoutMode.SCROLLED) nx.webView.scrollTo(0, 0)
                 position = 0f
                 loadNeighbours()
             }
@@ -283,6 +333,7 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
                 current = prev
                 val last = (prev.layout?.pageCount ?: 1) - 1
                 prev.page = last
+                if (mode == LayoutMode.SCROLLED) prev.webView.scrollTo(0, prev.webView.maxScrollY)
                 position = last.toFloat()
                 loadNeighbours()
             }
@@ -424,15 +475,13 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
                 listener?.selected(m)
             }
             "activePage" -> if (page === current) m.page?.let { listener?.inkReached(it) }
-            "scroll" -> if (page === current) {
-                scrolledTo = m.sentence
-                listener?.moved(this)
+            "scroll" -> {
+                // Kept for a neighbour too: it may be moved to its end before it comes in.
+                page.scrolledTo = m.sentence
+                if (page === current) listener?.moved(this)
             }
         }
     }
-
-    /** In scrolled mode, the first sentence in view (from `scroll`). */
-    private var scrolledTo: Int? = null
 
     // MARK: Where the reader is
 
@@ -441,7 +490,7 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
         val cur = current ?: return null
         val section = cur.section ?: return null
         val layout = cur.layout ?: return null
-        val sentence = if (mode == LayoutMode.SCROLLED) scrolledTo ?: 0 else layout.firstSentence(cur.page)
+        val sentence = if (mode == LayoutMode.SCROLLED) cur.scrolledTo ?: 0 else layout.firstSentence(cur.page)
         return Position(section.toUInt(), sentence.toUInt())
     }
 

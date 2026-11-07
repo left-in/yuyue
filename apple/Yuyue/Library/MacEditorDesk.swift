@@ -12,8 +12,8 @@ struct MacEditorDesk: View {
     @State private var typed = ""
     @State private var linesOpen = false
     @FocusState private var focused: Bool
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
     private var podcasts: Podcasts { library.podcasts }
 
     private var messages: [Podcasts.Message] { podcasts.talk[show.id] ?? [] }

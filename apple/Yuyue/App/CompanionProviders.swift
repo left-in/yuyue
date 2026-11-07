@@ -426,7 +426,7 @@ private struct ProviderForm: View {
                 done()
             }
         } message: {
-            Text("它的 Key 也会从钥匙串里删掉。正在用它的话，书伴换回设备自带的。")
+            Text("它的 Key 也会一起删掉。正在用它的话，书伴换回设备自带的。")
         }
     }
 
@@ -482,7 +482,7 @@ private struct ProviderForm: View {
         if provider.isCustom {
             return String(localized: "提问和书里相关的几段原文直接发到这个地址，语阅不经手。")
         }
-        return String(localized: "Key 只存在这台设备的钥匙串里。费用走你自己的 \(provider.account) 账号，语阅不经手，也看不到。")
+        return String(localized: "Key 只存在这台设备上。费用走你自己的 \(provider.account) 账号，语阅不经手，也看不到。")
     }
 
     private func signInNow() {

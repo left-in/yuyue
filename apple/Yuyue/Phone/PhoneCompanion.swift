@@ -9,8 +9,8 @@ struct PhoneCompanion: View {
     @State private var draft = ""
     @State private var settings = false
     @FocusState private var typing: Bool
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
     private var companion: BookCompanion { model.companion }
 
     var body: some View {
@@ -125,9 +125,10 @@ struct PhoneCompanion: View {
             Text(text)
                 .font(.yy(size: 15))
                 .lineSpacing(3)
-                .foregroundStyle(tint.onBlack)
+                .foregroundStyle(YYColor.t1)
                 .padding(.horizontal, 14).padding(.vertical, 9)
-                .background(tint.black, in: UnevenRoundedRectangle(topLeadingRadius: 16, bottomLeadingRadius: 16, bottomTrailingRadius: 4, topTrailingRadius: 16))
+                .background(YYColor.pill, in: UnevenRoundedRectangle(topLeadingRadius: 16, bottomLeadingRadius: 16, bottomTrailingRadius: 4, topTrailingRadius: 16))
+                .overlay(UnevenRoundedRectangle(topLeadingRadius: 16, bottomLeadingRadius: 16, bottomTrailingRadius: 4, topTrailingRadius: 16).strokeBorder(YYColor.pillLine, lineWidth: 0.5))
                 .textSelection(.enabled)
         }
     }

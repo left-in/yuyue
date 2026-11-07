@@ -14,8 +14,8 @@ struct MacPdfView: View {
     @State private var showShown = false
     @State private var listenShown = false
     @FocusState private var searchFocused: Bool
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
     @AppStorage(LiquidGlass.key) private var liquidChosen = true
     private var liquid: Bool { liquidChosen && LiquidGlass.supported }
 
@@ -338,8 +338,8 @@ private struct PdfToc: View {
 /// 笔记: the PDF's highlights and thoughts, page by page.
 private struct PdfNotes: View {
     let model: PdfModel
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {

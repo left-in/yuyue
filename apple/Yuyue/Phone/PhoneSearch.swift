@@ -10,10 +10,10 @@ struct PhoneSearch: View {
     @State private var search: QuickSearch?
     @State private var query = ""
     @State private var scope = Scope.all
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
     /// Regular width (iPhone Duo open, iPad): the results at most 720 wide, in the middle.
     @Environment(\.horizontalSizeClass) private var sizeClass
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     enum Scope: Hashable { case all, books, lines, notes, words }
 

@@ -106,6 +106,8 @@ class SectionPage(context: Context, private val core: YuyueCore, private val geo
         private set
     /** The page showing, as far as native knows. */
     var page = 0
+    /** In scrolled mode, the first sentence in view (from `scroll`). */
+    var scrolledTo: Int? = null
     private var target: Target? = null
     var generation = 0
         private set
@@ -273,6 +275,29 @@ class SectionPage(context: Context, private val core: YuyueCore, private val geo
 class ReaderWebView(context: Context) : WebView(context) {
     /** Text is selected on the page, so drags extend the selection instead of turning it. */
     var selecting = false
+
+    /** A finger is on the page: what moves it now is the reader, not the ink line. */
+    var touched = false
+        private set
+
+    /** How far down a scrolled section the page can go, in px. */
+    val maxScrollY: Int get() = maxOf(0, computeVerticalScrollRange() - height)
+
+    /** Up or down the page by this many px. */
+    var scrolled: ((Int) -> Unit)? = null
+
+    override fun dispatchTouchEvent(e: android.view.MotionEvent): Boolean {
+        when (e.actionMasked) {
+            android.view.MotionEvent.ACTION_DOWN -> touched = true
+            android.view.MotionEvent.ACTION_UP, android.view.MotionEvent.ACTION_CANCEL -> touched = false
+        }
+        return super.dispatchTouchEvent(e)
+    }
+
+    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
+        super.onScrollChanged(l, t, oldl, oldt)
+        if (t != oldt) scrolled?.invoke(t - oldt)
+    }
 
     /** Selected words get 语阅's own card (划线 · 想法 · 复制 …), not the system's toolbar over it;
      *  the selection and its handles stay. */

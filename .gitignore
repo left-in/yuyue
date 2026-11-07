@@ -34,6 +34,9 @@ android/keystore.properties
 /mockups/
 /build/window-catalog/
 
+# Release files
+/dist/
+
 # Not for the public repository
 .agents/
 skills-lock.json

@@ -52,6 +52,10 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     var ownSettings by mutableStateOf(false)
         private set
     var chromeShown by mutableStateOf(false)
+    /** Scrolling down the page sent the capsule away, and the top bar if it was up. */
+    var barsAway by mutableStateOf(false)
+        private set
+    private var chromeComesBack = false
     var tocShown by mutableStateOf(false)
     var settingsShown by mutableStateOf(false)
     var section by mutableIntStateOf(0)
@@ -118,7 +122,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     /** 沉浸阅读: only the words on the page. */
     var immersive: Boolean
         get() = immersiveState.value
-        set(v) { immersiveState.value = v; applyImmersive() }
+        set(v) { immersiveState.value = v; barsAway = false; applyImmersive() }
     /** 与书对话. */
     val companion = app.yuyue.companion.BookCompanion(this)
     var companionShown by mutableStateOf(false)
@@ -534,6 +538,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         pager.fontSize = s.fontSize
         val modeChanged = pager.mode != s.mode
         pager.mode = s.mode
+        if (modeChanged) barsAway(false)
         applyImmersive()
         pager.apply(s.script(pager.geometry()))
         if (modeChanged) pager.reload()
@@ -684,7 +689,11 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
     override fun moved(pager: ReaderPager) {
         val cur = pager.current ?: return
         val layout = cur.layout ?: return
-        if (section != cur.section) tick()
+        if (section != cur.section) {
+            tick()
+            // A chapter too short to scroll could not bring the capsule back.
+            barsAway(false)
+        }
         section = cur.section ?: 0
         page = cur.page
         pageCount = layout.pageCount
@@ -719,10 +728,27 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         val x = m.x ?: return
         // 点哪里翻页: the outer thirds turn, the middle shows the controls.
         when {
-            settings.mode == LayoutMode.SCROLLED -> chromeShown = !chromeShown
+            settings.mode == LayoutMode.SCROLLED -> toggleChrome()
             x < w * 0.3 -> turn(false)
             x > w * 0.7 -> turn(true)
-            else -> chromeShown = !chromeShown
+            else -> toggleChrome()
+        }
+    }
+
+    private fun toggleChrome() {
+        chromeShown = !chromeShown
+        barsAway = false
+    }
+
+    override fun barsAway(away: Boolean) {
+        if (searchShown || away == barsAway) return
+        barsAway = away
+        if (away) {
+            chromeComesBack = chromeShown && !immersive
+            chromeShown = false
+        } else {
+            if (chromeComesBack) chromeShown = true
+            chromeComesBack = false
         }
     }
 

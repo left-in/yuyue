@@ -31,8 +31,8 @@ struct MacReaderView: View {
     /// The window 沉浸阅读 put into full screen, to take it out again.
     @State private var fullScreened: NSWindow?
     @FocusState private var searchFocused: Bool
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
     @AppStorage(LiquidGlass.key) private var liquidChosen = true
     /// 墨水屏 has no glass.
     private var liquid: Bool { liquidChosen && LiquidGlass.supported && !paper.isEink }

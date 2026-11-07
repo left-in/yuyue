@@ -53,7 +53,7 @@ struct CompanionSettings: View {
                     EmptyView()
                 } action: { focus.sheet = .add }
             }
-            SettingsNote(String(localized: "Key 只存在这台 Mac 的钥匙串里，不同步、不上传；费用直接走你的账号，语阅不经手。写播客稿也用书伴在用的这个模型。"))
+            SettingsNote(String(localized: "Key 只存在这台 Mac 上，不同步、不上传；费用直接走你的账号，语阅不经手。写播客稿也用书伴在用的这个模型。"))
             Spacer(minLength: 0)
         }
         .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification).receive(on: RunLoop.main)) { _ in
@@ -200,7 +200,7 @@ private struct ServicePanel: View {
                             focus.reload()
                         }
                     } message: {
-                        Text("它的 Key 也从钥匙串里删掉。")
+                        Text("它的 Key 也一起删掉。")
                     }
                 }
             }

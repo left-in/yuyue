@@ -171,10 +171,10 @@ struct QuickSearchPanel: View {
     /// In a book's window: a book chosen here takes this window's place.
     @Environment(\.switchBook) private var switchBook
     @Environment(\.colorScheme) private var scheme
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
     /// 墨水屏 has no glass.
     @AppStorage(EInk.key) private var eink = false
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     init(library: Library, query: String = "", close: @escaping () -> Void, ask: @escaping (String) -> Void) {
         self.library = library

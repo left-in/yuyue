@@ -2,6 +2,56 @@
   "sourceLanguage" : "zh-Hans",
   "strings" : {
     "" : {},
+    "松绿" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pine Green"
+          }
+        }
+      }
+    },
+    "茶色" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tea Brown"
+          }
+        }
+      }
+    },
+    "苔绿" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moss Green"
+          }
+        }
+      }
+    },
+    "黛紫" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dusk Violet"
+          }
+        }
+      }
+    },
+    "松绿是默认" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pine Green is the default"
+          }
+        }
+      }
+    },
     " · 不要了 %lld 条" : {
       "localizations" : {
         "en" : {
@@ -2668,12 +2718,12 @@
         }
       }
     },
-    "Key 只存在这台设备的钥匙串里。费用走你自己的 %@ 账号，语阅不经手，也看不到。" : {
+    "Key 只存在这台设备上。费用走你自己的 %@ 账号，语阅不经手，也看不到。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The key stays in this device's keychain. Costs go to your own %@ account; Yuyue never handles or sees them."
+            "value" : "The key stays on this device. Costs go to your own %@ account; Yuyue never handles or sees them."
           }
         }
       }
@@ -7178,12 +7228,12 @@
         }
       }
     },
-    "坚果云填“应用密码”；存在钥匙串里" : {
+    "坚果云填“应用密码”；只存在这台 Mac 上" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "For Nutstore, use an app password. Stored in the keychain"
+            "value" : "For Nutstore, use an app password. Stored only on this Mac"
           }
         }
       }
@@ -7623,12 +7673,12 @@
         }
       }
     },
-    "它的 Key 也会从钥匙串里删掉。正在用它的话，书伴换回设备自带的。" : {
+    "它的 Key 也会一起删掉。正在用它的话，书伴换回设备自带的。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Its key is deleted from the keychain too. If Companion was using it, it goes back to this device's own model."
+            "value" : "Its key is deleted too. If Companion was using it, it goes back to this device's own model."
           }
         }
       }
@@ -17963,38 +18013,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "E-ink Mode"
-          }
-        }
-      }
-    },
-    "墨蓝" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ink Blue"
-          }
-        }
-      }
-    },
-    "墨蓝是默认" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ink Blue is the default"
-          }
-        }
-      }
-    },
-    "墨黑" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ink Black"
           }
         }
       }

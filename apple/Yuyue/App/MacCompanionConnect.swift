@@ -178,7 +178,7 @@ struct MacProviderForm: View {
         if provider.group == .local { return start + String(localized: "本机或局域网里跑的，提问和书里相关的几段原文只发到这个地址。") }
         if provider.isCustom { return start + String(localized: "提问和书里相关的几段原文直接发到这个地址，语阅不经手。") }
         return (provider.blurb.map { $0 + String(localized: "。") } ?? "") + start
-            + String(localized: "Key 只存在这台 Mac 的钥匙串里，费用走你自己的 \(provider.account) 账号。")
+            + String(localized: "Key 只存在这台 Mac 上，费用走你自己的 \(provider.account) 账号。")
     }
 
     private var draft: CompanionConfig {

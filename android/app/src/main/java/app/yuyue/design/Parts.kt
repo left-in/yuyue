@@ -208,7 +208,9 @@ fun <T> YYSegments(items: List<Pair<T, String>>, selection: T, onSelect: (T) -> 
 enum class ButtonKind { Main, Raised, Soft, Plain, Danger }
 enum class ButtonSize { Small, Regular, Large }
 
-/** The app's capsule buttons. */
+/** The app's pill buttons: `Main`, the page's one action, is a faint wash of the theme colour with
+ *  a hairline and words in the colour; `Raised` and `Plain` the warm white pill with a hairline.
+ *  No shadows. */
 @Composable
 fun YYButton(
     title: String,
@@ -220,9 +222,10 @@ fun YYButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    val height = when (size) { ButtonSize.Small -> 26f; ButtonSize.Regular -> 32f; ButtonSize.Large -> 46f }
-    val font = when (size) { ButtonSize.Small -> 10.5f; ButtonSize.Regular -> 11.5f; ButtonSize.Large -> 13f }
-    val pad = when (size) { ButtonSize.Small -> 10f; ButtonSize.Regular -> 14f; ButtonSize.Large -> 20f }
+    // Low on purpose: a tall pill looks heavy next to the rows around it.
+    val height = when (size) { ButtonSize.Small -> 26f; ButtonSize.Regular -> 30f; ButtonSize.Large -> 38f }
+    val font = when (size) { ButtonSize.Small -> 11f; ButtonSize.Regular -> 12f; ButtonSize.Large -> 13.5f }
+    val pad = when (size) { ButtonSize.Small -> 11f; ButtonSize.Regular -> 14f; ButtonSize.Large -> 20f }
     val tint = YY.tint
     val fg = when (kind) {
         ButtonKind.Main -> tint.onBlack
@@ -232,10 +235,14 @@ fun YYButton(
     }
     val bg = when (kind) {
         ButtonKind.Main -> tint.black
-        ButtonKind.Raised -> YY.c.card
+        ButtonKind.Raised, ButtonKind.Plain -> YY.c.pill
         ButtonKind.Soft -> tint.accentSoft
         ButtonKind.Danger -> YY.c.danger.copy(alpha = 0.11f)
-        ButtonKind.Plain -> YY.c.inset
+    }
+    val line = when (kind) {
+        ButtonKind.Main -> tint.edge
+        ButtonKind.Raised, ButtonKind.Plain -> YY.c.pillLine
+        else -> Color.Transparent
     }
     val source = remember { MutableInteractionSource() }
     val pressed by source.collectIsPressedAsState()
@@ -244,17 +251,17 @@ fun YYButton(
             .then(if (wide) Modifier.fillMaxWidth() else Modifier)
             .height(YY.s(height))
             .alpha(if (!enabled) 0.4f else if (pressed) 0.75f else 1f)
-            .then(if (kind == ButtonKind.Raised) Modifier.shadow(1.dp, CircleShape) else Modifier)
             .clip(CircleShape)
             .background(bg)
-            .then(if (kind == ButtonKind.Raised) Modifier.border(0.5.dp, YY.c.line, CircleShape) else Modifier)
+            .border(0.5.dp, line, CircleShape)
             .clickable(interactionSource = source, indication = null, enabled = enabled, onClick = onClick)
             .padding(horizontal = YY.s(pad)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(YY.s(5), Alignment.CenterHorizontally),
     ) {
         if (icon != null) Icon(icon, null, tint = fg, modifier = Modifier.size(YY.s(font + 2)))
-        Text(title, style = YY.font(font, FontWeight.SemiBold), color = fg, maxLines = 1, softWrap = false)
+        val weight = if (kind == ButtonKind.Main || kind == ButtonKind.Danger) FontWeight.SemiBold else FontWeight.Normal
+        Text(title, style = YY.font(font, weight), color = fg, maxLines = 1, softWrap = false)
     }
 }
 

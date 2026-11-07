@@ -10,8 +10,8 @@ struct MacSettings: View {
     let library: Library
     @AppStorage("settings.page") private var page = SettingsPage.general
 
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     /// One height for every page, so switching pages doesn't move the window; less on a small screen.
     private var height: CGFloat {
@@ -498,8 +498,8 @@ private struct AppearanceSettings: View {
     @AppStorage("shelf.showProgress") private var showProgress = true
     @AppStorage(LiquidGlass.key) private var liquid = true
 
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -519,7 +519,7 @@ private struct AppearanceSettings: View {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("主题色").font(.yy(size: 13, weight: .medium)).foregroundStyle(YYColor.t1)
-                            Text("墨蓝是默认").font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
+                            Text("松绿是默认").font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
                         }
                         Spacer()
                         HStack(spacing: 14) { ForEach(YYTint.all) { t in tintChoice(t) } }
@@ -578,9 +578,9 @@ private struct AppearanceSettings: View {
         let on = tintID == t.id
         return Button { tintID = t.id } label: {
             VStack(spacing: 6) {
-                Circle().fill(Color(t.black.resolve(in: EnvironmentValues().with(\.colorScheme, .light))))
+                Circle().fill(Color(t.accent.resolve(in: EnvironmentValues().with(\.colorScheme, .light))))
                     .frame(width: 26, height: 26).padding(3)
-                    .overlay(Circle().strokeBorder(on ? t.black : .clear, lineWidth: 2))
+                    .overlay(Circle().strokeBorder(on ? t.accent : .clear, lineWidth: 2))
                 Text(t.name).font(.yy(size: 11.5, weight: on ? .semibold : .regular))
                     .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
             }
@@ -822,12 +822,13 @@ private struct DataSettings: View {
                     }
                     Spacer()
                     Button("导入快照…") { pick() }
+                        .buttonStyle(YYButtonStyle(kind: .raised, size: .small))
                     Button {
                         Task { await snapshots.make() }
                     } label: {
                         if snapshots.making { ProgressView().controlSize(.small) } else { Text("生成快照") }
                     }
-                    .buttonStyle(YYButtonStyle(kind: .main, size: .small))
+                    .buttonStyle(YYButtonStyle(kind: .card, size: .small))
                     .disabled(snapshots.making)
                 }
                 .padding(.horizontal, 16)
@@ -836,6 +837,7 @@ private struct DataSettings: View {
             SettingsCard {
                 SettingsRow(String(localized: "导出阅读记录"), detail: String(localized: "想读、在读、读完和读完的日期，给 Goodreads 或 StoryGraph 导入")) {
                     Button("导出…") { exporting = true }
+                        .buttonStyle(YYButtonStyle(kind: .raised, size: .small))
                 }
             }
             if !snapshots.saved.isEmpty {

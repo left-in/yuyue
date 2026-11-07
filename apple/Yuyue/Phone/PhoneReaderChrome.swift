@@ -19,8 +19,8 @@ struct PhoneReaderChrome: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
 
     private var paper: YYPaper { model.paperTokens }
-    /// 沉浸阅读 hides the capsule until the middle is tapped.
-    private var capsuleShown: Bool { !model.immersive || model.chromeShown || model.searchShown }
+    /// 沉浸阅读 hides the capsule until the middle is tapped; scrolling down the page, until back up it.
+    private var capsuleShown: Bool { (!model.immersive && !model.barsAway) || model.chromeShown || model.searchShown }
 
     var body: some View {
         layout
@@ -29,6 +29,7 @@ struct PhoneReaderChrome: View {
         .animation(.snappy(duration: 0.22), value: model.chromeShown)
         .animation(.snappy(duration: 0.22), value: model.searchShown)
         .animation(.snappy(duration: 0.22), value: model.immersive)
+        .animation(.snappy(duration: 0.22), value: model.barsAway)
         .animation(.snappy(duration: 0.22), value: model.returnTo == nil)
         .animation(.snappy(duration: 0.22), value: model.recap)
         .animation(.snappy(duration: 0.22), value: model.openNote)

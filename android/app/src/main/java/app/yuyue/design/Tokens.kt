@@ -27,7 +27,9 @@ data class YYPalette(
     val danger: Color,
     val warn: Color,
     val glass: Color,
-    val fade0: Color
+    val fade0: Color,
+    val pill: Color,
+    val pillLine: Color
 )
 
 object YYColors {
@@ -51,7 +53,9 @@ object YYColors {
         danger = Color(0xFFC2473AL),
         warn = Color(0xFFB7791FL),
         glass = Color(0xDBFFFFFFL),
-        fade0 = Color(0x00F6F5F3L)
+        fade0 = Color(0x00F6F5F3L),
+        pill = Color(0xFFFBFAF7L),
+        pillLine = Color(0x2950412DL)
     )
     val Dark = YYPalette(
         bg = Color(0xFF101112L),
@@ -73,7 +77,9 @@ object YYColors {
         danger = Color(0xFFE5806FL),
         warn = Color(0xFFD9A54AL),
         glass = Color(0xDB1E1F22L),
-        fade0 = Color(0x00101112L)
+        fade0 = Color(0x00101112L),
+        pill = Color(0xFF2C2D30L),
+        pillLine = Color(0x1AFFFFFFL)
     )
 }
 
@@ -94,6 +100,7 @@ data class YYTintColors(
     val onBlack: Color,
     val accent: Color,
     val accentSoft: Color,
+    val edge: Color,
     val fill: Color,
     val soft: Color,
     val onSoft: Color
@@ -125,34 +132,60 @@ data class YYTint(
 }
 
 object YYTints {
-    val Blue = YYTint(
-        id = "blue",
-        name = "墨蓝",
-        light = YYTintColors(black = Color(0xFF2B4C7EL), onBlack = Color(0xFFFFFFFFL), accent = Color(0xFF2B4C7EL), accentSoft = Color(0x1F2B4C7EL), fill = Color(0xFF2B4C7EL), soft = Color(0x1F2B4C7EL), onSoft = Color(0xFF2B4C7EL)),
-        dark = YYTintColors(black = Color(0xFF8FA8C8L), onBlack = Color(0xFF101214L), accent = Color(0xFF8FA8C8L), accentSoft = Color(0x298FA8C8L), fill = Color(0xFF8FA8C8L), soft = Color(0x298FA8C8L), onSoft = Color(0xFF8FA8C8L)),
-        paperAccentLight = Color(0xFF2B4C7EL),
-        paperAccentDark = Color(0xFF8FA8C8L),
-        playPlain = Color(0xFF2B4C7EL),
-        playKami = Color(0xFF1B365DL),
-        playDark = Color(0xFF8FA8C8L),
-        playKaminight = Color(0xFF8FA8C8L),
-        playSage = Color(0xFF2B4C7EL),
+    val Pine = YYTint(
+        id = "pine",
+        name = "松绿",
+        light = YYTintColors(black = Color(0xFFEAF4F0L), onBlack = Color(0xFF246858L), accent = Color(0xFF246858L), accentSoft = Color(0x1A246858L), edge = Color(0x52246858L), fill = Color(0xFF40927AL), soft = Color(0x1A246858L), onSoft = Color(0xFF246858L)),
+        dark = YYTintColors(black = Color(0x2978BEAAL), onBlack = Color(0xFF78BEAAL), accent = Color(0xFF78BEAAL), accentSoft = Color(0x2978BEAAL), edge = Color(0x5978BEAAL), fill = Color(0xFF4A9680L), soft = Color(0x2978BEAAL), onSoft = Color(0xFF78BEAAL)),
+        paperAccentLight = Color(0xFF246858L),
+        paperAccentDark = Color(0xFF78BEAAL),
+        playPlain = Color(0xFF246858L),
+        playKami = Color(0xFF246858L),
+        playDark = Color(0xFF78BEAAL),
+        playKaminight = Color(0xFF78BEAAL),
+        playSage = Color(0xFF246858L),
     )
-    val Ink = YYTint(
-        id = "ink",
-        name = "墨黑",
-        light = YYTintColors(black = Color(0xFF101214L), onBlack = Color(0xFFFFFFFFL), accent = Color(0xFF2B4C7EL), accentSoft = Color(0x1F2B4C7EL), fill = Color(0xFF2A2B2EL), soft = Color(0x142A2B2EL), onSoft = Color(0xFF2A2B2EL)),
-        dark = YYTintColors(black = Color(0xFFEDEDEEL), onBlack = Color(0xFF101214L), accent = Color(0xFF8FA8C8L), accentSoft = Color(0x298FA8C8L), fill = Color(0xFFEDEDEEL), soft = Color(0x14EDEDEEL), onSoft = Color(0xFFEDEDEEL)),
-        paperAccentLight = Color(0xFF2B4C7EL),
-        paperAccentDark = Color(0xFF8FA8C8L),
-        playPlain = Color(0xFF101214L),
-        playKami = Color(0xFF1B365DL),
-        playDark = Color(0xFFD6D6D8L),
-        playKaminight = Color(0xFF8FA8C8L),
-        playSage = Color(0xFF101214L),
+    val Tea = YYTint(
+        id = "tea",
+        name = "茶色",
+        light = YYTintColors(black = Color(0xFFF8EFE6L), onBlack = Color(0xFF8C5832L), accent = Color(0xFF8C5832L), accentSoft = Color(0x1A8C5832L), edge = Color(0x528C5832L), fill = Color(0xFFAA744CL), soft = Color(0x1A8C5832L), onSoft = Color(0xFF8C5832L)),
+        dark = YYTintColors(black = Color(0x29D6A47CL), onBlack = Color(0xFFD6A47CL), accent = Color(0xFFD6A47CL), accentSoft = Color(0x29D6A47CL), edge = Color(0x59D6A47CL), fill = Color(0xFFB07850L), soft = Color(0x29D6A47CL), onSoft = Color(0xFFD6A47CL)),
+        paperAccentLight = Color(0xFF8C5832L),
+        paperAccentDark = Color(0xFFD6A47CL),
+        playPlain = Color(0xFF8C5832L),
+        playKami = Color(0xFF8C5832L),
+        playDark = Color(0xFFD6A47CL),
+        playKaminight = Color(0xFFD6A47CL),
+        playSage = Color(0xFF8C5832L),
     )
-    val Default = Blue
-    val All = listOf(Blue, Ink)
+    val Moss = YYTint(
+        id = "moss",
+        name = "苔绿",
+        light = YYTintColors(black = Color(0xFFF0F3E5L), onBlack = Color(0xFF58682CL), accent = Color(0xFF58682CL), accentSoft = Color(0x1A58682CL), edge = Color(0x5258682CL), fill = Color(0xFF748840L), soft = Color(0x1A58682CL), onSoft = Color(0xFF58682CL)),
+        dark = YYTintColors(black = Color(0x29B2C278L), onBlack = Color(0xFFB2C278L), accent = Color(0xFFB2C278L), accentSoft = Color(0x29B2C278L), edge = Color(0x59B2C278L), fill = Color(0xFF809246L), soft = Color(0x29B2C278L), onSoft = Color(0xFFB2C278L)),
+        paperAccentLight = Color(0xFF58682CL),
+        paperAccentDark = Color(0xFFB2C278L),
+        playPlain = Color(0xFF58682CL),
+        playKami = Color(0xFF58682CL),
+        playDark = Color(0xFFB2C278L),
+        playKaminight = Color(0xFFB2C278L),
+        playSage = Color(0xFF58682CL),
+    )
+    val Dai = YYTint(
+        id = "dai",
+        name = "黛紫",
+        light = YYTintColors(black = Color(0xFFF0EDF8L), onBlack = Color(0xFF5E4E92L), accent = Color(0xFF5E4E92L), accentSoft = Color(0x1A5E4E92L), edge = Color(0x525E4E92L), fill = Color(0xFF7C6CB4L), soft = Color(0x1A5E4E92L), onSoft = Color(0xFF5E4E92L)),
+        dark = YYTintColors(black = Color(0x29B0A4E2L), onBlack = Color(0xFFB0A4E2L), accent = Color(0xFFB0A4E2L), accentSoft = Color(0x29B0A4E2L), edge = Color(0x59B0A4E2L), fill = Color(0xFF7C6CBEL), soft = Color(0x29B0A4E2L), onSoft = Color(0xFFB0A4E2L)),
+        paperAccentLight = Color(0xFF5E4E92L),
+        paperAccentDark = Color(0xFFB0A4E2L),
+        playPlain = Color(0xFF5E4E92L),
+        playKami = Color(0xFF5E4E92L),
+        playDark = Color(0xFFB0A4E2L),
+        playKaminight = Color(0xFFB0A4E2L),
+        playSage = Color(0xFF5E4E92L),
+    )
+    val Default = Pine
+    val All = listOf(Pine, Tea, Moss, Dai)
 }
 
 /** Body typography defaults of a paper. Sizes are design pixels at 14px text: scale by fontSize / 14. */

@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -201,10 +202,13 @@ private fun Round(icon: androidx.compose.ui.graphics.vector.ImageVector, label: 
 @Composable
 private fun Pill(title: String, icon: androidx.compose.ui.graphics.vector.ImageVector?, main: Boolean, modifier: Modifier, onClick: () -> Unit) {
     Row(
-        modifier.height(44.dp).then(if (main) Modifier else Modifier.shadow(1.dp, CircleShape)).background(if (main) YY.tint.black else YY.c.card, CircleShape).clickable(onClick = onClick),
+        modifier.height(38.dp)
+            .background(if (main) YY.tint.black else YY.c.pill, CircleShape)
+            .border(0.5.dp, if (main) YY.tint.edge else YY.c.pillLine, CircleShape)
+            .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
     ) {
-        val color = if (main) YY.tint.onBlack else YY.c.t2
+        val color = if (main) YY.tint.onBlack else YY.c.t1
         if (icon != null) Icon(icon, null, tint = color, modifier = Modifier.size(15.dp))
         Text(title, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = color)
     }

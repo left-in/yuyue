@@ -20,6 +20,10 @@ protocol ReaderPagerDelegate: AnyObject {
     func pager(_ pager: ReaderPager, selected message: ReaderMessage)
     /// A double click on `sentence`.
     func pager(_ pager: ReaderPager, doubleTapped message: ReaderMessage)
+    #if os(iOS)
+    /// Scrolling: the reader moved on down the page (controls away), back up it, or reached an end of it.
+    func pager(_ pager: ReaderPager, barsAway away: Bool)
+    #endif
 }
 
 /// Shows the book one section at a time and turns its pages (reader contract: native owns
@@ -57,6 +61,9 @@ final class ReaderPager: PlatformView {
     private let outer = SectionScrollView()
     /// Directions the outer scroll view may move during the current drag.
     private var outerMayMove: (forward: Bool, backward: Bool) = (false, false)
+    /// Scrolling: where the page was last, and how far the hand has moved it one way.
+    private var barsLastY: CGFloat = 0
+    private var barsTravel: CGFloat = 0
     private var arranging = false
     /// 下拉加书签: how far the page is pulled down, and whether the finger let go.
     var onPull: ((CGFloat, Bool) -> Void)?
@@ -766,6 +773,7 @@ final class ReaderPager: PlatformView {
         #if os(iOS)
         for page in slots + spare { configure(page.webView.scrollView) }
         outer.isScrollEnabled = mode == .paginated
+        delegate?.pager(self, barsAway: false)
         #endif
     }
 
@@ -923,13 +931,39 @@ extension ReaderPager: UIScrollViewDelegate {
     private func atEnd(_ s: UIScrollView) -> Bool { s.contentOffset.x >= s.contentSize.width - s.bounds.width - 1 }
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        barsLastY = scrollView.contentOffset.y
+        barsTravel = 0
         delegate?.pagerTurnedByHand(self)
         guard scrollView === outer, let current else { return }
         let inner = current.webView.scrollView
         outerMayMove = (atEnd(inner), atStart(inner))
     }
 
+    /// The controls follow the hand only: the ink line moving the page doesn't send them away.
+    /// At either end of a section they come back, for 下一章 is on them.
+    private func trackBars(_ scroll: UIScrollView) {
+        guard mode == .scrolled, scroll === current?.webView.scrollView else { return }
+        let y = scroll.contentOffset.y
+        let moved = y - barsLastY
+        barsLastY = y
+        if y <= 0 || y >= scroll.contentSize.height - scroll.bounds.height - 1 {
+            barsTravel = 0
+            delegate?.pager(self, barsAway: false)
+            return
+        }
+        guard scroll.isDragging || scroll.isDecelerating else {
+            barsTravel = 0
+            return
+        }
+        barsTravel = moved * barsTravel < 0 ? moved : barsTravel + moved
+        if abs(barsTravel) >= 24 {
+            delegate?.pager(self, barsAway: barsTravel > 0)
+            barsTravel = 0
+        }
+    }
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        trackBars(scrollView)
         guard !arranging, mode == .paginated, let current, bounds.width > 0 else { return }
         let inner = current.webView.scrollView
         let base = x(of: current)

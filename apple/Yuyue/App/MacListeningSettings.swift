@@ -260,7 +260,7 @@ private struct CloudVoiceKeyPanel: View {
                     Spacer(minLength: 0)
                 } action: { NSWorkspace.shared.open(step.url) }
             }
-            PanelHint(step.detail + String(localized: "。Key 只存在这台 Mac 的钥匙串里，费用走你自己的账号。"))
+            PanelHint(step.detail + String(localized: "。Key 只存在这台 Mac 上，费用走你自己的账号。"))
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 14)
@@ -366,7 +366,7 @@ struct CloudVoicePanel: View {
                     focus.reload()
                 }
             } message: {
-                Text("它的 Key 也从钥匙串里删掉。正在用它的声音的，换回这台 Mac 的声音。")
+                Text("它的 Key 也一起删掉。正在用它的声音的，换回这台 Mac 的声音。")
             }
         }
         .padding(.horizontal, 16)

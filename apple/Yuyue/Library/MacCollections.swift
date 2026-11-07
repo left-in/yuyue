@@ -30,8 +30,8 @@ struct CollectionWall: View {
     @State private var hovering: String?
     @State private var naming: Naming?
     @State private var name = ""
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
     @AppStorage(EInk.key) private var eink = false
 
     enum Sort: String, CaseIterable {
@@ -149,11 +149,12 @@ struct CollectionWall: View {
                     Image(systemName: "plus").font(.yy(size: 11, weight: .semibold))
                     Text("新建合集")
                 }
-                .font(.yy(size: 12, weight: .medium))
+                .font(.yy(size: 12))
                 .foregroundStyle(YYColor.t1)
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 13)
                 .frame(height: 28)
-                .yyGlass(Capsule(), fill: YYColor.card, line: YYColor.line, shadow: 0, interactive: true, liquid: !eink)
+                .background(YYColor.pill, in: .capsule)
+                .overlay(Capsule().strokeBorder(YYColor.pillLine, lineWidth: 0.5))
                 .contentShape(.capsule)
             }
             .buttonStyle(.plain)
@@ -320,8 +321,8 @@ struct CollectionDropList: View {
     let done: () -> Void
     @State private var query = ""
     @State private var target: String?
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     private var shown: [BookCollection] {
         let all = library.collections.sorted { $0.usedAt > $1.usedAt }

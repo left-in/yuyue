@@ -19,7 +19,7 @@ struct NoteExportSettings: View {
                     ExportRow(target: t, selected: focus.target == t)
                 }
             }
-            SettingsNote(String(localized: "开着的才出现在“发到”里。令牌和链接存在这台 Mac 的钥匙串里，不同步、不上传。"))
+            SettingsNote(String(localized: "开着的才出现在“发到”里。令牌和链接存在这台 Mac 上，不同步、不上传。"))
             Spacer(minLength: 0)
         }
         .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification).receive(on: RunLoop.main)) { _ in
@@ -232,7 +232,7 @@ private struct ConnectedPanel: View {
                     NotesFocus.shared.tick &+= 1
                 }
             } message: {
-                Text(target == .obsidian ? String(localized: "已经写进去的笔记留着不动。") : String(localized: "令牌从钥匙串里删掉；已经发过去的留着不动。"))
+                Text(target == .obsidian ? String(localized: "已经写进去的笔记留着不动。") : String(localized: "令牌也一起删掉；已经发过去的留着不动。"))
             }
         }
         .padding(.horizontal, 16)
@@ -358,7 +358,7 @@ private struct FlomoSetup: View {
                 StepRow(n: 1, done: opened || !link.isEmpty, title: String(localized: "打开 flomo 的 API 页"),
                         detail: String(localized: "flomo › 设置 › API（要 PRO），拷那条链接"),
                         link: URL(string: "https://v.flomoapp.com/mine?source=incoming_webhook")) { opened = true }
-                StepRow(n: 2, done: checks.done, title: String(localized: "贴到下面"), detail: String(localized: "只存在这台 Mac 的钥匙串里"))
+                StepRow(n: 2, done: checks.done, title: String(localized: "贴到下面"), detail: String(localized: "只存在这台 Mac 上"))
             }
             if link.isEmpty, let clip, NoteExport.isFlomoLink(clip) {
                 ClipRow(text: String(localized: "用剪贴板里的 flomoapp.com/iwh/••••")) { link = clip }

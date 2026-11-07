@@ -690,11 +690,20 @@ struct LocalFolder: SyncFolder {
 
 // MARK: - Keychain
 
+#if os(macOS)
+/// The Mac keeps keys in a file in the app's container. Its keychain ties an item to the app's code
+/// signature, and without a Developer ID the signature changes with every build, so each update
+/// would ask for the login password once per key. The file is plain text, readable only by this
+/// user, and outside the library so it's never in a snapshot or a sync.
 nonisolated enum Keychain {
-    private static let service = "app.yuyue.Yuyue"
+    private static let lock = NSLock()
 
-    /// `-debugNoKeychain 1`: a scratch run never touches the keychain, so a fresh ad-hoc build
-    /// doesn't put 钥匙串 的密码框 in front of whatever the user is doing.
+    private static var file: URL {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("secrets.json")
+    }
+
+    /// `-debugNoKeychain 1`: a scratch run neither sees the real keys nor changes them.
     private static var off: Bool {
         #if DEBUG
         UserDefaults.standard.bool(forKey: "debugNoKeychain")
@@ -703,8 +712,48 @@ nonisolated enum Keychain {
         #endif
     }
 
+    private static func load() -> [String: String] {
+        guard let data = try? Data(contentsOf: file) else { return [:] }
+        return (try? JSONDecoder().decode([String: String].self, from: data)) ?? [:]
+    }
+
+    private static func save(_ secrets: [String: String]) {
+        guard let data = try? JSONEncoder().encode(secrets) else { return }
+        try? FileManager.default.createDirectory(at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
+        guard (try? data.write(to: file, options: .atomic)) != nil else { return }
+        try? FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: file.path)
+    }
+
     static func read(_ key: String) -> String? {
         if off { return nil }
+        lock.lock()
+        defer { lock.unlock() }
+        return load()[key]
+    }
+
+    static func write(_ key: String, _ value: String) {
+        if off { return }
+        lock.lock()
+        defer { lock.unlock() }
+        var secrets = load()
+        secrets[key] = value
+        save(secrets)
+    }
+
+    static func delete(_ key: String) {
+        if off { return }
+        lock.lock()
+        defer { lock.unlock() }
+        var secrets = load()
+        guard secrets.removeValue(forKey: key) != nil else { return }
+        save(secrets)
+    }
+}
+#else
+nonisolated enum Keychain {
+    private static let service = "app.yuyue.Yuyue"
+
+    static func read(_ key: String) -> String? {
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
                                     kSecAttrAccount as String: key, kSecReturnData as String: true]
         var item: CFTypeRef?
@@ -713,7 +762,6 @@ nonisolated enum Keychain {
     }
 
     static func write(_ key: String, _ value: String) {
-        if off { return }
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
                                     kSecAttrAccount as String: key]
         SecItemDelete(query as CFDictionary)
@@ -723,9 +771,9 @@ nonisolated enum Keychain {
     }
 
     static func delete(_ key: String) {
-        if off { return }
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
                                     kSecAttrAccount as String: key]
         SecItemDelete(query as CFDictionary)
     }
 }
+#endif

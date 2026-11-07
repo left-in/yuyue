@@ -5,7 +5,7 @@ import FoundationModels
 
 /// Where 书伴's answers come from: the model on this device, or a service the
 /// user added with their own key. No service of ours sits in between; keys stay in the
-/// keychain and are not synced. 添加服务商 picks from `catalog`, grouped by how it's reached
+/// app's own store and are not synced. 添加服务商 picks from `catalog`, grouped by how it's reached
 /// (登录 / API Key / 本机和局域网), or adds one of the user's own
 /// (any OpenAI-shaped address). The logos are LobeHub Icons, from shared/provider-icons.
 struct CompanionProvider: Hashable, Identifiable {

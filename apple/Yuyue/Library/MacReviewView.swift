@@ -72,8 +72,8 @@ struct ReviewDeckCard: View {
     let library: Library
     let start: () -> Void
     @Environment(\.colorScheme) private var scheme
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         HStack(spacing: 16) {
@@ -101,6 +101,7 @@ struct ReviewDeckCard: View {
                         .foregroundStyle(tint.onBlack)
                         .padding(.horizontal, 16).frame(height: 28)
                         .background(tint.black, in: .capsule)
+                        .overlay(Capsule().strokeBorder(tint.edge, lineWidth: 0.5))
                 }
                 .buttonStyle(.plain)
             } else {
@@ -149,8 +150,8 @@ struct MacReviewSheet: View {
     let only: (BookSummary) -> Void
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var scheme
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -385,17 +386,19 @@ struct MacReviewSheet: View {
             HStack(spacing: 10) {
                 Button { withAnimation(.snappy) { review.choose(false) } } label: {
                     Label("不要了", systemImage: "xmark")
-                        .frame(maxWidth: .infinity).frame(height: 44)
-                        .foregroundStyle(YYColor.t2)
-                        .background(YYColor.card, in: .capsule)
-                        .yyShadow(scheme == .dark ? YYShadow.ringDark : YYShadow.ringLight)
+                        .font(.yy(size: 13))
+                        .frame(maxWidth: .infinity).frame(height: 36)
+                        .foregroundStyle(YYColor.t1)
+                        .background(YYColor.pill, in: .capsule)
+                        .overlay(Capsule().strokeBorder(YYColor.pillLine, lineWidth: 0.5))
                 }
                 .keyboardShortcut(.delete, modifiers: [])
                 Button { withAnimation(.snappy) { review.choose(true) } } label: {
                     Label("留下", systemImage: "checkmark")
-                        .frame(maxWidth: .infinity).frame(height: 44)
+                        .frame(maxWidth: .infinity).frame(height: 36)
                         .foregroundStyle(tint.onBlack)
                         .background(tint.black, in: .capsule)
+                        .overlay(Capsule().strokeBorder(tint.edge, lineWidth: 0.5))
                 }
                 .keyboardShortcut(.defaultAction)
             }
@@ -405,9 +408,10 @@ struct MacReviewSheet: View {
             Button { dismiss() } label: {
                 Text("完成")
                     .font(.yy(size: 13, weight: .semibold))
-                    .frame(maxWidth: .infinity).frame(height: 44)
+                    .frame(maxWidth: .infinity).frame(height: 36)
                     .foregroundStyle(tint.onBlack)
                     .background(tint.black, in: .capsule)
+                    .overlay(Capsule().strokeBorder(tint.edge, lineWidth: 0.5))
             }
             .buttonStyle(.plain)
             .keyboardShortcut(.defaultAction)

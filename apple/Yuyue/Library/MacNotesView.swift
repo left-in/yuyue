@@ -20,8 +20,8 @@ struct MacNotesView: View {
     @State private var deck: Review?
     @State private var reviewing: Review?
     @State private var sharing: QuoteShare?
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     enum Only: Hashable {
         case all, thoughts
@@ -226,16 +226,14 @@ struct MacNotesView: View {
                 }
                 if let name { Text(name) }
                 Text(count.formatted()).monospacedDigit()
-                    .foregroundStyle(on ? AnyShapeStyle(YYColor.t2) : AnyShapeStyle(YYColor.t3))
+                    .foregroundStyle(on ? AnyShapeStyle(tint.accent.opacity(0.7)) : AnyShapeStyle(YYColor.t3))
             }
             .font(.yy(size: 11, weight: on ? .semibold : .regular))
-            .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
+            .foregroundStyle(on ? tint.accent : YYColor.t2)
             .padding(.horizontal, 11).frame(height: 26)
-            .background(on ? YYColor.t1.opacity(0.09) : YYColor.card, in: .capsule)
-            .overlay(
-                Capsule().strokeBorder(on ? YYColor.t1.opacity(0.14) : Color.clear, lineWidth: 0.5)
-            )
-            .yyShadow(on ? [] : scheme == .dark ? YYShadow.ringDark : YYShadow.ringLight)
+            // The one chosen: the theme's wash and hairline, as 生词's 在学 / 掌握了.
+            .background(on ? tint.black : YYColor.pill, in: .capsule)
+            .overlay(Capsule().strokeBorder(on ? tint.edge : YYColor.pillLine, lineWidth: 0.5))
         }
         .buttonStyle(.plain)
     }

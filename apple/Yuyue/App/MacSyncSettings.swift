@@ -320,7 +320,7 @@ private struct WebDAVForm: View {
                 SettingsRow(String(localized: "账号")) {
                     TextField("", text: $user).textFieldStyle(.roundedBorder).frame(width: 300)
                 }
-                SettingsRow(String(localized: "密码"), detail: String(localized: "坚果云填“应用密码”；存在钥匙串里")) {
+                SettingsRow(String(localized: "密码"), detail: String(localized: "坚果云填“应用密码”；只存在这台 Mac 上")) {
                     SecureField("", text: $password).textFieldStyle(.roundedBorder).frame(width: 300)
                 }
                 SettingsRow(String(localized: "文件夹")) {
@@ -332,7 +332,7 @@ private struct WebDAVForm: View {
                     }
                     Spacer()
                     Button(check?.failed == true ? String(localized: "重试") : sync.method == .webdav ? String(localized: "重新连接") : String(localized: "连接")) { run() }
-                        .buttonStyle(YYButtonStyle(kind: .main, size: .small))
+                        .buttonStyle(YYButtonStyle(kind: .card, size: .small))
                         .disabled(account == nil || checking)
                 }
                 .padding(.horizontal, 16)

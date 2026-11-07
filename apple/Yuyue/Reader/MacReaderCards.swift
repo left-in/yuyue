@@ -1026,8 +1026,8 @@ struct CompanionPanel: View {
     @State private var askHeight: CGFloat = 44
     @FocusState private var typing: Bool
     @Environment(\.openSettings) private var openSettings
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
     private var companion: BookCompanion { model.companion }
 
     var body: some View {
@@ -1156,9 +1156,10 @@ struct CompanionPanel: View {
             Text(text)
                 .font(.yy(size: 12))
                 .lineSpacing(3)
-                .foregroundStyle(tint.onBlack)
+                .foregroundStyle(YYColor.t1)
                 .padding(.horizontal, 12).padding(.vertical, 8)
-                .background(tint.black, in: UnevenRoundedRectangle(topLeadingRadius: 14, bottomLeadingRadius: 14, bottomTrailingRadius: 4, topTrailingRadius: 14))
+                .background(YYColor.pill, in: UnevenRoundedRectangle(topLeadingRadius: 14, bottomLeadingRadius: 14, bottomTrailingRadius: 4, topTrailingRadius: 14))
+                .overlay(UnevenRoundedRectangle(topLeadingRadius: 14, bottomLeadingRadius: 14, bottomTrailingRadius: 4, topTrailingRadius: 14).strokeBorder(YYColor.pillLine, lineWidth: 0.5))
                 .textSelection(.enabled)
         }
     }

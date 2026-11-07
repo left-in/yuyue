@@ -16,8 +16,8 @@ struct MacShowEditor: View {
     /// The template this started from, by its own name: renaming the show doesn't rename it.
     @State private var template: String?
     @State private var failure: String?
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
     private var draft: Binding<ShowDraft> { $edit.draft }
 
     var body: some View {

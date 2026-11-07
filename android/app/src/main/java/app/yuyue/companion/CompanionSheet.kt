@@ -145,8 +145,11 @@ private fun Welcome(settings: () -> Unit) {
 @Composable
 private fun Bubble(text: String) {
     Text(
-        text, fontSize = 15.sp, lineHeight = 21.sp, color = YY.tint.onBlack,
-        modifier = Modifier.background(YY.tint.black, RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, bottomEnd = 4.dp, topEnd = 16.dp)).padding(horizontal = 14.dp, vertical = 9.dp),
+        text, fontSize = 15.sp, lineHeight = 21.sp, color = YY.c.t1,
+        modifier = Modifier
+            .background(YY.c.pill, RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, bottomEnd = 4.dp, topEnd = 16.dp))
+            .border(0.5.dp, YY.c.pillLine, RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp, bottomEnd = 4.dp, topEnd = 16.dp))
+            .padding(horizontal = 14.dp, vertical = 9.dp),
     )
 }
 

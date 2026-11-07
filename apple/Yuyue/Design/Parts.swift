@@ -372,10 +372,11 @@ struct YYSwitch: View {
     }
 }
 
-/// A capsule button. `main` is the theme's dark one, `raised` the white one,
-/// `soft` the tinted one, `plain` the grey one.
+/// A pill button. `main`, the page's one action, is a faint wash of the theme colour with a
+/// hairline and words in the colour; `card`, the action inside a white card, the warm white pill
+/// with only its words in the colour; `raised` and `plain` the warm white pill in ink, `soft` the tinted chip, `danger` the red one.
 struct YYButtonStyle: ButtonStyle {
-    enum Kind { case main, raised, soft, plain, danger }
+    enum Kind { case main, card, raised, soft, plain, danger }
     enum Size { case small, regular, large }
     var kind = Kind.plain
     var size = Size.regular
@@ -383,28 +384,36 @@ struct YYButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var enabled
 
     func makeBody(configuration: Configuration) -> some View {
-        let height: CGFloat = switch size { case .small: 26; case .regular: 32; case .large: 46 }
-        let font: CGFloat = switch size { case .small: 10.5; case .regular: 11.5; case .large: 13 }
-        let pad: CGFloat = switch size { case .small: 10; case .regular: 14; case .large: 20 }
+        // Low on purpose: a tall pill looks heavy next to the rows around it.
+        let height: CGFloat = switch size { case .small: 26; case .regular: 30; case .large: 36 }
+        let font: CGFloat = switch size { case .small: 11; case .regular: 12; case .large: 13 }
+        let pad: CGFloat = switch size { case .small: 11; case .regular: 14; case .large: 20 }
         let tint = YYTint.standard
         return configuration.label
-            .font(YYUI.font(font, .semibold))
+            .font(YYUI.font(font, kind == .main || kind == .card || kind == .danger ? .semibold : .regular))
             .lineLimit(1)
             .foregroundStyle(foreground(tint))
             .padding(.horizontal, YYUI.s(pad))
             .frame(maxWidth: wide ? .infinity : nil)
             .frame(height: YYUI.s(height))
             .background(background(tint), in: .capsule)
-            .shadow(color: kind == .raised ? Color(yy: YYRGBA(51, 46, 41, 0.08)) : .clear, radius: 1.5, y: 1)
-            .overlay(kind == .raised ? Capsule().strokeBorder(YYColor.line, lineWidth: 0.5) : nil)
+            .overlay(Capsule().strokeBorder(line(tint), lineWidth: 0.5))
             .opacity(enabled ? (configuration.isPressed ? 0.75 : 1) : 0.4)
             .contentShape(.capsule)
+    }
+
+    private func line(_ tint: YYTint) -> Color {
+        switch kind {
+        case .main: tint.edge
+        case .card, .raised, .plain: YYColor.pillLine
+        case .soft, .danger: .clear
+        }
     }
 
     private func foreground(_ tint: YYTint) -> Color {
         switch kind {
         case .main: tint.onBlack
-        case .soft: tint.accent
+        case .card, .soft: tint.accent
         case .danger: YYColor.danger
         case .raised, .plain: YYColor.t1
         }
@@ -413,10 +422,9 @@ struct YYButtonStyle: ButtonStyle {
     private func background(_ tint: YYTint) -> Color {
         switch kind {
         case .main: tint.black
-        case .raised: YYColor.card
+        case .card, .raised, .plain: YYColor.pill
         case .soft: tint.accentSoft
         case .danger: YYColor.danger.opacity(0.11)
-        case .plain: YYColor.inset
         }
     }
 }

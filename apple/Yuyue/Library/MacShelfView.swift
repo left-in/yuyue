@@ -38,10 +38,10 @@ struct MacShelfView: View {
         let at: CGPoint
     }
 
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
     @AppStorage("general.reopenLast") private var reopenLast = false
     @State private var reopened = false
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         // 首页导航: the sidebar is written straight on the desk, no
@@ -740,12 +740,12 @@ struct MacShelfView: View {
                     Text("导入")
                 }
             }
-            .font(.yy(size: 12, weight: .medium))
+            .font(.yy(size: 12))
             .foregroundStyle(YYColor.t1)
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 13)
             .frame(height: 28)
-            // Liquid Glass that answers the pointer, or a white capsule.
-            .yyGlass(Capsule(), fill: YYColor.card, line: YYColor.line, shadow: 0, interactive: true, liquid: !eink)
+            .background(YYColor.pill, in: .capsule)
+            .overlay(Capsule().strokeBorder(YYColor.pillLine, lineWidth: 0.5))
             .contentShape(.capsule)
         }
         .buttonStyle(.plain)

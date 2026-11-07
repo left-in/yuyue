@@ -18,8 +18,8 @@ struct MacPodcastView: View {
     @State private var opened: String?
     /// Each episode's 条, for “停在第 2 条 · Rust 1.91”.
     @State private var segments: [String: [EpisodeSegment]] = [:]
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
     private var podcasts: Podcasts { library.podcasts }
 
     var body: some View {

@@ -17,10 +17,10 @@ struct PhoneMe: View {
     @AppStorage(EInk.key) private var einkOn = false
     @State private var words = 0
     @AppStorage(AppAppearance.key) private var mode = AppAppearance.system
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
     /// Regular width (iPhone Duo open, iPad): the column at most 640 wide, in the middle.
     @Environment(\.horizontalSizeClass) private var sizeClass
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         NavigationStack {
@@ -318,8 +318,8 @@ struct PhoneStats: View {
     @State private var period = Period.week
     @State private var anchor = Date()
     @State private var times: [DayTime] = []
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     enum Period: String, CaseIterable, Identifiable {
         case week, month, year
@@ -639,11 +639,11 @@ struct PhoneStats: View {
 /// 外观: light, dark or the system's; 墨蓝 or 墨黑; and a look at both.
 struct PhoneAppearance: View {
     @AppStorage(AppAppearance.key) private var mode = AppAppearance.system
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
     @AppStorage(LiquidGlass.key) private var liquid = true
     @State private var sample = true
     @Environment(\.colorScheme) private var scheme
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     var body: some View {
         YYPage {
@@ -657,11 +657,11 @@ struct PhoneAppearance: View {
                 ForEach(YYTint.all) { t in
                     Button { tintID = t.id } label: {
                         HStack(spacing: YYUI.s(10)) {
-                            Circle().fill(t.black).frame(width: YYUI.s(18), height: YYUI.s(18))
+                            Circle().fill(t.accent).frame(width: YYUI.s(18), height: YYUI.s(18))
                                 .overlay(Circle().strokeBorder(.black.opacity(0.12), lineWidth: 0.5))
                             Text(t.name).font(YYUI.font(11.5)).foregroundStyle(YYColor.t1)
                             Spacer(minLength: YYUI.s(8))
-                            if t.id == YYTint.blue.id {
+                            if t.id == YYTint.pine.id {
                                 Text("默认").font(YYUI.font(10.5)).foregroundStyle(YYColor.t3)
                             }
                             Image(systemName: "checkmark").font(YYUI.font(11, .bold)).foregroundStyle(tint.accent)

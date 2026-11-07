@@ -61,6 +61,8 @@ public enum YYColor {
     public static let warn = Color.yyDynamic(light: YYRGBA(183, 121, 31), dark: YYRGBA(217, 165, 74))
     public static let glass = Color.yyDynamic(light: YYRGBA(255, 255, 255, 0.86), dark: YYRGBA(30, 31, 34, 0.86))
     public static let fade0 = Color.yyDynamic(light: YYRGBA(246, 245, 243, 0), dark: YYRGBA(16, 17, 18, 0))
+    public static let pill = Color.yyDynamic(light: YYRGBA(251, 250, 247), dark: YYRGBA(44, 45, 48))
+    public static let pillLine = Color.yyDynamic(light: YYRGBA(80, 65, 45, 0.16), dark: YYRGBA(255, 255, 255, 0.1))
 }
 
 /// Font families. `css` is the reader's stack; `appleNames` are tried in order, then the system design.
@@ -129,7 +131,8 @@ public enum YYFontFamily: String, Sendable, CaseIterable {
     }
 }
 
-/// 主题色. `black`/`onBlack`: main buttons; `fill`: switches and progress; `soft`/`onSoft`: soft chips.
+/// 主题色 (松绿, 茶色, 苔绿, 黛紫). `black`/`onBlack`: main buttons, a faint wash of the colour with the
+/// colour as text; `edge`: their hairline; `fill`: switches and progress; `soft`/`onSoft`: soft chips.
 public struct YYTint: Sendable, Hashable, Identifiable {
     public let id: String
     public let name: String
@@ -137,6 +140,7 @@ public struct YYTint: Sendable, Hashable, Identifiable {
     public let onBlack: Color
     public let accent: Color
     public let accentSoft: Color
+    public let edge: Color
     public let fill: Color
     public let soft: Color
     public let onSoft: Color
@@ -157,47 +161,87 @@ public struct YYTint: Sendable, Hashable, Identifiable {
         }
     }
 
-    public static let blue = YYTint(
-        id: "blue",
-        name: String(localized: "墨蓝"),
-        black: Color.yyDynamic(light: YYRGBA(43, 76, 126), dark: YYRGBA(143, 168, 200)),
-        onBlack: Color.yyDynamic(light: YYRGBA(255, 255, 255), dark: YYRGBA(16, 18, 20)),
-        accent: Color.yyDynamic(light: YYRGBA(43, 76, 126), dark: YYRGBA(143, 168, 200)),
-        accentSoft: Color.yyDynamic(light: YYRGBA(43, 76, 126, 0.12), dark: YYRGBA(143, 168, 200, 0.16)),
-        fill: Color.yyDynamic(light: YYRGBA(43, 76, 126), dark: YYRGBA(143, 168, 200)),
-        soft: Color.yyDynamic(light: YYRGBA(43, 76, 126, 0.12), dark: YYRGBA(143, 168, 200, 0.16)),
-        onSoft: Color.yyDynamic(light: YYRGBA(43, 76, 126), dark: YYRGBA(143, 168, 200)),
-        paperAccentLight: Color(yy: YYRGBA(43, 76, 126)),
-        paperAccentDark: Color(yy: YYRGBA(143, 168, 200)),
-        playPlain: Color(yy: YYRGBA(43, 76, 126)),
-        playKami: Color(yy: YYRGBA(27, 54, 93)),
-        playDark: Color(yy: YYRGBA(143, 168, 200)),
-        playKaminight: Color(yy: YYRGBA(143, 168, 200)),
-        playSage: Color(yy: YYRGBA(43, 76, 126))
+    public static let pine = YYTint(
+        id: "pine",
+        name: String(localized: "松绿"),
+        black: Color.yyDynamic(light: YYRGBA(234, 244, 240), dark: YYRGBA(120, 190, 170, 0.16)),
+        onBlack: Color.yyDynamic(light: YYRGBA(36, 104, 88), dark: YYRGBA(120, 190, 170)),
+        accent: Color.yyDynamic(light: YYRGBA(36, 104, 88), dark: YYRGBA(120, 190, 170)),
+        accentSoft: Color.yyDynamic(light: YYRGBA(36, 104, 88, 0.1), dark: YYRGBA(120, 190, 170, 0.16)),
+        edge: Color.yyDynamic(light: YYRGBA(36, 104, 88, 0.32), dark: YYRGBA(120, 190, 170, 0.35)),
+        fill: Color.yyDynamic(light: YYRGBA(64, 146, 122), dark: YYRGBA(74, 150, 128)),
+        soft: Color.yyDynamic(light: YYRGBA(36, 104, 88, 0.1), dark: YYRGBA(120, 190, 170, 0.16)),
+        onSoft: Color.yyDynamic(light: YYRGBA(36, 104, 88), dark: YYRGBA(120, 190, 170)),
+        paperAccentLight: Color(yy: YYRGBA(36, 104, 88)),
+        paperAccentDark: Color(yy: YYRGBA(120, 190, 170)),
+        playPlain: Color(yy: YYRGBA(36, 104, 88)),
+        playKami: Color(yy: YYRGBA(36, 104, 88)),
+        playDark: Color(yy: YYRGBA(120, 190, 170)),
+        playKaminight: Color(yy: YYRGBA(120, 190, 170)),
+        playSage: Color(yy: YYRGBA(36, 104, 88))
     )
-    public static let ink = YYTint(
-        id: "ink",
-        name: String(localized: "墨黑"),
-        black: Color.yyDynamic(light: YYRGBA(16, 18, 20), dark: YYRGBA(237, 237, 238)),
-        onBlack: Color.yyDynamic(light: YYRGBA(255, 255, 255), dark: YYRGBA(16, 18, 20)),
-        accent: Color.yyDynamic(light: YYRGBA(43, 76, 126), dark: YYRGBA(143, 168, 200)),
-        accentSoft: Color.yyDynamic(light: YYRGBA(43, 76, 126, 0.12), dark: YYRGBA(143, 168, 200, 0.16)),
-        fill: Color.yyDynamic(light: YYRGBA(42, 43, 46), dark: YYRGBA(237, 237, 238)),
-        soft: Color.yyDynamic(light: YYRGBA(42, 43, 46, 0.08), dark: YYRGBA(237, 237, 238, 0.08)),
-        onSoft: Color.yyDynamic(light: YYRGBA(42, 43, 46), dark: YYRGBA(237, 237, 238)),
-        paperAccentLight: Color(yy: YYRGBA(43, 76, 126)),
-        paperAccentDark: Color(yy: YYRGBA(143, 168, 200)),
-        playPlain: Color(yy: YYRGBA(16, 18, 20)),
-        playKami: Color(yy: YYRGBA(27, 54, 93)),
-        playDark: Color(yy: YYRGBA(214, 214, 216)),
-        playKaminight: Color(yy: YYRGBA(143, 168, 200)),
-        playSage: Color(yy: YYRGBA(16, 18, 20))
+    public static let tea = YYTint(
+        id: "tea",
+        name: String(localized: "茶色"),
+        black: Color.yyDynamic(light: YYRGBA(248, 239, 230), dark: YYRGBA(214, 164, 124, 0.16)),
+        onBlack: Color.yyDynamic(light: YYRGBA(140, 88, 50), dark: YYRGBA(214, 164, 124)),
+        accent: Color.yyDynamic(light: YYRGBA(140, 88, 50), dark: YYRGBA(214, 164, 124)),
+        accentSoft: Color.yyDynamic(light: YYRGBA(140, 88, 50, 0.1), dark: YYRGBA(214, 164, 124, 0.16)),
+        edge: Color.yyDynamic(light: YYRGBA(140, 88, 50, 0.32), dark: YYRGBA(214, 164, 124, 0.35)),
+        fill: Color.yyDynamic(light: YYRGBA(170, 116, 76), dark: YYRGBA(176, 120, 80)),
+        soft: Color.yyDynamic(light: YYRGBA(140, 88, 50, 0.1), dark: YYRGBA(214, 164, 124, 0.16)),
+        onSoft: Color.yyDynamic(light: YYRGBA(140, 88, 50), dark: YYRGBA(214, 164, 124)),
+        paperAccentLight: Color(yy: YYRGBA(140, 88, 50)),
+        paperAccentDark: Color(yy: YYRGBA(214, 164, 124)),
+        playPlain: Color(yy: YYRGBA(140, 88, 50)),
+        playKami: Color(yy: YYRGBA(140, 88, 50)),
+        playDark: Color(yy: YYRGBA(214, 164, 124)),
+        playKaminight: Color(yy: YYRGBA(214, 164, 124)),
+        playSage: Color(yy: YYRGBA(140, 88, 50))
     )
-    public static let all: [YYTint] = [.blue, .ink]
+    public static let moss = YYTint(
+        id: "moss",
+        name: String(localized: "苔绿"),
+        black: Color.yyDynamic(light: YYRGBA(240, 243, 229), dark: YYRGBA(178, 194, 120, 0.16)),
+        onBlack: Color.yyDynamic(light: YYRGBA(88, 104, 44), dark: YYRGBA(178, 194, 120)),
+        accent: Color.yyDynamic(light: YYRGBA(88, 104, 44), dark: YYRGBA(178, 194, 120)),
+        accentSoft: Color.yyDynamic(light: YYRGBA(88, 104, 44, 0.1), dark: YYRGBA(178, 194, 120, 0.16)),
+        edge: Color.yyDynamic(light: YYRGBA(88, 104, 44, 0.32), dark: YYRGBA(178, 194, 120, 0.35)),
+        fill: Color.yyDynamic(light: YYRGBA(116, 136, 64), dark: YYRGBA(128, 146, 70)),
+        soft: Color.yyDynamic(light: YYRGBA(88, 104, 44, 0.1), dark: YYRGBA(178, 194, 120, 0.16)),
+        onSoft: Color.yyDynamic(light: YYRGBA(88, 104, 44), dark: YYRGBA(178, 194, 120)),
+        paperAccentLight: Color(yy: YYRGBA(88, 104, 44)),
+        paperAccentDark: Color(yy: YYRGBA(178, 194, 120)),
+        playPlain: Color(yy: YYRGBA(88, 104, 44)),
+        playKami: Color(yy: YYRGBA(88, 104, 44)),
+        playDark: Color(yy: YYRGBA(178, 194, 120)),
+        playKaminight: Color(yy: YYRGBA(178, 194, 120)),
+        playSage: Color(yy: YYRGBA(88, 104, 44))
+    )
+    public static let dai = YYTint(
+        id: "dai",
+        name: String(localized: "黛紫"),
+        black: Color.yyDynamic(light: YYRGBA(240, 237, 248), dark: YYRGBA(176, 164, 226, 0.16)),
+        onBlack: Color.yyDynamic(light: YYRGBA(94, 78, 146), dark: YYRGBA(176, 164, 226)),
+        accent: Color.yyDynamic(light: YYRGBA(94, 78, 146), dark: YYRGBA(176, 164, 226)),
+        accentSoft: Color.yyDynamic(light: YYRGBA(94, 78, 146, 0.1), dark: YYRGBA(176, 164, 226, 0.16)),
+        edge: Color.yyDynamic(light: YYRGBA(94, 78, 146, 0.32), dark: YYRGBA(176, 164, 226, 0.35)),
+        fill: Color.yyDynamic(light: YYRGBA(124, 108, 180), dark: YYRGBA(124, 108, 190)),
+        soft: Color.yyDynamic(light: YYRGBA(94, 78, 146, 0.1), dark: YYRGBA(176, 164, 226, 0.16)),
+        onSoft: Color.yyDynamic(light: YYRGBA(94, 78, 146), dark: YYRGBA(176, 164, 226)),
+        paperAccentLight: Color(yy: YYRGBA(94, 78, 146)),
+        paperAccentDark: Color(yy: YYRGBA(176, 164, 226)),
+        playPlain: Color(yy: YYRGBA(94, 78, 146)),
+        playKami: Color(yy: YYRGBA(94, 78, 146)),
+        playDark: Color(yy: YYRGBA(176, 164, 226)),
+        playKaminight: Color(yy: YYRGBA(176, 164, 226)),
+        playSage: Color(yy: YYRGBA(94, 78, 146))
+    )
+    public static let all: [YYTint] = [.pine, .tea, .moss, .dai]
     /// The tint chosen in 设置 · 外观 (`appearance.tint`), or the default.
     public static var standard: YYTint {
         let chosen = UserDefaults.standard.string(forKey: "appearance.tint")
-        return all.first { $0.id == chosen } ?? .blue
+        return all.first { $0.id == chosen } ?? .pine
     }
 }
 

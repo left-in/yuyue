@@ -13,14 +13,16 @@ struct MacWordsView: View {
     let library: Library
     @Environment(\.openWindow) private var openWindow
     @AppStorage("words.byBook") private var byBook = false
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    @AppStorage("appearance.tint") private var tintID = YYTint.pine.id
     @State private var words: [VocabWord] = []
     @State private var counts: [String: WordCount] = [:]
     @State private var chapters: [String: BookDetail] = [:]
     @State private var showKnown = false
     @State private var export: ExportFile?
-    @State private var speaker = AVSpeechSynthesizer()
-    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @State private var voice = WordVoice()
+    /// 掌握了 just pressed: the button turns the theme colour for a moment before the word moves.
+    @State private var justKnown: Set<String> = []
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .pine }
 
     private var learning: [VocabWord] { words.filter { !$0.known } }
     private var known: [VocabWord] { words.filter(\.known) }
@@ -155,7 +157,7 @@ struct MacWordsView: View {
                 .foregroundStyle(on ? tint.onBlack : YYColor.t2)
                 .padding(.horizontal, 13).frame(height: 28)
                 .background(on ? AnyShapeStyle(tint.black) : AnyShapeStyle(YYColor.card), in: .capsule)
-                .overlay(Capsule().strokeBorder(on ? .clear : YYColor.line))
+                .overlay(Capsule().strokeBorder(on ? tint.edge : YYColor.line, lineWidth: on ? 0.5 : 1))
         }
         .buttonStyle(.plain)
     }
@@ -217,9 +219,15 @@ struct MacWordsView: View {
                     Text(p).font(.yy(size: 12)).foregroundStyle(YYColor.t2)
                 }
                 Spacer(minLength: 8)
+                let speaking = voice.word == w.word
                 Button { say(w) } label: {
-                    Image(systemName: "speaker.wave.2").font(.yy(size: 12, weight: .medium)).foregroundStyle(YYColor.t1)
-                        .frame(width: 28, height: 28).background(YYColor.inset, in: .circle)
+                    Image(systemName: "speaker.wave.2").font(.yy(size: 12, weight: .medium))
+                        .foregroundStyle(speaking ? tint.accent : YYColor.t1)
+                        .symbolEffect(.variableColor.iterative, options: .repeating, isActive: speaking)
+                        .frame(width: 28, height: 28)
+                        .background(speaking ? tint.black : YYColor.inset, in: .circle)
+                        .overlay(Circle().strokeBorder(speaking ? tint.edge : .clear, lineWidth: 0.5))
+                        .animation(.easeOut(duration: 0.15), value: speaking)
                 }
                 .buttonStyle(.plain)
                 .help("读一遍")
@@ -247,10 +255,14 @@ struct MacWordsView: View {
                     }
                 }
                 Spacer()
-                Button { setKnown(w, !w.known) } label: {
+                let done = justKnown.contains(w.word)
+                Button { press(w) } label: {
                     Label(w.known ? String(localized: "再学一遍") : String(localized: "掌握了"), systemImage: w.known ? "arrow.uturn.backward" : "checkmark")
+                        .symbolEffect(.bounce, value: done)
                 }
-                .buttonStyle(CardButton(filled: false))
+                .buttonStyle(CardButton(filled: done))
+                .scaleEffect(done ? 1.06 : 1)
+                .animation(.spring(response: 0.3, dampingFraction: 0.55), value: done)
                 .help(w.known ? String(localized: "放回在学，书里重新标出来") : String(localized: "书里不再标它"))
             }
             .padding(.top, 11)
@@ -272,6 +284,19 @@ struct MacWordsView: View {
         }
     }
 
+    /// 掌握了 lights up in the theme colour and its tick bounces, then the word moves over;
+    /// 再学一遍 moves it straight back.
+    private func press(_ w: VocabWord) {
+        guard !w.known else { setKnown(w, false); return }
+        guard !justKnown.contains(w.word) else { return }
+        justKnown.insert(w.word)
+        Task {
+            try? await Task.sleep(for: .milliseconds(550))
+            withAnimation(.snappy) { setKnown(w, true) }
+            justKnown.remove(w.word)
+        }
+    }
+
     private func setKnown(_ w: VocabWord, _ on: Bool) {
         try? library.core.setWordKnown(word: w.word, known: on)
         NotificationCenter.default.post(name: .vocabChanged, object: nil)
@@ -284,11 +309,7 @@ struct MacWordsView: View {
     }
 
     private func say(_ w: VocabWord) {
-        speaker.stopSpeaking(at: .immediate)
-        let u = AVSpeechUtterance(string: w.word)
-        u.voice = ForeignPrefs.voice(for: chapters[w.book]?.summary.language)
-        u.rate = AVSpeechUtteranceDefaultSpeechRate * 0.9
-        speaker.speak(u)
+        voice.say(w.word, voice: ForeignPrefs.voice(for: chapters[w.book]?.summary.language))
     }
 
     private var empty: some View {
@@ -331,6 +352,47 @@ private struct ExportFile: FileDocument {
 
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
         FileWrapper(regularFileWithContents: Data(text.utf8))
+    }
+}
+
+/// Reads one word aloud and remembers which, so its speaker button can show it's playing
+/// until the voice finishes or is cut off.
+@MainActor @Observable
+private final class WordVoice: NSObject, AVSpeechSynthesizerDelegate {
+    private(set) var word: String?
+    @ObservationIgnored private var current: AVSpeechUtterance?
+    @ObservationIgnored private let synthesizer = AVSpeechSynthesizer()
+
+    override init() {
+        super.init()
+        synthesizer.delegate = self
+    }
+
+    func say(_ text: String, voice: AVSpeechSynthesisVoice?) {
+        synthesizer.stopSpeaking(at: .immediate)
+        let u = AVSpeechUtterance(string: text)
+        u.voice = voice
+        u.rate = AVSpeechUtteranceDefaultSpeechRate * 0.9
+        current = u
+        word = text
+        synthesizer.speak(u)
+    }
+
+    /// Only the reading still current clears the button; an older one cut off by a new press doesn't.
+    private func ended(_ u: AVSpeechUtterance) {
+        guard u === current else { return }
+        current = nil
+        word = nil
+    }
+
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        nonisolated(unsafe) let u = utterance
+        Task { @MainActor in self.ended(u) }
+    }
+
+    nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        nonisolated(unsafe) let u = utterance
+        Task { @MainActor in self.ended(u) }
     }
 }
 #endif

@@ -37,7 +37,10 @@ final class ReaderModel {
     var listenOnly = false
     /// 沉浸阅读: only the words on the page.
     var immersive = false {
-        didSet { applyImmersive() }
+        didSet {
+            barsAway = false
+            applyImmersive()
+        }
     }
 
     private func applyImmersive() {
@@ -51,7 +54,12 @@ final class ReaderModel {
     private(set) var section: UInt32?
     private(set) var page = 0
     private(set) var pageCount = 1
-    var chromeShown = false
+    var chromeShown = false {
+        didSet { if chromeShown { barsAway = false } }
+    }
+    /// Scrolling down the page sent the capsule away, and the top bar if it was up.
+    private(set) var barsAway = false
+    private var chromeComesBack = false
     var tocShown = false
     var settingsShown = false
     /// 替换规则, from 更多 or the menu bar.
@@ -628,7 +636,13 @@ final class ReaderModel {
 extension ReaderModel: ReaderPagerDelegate {
     func pagerMoved(_ pager: ReaderPager) {
         guard let current = pager.current, let layout = current.layout else { return }
-        if section != current.section { tick() }
+        if section != current.section {
+            tick()
+            // A chapter too short to scroll could not bring the capsule back.
+            #if os(iOS)
+            self.pager(pager, barsAway: false)
+            #endif
+        }
         section = current.section
         page = current.page
         pageCount = layout.pageCount
@@ -696,6 +710,21 @@ extension ReaderModel: ReaderPagerDelegate {
         chromeShown = true
         #endif
     }
+
+    #if os(iOS)
+    func pager(_ pager: ReaderPager, barsAway away: Bool) {
+        guard !searchShown, away != barsAway else { return }
+        if away {
+            chromeComesBack = chromeShown && !immersive
+            chromeShown = false
+            barsAway = true
+        } else {
+            barsAway = false
+            if chromeComesBack { chromeShown = true }
+            chromeComesBack = false
+        }
+    }
+    #endif
 
     func pager(_ pager: ReaderPager, selected m: ReaderMessage) {
         guard let section = pager.current?.section, let start = m.start, let end = m.end,
