@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 替换规则 (prototype R10): this book's rules and the ones for every book, each saying what
+/// 替换规则: this book's rules and the ones for every book, each saying what
 /// becomes what, marked 正则 and 只改朗读, with a switch to turn one off. They run from the top
 /// down and can be dragged into another order. A book open in a window follows at once.
 struct ReplaceRulesView: View {
@@ -18,7 +18,7 @@ struct ReplaceRulesView: View {
     @State private var editing: Editing?
     @State private var commonShown = false
     @State private var failure: String?
-    /// U3: the rules just deleted, for 撤销 a few seconds.
+    /// The rules just deleted, for 撤销 a few seconds.
     @State private var removed: [ReplaceRule] = []
     @State private var removedToken = UUID()
 
@@ -272,7 +272,7 @@ struct ReplaceRulesView: View {
     }
 }
 
-/// `.v-rd-rule`: what is found, an arrow, what it becomes (or 删掉), its tags and its switch.
+/// What is found, an arrow, what it becomes (or 删掉), its tags and its switch.
 /// A rule turned off goes grey.
 private struct RuleRow: View {
     let rule: ReplaceRule
@@ -314,7 +314,7 @@ private struct RuleRow: View {
     }
 }
 
-/// 编辑一条规则 (prototype R11): 查找, 替换为, the 正则 switch, 改哪里 and 用于, and underneath a
+/// 编辑一条规则: 查找, 替换为, the 正则 switch, 改哪里 and 用于, and underneath a
 /// preview that follows the typing: how many places in this book, the first one before and after.
 struct ReplaceRuleEditor: View {
     let core: YuyueCore
@@ -416,7 +416,7 @@ struct ReplaceRuleEditor: View {
 
     // MARK: Preview
 
-    /// `.v-rd-pv`: how many places in this book, and the first one before and after.
+    /// How many places in this book, and the first one before and after.
     private var previewCard: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {

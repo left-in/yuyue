@@ -113,7 +113,7 @@ pub struct BookSummary {
     pub finished_at: Option<i64>,
     /// 0–1, from the most recent position on any device.
     pub progress: f64,
-    /// 想读 / 在读 / 读完, kept by the app (FEATURES §1).
+    /// 想读 / 在读 / 读完, kept by the app.
     pub status: ReadingStatus,
     /// Ids of the collections the book is in.
     pub collections: Vec<String>,

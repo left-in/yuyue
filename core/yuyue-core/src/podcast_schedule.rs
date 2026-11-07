@@ -1,4 +1,4 @@
-//! 到点自己出新一集 (播客开发方案 §3.4, 第二期 6): when a show's next episode is due, and on
+//! 到点自己出新一集: when a show's next episode is due, and on
 //! which device. A show is written by one device only (`Show::device`, by default the one it was
 //! made on), so two don't write the same episode; the others get the script through sync.
 //!

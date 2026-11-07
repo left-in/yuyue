@@ -69,7 +69,7 @@ private class NoteHit(val book: BookSummary, val mark: Mark, val chapter: String
 
 private enum class Scope { All, Books, Lines, Notes, Words }
 
-/** 搜索 · 问 on the phone (prototype 搜索结果), as on iPhone: book names, every book's own
+/** 搜索 · 问 on the phone, as on iPhone: book names, every book's own
  *  sentences, highlights and thoughts, and 生词, looked for at once; chips keep one kind. The
  *  first row always hands the words to 书伴. A tap goes to the page. */
 @Composable
@@ -231,7 +231,7 @@ private fun Chip(title: String, count: Int?, on: Boolean, onClick: () -> Unit) {
     }
 }
 
-/** `.v-fx-ask`: the row that's always first, handing the words to 书伴. */
+/** The row that's always first, handing the words to 书伴. */
 @Composable
 private fun AskCard(q: String, book: BookSummary, onClick: () -> Unit) {
     val tint = YY.tint

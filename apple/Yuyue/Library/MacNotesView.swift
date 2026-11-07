@@ -2,7 +2,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 笔记 in the shelf window (prototype 笔记 · 按时间 / 按书): every book's highlights and thoughts.
+/// 笔记 in the shelf window: every book's highlights and thoughts.
 /// By day, newest first; or a column of books with the chosen one's notes in book order. The dots
 /// show one colour only; 导出 takes what is shown. Double-click goes back to the page.
 struct MacNotesView: View {
@@ -46,7 +46,7 @@ struct MacNotesView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // `.v-mac-hd.v-ms-hd`: 64 high, the title in the middle; `.v-ms-mn` 22 in, 28 on the right.
+            // 64 high, the title in the middle; the list 22 in, 28 on the right.
             header
                 // The title and the line beside it share a baseline, which lifts the title: down 4.
                 .frame(height: 56)
@@ -209,7 +209,7 @@ struct MacNotesView: View {
         }
     }
 
-    /// `.v-ms-fl .v-chip`: the name, then the count in grey.
+    /// The name, then the count in grey.
     private func chip(_ value: Only, _ name: String?, _ count: Int, dot: MarkStyle? = nil) -> some View {
         let on = only == value
         return Button { only = on && value != .all ? .all : value } label: {
@@ -285,7 +285,7 @@ struct MacNotesView: View {
                             }
                         }
                     }
-                    // M6: a note taken out closes up; the ones under it move up into its place.
+                    // A note taken out closes up; the ones under it move up into its place.
                     .animation(YYMotion.layout, value: day.items.map(\.1.id))
                 }
             }
@@ -397,7 +397,7 @@ struct MacNotesView: View {
         }
     }
 
-    /// `.v-btn.o.sm`: a small white button in the book's heading.
+    /// A small white button in the book's heading.
     private func smallButton(_ title: String, _ icon: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Label(title, systemImage: icon)

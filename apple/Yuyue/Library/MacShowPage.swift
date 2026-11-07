@@ -2,7 +2,7 @@ import SwiftUI
 import YuyueCore
 #if os(macOS)
 
-/// 节目页 (docs/design/播客.html · 节目): laid out as 小宇宙 lays a show out — the big name, the
+/// 节目页: the big name, the
 /// blurb, who hosts, the cover on the right — but the blurb is what the reader told the editor,
 /// the notice is when the next one comes and what's come in for it, and the big button writes
 /// one now instead of subscribing. Below, where it reads from, then every episode.

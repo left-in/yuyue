@@ -24,7 +24,7 @@ done
 
 # shellcheck disable=SC1091
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
-: "${ANDROID_HOME:=/Volumes/T2214/android-sdk}"
+: "${ANDROID_HOME:=$HOME/Library/Android/sdk}"
 if [ -z "${ANDROID_NDK_HOME:-}" ]; then
   ANDROID_NDK_HOME="$(ls -d "$ANDROID_HOME"/ndk/* | sort -V | tail -1)"
 fi

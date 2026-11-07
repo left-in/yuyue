@@ -139,7 +139,7 @@ struct PhoneMDictList: View {
 
     private func reload() { list = (try? core.dictionaries()) ?? [] }
 
-    /// U3: 往上挪 / 往下挪 — a word is looked up in this order.
+    /// 往上挪 / 往下挪 — a word is looked up in this order.
     private func move(_ d: DictionaryInfo, by step: Int) {
         var ids = list.map(\.id)
         guard let i = ids.firstIndex(of: d.id), ids.indices.contains(i + step) else { return }

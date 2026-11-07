@@ -160,7 +160,7 @@ struct CollectionWall: View {
         }
     }
 
-    /// `.v-cw`: three covers fanned back from the front one, the pin over the top right.
+    /// Three covers fanned back from the front one, the pin over the top right.
     private func stack(_ c: BookCollection) -> some View {
         let books = library.books.filter { $0.collections.contains(c.id) }.sorted { ($0.openedAt ?? 0) > ($1.openedAt ?? 0) }
         let isPinned = pinned.contains(c.id)

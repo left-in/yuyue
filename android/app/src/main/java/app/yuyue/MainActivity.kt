@@ -178,7 +178,7 @@ fun Root(library: Library) {
         CompositionLocalProvider(LocalTabBarHeight provides barHeight) {
             Box(Modifier.fillMaxSize().hazeSource(haze)) {
                 when (val page = pages.lastOrNull()) {
-                    // M8: one tab fades into the next instead of being swapped at once.
+                    // One tab fades into the next instead of being swapped at once.
                     null -> androidx.compose.animation.Crossfade(tab, animationSpec = app.yuyue.design.YYMotion.standard(), label = "tab") { shown ->
                         when (shown) {
                             Tab.Shelf -> ShelfScreen(library, openWifi = { pages += Page.Wifi }, openRemote = { pages += Page.Remote }, openWatched = { pages += Page.Watched })
@@ -243,7 +243,7 @@ fun Root(library: Library) {
  *  the last row scrolls clear of it. */
 val LocalTabBarHeight = staticCompositionLocalOf { 0.dp }
 
-/** The tab bar flush with the bottom edge, the prototype's Android 底栏 (`.v-tabs`): paper colour
+/** The tab bar flush with the bottom edge: paper colour
  *  at 88% over a blur of the page, a hairline on top; four tabs with icon and word, the one that
  *  is on filled and in the theme's fill colour (墨蓝 by default, ink under 墨黑). While a book is read aloud the 播放条 sits inside it, on
  *  the same blurred paper, above the tabs. */
@@ -260,7 +260,7 @@ private fun TabBar(tab: Tab, haze: HazeState, playing: @Composable () -> Unit, s
     Column(Modifier.fillMaxWidth().hazeBlur(HazeInput.Sources(haze), style)) {
         Box(Modifier.fillMaxWidth().height(YY.s(0.5f)).background(YY.c.line))
         playing()
-        // The prototype leaves 35px under the tabs, the system's handle included.
+        // 35px under the tabs, the system's handle included.
         val inset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
         Row(
             Modifier.fillMaxWidth().padding(start = YY.s(4), end = YY.s(4), top = YY.s(5), bottom = maxOf(YY.s(35), inset + 7.dp)),
@@ -276,14 +276,14 @@ private fun TabBar(tab: Tab, haze: HazeState, playing: @Composable () -> Unit, s
 
 @Composable
 private fun RowScope.TabItem(icon: ImageVector, iconOn: ImageVector, title: String, on: Boolean, onClick: () -> Unit) {
-    // M8: the colour turns over a moment, and the icon gives a little as it's chosen.
+    // The colour turns over a moment, and the icon gives a little as it's chosen.
     val color by androidx.compose.animation.animateColorAsState(if (on) YY.tint.fill else YY.c.t2, app.yuyue.design.YYMotion.quick(), label = "tab")
     val press = remember { MutableInteractionSource() }
     Column(
         Modifier.weight(1f).height(YY.s(44))
             .selectable(on, interactionSource = press, indication = null, role = androidx.compose.ui.semantics.Role.Tab, onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
-        // 2px in the prototype; Android's line box for the word already adds about 1.6 of it.
+        // 2px wanted; Android's line box for the word already adds about 1.6 of it.
         verticalArrangement = Arrangement.spacedBy(YY.s(0.4f), Alignment.CenterVertically),
     ) {
         androidx.compose.animation.Crossfade(on, animationSpec = app.yuyue.design.YYMotion.quick(), label = "tabIcon") { filled ->
@@ -300,7 +300,7 @@ fun Placeholder(title: String) {
     }
 }
 
-/** The prototype's 播放条 (`.v-acc`) while a book is read aloud with its pages closed: a small card
+/** The 播放条 while a book is read aloud with its pages closed: a small card
  *  over the tab bar with the cover, `背影 · 第一章` and `第 4 / 24 句 · 本章还剩 7 分钟`, ‹ ▶ ›,
  *  and a thin line for the chapter along its bottom. A tap anywhere else goes back to the page. */
 @Composable
@@ -335,7 +335,7 @@ private fun NowPlayingBar(library: Library) {
             app.yuyue.shelf.BookCover(book, Modifier.padding(end = YY.s(6)).size(width = YY.s(24), height = YY.s(36)))
             Column(Modifier.weight(1f)) {
                 Text(if (chapter != null) t("%@ · %@", book.title, chapter) else book.title, style = YY.font(11.5f, FontWeight.SemiBold), color = YY.c.t1, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                // M3: the line rolls up as the voice moves to the next sentence.
+                // The line rolls up as the voice moves to the next sentence.
                 androidx.compose.animation.AnimatedContent(note ?: player.line ?: "", transitionSpec = {
                     (androidx.compose.animation.fadeIn(app.yuyue.design.YYMotion.standard()) + androidx.compose.animation.slideInVertically(app.yuyue.design.YYMotion.standard()) { it / 2 }) togetherWith
                         androidx.compose.animation.fadeOut(app.yuyue.design.YYMotion.exit())
@@ -363,7 +363,7 @@ private fun NowPlayingBar(library: Library) {
     }
 }
 
-/** The 播放条 for an 有声书 (prototype v0.30 C2): −15 s, ▶, +30 s, and the time. */
+/** The 播放条 for an 有声书: −15 s, ▶, +30 s, and the time. */
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
 private fun AudioPlayingBar(library: Library, player: app.yuyue.speech.AudiobookPlayer) {

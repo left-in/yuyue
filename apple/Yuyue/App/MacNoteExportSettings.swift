@@ -2,7 +2,7 @@
 import SwiftUI
 import AppKit
 
-/// 设置 · 笔记导出 (docs/design/设置-书伴朗读笔记导出.html). The middle is one list, Obsidian,
+/// 设置 · 笔记导出. The middle is one list, Obsidian,
 /// Notion, flomo, each with a switch: on, it shows in 笔记 › 导出 › 发到. Choosing one puts it in
 /// the right column: where it writes, when it last got something, 断开; or, not yet connected,
 /// the steps and the fields, checked as soon as what's typed looks right. Under it, a sample of

@@ -209,7 +209,7 @@ fun ReaderScreen(library: Library, bookID: String, close: () -> Unit) {
     }
 }
 
-/** 下拉加书签 (prototype): in the space the page leaves, a bookmark and what letting go does. */
+/** 下拉加书签: in the space the page leaves, a bookmark and what letting go does. */
 @Composable
 private fun PullMark(model: ReaderModel, paper: YYPaper) {
     if (model.pull <= 0f) return
@@ -517,7 +517,7 @@ object VolumeKeys {
     var handler: ((forward: Boolean) -> Boolean)? = null
 }
 
-/** 第一次进阅读器 (prototype): three faint zones — 上一页, 菜单, 下一页 — over the page the first time
+/** 第一次进阅读器: three faint zones — 上一页, 菜单, 下一页 — over the page the first time
  *  a book is opened, gone after three seconds and never shown again. */
 @Composable
 private fun PageTapHint(model: ReaderModel, paper: YYPaper) {

@@ -1,4 +1,4 @@
-// 气泡模式 (docs/design/听书-气泡与有声书.html, B1–B3): a book's dialogue as a chat. Narration
+// 气泡模式: a book's dialogue as a chat. Narration
 // stays a paragraph; each quote becomes a bubble with whoever says it. Short narration that only
 // says who speaks (“宝钗因笑道：”) goes into the line above the bubble instead of a paragraph of
 // its own. A line nobody is sure of is a grey bubble with “?”.

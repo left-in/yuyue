@@ -3,7 +3,7 @@ import ServiceManagement
 import SwiftUI
 import YuyueCore
 
-/// 菜单栏里的语阅 (播客开发方案 §3.4): shows written here at set times need 语阅 running, not its
+/// 菜单栏里的语阅: shows written here at set times need 语阅 running, not its
 /// windows. While there are any, a radio sits in the menu bar: each show's next time or how far
 /// its episode has got, the new episodes to play, and the way back to the shelf. Closing every
 /// window leaves 语阅 running there. (AppKit's status item: SwiftUI's MenuBarExtra put nothing

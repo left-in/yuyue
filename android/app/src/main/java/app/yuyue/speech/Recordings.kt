@@ -23,7 +23,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 /**
- * 听读书 on Android (听书开发方案 §4.3), as on Apple: an 有声书 on the shelf laid against its e-book
+ * 听读书 on Android, as on Apple: an 有声书 on the shelf laid against its e-book
  * (强制对齐), so the e-book can be listened to in the narrator's voice with the ink line
  * following along. What's kept, in `audiobooks/<e-book>/`: which 有声书 it is, the model's output
  * for each of its files (so a stopped job picks up where it was), and `timings.json`, where each
@@ -155,7 +155,7 @@ class Recordings(private val context: Context, private val library: Library) {
     }
 
     /**
-     * 同步 (听书开发方案 §4.3): what another device laid out comes in through the sync log. For
+     * 同步: what another device laid out comes in through the sync log. For
      * every recording on this shelf (each device brings in its own copy; the id says it's the same
      * one), its e-book and where each sentence is are taken in; what was made here before the log
      * kept it goes out. Called when the app starts and after each sync.

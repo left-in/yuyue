@@ -359,7 +359,7 @@
     updatePageInfo();
   });
 
-  // Prototype: left third = previous page, right third = next page, middle = menu. The demo has
+  // Left third = previous page, right third = next page, middle = menu. The demo has
   // no menu, so a tap on a sentence in the middle starts playback there.
   function onTap(m) {
     const r = yy();

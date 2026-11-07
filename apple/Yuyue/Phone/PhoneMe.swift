@@ -5,7 +5,7 @@ import Translation
 import UniformTypeIdentifiers
 import YuyueCore
 
-/// 我的 (prototype 我的): this week's reading and listening on top, the year's totals under it,
+/// 我的: this week's reading and listening on top, the year's totals under it,
 /// then every setting in groups: 同步; 外观; 外文 and 引擎; 存储 and 关于.
 struct PhoneMe: View {
     let library: Library
@@ -134,7 +134,7 @@ struct PhoneMe: View {
         }
     }
 
-    /// `.v-me-set`: one of the five groups of settings.
+    /// One of the five groups of settings.
     private func group<Content: View>(@ViewBuilder _ rows: () -> Content) -> some View {
         YYGroup { rows() }.padding(.bottom, YYUI.s(10))
     }
@@ -177,7 +177,7 @@ struct PhoneMe: View {
 
     // MARK: 这周
 
-    /// `.v-me-wk`: this week's reading and listening, a column a day stacked, and under them the
+    /// This week's reading and listening, a column a day stacked, and under them the
     /// books finished this year, the lines marked and the words kept.
     private var weekCard: some View {
         let days = PhoneStats.Period.week.days(containing: Date())
@@ -220,7 +220,7 @@ struct PhoneMe: View {
         .contentShape(.rect)
     }
 
-    /// `.v-me-n3`: one of the three counts.
+    /// One of the three counts.
     private func tile(_ number: String, _ unit: String, _ label: String) -> some View {
         VStack(spacing: 1) {
             HStack(alignment: .firstTextBaseline, spacing: YYUI.s(2)) {
@@ -233,7 +233,7 @@ struct PhoneMe: View {
     }
 }
 
-/// `.v-me-ch`: seven columns, listening stacked on reading; today's column wider and its label
+/// Seven columns, listening stacked on reading; today's column wider and its label
 /// dark, the days to come empty.
 private struct WeekBars: View {
     let days: [Date]
@@ -289,7 +289,7 @@ private struct WeekBars: View {
     }
 }
 
-/// `.v-me-tt`: "■ 读 5 小时 12 分", the numbers big.
+/// "■ 读 5 小时 12 分", the numbers big.
 fileprivate func periodTotal(_ label: String, _ seconds: Int, _ color: Color) -> some View {
     let m = seconds / 60
     let parts: [(Int, String)] = m < 60 ? [(m, String(localized: "分"))] : m % 60 == 0 ? [(m / 60, String(localized: "小时"))] : [(m / 60, String(localized: "小时")), (m % 60, String(localized: "分"))]
@@ -311,7 +311,7 @@ fileprivate func periodTotal(_ label: String, _ seconds: Int, _ color: Color) ->
 
 // MARK: - 阅读统计
 
-/// 阅读统计 (prototype 阅读统计): by week, month or year, reading and listening apart; the books
+/// 阅读统计: by week, month or year, reading and listening apart; the books
 /// finished; each book's time; and, at the bottom, how the time is counted.
 struct PhoneStats: View {
     let library: Library
@@ -384,7 +384,7 @@ struct PhoneStats: View {
         .onChange(of: period) { anchor = Date() }
     }
 
-    /// `.v-me-mo`: the period, its way back and on, reading and listening, a column a day (a
+    /// The period, its way back and on, reading and listening, a column a day (a
     /// month in a year), and the books finished in it.
     private var periodCard: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -545,7 +545,7 @@ struct PhoneStats: View {
         }
     }
 
-    /// `.v-me-bk`: a book, how far and how long to go, and the time read and listened.
+    /// A book, how far and how long to go, and the time read and listened.
     private func bookRow(_ book: BookSummary, _ read: Int, _ listen: Int) -> some View {
         HStack(spacing: YYUI.s(10)) {
             BookCover(book: book).frame(width: YYUI.s(24))
@@ -563,7 +563,7 @@ struct PhoneStats: View {
         .padding(.vertical, YYUI.s(8))
     }
 
-    /// `.v-me-how`: how the time is counted, on a grey card.
+    /// How the time is counted, on a grey card.
     private var how: some View {
         VStack(alignment: .leading, spacing: 0) {
             Label("怎么算的", systemImage: "info.circle")
@@ -636,7 +636,7 @@ struct PhoneStats: View {
 
 // MARK: - 外观
 
-/// 外观 (prototype 外观): light, dark or the system's; 墨蓝 or 墨黑; and a look at both.
+/// 外观: light, dark or the system's; 墨蓝 or 墨黑; and a look at both.
 struct PhoneAppearance: View {
     @AppStorage(AppAppearance.key) private var mode = AppAppearance.system
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
@@ -682,7 +682,7 @@ struct PhoneAppearance: View {
                     YYRow(title: String(localized: "液态玻璃效果")) { YYSwitch(isOn: $liquid, label: String(localized: "液态玻璃效果")) }
                 }
                 .padding(.top, YYUI.s(16))
-                YYNote(String(localized: "胶囊、播放条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃。"))
+                YYNote(String(localized: "胶囊、播放条这些浮着的东西用系统的液态玻璃；关掉就用毛玻璃。"))
             }
         }
         .navigationTitle("外观")
@@ -696,7 +696,7 @@ struct PhoneAppearance: View {
             .padding(.horizontal, YYUI.s(4)).padding(.bottom, YYUI.s(6))
     }
 
-    /// `.v-me-mi`: a little page in light, dark, or both split down a slant; the chosen one ringed.
+    /// A little page in light, dark, or both split down a slant; the chosen one ringed.
     private func modeTile(_ m: AppAppearance) -> some View {
         let on = m == mode
         let light = (bg: Color(yy: YYRGBA(246, 245, 243)), bar: Color.white, title: Color(yy: YYRGBA(42, 43, 46)).opacity(0.75))
@@ -760,7 +760,7 @@ struct PhoneAppearance: View {
         }
     }
 
-    /// `.v-me-pv`: a book with its progress and 接着读, a switch, the shelf's chips, and the
+    /// A book with its progress and 接着读, a switch, the shelf's chips, and the
     /// reading capsule on a page — all in the chosen colour.
     private var preview: some View {
         VStack(spacing: 0) {
@@ -814,7 +814,7 @@ struct PhoneAppearance: View {
         .allowsHitTesting(true)
     }
 
-    /// `.v-me-pvp`: the reading capsule on a plain page; only its play button takes the colour.
+    /// The reading capsule on a plain page; only its play button takes the colour.
     private var pagePreview: some View {
         let paper = scheme == .dark ? YYPaper.dark : YYPaper.plain
         return ZStack(alignment: .bottom) {
@@ -1011,7 +1011,7 @@ private struct PhoneVoiceSection: View {
 
 // MARK: - 外文阅读
 
-/// 外文阅读 (prototype 外文阅读设置): saying a word aloud, 难词注释, the 生词 marks, and the
+/// 外文阅读: saying a word aloud, 难词注释, the 生词 marks, and the
 /// system's offline translation.
 struct PhoneForeign: View {
     let library: Library
@@ -1110,7 +1110,7 @@ struct PhoneForeign: View {
             .padding(.horizontal, YYUI.s(4)).padding(.bottom, YYUI.s(6))
     }
 
-    /// `.v-fx-pv`: a line of Austen with the gloss over the hard word, changing as the settings do.
+    /// A line of Austen with the gloss over the hard word, changing as the settings do.
     private var glossPreview: some View {
         VStack(alignment: .leading, spacing: YYUI.s(4)) {
             Text("预览").font(YYUI.font(10)).foregroundStyle(YYColor.t3).padding(.top, YYUI.s(6))
@@ -1157,7 +1157,7 @@ struct PhoneForeign: View {
 
 // MARK: - 引擎
 
-/// 引擎 (prototype 引擎): who answers as 书伴, which voice reads, what translates. The device's own
+/// 引擎: who answers as 书伴, which voice reads, what translates. The device's own
 /// by default; or the user's own key, kept in the keychain.
 struct PhoneEngines: View {
     let library: Library
@@ -1219,7 +1219,7 @@ struct PhoneEngines: View {
         .task { await choice.list() }
     }
 
-    /// nanobot's ProviderPicker: those to choose from, a line, 配置 the one in use, 添加服务商.
+    /// Those to choose from, a line, 配置 the one in use, 添加服务商.
     private var providerMenu: some View {
         Menu {
             ForEach(choice.options) { p in
@@ -1283,7 +1283,7 @@ struct PhoneEngines: View {
         .padding(.horizontal, YYUI.s(4)).padding(.bottom, YYUI.s(6))
     }
 
-    /// `.v-r2` in `.v-me-eng`: the engine in use, a grey line, the tick.
+    /// The engine in use, a grey line, the tick.
     private func inUse(_ title: String, _ detail: String) -> some View {
         HStack(spacing: YYUI.s(10)) {
             VStack(alignment: .leading, spacing: YYUI.s(1)) {
@@ -1308,7 +1308,7 @@ struct PhoneEngines: View {
 
 // MARK: - 同步
 
-/// 同步 (prototype 同步): how it is going and each device's last book on top, the three ways in the
+/// 同步: how it is going and each device's last book on top, the three ways in the
 /// middle, what goes along below.
 struct PhoneSync: View {
     let library: Library
@@ -1390,7 +1390,7 @@ struct PhoneSync: View {
         }
     }
 
-    /// `.v-sy-st`: how it went and when, 立即同步, then every device and how long since it synced.
+    /// How it went and when, 立即同步, then every device and how long since it synced.
     /// Red when it failed; for WebDAV a tap goes to the connection check.
     private var statusCard: some View {
         VStack(spacing: 0) {
@@ -1457,7 +1457,7 @@ struct PhoneSync: View {
             .buttonStyle(.plain)
     }
 
-    /// `.v-r2` in `.v-sy-way`: a small icon tile, the name and a grey line, a tick on the one in use.
+    /// A small icon tile, the name and a grey line, a tick on the one in use.
     private func methodLabel(_ m: Sync.Method, _ symbol: String, _ title: String, _ detail: String) -> some View {
         let on = sync.method == m && sync.isOn
         return HStack(spacing: YYUI.s(10)) {
@@ -1500,7 +1500,7 @@ struct PhoneSync: View {
         }
     }
 
-    /// `.v-sy-bdg`: a tick on green, a turning arrow, or ! on red.
+    /// A tick on green, a turning arrow, or ! on red.
     @ViewBuilder private var statusIcon: some View {
         let (symbol, color): (String, Color) = switch sync.state {
         case .syncing: ("arrow.triangle.2.circlepath", tint.accent)
@@ -1560,7 +1560,7 @@ struct PhoneSync: View {
     }
 }
 
-/// WebDAV (prototype 连接诊断): 地址, 账号, 密码, 文件夹; 连接 runs the check step by step and
+/// WebDAV: 地址, 账号, 密码, 文件夹; 连接 runs the check step by step and
 /// keeps the account once every step passes.
 private struct PhoneWebDAV: View {
     let sync: Sync
@@ -1705,7 +1705,7 @@ struct PhoneStorage: View {
         .sheet(item: $info) { PhoneBookInfo(library: library, book: $0) }
     }
 
-    /// `.v-sy-use`: the total, what is left on the device, one bar split by kind and its legend.
+    /// The total, what is left on the device, one bar split by kind and its legend.
     private var useCard: some View {
         let parts = parts
         let total = max(1, parts.reduce(0) { $0 + $1.1 })
@@ -1757,12 +1757,12 @@ struct PhoneStorage: View {
                 (String(localized: "其他"), max(0, u.total - u.bookBytes - u.deletedBytes))]
     }
 
-    /// The prototype's four greys, from the ink down.
+    /// The four greys, from the ink down.
     private func shade(_ i: Int) -> Color {
         [YYColor.t1, YYColor.t1.opacity(0.62), YYColor.t1.opacity(0.36), YYColor.t1.opacity(0.21)][min(i, 3)]
     }
 
-    /// `.v-sy-bk`: cover, title and kind, the size in ink.
+    /// Cover, title and kind, the size in ink.
     private func bookRow(_ b: StorageUsage.Book) -> some View {
         let book = library.books.first { $0.id == b.id }
         return Button { info = book } label: {
@@ -1820,7 +1820,7 @@ struct PhoneStorage: View {
 
 // MARK: - 关于
 
-/// 关于 (prototype 关于): free, no server, nothing collected; the licences, privacy, and feedback
+/// 关于: free, no server, nothing collected; the licences, privacy, and feedback
 /// by mail, as there is no server to send it to.
 struct PhoneAbout: View {
     private var version: String {
@@ -1832,7 +1832,7 @@ struct PhoneAbout: View {
     var body: some View {
         YYPage {
             VStack(spacing: 0) {
-                // `.v-me-logo`: 阅 on paper, the blue rule under it.
+                // 阅 on paper, the blue rule under it.
                 Text("阅")
                     .font(YYUI.font(30, .bold, design: .serif))
                     .foregroundStyle(Color(yy: YYRGBA(28, 29, 32)))

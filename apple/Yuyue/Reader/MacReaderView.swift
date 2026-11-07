@@ -3,7 +3,7 @@ import SwiftUI
 import Translation
 import YuyueCore
 
-/// The book's own window (FEATURES §5): the paper fills it, the tools sit in the toolbar, the
+/// The book's own window: the paper fills it, the tools sit in the toolbar, the
 /// reading capsule floats at the bottom and a panel on the right holds the contents, notes or
 /// search results. Closing the panel puts the text back in the middle.
 struct MacReaderView: View {
@@ -65,7 +65,7 @@ struct MacReaderView: View {
         .toolbar(model.immersive ? .hidden : .visible, for: .windowToolbar)
         .toolbar(removing: .title)
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-        // `.v-mac-tb`: 18 in, in the middle of the 58-high bar.
+        // 18 in, in the middle of the 58-high bar.
         .trafficLights(CGPoint(x: 24, y: 29))
         .navigationTitle(model.detail?.summary.title ?? String(localized: "读书"))
         .focusedSceneValue(\.reader, model)
@@ -400,8 +400,8 @@ struct MacReaderView: View {
 
     // MARK: The tool capsule
 
-    /// `.v-mac-tools`: what's open is in the paper's theme colour on a soft pad; the capsule is
-    /// Liquid Glass or, as the prototype draws it, frosted.
+    /// What's open is in the paper's theme colour on a soft pad; the capsule is
+    /// Liquid Glass or frosted.
     private var tools: some View {
         HStack(spacing: 2) {
             tool(model.isPlaying ? String(localized: "暂停") : String(localized: "朗读"), model.isPlaying ? "pause.fill" : "play.fill",
@@ -545,7 +545,7 @@ struct MacReaderView: View {
                     Text(model.sentenceCount > 0 ? String(localized: "第 \(min(model.sentence + 1, model.sentenceCount)) / \(model.sentenceCount) 句") : (model.chapterTitle ?? ""))
                         .font(.yy(size: 12, weight: .semibold))
                         .foregroundStyle(paper.ink)
-                        // M3: the sentence number rolls on as the voice reads.
+                        // The sentence number rolls on as the voice reads.
                         .contentTransition(.numericText(value: Double(model.sentence)))
                         .animation(YYMotion.standard, value: model.sentence)
                     Text(model.capsuleNote)
@@ -572,7 +572,7 @@ struct MacReaderView: View {
             .accessibilityLabel(model.player?.spot != nil ? Text("上一句") : Text("上一页"))
             Button { model.togglePlay() } label: {
                 Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
-                    // M4: ▶ and ❚❚ turn into each other.
+                    // ▶ and ❚❚ turn into each other.
                     .contentTransition(.symbolEffect(.replace))
                     .animation(YYMotion.quick, value: model.isPlaying)
                     .font(.yy(size: 14, weight: .semibold))
@@ -688,7 +688,7 @@ struct MacReaderView: View {
             items.append(ActionMenuItem(String(localized: "问书伴"), symbol: "sparkle") { ask(selection.text) })
             items.append(ActionMenuItem(String(localized: "翻译"), symbol: "translate") { translate(selection.text) })
             items.append(ActionMenuItem(String(localized: "复制"), symbol: "doc.on.doc", key: "c", modifiers: .command) { model.copySelection() })
-            // Not on the card (`.v-mr-act` has five); here instead.
+            // Not on the card (it has five); here instead.
             items.append(ActionMenuItem(String(localized: "分享…"), symbol: "square.and.arrow.up") { share(selection.text, note: nil, section: selection.section) })
             return items
         }
@@ -883,7 +883,6 @@ private struct TocPanel: View {
         // A book without a table of contents is listed by 节 (第 1 节…), and counted the same way.
         let unit = model.detail?.toc.isEmpty == true ? String(localized: "节")
             : chapters.compactMap { ChapterTitle($0.title).number?.last }.first.map(String.init) ?? String(localized: "章")
-        // `.v-mr-bk` / `.v-mr-bp`
         return VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 11) {
                 if let book {
@@ -943,7 +942,7 @@ private struct TocPanel: View {
                 .padding(.bottom, 12)
             }
             .scrollIndicators(.never)
-            // `.v-mr-chs` reaches 6 past the panel's padding (on the scroll view, which clips).
+            // Reaches 6 past the panel's padding (on the scroll view, which clips).
             .padding(.horizontal, -6)
             .onAppear {
                 if let currentID { proxy.scrollTo(currentID, anchor: .center) }
@@ -956,7 +955,7 @@ private struct TocPanel: View {
         let past = (currentID ?? -1) > c.id
         let t = ChapterTitle(c.title)
         return Button { model.go(to: c.item) } label: {
-            // `.v-mr-ch`: only the chapter being read wraps; the rest stay one line.
+            // Only the chapter being read wraps; the rest stay one line.
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 if let number = t.number {
                     Text(number)
@@ -1285,18 +1284,6 @@ private struct NoteList: View {
             Button("删除划线", role: .destructive) { model.deleteMark(mark) }
         }
     }
-
-    private func styled(_ mark: Mark) -> Text {
-        var text = AttributedString(mark.text)
-        switch mark.style {
-        case .yellow, .blue, .pink: text.backgroundColor = mark.style.fill
-        case .wave:
-            text.underlineStyle = Text.LineStyle(pattern: .dot, color: YYColor.hlR)
-        case .underline: text.underlineStyle = .single
-        case .dotted: text.underlineStyle = Text.LineStyle(pattern: .dot)
-        }
-        return Text(text)
-    }
 }
 
 /// 搜索结果: every hit with its context, by page; the current one filled.
@@ -1343,7 +1330,6 @@ private struct SearchPanel: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 0) {
-                            // `.v-mr-rg` / `.v-mr-r`
                             // Pages and hits are both numbers: their ids are kept apart, or a page
                             // and the hit with the same number land in each other's place.
                             ForEach(Array(groups.enumerated()), id: \.element.id) { g, group in

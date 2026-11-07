@@ -11,21 +11,18 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.IntOffset
 
 /**
- * 动效 (docs/design/动效与体验提案.html · M0), as on Apple: every animation picks one of these.
+ * 动效, as on Apple: every animation picks one of these.
  * Short, eased out, no bounce. Compose already follows the system's 移除动画 / animator scale, so
  * nothing here checks it.
  */
@@ -52,15 +49,9 @@ object YYMotion {
     fun barOut(toTop: Boolean): ExitTransition =
         fadeOut(exit()) + slideOutVertically(exit()) { if (toTop) -it / 3 else it / 3 }
 
-    /** A card growing out of what opened it. */
-    fun popIn(origin: TransformOrigin = TransformOrigin.Center): EnterTransition =
-        fadeIn(standard()) + scaleIn(standard(), initialScale = 0.94f, transformOrigin = origin)
-
-    fun popOut(origin: TransformOrigin = TransformOrigin.Center): ExitTransition =
-        fadeOut(exit()) + scaleOut(exit(), targetScale = 0.97f, transformOrigin = origin)
 }
 
-/** M7: gives a little while pressed (0.98), back as it's let go. Pass the same interaction
+/** Gives a little while pressed (0.98), back as it's let go. Pass the same interaction
  *  source as the clickable. */
 @Composable
 fun Modifier.pressScale(source: MutableInteractionSource, scale: Float = 0.98f): Modifier {

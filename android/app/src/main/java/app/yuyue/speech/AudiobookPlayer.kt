@@ -29,7 +29,7 @@ import java.time.LocalDate
 import kotlin.math.roundToLong
 
 /**
- * 有声书 listened to on its own (prototype v0.30 C3–C5), as on Apple: the recording's files one
+ * 有声书 listened to on its own, as on Apple: the recording's files one
  * after another in ExoPlayer, by time. A position is a chapter and the milliseconds into it, saved
  * like any book's, so progress, 书签 and 听了多久 follow the book to other devices.
  *

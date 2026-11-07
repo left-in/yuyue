@@ -31,5 +31,9 @@ android/keystore.properties
 *.jks
 *.keystore
 .alma-snapshots
-/prototypes/
+/mockups/
 /build/window-catalog/
+
+# Not for the public repository
+.agents/
+skills-lock.json

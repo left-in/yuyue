@@ -7,7 +7,7 @@ struct AlignTarget: Codable, Hashable {
     let at: Int
 }
 
-/// 有声书 · Mac 上微调 (A5): a window like the reader's. The chapter's words on the paper with
+/// 有声书 · Mac 上微调: a window like the reader's. The chapter's words on the paper with
 /// the stretch to look at framed in amber, a timeline floating below that lays the sentences
 /// over the recording, and a panel on the right to move them. 空格 试听, ← → 0.1 秒.
 struct AlignCheckWindow: View {
@@ -72,7 +72,7 @@ private struct AlignCheck: View {
         }
         .background(paper.bg)
         .environment(\.colorScheme, .light)
-        // `.v-mac-tb`, as in the reading window.
+        // As in the reading window.
         .trafficLights(CGPoint(x: 24, y: 29))
         .navigationTitle("\(bookTitle) · 对齐检查")
         .navigationSubtitle("第 \(chapter) 章 · \(timings.sections.count - timings.troubled.count) 章对好了\(left > 0 ? String(localized: "，\(left) 处要看一下") : "")")
@@ -204,7 +204,7 @@ private struct AlignCheck: View {
         }
     }
 
-    /// `.v-al-sn`: one tint on every other sentence, the current one in the theme's blue; the
+    /// One tint on every other sentence, the current one in the theme's blue; the
     /// rest can be clicked to look at them.
     private func prose(_ list: [String], _ range: Range<Int>) -> some View {
         var text = AttributedString()
@@ -234,7 +234,7 @@ private struct AlignCheck: View {
 
     // MARK: The timeline
 
-    /// `.v-al-tl`: the sentences as blocks over the recording, a few seconds either side.
+    /// The sentences as blocks over the recording, a few seconds either side.
     private var timeline: some View {
         VStack(spacing: 0) {
             GeometryReader { g in
@@ -268,7 +268,7 @@ private struct AlignCheck: View {
                     }
                     .frame(width: w, height: 46)
                     .offset(x: 44, y: 58)
-                    // .v-al-ph: where this sentence begins.
+                    // Where this sentence begins.
                     let px = x(sentence.start)
                     if px >= 44, px <= 44 + w {
                         Rectangle().fill(paper.paperAccent).frame(width: 1.5, height: 98).offset(x: px - 0.75, y: 6)
@@ -390,7 +390,7 @@ private struct AlignCheck: View {
         .help("换一章")
     }
 
-    /// `.v-al-map`: a square for each chapter, amber where something is left to look at.
+    /// A square for each chapter, amber where something is left to look at.
     private var map: some View {
         let troubled = timings.troubled
         return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 12), spacing: 4) {
@@ -442,7 +442,7 @@ private struct AlignCheck: View {
         .overlay(alignment: .bottom) { Rectangle().fill(YYColor.line).frame(height: 0.5) }
     }
 
-    /// `.v-al-tm`: `开始 0:15.7 −0.1 +0.1`.
+    /// `开始 0:15.7 −0.1 +0.1`.
     private func time(_ label: String, _ t: Double, nudge: @escaping (Double) -> Void) -> some View {
         HStack(spacing: 6) {
             Text(label).font(.yy(size: 11)).foregroundStyle(YYColor.t2).frame(width: 30, alignment: .leading)

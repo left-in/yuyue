@@ -151,7 +151,7 @@ Posted with `window.webkit.messageHandlers.yy.postMessage(obj)` on Apple and
 
 ## 7. The ink line (墨线)
 
-From the prototype: a 1.5px line in `--p-accent` under the sentence being read, growing from the
+A 1.5px line in `--p-accent` under the sentence being read, growing from the
 start of the sentence to its end over the sentence's audio duration (`.s { padding-bottom: 2px }`).
 Fragments of one sentence grow one after another, each for its share of the characters.
 `setPlaying(false)` freezes it. With `data-yy-motion="reduced"` the full line is drawn at once

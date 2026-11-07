@@ -1,7 +1,7 @@
 import Foundation
 import Security
 
-/// 连接检查 (prototype 连接诊断): the server, its certificate, the account, then the folder, one
+/// 连接检查: the server, its certificate, the account, then the folder, one
 /// after another. It stops at the first that fails and says how to put it right; the ones after
 /// it are marked as not tested, so they don't look broken too.
 struct WebDAVCheck: Equatable {

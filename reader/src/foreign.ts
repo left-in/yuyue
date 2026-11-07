@@ -1,4 +1,4 @@
-// 外文原著 (FEATURES §3.5): the word under a click (点词), the words kept in the 生词本 marked
+// 外文原著: the word under a click (点词), the words kept in the 生词本 marked
 // with a dotted line wherever they turn up, and translations under paragraphs (译).
 //
 // Words are runs of Latin, Greek or Cyrillic letters; an apostrophe or hyphen between letters

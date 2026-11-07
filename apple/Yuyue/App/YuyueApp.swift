@@ -9,7 +9,7 @@ struct YuyueApp: App {
 
     var body: some Scene {
         #if os(macOS)
-        // FEATURES §5: the shelf and each book get their own windows.
+        // The shelf and each book get their own windows.
         Window(String(localized: "书架"), id: "library") {
             root
         }
@@ -27,9 +27,9 @@ struct YuyueApp: App {
                     .environment(\.switchBook) { $bookID.wrappedValue = $0 }
             }
         }
-        // `.v-mac`: a landscape window, the column in the middle and room for the notes beside it.
+        // A landscape window, the column in the middle and room for the notes beside it.
         .defaultSize(width: 1040, height: 720)
-        // `.v-mac-tb` is 58 high: the standard bar, not the compact one.
+        // 58 high: the standard bar, not the compact one.
         .windowToolbarStyle(.unified(showsTitle: true))
 
         // 有声书 · Mac 上微调.

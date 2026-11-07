@@ -2,7 +2,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 书架 · 播客 on the phone (docs/design/播客.html · iPhone · 更新; 播客开发方案 §6.5: in the
+/// 书架 · 播客 on the phone (in the
 /// shelf's 全部 / 书 / 有声 / 播客, not a tab of its own). The shows along the top, a number on
 /// those with episodes not heard; then every episode, newest first, to play. Shows are set up and
 /// written on the Mac; their episodes come here through sync.

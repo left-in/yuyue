@@ -1,4 +1,4 @@
-//! 剧本: who says each line of a book (听书开发方案 §3.2, step 3). The bubbles need only this;
+//! 剧本: who says each line of a book. The bubbles need only this;
 //! the voices of 分角色朗读 come later and read the same script.
 //!
 //! Rules first, and only where they're sure: a line gets a name when the words around it say

@@ -2,7 +2,7 @@ import SwiftUI
 import YuyueCore
 #if os(macOS)
 
-/// 配一档节目 (docs/design/播客.html): three steps on the left — 听什么, 谁来讲, 什么时候、多长 —
+/// 配一档节目: three steps on the left — 听什么, 谁来讲, 什么时候、多长 —
 /// and on the right what tomorrow's episode would sound like. 什么时候 is one line, changed
 /// only when asked: the template has chosen already.
 struct MacShowEditor: View {

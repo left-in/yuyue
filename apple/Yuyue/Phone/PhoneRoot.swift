@@ -75,7 +75,7 @@ struct PhoneRoot: View {
 
     private struct Presented: Identifiable { let id: String }
 
-    /// The prototype's own line icons: outlined, and the `-f` filled one on the chosen tab.
+    /// Our own line icons: outlined, and the `-f` filled one on the chosen tab.
     private func tabLabel(_ title: LocalizedStringKey, _ value: PhoneTab, line: String, fill: String) -> some View {
         Label(title, image: tab == value ? fill : line)
     }

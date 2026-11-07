@@ -7,7 +7,7 @@ extension FocusedValues {
 }
 
 /// 阅读 and 听书 in the menu bar: every shortcut of the book window, written next to what it
-/// does (FEATURES §5 快捷键). They act on the book in front and are greyed out without one.
+/// does. They act on the book in front and are greyed out without one.
 struct ReaderCommands: Commands {
     @FocusedValue(\.reader) private var model
 

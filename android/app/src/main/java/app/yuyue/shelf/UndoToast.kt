@@ -58,8 +58,8 @@ import kotlinx.coroutines.launch
 import kotlin.math.ceil
 
 /** The note after something happened. A plain one is a small white capsule that flashes at the
- *  top (docs/design: 第三轮 Q · 3); one that can be undone is the wide glass banner instead
- *  (删除后撤销 · V6 with button B3), so the two never look alike. */
+ *  top; one that can be undone is the wide glass banner instead,
+ *  so the two never look alike. */
 @Composable
 fun UndoToast(toast: Library.Toast, undo: () -> Unit, modifier: Modifier = Modifier) {
     if (toast.undo != null) UndoBanner(toast, undo, modifier) else NoteCapsule(toast, modifier)
@@ -141,7 +141,7 @@ private fun UndoBanner(toast: Library.Toast, undo: () -> Unit, modifier: Modifie
             Text(toast.title, style = YY.font(13f, FontWeight.SemiBold), color = YY.c.t1, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (toast.detail.isNotEmpty()) Text(toast.detail, style = YY.font(10.5f), color = YY.c.t2, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
-        // B3: a round glass button with only the arrow; it fades as the tick comes.
+        // A round glass button with only the arrow; it fades as the tick comes.
         val gone = tick.value.coerceIn(0f, 1f)
         Box(
             Modifier.size(YY.s(36)).graphicsLayer { alpha = 1 - gone; scaleX = 1 - 0.1f * gone; scaleY = 1 - 0.1f * gone }
@@ -166,7 +166,7 @@ private fun CountdownRing(left: Float, tick: Float, done: Boolean) {
                 val inset = w / 2
                 val arc = Size(size.width - w, size.height - w)
                 drawArc(red.copy(alpha = 0.18f), 0f, 360f, false, Offset(inset, inset), arc, style = Stroke(w))
-                // Drains anticlockwise from the top, as Telegram's does.
+                // Drains anticlockwise from the top.
                 drawArc(red, -90f, -360f * left, false, Offset(inset, inset), arc, style = Stroke(w, cap = StrokeCap.Round))
             }
             Text("$seconds", style = YY.font(11.5f, FontWeight.Bold).copy(fontFeatureSettings = "tnum"), color = red)
@@ -182,7 +182,7 @@ private fun CountdownRing(left: Float, tick: Float, done: Boolean) {
     }
 }
 
-/** 即刻's green tick for a plain note; a deletion is red. */
+/** A green tick for a plain note; a deletion is red. */
 private val Done = Color(0xFF2DBE60)
 
 val Library.Toast.Icon.vector: ImageVector

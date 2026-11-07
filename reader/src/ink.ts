@@ -40,10 +40,6 @@ export function elapsed(): number {
   return Math.max(0, Math.min(total, e));
 }
 
-export function activeSentence(): number | null {
-  return active;
-}
-
 function spokenLength(el: Element): number {
   let n = 0;
   const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);

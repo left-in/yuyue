@@ -6,7 +6,7 @@ import YuyueCore
 import CoreServices
 #endif
 
-/// 外文原著 (FEATURES §3.5, prototype 外文原著): click a word and it is said aloud and looked up
+/// 外文原著: click a word and it is said aloud and looked up
 /// in the system dictionary; keep it in the 生词本 and it is dotted in every book; 译 puts a
 /// translation under each paragraph, and a double click translates one sentence.
 

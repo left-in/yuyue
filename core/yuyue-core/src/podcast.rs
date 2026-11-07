@@ -1,4 +1,4 @@
-//! 播客 (AI 电台, docs/播客开发方案.md): a show the reader sets up, written by the model they
+//! 播客 (AI 电台): a show the reader sets up, written by the model they
 //! chose for 书伴 and read aloud by 语阅. This file is the part every platform shares and that
 //! never goes online:
 //!
@@ -241,7 +241,7 @@ impl YuyueCore {
         Ok(out)
     }
 
-    /// 听过的节目保留 30 天 (U6): episodes heard and written at least `older_than_ms` ago go —
+    /// 听过的节目保留 30 天: episodes heard and written at least `older_than_ms` ago go —
     /// off the list and off the shelf, as 删书 does, so the files follow once `purge_deleted`
     /// runs. One with a highlight, a thought or a bookmark in it stays: the reader kept something.
     /// Returns how many went.
@@ -425,7 +425,7 @@ fn episode_from(id: &str, f: &BTreeMap<String, Value>) -> Option<Episode> {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Prompts (docs/播客开发方案.md §3.3). Written here so every platform asks the same.
+// Prompts. Written here so every platform asks the same.
 
 /// An article the editor may pick from.
 #[derive(Clone, Debug, PartialEq, uniffi::Record)]

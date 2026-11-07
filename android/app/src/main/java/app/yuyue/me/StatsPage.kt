@@ -51,7 +51,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 import java.time.temporal.TemporalAdjusters
 
-/** 阅读统计 (prototype 阅读统计), as on iPhone: by week, month or year, reading and listening
+/** 阅读统计, as on iPhone: by week, month or year, reading and listening
  *  apart; the books finished; each book's time; and, at the bottom, how the time is counted. */
 @Composable
 fun StatsPage(library: Library) {
@@ -73,7 +73,6 @@ fun StatsPage(library: Library) {
 
     YYPage {
         YYSegments(Period.entries.map { it to it.title }, period, { period = it; anchor = LocalDate.now() }, modifier = Modifier.padding(top = YY.s(10)).fillMaxWidth())
-        // `.v-me-mo`
         Column(Modifier.padding(top = YY.s(12)).fillMaxWidth().background(YY.c.card, RoundedCornerShape(YY.s(16))).padding(start = YY.s(14), end = YY.s(14), top = YY.s(12))) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(YY.s(6))) {
                 val (title, range) = heading(period, days, current, word)
@@ -218,7 +217,7 @@ private fun Step(icon: androidx.compose.ui.graphics.vector.ImageVector, label: S
     ) { Icon(icon, label, tint = if (enabled) YY.c.t1 else YY.c.t3, modifier = Modifier.size(YY.s(13))) }
 }
 
-/** `.v-me-bk`: a book, how far and how long to go, and the time read and listened. */
+/** A book, how far and how long to go, and the time read and listened. */
 @Composable
 private fun BookTime(book: BookSummary, read: Int, listen: Int) {
     Row(Modifier.padding(vertical = YY.s(8)), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(YY.s(10))) {
@@ -246,7 +245,7 @@ private fun duration(seconds: Int): String {
     }
 }
 
-/** `.v-me-how`: how the time is counted, on a grey card. */
+/** How the time is counted, on a grey card. */
 @Composable
 private fun How(modifier: Modifier) {
     Column(modifier.fillMaxWidth().background(YY.c.inset, RoundedCornerShape(YY.s(14))).padding(start = YY.s(13), end = YY.s(13), top = YY.s(11), bottom = YY.s(12))) {

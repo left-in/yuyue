@@ -26,7 +26,7 @@ nonisolated enum PdfInfoReader {
             characters += doc.page(at: i)?.string?.count(where: { !$0.isWhitespace }) ?? 0
         }
         let total = UInt64(Double(characters) * Double(doc.pageCount) / Double(sample))
-        // I2: a first page full of text (a paper, a report) shrunk down is a grey smudge; such a
+        // A first page full of text (a paper, a report) shrunk down is a grey smudge; such a
         // PDF gets the paper cover with its title instead. A cover page, a scan, a picture stays.
         let first = doc.page(at: 0)
         let wordy = (first?.string?.count(where: { !$0.isWhitespace }) ?? 0) > textCoverLimit

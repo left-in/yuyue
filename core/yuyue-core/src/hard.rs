@@ -1,4 +1,4 @@
-//! 难词注释 (FEATURES §3.5): a short Chinese meaning written above the harder words of a book
+//! 难词注释: a short Chinese meaning written above the harder words of a book
 //! in English. Which words are hard comes from ECDICT's exam lists (四级, 六级, 考研, 雅思,
 //! GRE) and, for words no exam lists, how rarely they turn up; the list is trimmed from ECDICT
 //! (MIT) by `scripts/ecdict-trim.py` into `data/hardwords.tsv`.

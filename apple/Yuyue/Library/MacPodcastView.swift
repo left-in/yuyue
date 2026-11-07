@@ -2,7 +2,7 @@ import SwiftUI
 import YuyueCore
 #if os(macOS)
 
-/// 播客 on the Mac (docs/design/播客.html · Mac · 最新): the shows' covers along the top, then
+/// 播客 on the Mac: the shows' covers along the top, then
 /// every episode, the newest first. An episode opens in a reader window, the script as a chat,
 /// each host in their own voice. 配一档节目 makes a show; 编辑部 shows one being written.
 struct MacPodcastView: View {
@@ -398,8 +398,7 @@ extension ShowDraftEdit: Hashable {
     func hash(into h: inout Hasher) { h.combine(id) }
 }
 
-/// 设置 · 通用 · 开机时打开语阅. Shows are written at their time only while 语阅 runs, so this
-/// used to sit on a 播客 page of its own; it starts the whole app, so it's in 通用 now.
+/// 设置 · 通用 · 开机时打开语阅. Shows are written at their time only while 语阅 runs.
 struct LoginItemRow: View {
     @State private var atLogin = LoginItem.isOn || LoginItem.needsApproval
     @State private var problem: String?
@@ -430,7 +429,7 @@ struct LoginItemRow: View {
     }
 }
 
-/// 设置 · 存储 · 听过的节目一直保留 (U6): heard episodes are cleared after 30 days unless this is on.
+/// 设置 · 存储 · 听过的节目一直保留: heard episodes are cleared after 30 days unless this is on.
 struct KeepHeardRow: View {
     @AppStorage(Podcasts.keepHeardKey) private var keepHeard = false
 

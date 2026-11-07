@@ -4,7 +4,7 @@ members = ["yuyue-core", "uniffi-bindgen", "yuyue-cli"]
 
 [workspace.package]
 edition = "2024"
-license = "UNLICENSED"
+license = "GPL-3.0-only"
 publish = false
 
 [profile.dev]

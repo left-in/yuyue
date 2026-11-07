@@ -18,10 +18,10 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
-/** Where 书伴's answers come from (FEATURES §3.8), as on Apple, less Apple's on-device model:
+/** Where 书伴's answers come from, as on Apple, less Apple's on-device model:
  *  a service the reader added with their own key, or a model of their own (Ollama). No service
  *  of ours sits in between; keys stay on this device, encrypted, and are not synced.
- *  添加服务商 picks from [catalog], grouped by how it's reached as nanobot's webui groups them
+ *  添加服务商 picks from [catalog], grouped by how it's reached
  *  ([Group]), or adds one of the reader's own (any OpenAI-shaped address). The logos are LobeHub
  *  Icons, from shared/provider-icons (scripts/provider-icons.py). */
 data class CompanionProvider(

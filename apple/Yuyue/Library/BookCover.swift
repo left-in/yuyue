@@ -60,7 +60,7 @@ struct BookCover: View {
                     }
                 }
                 .padding(11 * unit)
-                // I2: a PDF with no cover of its own says what it is, small, at the bottom.
+                // A PDF with no cover of its own says what it is, small, at the bottom.
                 if book.format == .pdf {
                     Text(verbatim: "PDF")
                         .font(.system(size: 8.5 * unit, weight: .medium))

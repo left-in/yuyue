@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 编码和目录 (prototype R12), for a TXT: which encoding it is read in, with the first lines to
+/// 编码和目录, for a TXT: which encoding it is read in, with the first lines to
 /// see whether they read, and the rule that finds its chapters, with what it found. A chapter far
 /// longer than the others is pointed out. 完成 builds the book again the chosen way.
 struct TxtLayoutView: View {
@@ -101,7 +101,7 @@ struct TxtLayoutView: View {
         }
     }
 
-    /// `.v-rd-txt`: the first chapter's title and lines, in the encoding chosen.
+    /// The first chapter's title and lines, in the encoding chosen.
     private var previewCard: some View {
         VStack(alignment: .leading, spacing: YYUI.s(4)) {
             if let layout, !layout.preview.isEmpty {
@@ -188,7 +188,7 @@ struct TxtLayoutView: View {
             }
     }
 
-    /// `.v-rd-cl`: a chapter and how long it is, the one too long in the warning colour.
+    /// A chapter and how long it is, the one too long in the warning colour.
     private func chapterRow(_ c: TxtChapter, long: Bool) -> some View {
         HStack(spacing: YYUI.s(8)) {
             Text(c.title).font(YYUI.font(11)).lineLimit(1).foregroundStyle(YYColor.t1)
@@ -217,7 +217,7 @@ struct TxtLayoutView: View {
 
     // MARK: 长得不正常的一章
 
-    /// `.v-rd-warn`: which two chapters a long stretch lies between, how long the others are, and
+    /// Which two chapters a long stretch lies between, how long the others are, and
     /// the way there.
     private func warning(_ layout: TxtLayout, _ long: Int) -> some View {
         let c = layout.chapters[long]

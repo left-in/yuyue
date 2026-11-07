@@ -4,7 +4,7 @@ import UniformTypeIdentifiers
 import AppKit
 #endif
 
-/// 分享书摘 (prototype N8 · N9): one highlighted sentence on a card, with a little cover and
+/// 分享书摘: one highlighted sentence on a card, with a little cover and
 /// where it comes from, a small 语阅 in the corner, and the thought if wanted. Four looks — the
 /// cover's own colour, 纸本, 素白, 暗黑 — and three shapes. The last look and shape are kept.
 struct QuoteShare: Identifiable {
@@ -57,14 +57,6 @@ enum QuoteShape: String, CaseIterable, Identifiable {
         }
     }
 
-    /// The little outline in the shape picker.
-    var outline: CGSize {
-        switch self {
-        case .portrait: CGSize(width: 8, height: 11)
-        case .square: CGSize(width: 10, height: 10)
-        case .landscape: CGSize(width: 12, height: 8)
-        }
-    }
 }
 
 /// The colours of one card.

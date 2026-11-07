@@ -162,7 +162,7 @@ struct OneWindowPerBook: NSViewRepresentable {
     func updateNSView(_ view: NSView, context: Context) {}
 }
 
-/// A book keeps its own window size: it opens as the shelf does (`.v-mac`, with room for the
+/// A book keeps its own window size: it opens as the shelf does (with room for the
 /// notes beside the column), and remembers how it was last sized.
 private struct ReaderWindowShape: NSViewRepresentable {
     enum Kind: String {
@@ -362,7 +362,7 @@ private struct ReaderContent: View {
         .ignoresSafeArea()
     }
 
-    /// 下拉加书签 (prototype): in the space the page leaves, a bookmark and what letting go does.
+    /// 下拉加书签: in the space the page leaves, a bookmark and what letting go does.
     @ViewBuilder private var pullMark: some View {
         if pull > 0 {
             let reached = pull >= ReaderPager.pullMark
@@ -538,7 +538,7 @@ struct PagerView: NSViewRepresentable {
 }
 #endif
 
-/// 目录 (prototype R4): the book on top, then 目录 · 书签 · 笔记. The chapter being read sits in
+/// 目录: the book on top, then 目录 · 书签 · 笔记. The chapter being read sits in
 /// the middle in the accent, with a line for how far into it; the ones read are faded; each says
 /// about how long it takes.
 private struct TocList: View {
@@ -583,7 +583,7 @@ private struct TocList: View {
         }
     }
 
-    /// `.v-rd-bkh`: the cover, the book, where the reader is in it.
+    /// The cover, the book, where the reader is in it.
     private func header(_ chapters: [TocChapter], _ current: Int?) -> some View {
         let book = model.detail?.summary
         let at = current.flatMap { chapters[safe: $0] }.map { c in ChapterTitle(c.title).number ?? c.title }
@@ -639,7 +639,7 @@ private struct TocList: View {
         }
     }
 
-    /// `.v-rd-ch`: 第几回, the name, the minutes; this one in the accent, its name whole, a line under.
+    /// 第几回, the name, the minutes; this one in the accent, its name whole, a line under.
     private func chapterRow(_ c: TocChapter, current: Int?) -> some View {
         let now = c.id == current
         let done = (current ?? -1) > c.id
@@ -800,7 +800,7 @@ private struct TocList: View {
 }
 
 #if os(iOS)
-/// 第一次进阅读器 (prototype): three faint zones — 上一页, 菜单, 下一页 — gone after a few seconds.
+/// 第一次进阅读器: three faint zones — 上一页, 菜单, 下一页 — gone after a few seconds.
 private struct PageTapHint: View {
     let paper: YYPaper
 

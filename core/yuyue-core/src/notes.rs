@@ -1,5 +1,4 @@
-//! Highlights, thoughts, bookmarks, in-book search and the time spent in each chapter
-//! (FEATURES §2).
+//! Highlights, thoughts, bookmarks, in-book search and the time spent in each chapter.
 //!
 //! Registers: `mark/<book>/<id>` · `section` / `start` / `end` / `text` / `style` / `note` /
 //! `at` / `review` / `reviewedAt` / `deleted`, `bookmark/<book>/<id>` · `section` / `sentence` / `text` / `at` /

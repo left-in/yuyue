@@ -2,7 +2,7 @@
 import SwiftUI
 import UIKit
 
-/// Wi‑Fi 传书 (prototype 导入): the address in big type, what the computer will see there, and a
+/// Wi‑Fi 传书: the address in big type, what the computer will see there, and a
 /// row for each file coming over — how far, how long still, and when it's on the shelf.
 struct PhoneWifi: View {
     @State private var transfer: WifiTransfer
@@ -81,7 +81,7 @@ struct PhoneWifi: View {
         .transition(.opacity)
     }
 
-    /// `.v-lib-url`: 在电脑浏览器里打开, the address and 复制, then whether a computer has come.
+    /// 在电脑浏览器里打开, the address and 复制, then whether a computer has come.
     private var addressCard: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text("在电脑浏览器里打开").font(YYUI.font(10.5)).foregroundStyle(YYColor.t3)
@@ -123,7 +123,7 @@ struct PhoneWifi: View {
         .yyCard()
     }
 
-    /// `.v-lib-web`: what the computer shows at that address.
+    /// What the computer shows at that address.
     private var browser: some View {
         VStack(spacing: 0) {
             HStack(spacing: YYUI.s(6)) {
@@ -153,7 +153,7 @@ struct PhoneWifi: View {
         .accessibilityHidden(true)
     }
 
-    /// `.v-lib-rx .row`: a tile for the kind (a tick once it's in), the name, how it's going.
+    /// A tile for the kind (a tick once it's in), the name, how it's going.
     private func row(_ item: WifiTransfer.Item) -> some View {
         HStack(alignment: .top, spacing: YYUI.s(10)) {
             Image(systemName: symbol(item))
@@ -207,7 +207,7 @@ struct PhoneWifi: View {
     }
 }
 
-/// 导入 (prototype): the shelf's 加号. Each way in on its own row, with what it takes written out.
+/// 导入: the shelf's 加号. Each way in on its own row, with what it takes written out.
 struct PhoneImportSheet: View {
     /// The folder being watched, when there is one.
     var watching: String?
@@ -237,7 +237,7 @@ struct PhoneImportSheet: View {
         .presentationDragIndicator(.visible)
     }
 
-    /// `.v-r2`: the tile, the name and the line under it, the chevron.
+    /// The tile, the name and the line under it, the chevron.
     private func way(_ symbol: String, _ title: String, _ detail: String, _ action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: YYUI.s(10)) {

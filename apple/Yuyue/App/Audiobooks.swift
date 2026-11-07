@@ -7,7 +7,7 @@ import YuyueCore
 import UIKit
 #endif
 
-/// 有声书 (prototypes 17, 18): a recording of a book laid against the e-book on the shelf, so it
+/// 有声书: a recording of a book laid against the e-book on the shelf, so it
 /// can be listened to in the narrator's voice with the ink line following along.
 ///
 /// The recording is kept on this device beside the library, in `audiobooks/<id>/`: its files,
@@ -236,7 +236,7 @@ final class Audiobooks {
         adopt()
     }
 
-    // MARK: 同步 (听书开发方案 §4.3)
+    // MARK: 同步
 
     /// What another device laid out comes in through the sync log: where each sentence is and
     /// which e-book the recording goes with. Here it's taken in for every recording this device

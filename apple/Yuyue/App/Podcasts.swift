@@ -6,7 +6,7 @@ import YuyueCore
 import AppKit
 #endif
 
-/// 播客 (docs/播客开发方案.md §3.3): writes an episode on this device, step by step.
+/// 播客: writes an episode on this device, step by step.
 ///
 ///   1 取新内容 → 2 取正文 → 3 挑选 → 4 逐篇摘要 → 5 写稿 → 6 存成一集
 ///
@@ -60,7 +60,7 @@ final class Podcasts {
         var text: String
         /// The editor's list, under its first message.
         var list: [String] = []
-        /// The script was already being written: 重写这一集 under it (U2).
+        /// The script was already being written: 重写这一集 under it.
         var offersRewrite = false
     }
 
@@ -72,7 +72,7 @@ final class Podcasts {
     }
 
     func reload() {
-        // 听过的节目保留 30 天 (U6), unless they're to be kept.
+        // 听过的节目保留 30 天, unless they're to be kept.
         if !UserDefaults.standard.bool(forKey: Self.keepHeardKey) {
             _ = try? core.pruneHeardEpisodes(olderThanMs: 30 * 86_400_000)
         }

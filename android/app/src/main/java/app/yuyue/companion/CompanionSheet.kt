@@ -57,7 +57,7 @@ import app.yuyue.design.YYSegments
 import app.yuyue.reader.ReaderModel
 import app.yuyue.t
 
-/** 书伴 on the phone (prototype 与书对话), as on iPhone: the talk in a sheet over the page; a 出处
+/** 书伴 on the phone, as on iPhone: the talk in a sheet over the page; a 出处
  *  tag turns the page underneath. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

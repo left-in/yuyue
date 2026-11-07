@@ -30,8 +30,8 @@ import soundfile as sf
 import webrtcvad
 
 SR = 16000
-# 数据（下载的语料、拼好的考卷、模型）放在实验盘上，不进仓库。
-HERE = os.environ.get("YUYUE_BENCH", "/Volumes/T2214/yuyue-lab/bench")
+# 数据（下载的语料、拼好的考卷、模型）不进仓库，放在 YUYUE_BENCH 指的文件夹。
+HERE = os.environ.get("YUYUE_BENCH", "bench")
 SCRIPTS = os.path.dirname(os.path.abspath(__file__))
 DL = os.path.join(HERE, "dl")
 CASES = os.path.join(HERE, "cases")

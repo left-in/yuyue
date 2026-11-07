@@ -1,4 +1,4 @@
-//! 播客的信息源 (docs/播客开发方案.md §3.2, §4.1): reading what the apps downloaded. The core
+//! 播客的信息源: reading what the apps downloaded. The core
 //! never goes online; the apps fetch a URL and hand the bytes here.
 //!
 //! - RSS 2.0, RSS 1.0 (RDF) and Atom feeds into one list of [`FeedItem`]s;

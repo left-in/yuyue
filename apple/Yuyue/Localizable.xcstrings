@@ -425,17 +425,6 @@
         }
       }
     },
-    "%@ · %lld" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · %lld"
-          }
-        }
-      }
-    },
     "%@ · %u 条评论" : {
       "localizations" : {
         "zh-Hans" : {
@@ -698,23 +687,6 @@
         }
       }
     },
-    "%@ 处 · %lld 本书" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ places · %2$lld books"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ 处 · %2$lld 本书"
-          }
-        }
-      }
-    },
     "%@ 字" : {
       "localizations" : {
         "en" : {
@@ -751,23 +723,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ items"
-          }
-        }
-      }
-    },
-    "%@ 条 · 来自 %lld 本书" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ items · from %2$lld books"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ 条 · 来自 %2$lld 本书"
           }
         }
       }
@@ -1177,17 +1132,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "%lld 个词条" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld entries"
           }
         }
       }
@@ -1670,23 +1614,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "%lld 本书 · %@ 条" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld books · %2$@ items"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld 本书 · %2$@ 条"
           }
         }
       }
@@ -4654,17 +4581,6 @@
         }
       }
     },
-    "全部 %@ 章" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All %@ chapters"
-          }
-        }
-      }
-    },
     "全部 %lld" : {
       "localizations" : {
         "en" : {
@@ -6785,23 +6701,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pin to Sidebar"
-          }
-        }
-      }
-    },
-    "在 %@ 本书和 %@ 条笔记里搜" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search %1$@ books and %2$@ notes"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "在 %1$@ 本书和 %2$@ 条笔记里搜"
           }
         }
       }
@@ -12096,17 +11995,6 @@
         }
       }
     },
-    "没能导入" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Couldn't import"
-          }
-        }
-      }
-    },
     "没能改好" : {
       "localizations" : {
         "en" : {
@@ -13620,23 +13508,6 @@
         }
       }
     },
-    "第 %lld / %lld 张" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld of %2$lld"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "第 %1$lld / %2$lld 张"
-          }
-        }
-      }
-    },
     "第 %lld / %lld 章" : {
       "localizations" : {
         "en" : {
@@ -14007,17 +13878,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paste"
-          }
-        }
-      }
-    },
-    "粘贴 %@ 的 Key" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paste your %@ key"
           }
         }
       }
@@ -14640,7 +14500,7 @@
         }
       }
     },
-    "胶囊、播放条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃。" : {
+    "胶囊、播放条这些浮着的东西用系统的液态玻璃；关掉就用毛玻璃。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -15094,17 +14954,6 @@
         }
       }
     },
-    "识别出 %@ 章" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Found %@ chapters"
-          }
-        }
-      }
-    },
     "识别出 %lld 章" : {
       "localizations" : {
         "en" : {
@@ -15435,23 +15284,6 @@
         }
       }
     },
-    "读 %u 分钟 · 听 %u 分钟" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Read %1$u min · Listen %2$u min"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "读 %1$u 分钟 · 听 %2$u 分钟"
-          }
-        }
-      }
-    },
     "读一句外文，接着读一句译文（还没做好）" : {
       "localizations" : {
         "en" : {
@@ -15522,7 +15354,7 @@
         }
       }
     },
-    "读书窗口的工具胶囊和阅读胶囊、提示条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃，选中的垫一层浅色" : {
+    "读书窗口的工具胶囊和阅读胶囊、提示条这些浮着的东西用系统的液态玻璃；关掉就用毛玻璃，选中的垫一层浅色" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -15562,17 +15394,6 @@
         }
       }
     },
-    "读到 %lld%%" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%% read"
-          }
-        }
-      }
-    },
     "读到 %lld%% · 还剩 %lld 分钟" : {
       "localizations" : {
         "en" : {
@@ -15595,23 +15416,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "At %@"
-          }
-        }
-      }
-    },
-    "读到%@ · %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "At %1$@ · %2$@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "读到%1$@ · %2$@"
           }
         }
       }
@@ -17277,17 +17081,6 @@
         }
       }
     },
-    "选 .mdx 文件。点词时先查这里的词典，查不到再用系统的；右键一本可以移除" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a .mdx file. Tapped words are looked up here first, then in the system dictionary. Right-click one to remove it."
-          }
-        }
-      }
-    },
     "选 iCloud 云盘里的一个文件夹" : {
       "localizations" : {
         "en" : {
@@ -17793,6 +17586,26 @@
         }
       }
     },
+    "挑一句现成的" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick a ready-made line"
+          }
+        }
+      }
+    },
+    "发给编辑" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to the editor"
+          }
+        }
+      }
+    },
     "闲读" : {
       "localizations" : {
         "en" : {
@@ -17829,17 +17642,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reading Stats"
-          }
-        }
-      }
-    },
-    "阅读设置" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reading Settings"
           }
         }
       }

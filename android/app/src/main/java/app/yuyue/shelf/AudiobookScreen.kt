@@ -58,7 +58,7 @@ import app.yuyue.speech.AudiobookPlayer
 import app.yuyue.speech.Player
 import app.yuyue.t
 
-/** 有声书 open (prototype v0.30 C3, C4): the cover, the chapter, the scrubber with the 书签 on
+/** 有声书 open: the cover, the chapter, the scrubber with the 书签 on
  *  it, and the controls; 章节 and 书签 come up from the bottom. */
 @UnstableApi
 @Composable
@@ -118,7 +118,7 @@ fun AudiobookScreen(library: Library, bookID: String, close: () -> Unit) {
     list?.let { ChapterSheet(player, it, { list = it }) { list = null } }
 }
 
-/** 书架上有同一本电子书 (v0.30 C3): 合成 lays the recording against it; while it runs, how far. */
+/** 书架上有同一本电子书: 合成 lays the recording against it; while it runs, how far. */
 @UnstableApi
 @Composable
 private fun PairCard(library: Library, audio: uniffi.yuyue_core.BookSummary) {

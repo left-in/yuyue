@@ -12,7 +12,7 @@ extension View {
     }
 }
 
-/// 导入有声书 (prototype v0.30 C1): the cover, name and author read from the files, to change;
+/// 导入有声书: the cover, name and author read from the files, to change;
 /// the files in the order they'll play, by the numbers in their names, to drag into another;
 /// and, when the e-book is on the shelf, 合成听读书 after.
 struct AudiobookImportSheet: View {

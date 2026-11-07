@@ -1,0 +1,35 @@
+语阅 Yuyue
+Copyright (C) 2026 Yuyue contributors
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License, version 3, as published by the
+Free Software Foundation. See LICENSE.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.
+
+Third-party components keep their own licences:
+
+  UniFFI                                      MPL-2.0
+  rusqlite                                    MIT
+  SQLite                                      Public Domain
+  serde, serde_json, regex, encoding_rs,
+  chardetng, zip, html5ever, roxmltree,
+  ICU4X, blake3, percent-encoding, thiserror  MIT / Apache-2.0
+  rars                                        MIT
+  ECDICT                                      MIT
+  OkHttp, JNA                                 Apache-2.0
+  AndroidX, Jetpack Compose, Media3           Apache-2.0
+  pinyin, pypinyin word lists                 MIT
+  Lucide "radio" icon                         ISC
+  LobeHub Icons                               MIT
+  magpie icon                                 MIT
+
+The Meta MMS alignment model is not part of this repository or covered by the
+GPL. The apps download it separately when it is first needed. It is licensed
+under CC-BY-NC 4.0, which does not allow commercial use.
+
+Product names and logos in shared/provider-icons and the app's assets belong to
+their owners. They identify the services the app connects to and are not covered
+by the GPL.

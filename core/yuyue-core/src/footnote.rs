@@ -1,4 +1,4 @@
-//! 脚注 (FEATURES §2): the text a note marker points to, for the card the reader opens in place
+//! 脚注: the text a note marker points to, for the card the reader opens in place
 //! instead of turning to the notes at the back.
 
 use std::sync::LazyLock;

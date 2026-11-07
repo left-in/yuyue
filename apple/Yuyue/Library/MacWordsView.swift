@@ -4,7 +4,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 import YuyueCore
 
-/// 生词本 in the shelf window (prototype 生词本): the words kept while reading books in other
+/// 生词本 in the shelf window: the words kept while reading books in other
 /// languages, by the day they were kept or by book. Each has its sound, the short meaning, the
 /// sentence it was met in and where, and how often it turns up across the library. 掌握了 stops
 /// it being marked in books; 导出 makes Anki cards or a CSV.
@@ -28,7 +28,7 @@ struct MacWordsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // `.v-mac-hd.v-ms-hd`: 64 high, the title in the middle; `.v-ms-mn` 22 in, 28 on the right.
+            // 64 high, the title in the middle; the list 22 in, 28 on the right.
             header
                 // The title and the line beside it share a baseline, which lifts the title: down 4.
                 .frame(height: 56)
@@ -62,7 +62,7 @@ struct MacWordsView: View {
                                     NoteCard {
                                         ForEach(group.words, id: \.word) { row($0) }
                                     }
-                                    // M6: a word taken out closes up.
+                                    // A word taken out closes up.
                                     .animation(YYMotion.layout, value: group.words.map(\.word))
                                 }
                             }

@@ -2,7 +2,7 @@ import AVFoundation
 import Foundation
 import YuyueCore
 
-/// 有声书 onto the shelf (prototype v0.30 C1): reads what the system's player can tell of the
+/// 有声书 onto the shelf: reads what the system's player can tell of the
 /// files (how long each is, the chapter marks of an M4B, title, author, cover) and hands it to
 /// the core, which copies the files in and keeps the order.
 enum AudioImporter {

@@ -226,7 +226,7 @@ html[data-yy-kind="image"][data-yy-mode="paginated"] body { -webkit-column-count
 #yy-content .yy-c { color: var(--yy-p-ink) !important; }
 #yy-content .yy-lh1 { line-height: 1 !important; }
 
-/* English (.r-text.en in the prototype): Georgia, ragged right, no tracking, taller lines. */
+/* English (.r-text.en): Georgia, ragged right, no tracking, taller lines. */
 #yy-content .yy-b:lang(en) { font-size: var(--yy-base-en) !important; line-height: var(--yy-lh, var(--yy-lt-lh)) !important; }
 #yy-content .yy-r:lang(en) { font-size: calc(var(--yy-base-en) * var(--yy-fr, 1)) !important; line-height: var(--yy-lh, var(--yy-lt-lh)) !important; }
 #yy-content .yy-f:lang(en) { font-family: var(--yy-font-en, var(--yy-lt-font)) !important; }
@@ -534,7 +534,7 @@ yy-tr {
   -webkit-user-select: none;
   user-select: none;
 }
-/* A selection in the theme colour, light (`.v-mr-sel`), not the system's blue. */
+/* A selection in the theme colour, light, not the system's blue. */
 #yy-content ::selection { background-color: var(--yy-accent-soft); }
 ::highlight(yy-hit) { background-color: var(--yy-accent-soft); }
 ::highlight(yy-hit-now) { background-color: var(--yy-p-main); color: var(--yy-p-on-main); }
@@ -550,7 +550,7 @@ html[data-yy-paper="dark"], html[data-yy-paper="kaminight"] {
   --yy-mk-y: rgba(251, 231, 160, .26); --yy-mk-b: rgba(196, 227, 244, .22); --yy-mk-p: rgba(246, 199, 192, .24);
 }
 
-/* 播客 (docs/design/播客.html · 文稿 = 气泡): an episode's script as a chat. The first host on the
+/* 播客 (文稿 = 气泡): an episode's script as a chat. The first host on the
    left, the second on the right, each line a bubble; a segment's source line small above it. */
 #yy-content .yy-pod-summary {
   color: var(--yy-p-ink-2) !important;
@@ -609,12 +609,12 @@ html[data-yy-paper="dark"], html[data-yy-paper="kaminight"] {
   margin-bottom: .1em;
 }
 #yy-content p.yy-pod-line.yy-pod-first { margin-top: .9em !important; }
-/* The bubble being read: a ring in the theme's colour, as the prototype's 文稿 has it. */
+/* The bubble being read: a ring in the theme's colour. */
 #yy-content p.yy-pod-line:has(.s.yy-ink) { box-shadow: 0 0 0 1.5px var(--yy-p-accent); }
 html[data-yy-paper="eink"] #yy-content p.yy-pod-line { background: transparent; box-shadow: 0 0 0 1px #141414; }
 html[data-yy-paper="eink"] #yy-content p.yy-pod-line:has(.s.yy-ink) { box-shadow: 0 0 0 2.5px #141414; }
 
-/* 气泡模式 (docs/design/听书-气泡与有声书.html · B1–B3): narration stays a paragraph, each quote a
+/* 气泡模式: narration stays a paragraph, each quote a
    bubble with whoever says it. Each speaker's colour --yy-c is mixed with the paper, so changing
    paper needs nothing else; 墨水屏 only draws lines. */
 #yy-content .yy-bq {

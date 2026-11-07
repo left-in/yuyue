@@ -51,7 +51,7 @@ import app.yuyue.library.Library
 import app.yuyue.library.WifiTransfer
 import app.yuyue.t
 
-/** Wi‑Fi 传书 (prototype 导入), as on iPhone: the address in big type, whether a computer has come,
+/** Wi‑Fi 传书, as on iPhone: the address in big type, whether a computer has come,
  *  and a row for each file coming over — how far, how long still, and when it's on the shelf. */
 @Composable
 fun WifiPage(library: Library) {

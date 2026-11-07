@@ -18,7 +18,7 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
- * 分角色朗读 (听书开发方案 §5.1): each sentence read by the voice of whoever says it. Nobody has
+ * 分角色朗读: each sentence read by the voice of whoever says it. Nobody has
  * one of their own until the reader gives it: by default everything is the narrator's, so a book
  * sounds as it always did. Lines the script isn't sure of stay the narrator's too.
  */
@@ -60,7 +60,7 @@ class TunedVoice(val base: BookVoice, val rate: Float, val pitch: Float) : BookV
 }
 
 /**
- * 克隆声音 (docs/design/听书-分角色与克隆声音.html, C1–C4): a voice made from a short recording.
+ * 克隆声音: a voice made from a short recording.
  * The recording stays on this device (files/clones/<id>); nothing about it syncs. What makes
  * speech of it is the reader's own ElevenLabs for now, to be swapped for a model on the device.
  */
@@ -143,7 +143,7 @@ object ClonedVoices {
     }
 }
 
-/** 检查录音 (C3): what can be told from the samples alone. It never refuses a recording. */
+/** 检查录音: what can be told from the samples alone. It never refuses a recording. */
 data class SampleCheck(val seconds: Double, val items: List<Item>) {
     data class Item(val ok: Boolean, val title: String, val detail: String? = null)
 

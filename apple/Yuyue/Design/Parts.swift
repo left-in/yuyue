@@ -5,8 +5,8 @@ import AppKit
 import UIKit
 #endif
 
-/// The prototype's own pieces (`.grp`, `.v-lb`, `.v-seg`, `.v-btn`…), for the screens it draws
-/// with them instead of a system form. Sizes are the prototype's pixels, scaled up from its
+/// The app's own pieces, for the screens drawn
+/// with them instead of a system form. Sizes are design pixels, scaled up from a
 /// phone mock to points.
 enum YYUI {
     #if os(macOS)
@@ -15,14 +15,14 @@ enum YYUI {
     static let k: CGFloat = 1.2
     #endif
 
-    /// A prototype size in points.
+    /// A design size in points.
     static func s(_ px: CGFloat) -> CGFloat { px * k }
 
     static func font(_ px: CGFloat, _ weight: Font.Weight = .regular, design: Font.Design = .default) -> Font {
         design == .serif ? serif(s(px), weight) : .yy(size: s(px), weight: weight, design: design)
     }
 
-    /// `--serif`: Songti, as the prototype sets it. The system serif (New York) borrows its Chinese
+    /// `--serif`: Songti. The system serif (New York) borrows its Chinese
     /// from a fallback that sets every ，and 。 nearly two characters wide.
     static func serif(_ size: CGFloat, _ weight: Font.Weight = .regular) -> Font {
         let size = size * TextScale.shared.factor
@@ -36,7 +36,7 @@ enum YYUI {
     #endif
 }
 
-/// 大字体: the system text size as a factor on the prototype's fixed sizes, on iPhone and iPad (the
+/// 大字体: the system text size as a factor on the fixed sizes, on iPhone and iPad (the
 /// Mac has no such setting). Between 0.85 and 1.5, so the drawn layouts still hold. Views read it
 /// through `Font.yy`, so they draw again when the setting changes.
 @Observable final class TextScale {
@@ -66,7 +66,7 @@ extension Font {
     }
 }
 
-/// A page of the prototype's pieces on its grey ground.
+/// A page of these pieces on its grey ground.
 struct YYPage<Content: View>: View {
     @ViewBuilder let content: Content
 
@@ -82,7 +82,7 @@ struct YYPage<Content: View>: View {
     }
 }
 
-/// `.v-lb`: a heading over a card, a grey note on its right.
+/// A heading over a card, a grey note on its right.
 struct YYLabel: View {
     let title: String
     var trailing: String?
@@ -104,7 +104,7 @@ struct YYLabel: View {
     }
 }
 
-/// `.v-note`: a grey line under a card.
+/// A grey line under a card.
 struct YYNote: View {
     let text: String
     init(_ text: String) { self.text = text }
@@ -140,7 +140,7 @@ struct YYGroup<Content: View>: View {
     }
 }
 
-/// `.v-card`: a white card on its own.
+/// A white card on its own.
 struct YYCardBackground: ViewModifier {
     @Environment(\.colorScheme) private var scheme
 
@@ -156,7 +156,7 @@ extension View {
     func yyCard() -> some View { modifier(YYCardBackground()) }
 }
 
-/// 动效 (docs/design/动效与体验提案.html · M0): every animation in the app picks one of these.
+/// 动效: every animation in the app picks one of these.
 /// Short, eased out, no bounce. With 减弱动态效果 on, things that move get there at once and the
 /// rest only fades, quickly.
 enum YYMotion {
@@ -178,28 +178,13 @@ enum YYMotion {
     /// Going away, a little quicker than coming.
     static var exit: Animation { .easeIn(duration: YYDuration.exit) }
 
-    /// A card that grows out of what opened it (Aa, the words chosen): 0.94 → 1 and a fade in,
-    /// gone quicker than it came. Only the fade with 减弱动态效果.
-    static func pop(from anchor: UnitPoint) -> AnyTransition {
-        if reduce { return .opacity.animation(.easeOut(duration: 0.15)) }
-        return .asymmetric(
-            insertion: .scale(scale: 0.94, anchor: anchor).combined(with: .opacity).animation(standard),
-            removal: .scale(scale: 0.97, anchor: anchor).combined(with: .opacity).animation(exit))
-    }
-
-    /// A row taken out of a list: it slides a little left as it fades, and the rows below close up.
-    static var rowRemoval: AnyTransition {
-        reduce ? .opacity : .asymmetric(insertion: .opacity.combined(with: .move(edge: .top)),
-                                        removal: .opacity.combined(with: .offset(x: -12)))
-    }
-
     /// Content that changes in place (another 侧栏 page): fades in a few points lower.
     static var swap: AnyTransition {
         reduce ? .opacity : .asymmetric(insertion: .opacity.combined(with: .offset(y: 6)), removal: .opacity)
     }
 }
 
-/// M5: a card grows out of what it points at as it appears — 0.94 → 1 from `anchor` with a fade —
+/// A card grows out of what it points at as it appears — 0.94 → 1 from `anchor` with a fade —
 /// so it reads as coming from the words chosen, not from nowhere. Its going is the container's
 /// transition (a quick fade).
 private struct YYPopOnAppear: ViewModifier {
@@ -230,7 +215,7 @@ struct YYToastMotion<Value: Equatable>: ViewModifier {
 extension View {
     func yyToastMotion<Value: Equatable>(value: Value) -> some View { modifier(YYToastMotion(value: value)) }
 
-    /// M7: lifted a little under the pointer (Mac). For things that open something: a book, a
+    /// Lifted a little under the pointer (Mac). For things that open something: a book, a
     /// collection, a note. A press is the button's: `YYPressStyle`.
     func yyLift() -> some View { modifier(YYLift()) }
 }
@@ -249,7 +234,7 @@ private struct YYLift: ViewModifier {
     }
 }
 
-/// A plain button that gives a little when pressed (M7): down to 0.98, back as it's let go.
+/// A plain button that gives a little when pressed: down to 0.98, back as it's let go.
 struct YYPressStyle: ButtonStyle {
     var scale: CGFloat = 0.98
     func makeBody(configuration: Configuration) -> some View {
@@ -294,7 +279,7 @@ extension YYRow where Trailing == EmptyView {
     }
 }
 
-/// `.v-in`: a field with its name in a fixed column on the left.
+/// A field with its name in a fixed column on the left.
 struct YYField<Field: View>: View {
     let label: String
     var labelWidth: CGFloat = 58
@@ -309,8 +294,8 @@ struct YYField<Field: View>: View {
     }
 }
 
-/// `.v-seg`: choices on an inset track, the chosen one lifted on a white chip; `small` is
-/// `.v-seg.sm`, the one at the end of a row.
+/// Choices on an inset track, the chosen one lifted on a white chip; `small` is
+/// the one at the end of a row.
 struct YYSegments<T: Hashable>: View {
     let items: [(T, String)]
     @Binding var selection: T
@@ -353,7 +338,7 @@ struct YYSegments<T: Hashable>: View {
     }
 }
 
-/// `.v-tag`: a small grey label.
+/// A small grey label.
 struct YYTag: View {
     let text: String
     var icon: String?
@@ -387,8 +372,8 @@ struct YYSwitch: View {
     }
 }
 
-/// `.v-btn`: a capsule button. `main` is the theme's dark one (`.k`), `raised` the white one
-/// (`.o`), `soft` the tinted one (`.a`), `plain` the grey one.
+/// A capsule button. `main` is the theme's dark one, `raised` the white one,
+/// `soft` the tinted one, `plain` the grey one.
 struct YYButtonStyle: ButtonStyle {
     enum Kind { case main, raised, soft, plain, danger }
     enum Size { case small, regular, large }
@@ -436,7 +421,7 @@ struct YYButtonStyle: ButtonStyle {
     }
 }
 
-/// `.v-sh`: a sheet's own title with × on the right.
+/// A sheet's own title with × on the right.
 struct YYSheetHeader: View {
     let title: String
     var subtitle: String?
@@ -461,7 +446,7 @@ struct YYSheetHeader: View {
     }
 }
 
-/// The tab bar's own icons (the prototype's `#tab-shelf-f`, as Android draws it), for the places
+/// The tab bar's own icons (as Android draws them), for the places
 /// that stand for the same thing: the Mac sidebar's 全部 is the 书架 tab.
 enum PhoneTabIcon {
     /// An asset in the catalogue, drawn as a template.

@@ -3,7 +3,7 @@ import YuyueCore
 #if os(macOS)
 import UniformTypeIdentifiers
 
-/// `.v-ms-imp` (prototype 38): at the top of the shelf while files come in — one row each, with
+/// At the top of the shelf while files come in — one row each, with
 /// where it went, what's being read, or that it was already there and where to find it.
 struct MacImportCard: View {
     let library: Library
@@ -169,7 +169,7 @@ struct MacImportCard: View {
     }
 }
 
-/// `.v-ms-drop`: over the shelf while files are dragged in from Finder — how many, where they'll
+/// Over the shelf while files are dragged in from Finder — how many, where they'll
 /// go, and what can be read.
 struct MacDropHint: View {
     let count: Int

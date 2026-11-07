@@ -1,4 +1,4 @@
-//! 替换规则 (FEATURES §3): find and replace on a book's words, for one book or for every book,
+//! 替换规则: find and replace on a book's words, for one book or for every book,
 //! plain or as a regular expression, on the page and in the voice or in the voice only.
 //!
 //! Registers: `rule/<id>` · `book` (a book id, `""` for every book) / `find` / `replace` /

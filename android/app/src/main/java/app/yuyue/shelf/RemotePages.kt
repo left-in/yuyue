@@ -194,7 +194,7 @@ private fun SourceForm(library: Library, source: RemoteSource?, dismiss: () -> U
     }
 }
 
-/** 远程书库 (prototype): the catalogue's ways in as chips at the top, then its books — each with a
+/** 远程书库: the catalogue's ways in as chips at the top, then its books — each with a
  *  download button, a ring while it comes, or 在书架. Folders open further in; 返回 comes back out. */
 @Composable
 fun RemoteBrowser(library: Library, source: RemoteSource, back: () -> Unit) {

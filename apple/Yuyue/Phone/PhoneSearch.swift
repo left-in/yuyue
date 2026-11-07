@@ -2,7 +2,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 搜索 · 问 on the phone (prototype 搜索结果): book names, every book's own sentences, highlights
+/// 搜索 · 问 on the phone: book names, every book's own sentences, highlights
 /// and thoughts, and 生词, looked for at once; the chips under the field keep one kind. The first
 /// row always hands the words to 书伴 instead. A tap goes to the page.
 struct PhoneSearch: View {
@@ -98,7 +98,7 @@ struct PhoneSearch: View {
 
     // MARK: Chips
 
-    /// `.v-fx-scope`: one kind at a time.
+    /// One kind at a time.
     private func chips(_ s: QuickSearch) -> some View {
         ScrollView(.horizontal) {
             HStack(spacing: YYUI.s(6)) {
@@ -139,7 +139,7 @@ struct PhoneSearch: View {
 
     // MARK: Results
 
-    /// `.v-fx-sr`: 问书伴 on top, then each kind under its own label, in white cards.
+    /// 问书伴 on top, then each kind under its own label, in white cards.
     private func results(_ s: QuickSearch) -> some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 0) {
@@ -193,7 +193,7 @@ struct PhoneSearch: View {
         }
     }
 
-    /// `.v-fx-ask`: the row that's always first, handing the words to 书伴.
+    /// The row that's always first, handing the words to 书伴.
     private func askCard(_ book: BookSummary) -> some View {
         Button { library.ask(q, in: book.id) } label: {
             HStack(spacing: YYUI.s(10)) {
@@ -230,7 +230,7 @@ struct PhoneSearch: View {
         book.format != .pdf
     }
 
-    /// `.v-lb`, a little closer to its card than elsewhere.
+    /// A little closer to its card than elsewhere.
     private func label(_ title: String, _ detail: String?) -> some View {
         YYLabel(title, detail)
             .monospacedDigit()
@@ -280,7 +280,7 @@ struct PhoneSearch: View {
         .buttonStyle(.plain)
     }
 
-    /// `.v-fx-hit p`: the book's own sentence, two lines at most.
+    /// The book's own sentence, two lines at most.
     private func passage(_ text: Text) -> some View {
         text
             .font(YYUI.font(12.5, design: .serif))
@@ -347,7 +347,7 @@ struct PhoneSearch: View {
         }
     }
 
-    /// `.v-fx-at`: a tiny cover, the book, where in it.
+    /// A tiny cover, the book, where in it.
     private func source(_ book: BookSummary, _ chapter: String?) -> some View {
         HStack(spacing: YYUI.s(5)) {
             BookCover(book: book).frame(width: YYUI.s(10))

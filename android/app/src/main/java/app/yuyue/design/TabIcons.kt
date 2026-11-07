@@ -9,8 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.addPathNodes
 import androidx.compose.ui.unit.dp
 
-/** The prototype's tab bar icons (`#tab-shelf`, `#tab-notes`, `#tab-me`, `#tab-search` and their
- *  `-f` forms): a line drawing, and the filled one for the tab that is on. */
+/** The tab bar icons: a line drawing, and the filled one for the tab that is on. */
 object TabIcons {
     private const val SHELF = "M3.95 4.25h2.1a1.2 1.2 0 0 1 1.2 1.2v13.1a1.2 1.2 0 0 1-1.2 1.2h-2.1a1.2 1.2 0 0 1-1.2-1.2V5.45a1.2 1.2 0 0 1 1.2-1.2z" +
         "M9.95 6.75h2.1a1.2 1.2 0 0 1 1.2 1.2v10.6a1.2 1.2 0 0 1-1.2 1.2h-2.1a1.2 1.2 0 0 1-1.2-1.2V7.95a1.2 1.2 0 0 1 1.2-1.2z" +

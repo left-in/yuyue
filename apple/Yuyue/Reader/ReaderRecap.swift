@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 前情提要 (prototype): back to a book after a few days, three lines on what happened so far
+/// 前情提要: back to a book after a few days, three lines on what happened so far
 /// float over the page. Written by 书伴 from the part already read only; not within a day.
 struct Recap: Codable, Equatable {
     let lines: [String]

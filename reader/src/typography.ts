@@ -228,7 +228,7 @@ function hideLeadingBreaks(el: HTMLElement): void {
   }
 }
 
-/** "朱自清 · 读 8 分钟 · 听 12 分钟" -> spans with reading/listening icons (prototype .r-meta). */
+/** "朱自清 · 读 8 分钟 · 听 12 分钟" -> spans with reading/listening icons. */
 function decorateMeta(content: HTMLElement): void {
   const metas = content.querySelectorAll('.yy-meta');
   for (let i = 0; i < metas.length; i++) {

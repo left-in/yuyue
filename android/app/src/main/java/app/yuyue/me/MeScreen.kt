@@ -65,7 +65,7 @@ import java.time.temporal.TemporalAdjusters
 /** A page under 我的. */
 enum class MePage { Immersive, EInk, Sources, Stats, Appearance, About, Privacy, Licences, Sync, Snapshot, Listening, Companion, NoteExport, Wifi, Foreign, Engines, Storage }
 
-/** 我的 (prototype 我的), as on iPhone: this week's reading and listening on top, the year's
+/** 我的, as on iPhone: this week's reading and listening on top, the year's
  *  totals under it, then every setting in groups. */
 @Composable
 fun MeScreen(library: Library) {
@@ -215,7 +215,7 @@ private fun sums(library: Library, days: List<LocalDate>): List<DaySums> {
     }
 }
 
-/** `.v-me-wk`: this week's reading and listening, a column a day stacked, and under them the
+/** This week's reading and listening, a column a day stacked, and under them the
  *  books finished this year, the lines marked and the words kept. */
 @Composable
 private fun WeekCard(library: Library) {
@@ -262,7 +262,7 @@ private fun Tile(number: String, unit: String, label: String, modifier: Modifier
     }
 }
 
-/** `.v-me-tt`: "■ 读 5 小时 12 分", the numbers big. */
+/** "■ 读 5 小时 12 分", the numbers big. */
 @Composable
 internal fun PeriodTotal(label: String, seconds: Int, color: Color) {
     val m = seconds / 60
@@ -281,7 +281,7 @@ internal fun PeriodTotal(label: String, seconds: Int, color: Color) {
     }
 }
 
-/** `.v-me-ch`: seven columns, listening stacked on reading; today's column wider and its label dark. */
+/** Seven columns, listening stacked on reading; today's column wider and its label dark. */
 @Composable
 private fun Bars(days: List<DaySums>, modifier: Modifier) {
     val most = maxOf(1, days.maxOf { it.read + it.listen })
@@ -357,7 +357,7 @@ private fun About(push: (MePage) -> Unit) {
     val context = LocalContext.current
     YYPage {
         Column(Modifier.fillMaxWidth().padding(top = YY.s(24)), horizontalAlignment = Alignment.CenterHorizontally) {
-            // `.v-me-logo`: 阅 on paper, the blue rule under it.
+            // 阅 on paper, the blue rule under it.
             Box(
                 Modifier.size(YY.s(64)).shadow(8.dp, RoundedCornerShape(YY.s(15))).background(Color(0xFFFBFAF7), RoundedCornerShape(YY.s(15))),
                 contentAlignment = Alignment.Center,

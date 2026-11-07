@@ -6,7 +6,7 @@
 // Highlight API, which paints over the text without touching the DOM, so the layout, the anchors
 // and the ink line never see them; engines without it (old Android WebViews) simply show none.
 // The three colours are boxes in a layer behind the text instead (placeFills): the Highlight API
-// colours the whole line height in WebKit, and the prototype's `.hl` only covers the letters.
+// colours the whole line height in WebKit, and a highlight should only cover the letters.
 
 import { post } from './bridge';
 import { fragmentsOf, sentenceOf, state } from './layout';

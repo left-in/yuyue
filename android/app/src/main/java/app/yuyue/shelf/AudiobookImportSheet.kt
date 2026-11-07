@@ -57,7 +57,7 @@ import app.yuyue.library.Library
 import app.yuyue.speech.AudiobookPlayer
 import app.yuyue.t
 
-/** 导入有声书 (prototype v0.30 C1): the cover, name and author read from the files, to change;
+/** 导入有声书: the cover, name and author read from the files, to change;
  *  the files in the order they'll play, by the numbers in their names, moved up or down with
  *  the arrows when that's wrong. An M4B's own chapters are shown as they are. */
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 播客's own pieces, the same on the Mac and the phone (docs/design/播客.html).
+/// 播客's own pieces, the same on the Mac and the phone.
 
 /// `.lg25`: the 液态玻璃 button chosen for 播客 (播客-按钮.html · A). Half see-through, a bright
 /// line along the top and a soft shadow under; the action in ink, the one playing in the theme's
@@ -12,7 +12,7 @@ struct PodcastGlassButton: View {
     let title: String
     var symbol: String?
     var kind = Kind.plain
-    /// No glass: the prototype's white capsule with a hairline (`.imp`), sitting on the paper.
+    /// No glass: a white capsule with a hairline, sitting on the paper.
     var flat = false
     /// The key that presses it, written small after the title (配节目-排版.html: 建好了 ⌘↩).
     var key: String?
@@ -41,7 +41,7 @@ struct PodcastGlassButton: View {
         .buttonStyle(PressDown())
     }
 
-    /// `.imp`: the card's white, `--zsh` round it (a hairline and the faintest shadow).
+    /// The card's white, `--zsh` round it (a hairline and the faintest shadow).
     private var paper: some View {
         Capsule()
             .fill(YYColor.card)
@@ -69,7 +69,7 @@ struct PodcastGlassButton: View {
     }
 }
 
-/// 播客列表一行右边那一颗 (docs/design/播客-列表按钮.html · A 一条一道): a line of words over one
+/// 播客列表一行右边那一颗: a line of words over one
 /// short mark a 条. Heard 条 in ink, the one being told in the theme's colour and breathing, the
 /// rest faint. Writing uses the same marks — one lights as each 条 is written — and a failure
 /// stops on a red one. No frame; a faint wash under the pointer.
@@ -300,7 +300,7 @@ struct RadioCover: View {
     }
 }
 
-/// 节目封面: made from the show's name, square, the radio mark in the corner (`.v-sqc.pc`).
+/// 节目封面: made from the show's name, square, the radio mark in the corner.
 struct ShowCover: View {
     let name: String
     var size: CGFloat = 52
@@ -329,7 +329,7 @@ struct ShowCover: View {
             .accessibilityHidden(true)
     }
 
-    /// The prototype's five: 墨蓝、砖红、苔绿、米、紫.
+    /// The five: 墨蓝、砖红、苔绿、米、紫.
     private static let palette: [(Color, Color)] = [
         (Color(red: 0x2F / 255, green: 0x45 / 255, blue: 0x60 / 255), .white),
         (Color(red: 0x8C / 255, green: 0x4A / 255, blue: 0x33 / 255), .white),

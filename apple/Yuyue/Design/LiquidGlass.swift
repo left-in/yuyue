@@ -2,8 +2,8 @@ import SwiftUI
 
 /// 液态玻璃效果, one switch for the whole app (设置 · 外观 on the Mac, 我的 · 外观 on the phone):
 /// everything that floats — capsules, tool capsules, the tabs along the top of 设置 — in the
-/// system's Liquid Glass, or as the prototype draws it: frosted, with a soft pad under what's
-/// chosen. Systems before 26 have no Liquid Glass and always get the prototype.
+/// system's Liquid Glass, or our own: frosted, with a soft pad under what's
+/// chosen. Systems before 26 have no Liquid Glass and always get ours.
 enum LiquidGlass {
     static let key = "appearance.liquidGlass"
 
@@ -23,7 +23,7 @@ extension YYPaper {
 }
 
 extension View {
-    /// The glass under something that floats. Off, or before 26, the prototype's frost: `fill`
+    /// The glass under something that floats. Off, or before 26, our frost: `fill`
     /// over the material, a soft shadow, a hairline. `liquid: false` keeps the frost whatever the
     /// switch says (墨水屏 has no glass).
     func yyGlass(
@@ -77,10 +77,10 @@ private struct YYGlass<S: Shape>: ViewModifier {
 }
 
 extension View {
-    /// A card that floats over the page (`.v-float`): the selection card, notes and recaps over
+    /// A card that floats over the page: the selection card, notes and recaps over
     /// the text, the book menu, the side panel. Liquid Glass with a wash of the card colour, so
-    /// the words on it stay easy to read over the page; off, before 26 or on 墨水屏, the
-    /// prototype's white card and its float shadow.
+    /// the words on it stay easy to read over the page; off, before 26 or on 墨水屏, a
+    /// white card and its float shadow.
     func yyFloatCard(_ shape: some Shape, shadow: [YYShadowLayer]) -> some View {
         modifier(YYFloatCard(shape: shape, shadow: shadow))
     }
@@ -106,7 +106,7 @@ private struct YYFloatCard<S: Shape>: ViewModifier {
 }
 
 extension View {
-    /// macOS 26 and iOS 26 fade whatever scrolls under a bar; the prototype doesn't.
+    /// macOS 26 and iOS 26 fade whatever scrolls under a bar; here it shouldn't.
     @ViewBuilder func noScrollEdgeFade() -> some View {
         if #available(macOS 26, iOS 26, *) {
             scrollEdgeEffectHidden(true, for: .vertical)
@@ -118,8 +118,8 @@ extension View {
 
 #if os(macOS)
 
-/// A tool in a tool capsule (`.v-mac-tools i`), 34 × 26: what's open is in `accent` on a soft
-/// pad of it. `symbol` nil is the prototype's Latin "Aa".
+/// A tool in a tool capsule, 34 × 26: what's open is in `accent` on a soft
+/// pad of it. `symbol` nil is a Latin "Aa".
 struct GlassTool: View {
     let title: String
     let symbol: String?
@@ -137,7 +137,7 @@ struct GlassTool: View {
                     // A label, not a bare image: in the window's toolbar the capsule becomes one
                     // item, and only a button's own title survives as what VoiceOver reads.
                     Label(title, systemImage: symbol).labelStyle(.iconOnly).font(.yy(size: 13, weight: .medium))
-                        // M4: a tool whose icon changes (朗读 ⇄ 暂停) turns one into the other.
+                        // A tool whose icon changes (朗读 ⇄ 暂停) turns one into the other.
                         .contentTransition(.symbolEffect(.replace))
                         .animation(YYMotion.quick, value: symbol)
                 } else {
@@ -156,8 +156,8 @@ struct GlassTool: View {
     }
 }
 
-/// `.v-mac-back`: 书架 at the top left, the system's own toolbar button in Liquid Glass, or the
-/// prototype's frosted capsule.
+/// 书架 at the top left, the system's own toolbar button in Liquid Glass, or a
+/// frosted capsule.
 struct ShelfButtonToolbar: ToolbarContent {
     let liquid: Bool
     let ink: Color

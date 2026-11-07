@@ -3,7 +3,7 @@ import SwiftUI
 import AppKit
 
 // 设置 · 书伴, a service added: its key is changed straight in its row in the right column
-// (docs/design/设置-书伴朗读笔记导出.html), not in the sheet. Once what's typed looks whole it's
+// not in the sheet. Once what's typed looks whole it's
 // tried, and kept only if the service answers. 添加服务商 stays a sheet.
 
 extension CompanionProvider {

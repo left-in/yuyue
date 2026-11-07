@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 导入快照 (prototype 29): whose snapshot and when, what's in it, 合并 or 覆盖, and what the
+/// 导入快照: whose snapshot and when, what's in it, 合并 or 覆盖, and what the
 /// library comes to after, before anything is done.
 struct SnapshotImportSheet: View {
     let snapshots: Snapshots
@@ -48,7 +48,7 @@ struct SnapshotImportSheet: View {
         .background(YYColor.bg)
     }
 
-    /// `.v-dt-file`: the file, where it's from, and what it holds.
+    /// The file, where it's from, and what it holds.
     private var fileCard: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: YYUI.s(10)) {
@@ -81,7 +81,7 @@ struct SnapshotImportSheet: View {
         return out
     }
 
-    /// `.v-dt-mode`: one of the two ways, ringed and ticked when chosen.
+    /// One of the two ways, ringed and ticked when chosen.
     private func choice(_ value: Bool, _ title: String, _ detail: String) -> some View {
         let on = replace == value
         return Button { replace = value } label: {
@@ -181,7 +181,7 @@ struct Flow: Layout {
     }
 }
 
-/// 导出阅读记录 (prototype 29): the shelf as a CSV for Goodreads or StoryGraph — how many of
+/// 导出阅读记录: the shelf as a CSV for Goodreads or StoryGraph — how many of
 /// each, the first lines of the file, and a word on the books without an ISBN.
 struct ReadingExportSheet: View {
     let library: Library
@@ -226,7 +226,7 @@ struct ReadingExportSheet: View {
         .task(id: site) { make() }
     }
 
-    /// `.v-csv`: the header line and the first few rows, as the file has them.
+    /// The header line and the first few rows, as the file has them.
     private var preview: some View {
         let lines = (export?.csv ?? "").split(separator: "\n").prefix(4).map(String.init)
         return VStack(alignment: .leading, spacing: YYUI.s(3)) {

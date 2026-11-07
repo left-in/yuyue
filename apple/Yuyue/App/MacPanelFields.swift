@@ -2,7 +2,7 @@
 import SwiftUI
 import AppKit
 
-// The right column's typing pieces (docs/design/设置-书伴朗读笔记导出.html): a key is typed
+// The right column's typing pieces: a key is typed
 // straight into its row, no box, no sheet; once it looks whole it's tried on its own, and the
 // row says how that went. No 连接, no 取消, no 粘贴 or 👁 buttons: ⌘V pastes, Esc puts it back.
 
@@ -89,7 +89,6 @@ final class AutoConnect {
     private var task: Task<Void, Never>?
 
     var failed: Bool { if case .failed = phase { true } else { false } }
-    var succeeded: Bool { if case .ok = phase { true } else { false } }
     var busy: Bool { if case .checking = phase { true } else { false } }
 
     func start(_ checking: String, delay: Duration = .milliseconds(600),

@@ -18,7 +18,7 @@ import kotlin.coroutines.coroutineContext
 import kotlin.math.sqrt
 
 /**
- * 强制对齐 (听书开发方案 §4.2), as on Apple: Meta's MMS alignment model, 8-bit, as ONNX. It turns a
+ * 强制对齐, as on Apple: Meta's MMS alignment model, 8-bit, as ONNX. It turns a
  * recording into how likely each letter is every 20 ms; the core lays the book's words along that.
  *
  * The model (about 300 MB) isn't in the app: it's fetched from 语阅's own GitHub release the first

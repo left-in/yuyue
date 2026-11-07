@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// `.v-sy-dx`: 连接检查's steps down a thread, the failed one red with how to fix it under it,
+/// 连接检查's steps down a thread, the failed one red with how to fix it under it,
 /// the untested ones dashed.
 struct WebDAVCheckCard: View {
     let check: WebDAVCheck

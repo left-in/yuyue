@@ -1,4 +1,4 @@
-//! 生词本 (FEATURES §3.5): words looked up in books in other languages and kept to learn.
+//! 生词本: words looked up in books in other languages and kept to learn.
 //!
 //! Registers: `word/<key>` · `word` / `phonetic` / `meaning` / `book` / `section` /
 //! `sentence` / `context` / `at` / `known` / `deleted`, where `<key>` is the word in lower

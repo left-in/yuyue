@@ -62,7 +62,7 @@ final class Sync {
     }
 
     /// 书文件: each book's own file goes into the folder too, so a device that has only heard of a
-    /// book gets it. On by default. (播客's episodes go whatever this says: they're a few KB.)
+    /// book gets it. On by default.
     private(set) var syncsFiles = UserDefaults.standard.object(forKey: Keys.files) as? Bool ?? true
 
     func syncFiles(_ on: Bool) {
@@ -73,7 +73,7 @@ final class Sync {
 
     /// 有声书录音: the recordings made into 听读书 here, whole (hundreds of MB each). Off by
     /// default: where each sentence is goes with 进度和书签 anyway, so a device that brings in
-    /// its own copy of the recording listens straight away (听书开发方案 §4.1).
+    /// its own copy of the recording listens straight away.
     private(set) var syncsRecordings = UserDefaults.standard.bool(forKey: Keys.recordings)
 
     func syncRecordings(_ on: Bool) {

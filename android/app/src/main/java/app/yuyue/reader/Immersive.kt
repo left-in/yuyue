@@ -64,7 +64,7 @@ object ImmersivePrefs {
     const val ALWAYS = "immersive.always"
 
     val keepsLine get() = Prefs.bool(LINE, true)
-    /** Off at first (prototype 沉浸设置): a highlight is the reader's own and stays unless asked. */
+    /** Off at first: a highlight is the reader's own and stays unless asked. */
     val hidesMarks get() = Prefs.bool(MARKS, false)
     val stillPages get() = Prefs.bool(STILL, true)
     val hidesStatusBar get() = Prefs.bool(STATUS, true)
@@ -76,7 +76,7 @@ object ImmersivePrefs {
 }
 
 /**
- * 读书时通知不打扰 (prototype: 打开沉浸阅读时，语阅顺手打开勿扰，快捷开关上写着"由语阅打开"；离开书页
+ * 读书时通知不打扰 (打开沉浸阅读时，语阅顺手打开勿扰，快捷开关上写着"由语阅打开"；离开书页
  * 就关掉，你自己开的勿扰不会被动). An automatic rule of the app's own, so the system shows it as
  * turned on by 语阅, and turning it off never ends a Do Not Disturb the reader turned on.
  */
@@ -145,7 +145,7 @@ object EInk {
     }
 }
 
-/** 沉浸阅读 (prototype 沉浸设置): one switch, and what goes with it, each to keep if wanted. From
+/** 沉浸阅读: one switch, and what goes with it, each to keep if wanted. From
  *  a book it turns it on there; from 我的 it is for every book. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

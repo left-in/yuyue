@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 人物声音 (docs/design/听书-分角色与克隆声音.html, R2–R4): who has spoken so far in the book and
+/// 人物声音: who has spoken so far in the book and
 /// the voice each reads with. Everyone reads with the narrator's until given one; the narrator's
 /// is the book's voice from the listen card. Spoilers stay out: only those up to this chapter.
 struct CastSheet: View {
@@ -186,7 +186,7 @@ private struct CastRow: View {
     }
 }
 
-/// R3: one of the cast — voice, which side their bubbles go, pace, pitch — and one of their own
+/// One of the cast — voice, which side their bubbles go, pace, pitch — and one of their own
 /// lines to try every change on.
 private struct RoleView: View {
     let context: CastContext
@@ -287,7 +287,7 @@ private struct RoleView: View {
     }
 }
 
-/// R4 / C1: choosing a voice for someone (or the narrator). 跟旁白 first, then the voices cloned on
+/// Choosing a voice for someone (or the narrator). 跟旁白 first, then the voices cloned on
 /// this device with 克隆一个声音 at the end, then the rest; every 试听 reads their own line.
 private struct VoiceChoiceView: View {
     let context: CastContext
@@ -397,7 +397,7 @@ extension Voices {
 }
 
 
-/// 人物 on the Mac (B5): a float panel beside the page, the narrator at the top and each of the
+/// 人物 on the Mac: a float panel beside the page, the narrator at the top and each of the
 /// cast with their voice; a click opens their page.
 struct CastPanel: View {
     let model: ReaderModel

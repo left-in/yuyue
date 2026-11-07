@@ -73,7 +73,7 @@ private val spacings = listOf(1.6, null, 2.2)
 private fun Main(model: ReaderModel, openMore: () -> Unit, edit: (uniffi.yuyue_core.CustomPaper) -> Unit) {
     val s = model.settings
     if (model.hasDialogue) {
-        // 切到气泡 (B2): 正文 / 气泡, kept per book.
+        // 切到气泡: 正文 / 气泡, kept per book.
         YYSegments(listOf(false to t("正文"), true to t("气泡")), model.bubbles, { model.bubbles = it })
     }
     PaperRow(model, edit)

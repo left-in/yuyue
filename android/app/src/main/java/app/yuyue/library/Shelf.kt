@@ -130,7 +130,7 @@ object CollectionIcon {
     fun of(c: uniffi.yuyue_core.BookCollection): ImageVector =
         vector(c.icon ?: guess(c.name))
 
-    /** 换图标 (U3): the same icons a name can bring, each with what it's for. */
+    /** 换图标: the same icons a name can bring, each with what it's for. */
     val choices: List<Pair<String, String>> = listOf(
         "books.vertical" to "书", "moon" to "睡前", "headphones" to "听", "sparkle" to "科幻", "globe" to "外文",
         "cup.and.saucer" to "闲读", "key" to "推理", "quote.opening" to "诗词", "sun.max" to "孩子",

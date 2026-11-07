@@ -134,7 +134,7 @@ private fun time(ms: Long): String = Instant.ofEpochMilli(ms).atZone(ZoneId.syst
 private typealias Only = MarkStyle?
 
 /**
- * 笔记 on the phone, as on iPhone (prototype 笔记 · 按时间 / 按书 / 一本书的笔记 / 多选): every
+ * 笔记 on the phone, as on iPhone: every
  * book's highlights and thoughts by day, with 今天回顾 on top, or book by book; and the 生词本.
  * A tap goes back to the page; a long press offers the rest; 选择 takes several at once.
  */
@@ -266,7 +266,7 @@ private fun Timeline(
                 }
             }
             item(key = "c$d") {
-                // M6: a note taken out closes up and the card shrinks around the rest.
+                // A note taken out closes up and the card shrinks around the rest.
                 Column(Modifier.animateItem(placementSpec = app.yuyue.design.YYMotion.place).animateContentSize(app.yuyue.design.YYMotion.layout()).fillMaxWidth().background(YY.c.card, RoundedCornerShape(14.dp)).border(0.5.dp, YY.c.line, RoundedCornerShape(14.dp))) {
                     list.forEachIndexed { i, (n, m) ->
                         if (i > 0) Box(Modifier.padding(horizontal = 16.dp).fillMaxWidth().height(0.5.dp).background(YY.c.line))
@@ -382,7 +382,7 @@ private fun BookList(shown: List<NotedBook>, open: (String) -> Unit) {
     }
 }
 
-/** One book's notes in book order, under their chapters (prototype 一本书的笔记). The dots keep one
+/** One book's notes in book order, under their chapters. The dots keep one
  *  style; 导出 takes this book; 回顾这本书 goes through its highlights. */
 @Composable
 private fun BookNotes(library: Library, n: NotedBook, thoughtsOnly: Boolean, back: () -> Unit, review: () -> Unit, act: (String, Mark) -> Unit) {

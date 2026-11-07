@@ -2,7 +2,7 @@
 import AppKit
 import SwiftUI
 
-/// 点词 (prototype 外文原著): under the word, its headword and sound, the short meaning, the
+/// 点词: under the word, its headword and sound, the short meaning, the
 /// phrase it was met in, then 系统词典 · 本书出现 N 次, 更多释义 and 加入生词本.
 struct WordCard: View {
     let model: ReaderModel

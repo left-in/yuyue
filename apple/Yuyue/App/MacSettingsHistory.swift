@@ -2,7 +2,7 @@
 import SwiftUI
 import AppKit
 
-/// 最近改过 (docs/design/设置-书伴朗读笔记导出.html): a clock beside 已存在这台 Mac, with how
+/// 最近改过: a clock beside 已存在这台 Mac, with how
 /// many things were changed today; it opens a card of the changes, a day at a time. Each one
 /// says which page and what, and draws the old and the new value (the colour, the font, the
 /// switch, the voice to hear); 改回 is always there, and once taken back it's 再改过来.

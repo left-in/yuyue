@@ -1,7 +1,7 @@
 #if os(iOS)
 import SwiftUI
 
-/// 沉浸设置 (prototype 沉浸阅读): one switch to go in, then what goes with it, each of which can
+/// 沉浸设置: one switch to go in, then what goes with it, each of which can
 /// be kept. From a book the switch is for that book now; from 我的 it is for every book opened.
 struct PhoneImmersiveSheet: View {
     var model: ReaderModel?

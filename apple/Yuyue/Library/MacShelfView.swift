@@ -9,7 +9,7 @@ import UniformTypeIdentifiers
 struct MacShelfView: View {
     @Bindable var library: Library
     @State private var filter: ShelfFilter? = .all
-    /// M1: the sidebar's white selection slides from row to row.
+    /// The sidebar's white selection slides from row to row.
     @Namespace private var sidebarSelection
     /// 搜索 · 问 ⌘K, and what to start it with.
     @State private var quick: String?
@@ -44,7 +44,7 @@ struct MacShelfView: View {
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
 
     var body: some View {
-        // 首页导航 · A (docs/design/首页导航.html): the sidebar is written straight on the desk, no
+        // 首页导航: the sidebar is written straight on the desk, no
         // card; the page is a sheet of paper lifted off it, 8 in from the window's edges. Put away,
         // the sidebar slides out to the left while the paper widens to the window's left edge.
         ZStack(alignment: .topLeading) {
@@ -58,7 +58,7 @@ struct MacShelfView: View {
                 default: main
                 }
             }
-            // M1: another page fades in a few points lower, rather than replacing this at once.
+            // Another page fades in a few points lower, rather than replacing this at once.
             .id(filter)
             .transition(YYMotion.swap)
             .animation(YYMotion.standard, value: filter)
@@ -101,10 +101,10 @@ struct MacShelfView: View {
         }
         .toolbar(removing: .title)
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-        // `.v-mac-sb .v-lights`: in the sidebar card's top corner, inside the title bar so they
+        // In the sidebar card's top corner, inside the title bar so they
         // can be clicked; they fade out and back with the sidebar.
         .trafficLights(CGPoint(x: 30, y: 24), hidden: !sidebarShown)
-        // The prototype has no fade where lists meet the title bar, the search field or the line
+        // No fade where lists meet the title bar, the search field or the line
         // above 同步: what scrolls up just goes under, clean.
         .noScrollEdgeFade()
         .fileImporter(isPresented: $importerShown, allowedContentTypes: Library.importTypes, allowsMultipleSelection: true) { result in
@@ -259,7 +259,6 @@ struct MacShelfView: View {
         .onMoveCommand(perform: moveFilter)
     }
 
-    /// `.v-mac-sch`
     private var searchField: some View {
         Button { quick = "" } label: {
             HStack(spacing: 7) {
@@ -342,7 +341,7 @@ struct MacShelfView: View {
         }
     }
 
-    /// `.v-mac-gt`: a click folds the group away or back; the arrow shows on hover, as in 访达.
+    /// A click folds the group away or back; the arrow shows on hover, as in 访达.
     private func sidebarGroup(_ title: String, key: String) -> some View {
         SidebarGroupTitle(title: title, closed: closedGroups.contains(key)) { toggleGroup(key) }
     }
@@ -371,7 +370,7 @@ struct MacShelfView: View {
         }
     }
 
-    /// `.v-mac-sync`: 同步 at the foot of the sidebar; a click opens 设置 · 同步.
+    /// 同步 at the foot of the sidebar; a click opens 设置 · 同步.
     private var syncStatus: some View {
         let sync = library.sync
         let (dot, text): (Color, String) = switch sync.state {
@@ -497,7 +496,7 @@ struct MacShelfView: View {
 
     // MARK: 收起 / 展开
 
-    /// 显示侧栏 / 隐藏侧栏 (⌘⌥N, as the prototype has it for both windows). A window too narrow
+    /// 显示侧栏 / 隐藏侧栏 (⌘⌥N, for both windows). A window too narrow
     /// for the sidebar puts it away by itself, until it's asked for again. Remembered.
     @AppStorage("shelf.sidebarShown") private var sidebarWanted = true
     @AppStorage("notes.byBook") private var notesByBook = false
@@ -505,7 +504,7 @@ struct MacShelfView: View {
     @State private var narrowWindow = false
     @State private var openedWhileNarrow = false
 
-    /// The middle of 显示侧栏 and the page's title, from the window's top (`.v-mac-hd`).
+    /// The middle of 显示侧栏 and the page's title, from the window's top.
     static let lineY: CGFloat = 34
     /// Out and back with a little give at the end.
     static let slide = Animation.timingCurve(0.32, 1.18, 0.42, 1, duration: 0.42)
@@ -618,7 +617,7 @@ struct MacShelfView: View {
     /// 墨水屏 has no glass.
     @AppStorage(EInk.key) private var eink = false
 
-    /// `.v-mac-g`: at the default size a 1040-wide window holds eight covers about 80 wide. The
+    /// At the default size a 1040-wide window holds eight covers about 80 wide. The
     /// covers are sized from the window, room for a scroller always left: sized from inside the
     /// scroller, two rows that just fit grow taller without it, need it again, and never settle.
     /// The room left is generous and the width rounded down: with scrollers always shown, a grid
@@ -648,7 +647,7 @@ struct MacShelfView: View {
                     Spacer()
                     importButton
                 }
-                // `.v-mac-hd`: 64 high, 4 of it above, the title in the middle.
+                // 64 high, 4 of it above, the title in the middle.
                 .frame(height: 60)
                 .padding(.top, 4)
                 .padding(.bottom, 9)
@@ -670,7 +669,7 @@ struct MacShelfView: View {
                             .transition(.scale(scale: 0.96).combined(with: .opacity))
                         }
                     }
-                    // M2: a book moving into or out of the cards moves, not jumps.
+                    // A book moving into or out of the cards moves, not jumps.
                     .animation(YYMotion.layout, value: reading.map(\.id))
                     .padding(.bottom, 28)
                 }
@@ -702,12 +701,12 @@ struct MacShelfView: View {
                                 .transition(.scale(scale: 0.9).combined(with: .opacity))
                         }
                     }
-                    // M2: sorted another way, a book brought in or taken out, each moves to its place.
+                    // Sorted another way, a book brought in or taken out, each moves to its place.
                     .animation(YYMotion.layout, value: books.map(\.id))
                 }
                 }
             }
-            // `.v-mac-mn`: 22 in on the left, 26 on the right.
+            // 22 in on the left, 26 on the right.
             .padding(.leading, 22)
             .padding(.trailing, 26)
             .padding(.bottom, 80)
@@ -745,7 +744,7 @@ struct MacShelfView: View {
             .foregroundStyle(YYColor.t1)
             .padding(.horizontal, 12)
             .frame(height: 28)
-            // Liquid Glass that answers the pointer, or the prototype's white capsule.
+            // Liquid Glass that answers the pointer, or a white capsule.
             .yyGlass(Capsule(), fill: YYColor.card, line: YYColor.line, shadow: 0, interactive: true, liquid: !eink)
             .contentShape(.capsule)
         }
@@ -811,7 +810,6 @@ struct MacShelfView: View {
                 .font(.yy(size: 11))
                 .foregroundStyle(YYColor.t3)
         }
-        // `.v-mac-mn .v-lb`
         .padding(.horizontal, 2)
         .padding(.bottom, 10)
     }
@@ -858,7 +856,7 @@ struct MacShelfView: View {
             VStack(alignment: .leading, spacing: 0) {
                 BookCover(book: book)
                     .opacity(book.available ? 1 : 0.45)
-                    // M7: the cover lifts under the pointer.
+                    // The cover lifts under the pointer.
                     .yyLift()
                     .overlay {
                         if revealed == book.id {
@@ -1048,7 +1046,7 @@ private enum StatusShelf: CaseIterable {
     }
 }
 
-/// 首页导航 · A: the shelf window is a desk a shade darker than the page, the sidebar written on
+/// 首页导航: the shelf window is a desk a shade darker than the page, the sidebar written on
 /// it, and the page a sheet of paper lying on it.
 enum ShelfDesk {
     static let fill = Color.yyDynamic(light: YYRGBA(234, 232, 227), dark: YYRGBA(12, 12, 13))
@@ -1082,9 +1080,9 @@ enum ShelfDesk {
     }
 }
 
-/// `.v-mac-it`: an icon in grey, the name, the count on the right. The row being shown is a
+/// An icon in grey, the name, the count on the right. The row being shown is a
 /// white card; a collection with a book dragged over it lights up in the accent.
-/// `.v-mac-gt`, which folds its group away: a click on it, or on the arrow that shows while the
+/// A group's title folds it away: a click on it, or on the arrow that shows while the
 /// pointer is over it (as in 访达).
 private struct SidebarGroupTitle: View {
     let title: String
@@ -1132,7 +1130,7 @@ private struct SidebarRow<Title: View>: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            // `.v-mac-it svg`: every icon in the same 14 × 14 box, wide ones too.
+            // Every icon in the same 14 × 14 box, wide ones too.
             Group {
                 if let drawn = ProtoIcon(rawValue: symbol) {
                     drawn.shape.stroke(style: StrokeStyle(lineWidth: drawn.line, lineCap: .round, lineJoin: .round))
@@ -1154,7 +1152,7 @@ private struct SidebarRow<Title: View>: View {
                 Text(text)
                     .font(.yy(size: 10.5).monospacedDigit())
                     .foregroundStyle(drop ? tint.accent : YYColor.t3)
-                    // M3: a count rolls when a book comes or goes.
+                    // A count rolls when a book comes or goes.
                     .contentTransition(.numericText(value: Double(count ?? 0)))
                     .animation(YYMotion.standard, value: count)
             }
@@ -1166,7 +1164,7 @@ private struct SidebarRow<Title: View>: View {
                 RoundedRectangle(cornerRadius: 8).fill(tint.accentSoft)
                     .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(tint.accent, lineWidth: 1.5))
             } else if on {
-                // One white shape for the whole sidebar, so a new choice slides it there (M1).
+                // One white shape for the whole sidebar, so a new choice slides it there.
                 if let selection {
                     RoundedRectangle(cornerRadius: 8).fill(ShelfDesk.on)
                         .matchedGeometryEffect(id: "selection", in: selection)
@@ -1191,7 +1189,7 @@ extension EnvironmentValues {
     }
 }
 
-/// 编辑信息 (prototype 书的信息): the cover and 换封面, the title and author the shelf shows.
+/// 编辑信息: the cover and 换封面, the title and author the shelf shows.
 struct EditInfoSheet: View {
     let library: Library
     let book: BookSummary
@@ -1307,7 +1305,7 @@ struct ReadingCard: View {
     }
 
     #if os(macOS)
-    /// 封面色 + 进度按钮 · 底线 (docs/design/在读卡片按钮.html · F): the card in its cover's colour,
+    /// 封面色 + 进度按钮 · 底线: the card in its cover's colour,
     /// the progress line grown into the 接着读 bar, drawn along its bottom edge; 听 a square beside it.
     private var macBody: some View {
         let colors = (hue ?? .paper).card(dark: scheme == .dark, grey: eink)
@@ -1336,14 +1334,14 @@ struct ReadingCard: View {
                         Text(audio ? (listening ? String(localized: "正在听") : String(localized: "接着听")) : String(localized: "接着读")).font(.yy(size: 11.5, weight: .semibold))
                         Spacer(minLength: 8)
                         Text(book.percent).font(.yy(size: 11.5, weight: .medium)).monospacedDigit().opacity(0.7)
-                            // M3: the number rolls to the next one.
+                            // The number rolls to the next one.
                             .contentTransition(.numericText(value: book.progress))
                     }
                     .padding(.horizontal, 11)
                     .frame(height: 32)
                     .background(colors.fg.opacity(0.13))
                     .overlay(alignment: .bottomLeading) {
-                        // I1: a faint track the whole length, and the line never shorter than 10, so
+                        // A faint track the whole length, and the line never shorter than 10, so
                         // 1% still reads as begun.
                         GeometryReader { g in
                             ZStack(alignment: .leading) {
@@ -1380,7 +1378,7 @@ struct ReadingCard: View {
 
     private func listenButton(_ colors: (bg: Color, fg: Color)) -> some View {
         Button { open(listening ? nil : .listen) } label: {
-            // M4: one image, the headphones turning into the moving wave and back.
+            // One image, the headphones turning into the moving wave and back.
             Image(systemName: listening ? "waveform" : "headphones")
                 .contentTransition(.symbolEffect(.replace))
                 .symbolEffect(.variableColor.iterative, options: .repeating, isActive: listening)
@@ -1492,7 +1490,7 @@ struct CoverHue: Equatable {
     /// In dark mode every card is dark. Greys get a touch of warmth so they don't read as blank.
     func card(dark: Bool, grey: Bool) -> (bg: Color, fg: Color) {
         let s = grey ? 0 : max(saturation, 0.06)
-        // I3: the shelf is warm grey paper; a card may take a cover's hue but never be louder than
+        // The shelf is warm grey paper; a card may take a cover's hue but never be louder than
         // the shelf around it. Cool hues (green through violet) stand out more, so they're kept
         // paler still.
         let cool = hue > 0.2 && hue < 0.9
@@ -1552,7 +1550,7 @@ private struct SidebarToggle: View {
     }
 }
 
-/// The prototype's own icons where no system one matches, drawn as its SVGs are (16 × 16, lines).
+/// Our own icons where no system one matches, drawn as SVGs (16 × 16, lines).
 nonisolated enum ProtoIcon: String {
     /// `#i-wavef`: 有声.
     case wave = "proto.wave"

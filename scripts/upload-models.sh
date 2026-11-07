@@ -1,14 +1,14 @@
 #!/bin/sh
-# 把强制对齐模型传到 GitHub Releases 的 models-1（听书开发方案第 4 节）。
+# 把强制对齐模型传到 GitHub Releases 的 models-1。
 # 三端第一次合成有声书时从这里下载，下载后核对 BLAKE3，对不上就不用。
 #
-# 用法：scripts/upload-models.sh [模型所在文件夹] [仓库]
-#   默认：/Volumes/T2214/yuyue-lab/align/model  left-in/yuyue
+# 用法：scripts/upload-models.sh <模型所在文件夹> [仓库]
+#   仓库默认 left-in/yuyue
 # 先 gh auth login。仓库必须是公开的，否则别人下载是 404。
 # 换了仓库，要同时改 apple/Yuyue/App/Aligner.swift 和
 # android/app/src/main/java/app/yuyue/speech/Aligner.kt 里的地址。
 set -eu
-DIR=${1:-/Volumes/T2214/yuyue-lab/align/model}
+DIR=${1:?要给模型所在文件夹}
 REPO=${2:-left-in/yuyue}
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 YUYUE=$ROOT/core/target/release/yuyue

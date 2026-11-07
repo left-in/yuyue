@@ -1,6 +1,6 @@
 # App icon
 
-The icon is 关于's logo (`.v-me-logo` in the prototype, `PhoneAbout` in the app): a bold Songti 阅
+The icon is 关于's logo (`PhoneAbout` in the app): a bold Songti 阅
 on paper (#FBFAF7) with the 墨蓝 rule (#2B4C7E) under it. All sizes come from the logo's own
 64-unit box, so the icon and the logo stay the same picture.
 

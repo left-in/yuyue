@@ -1,7 +1,7 @@
 import AVFoundation
 import YuyueCore
 
-/// 分角色朗读 (听书开发方案 §5.1): each sentence read by the voice of whoever says it. Nobody has
+/// 分角色朗读: each sentence read by the voice of whoever says it. Nobody has
 /// one of their own until the reader gives it: by default everything is the narrator's, so a
 /// book sounds as it always did. Lines the script isn't sure of stay the narrator's too.
 @MainActor final class BookRoles {

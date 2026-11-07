@@ -62,7 +62,7 @@ fun ListenSheet(model: ReaderModel, dismiss: () -> Unit) {
             Sleep(model, player)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 if (model.hasDialogue) {
-                    // 分角色: 人物声音 (R1).
+                    // 分角色: 人物声音.
                     var own by remember { mutableStateOf(0) }
                     LaunchedEffect(model.castShown) { own = runCatching { model.core.bookRoles(model.bookID) }.getOrDefault(emptyList()).count { it.voice.voice != null } }
                     Tile(t("人物声音"), if (own == 0) t("都跟旁白") else t("%@ 人单独设", own.toString()), false, Modifier.weight(1f)) {

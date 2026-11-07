@@ -2,7 +2,7 @@ import SwiftUI
 import YuyueCore
 #if os(macOS)
 
-/// 编辑部 · 和编辑说话 (docs/design/播客.html): the editor is a person. It says how many new
+/// 编辑部 · 和编辑说话: the editor is a person. It says how many new
 /// articles came, which it picked and in what order, and why the rest were left out; the
 /// reader answers ("放最后", "不要这条", "短一点") and it changes the pick.
 struct MacEditorDesk: View {
@@ -10,6 +10,7 @@ struct MacEditorDesk: View {
     let show: Show
     let close: () -> Void
     @State private var typed = ""
+    @State private var linesOpen = false
     @FocusState private var focused: Bool
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
@@ -41,10 +42,27 @@ struct MacEditorDesk: View {
                 .defaultScrollAnchor(.bottom)
                 .onChange(of: messages.count) { withAnimation { proxy.scrollTo("end", anchor: .bottom) } }
             }
-            suggestions
             input
         }
         .padding(.bottom, 20)
+        .overlay {
+            if linesOpen, canSuggest {
+                Color.clear.contentShape(.rect).onTapGesture { linesOpen = false }
+                ReadyLinesCard(width: 330) {
+                    ForEach(Self.suggested, id: \.self) { s in
+                        QuickLine(line: s) { linesOpen = false; send(s) }
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                .frame(maxWidth: 660)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 22)
+                .padding(.bottom, 20 + 40 + 8)
+            }
+        }
+        #if DEBUG
+        .onAppear { if UserDefaults.standard.bool(forKey: "debugEditorLines") { linesOpen = true } }
+        #endif
     }
 
     private var opening: some View {
@@ -110,37 +128,30 @@ struct MacEditorDesk: View {
         })
     }
 
-    /// 输入框上面一行行纯文字, like Claude's.
-    private var suggestions: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            ForEach(Self.suggested, id: \.self) { s in
-                Button { send(s) } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "arrow.right").font(.system(size: 10)).foregroundStyle(YYColor.t3)
-                        Text(s).font(.yy(size: 12.5)).foregroundStyle(YYColor.t2)
-                    }
-                    .padding(.horizontal, 8).frame(height: 26).contentShape(.rect)
-                }
-                .buttonStyle(HoverWash())
-            }
-        }
-        .frame(maxWidth: 660, alignment: .leading)
-        .frame(maxWidth: .infinity)
-        .padding(.horizontal, 22)
-        .opacity(progress?.picked.isEmpty == false ? 1 : 0)
-    }
+    /// These only make sense once it has picked something.
+    private var canSuggest: Bool { progress?.picked.isEmpty == false }
 
     private static let suggested = [String(localized: "多讲一点第一条"), String(localized: "不要最后一条"), String(localized: "短一点")]
 
-    /// While it writes: what it's doing in place of the prompt, 停下 at the right end.
+    /// “ for a ready remark, what you type, ↑. While it writes: what it's doing in place of the
+    /// prompt, 停下 at the right end, ↑ only once there's something to send.
     private var input: some View {
-        HStack(spacing: 6) {
-            TextField(prompt, text: $typed)
+        let empty = typed.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let writing = podcasts.isWriting(show.id)
+        return HStack(spacing: 8) {
+            if canSuggest { ReadyLinesToggle(open: $linesOpen, help: Text("挑一句现成的")) }
+            TextField("", text: $typed, prompt: Text(prompt).font(.yy(size: 12)).foregroundStyle(YYColor.t3))
                 .textFieldStyle(.plain)
-                .font(.yy(size: 13))
+                .font(.custom("Songti SC", size: 13))
+                .foregroundStyle(YYColor.t1)
                 .focused($focused)
                 .onSubmit { send(typed) }
-            if podcasts.isWriting(show.id) {
+                .padding(.leading, 2)
+                .offset(y: 2)
+            if empty, !writing {
+                Text("回车发").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).fixedSize()
+            }
+            if writing {
                 Button { podcasts.cancel(show.id) } label: {
                     RoundedRectangle(cornerRadius: 2.5).fill(YYColor.t2).frame(width: 10, height: 10)
                         .frame(width: 28, height: 28).contentShape(.rect)
@@ -149,11 +160,12 @@ struct MacEditorDesk: View {
                 .help(String(localized: "停下"))
                 .accessibilityLabel(String(localized: "停下"))
             }
+            if !writing || !empty {
+                ComposerSendButton(ready: !empty, help: Text("发给编辑")) { send(typed) }
+            }
         }
-        .padding(.leading, 16).padding(.trailing, 8)
-        .frame(height: 44)
-        .background(YYColor.card, in: .rect(cornerRadius: 14))
-        .yyShadow(YYShadow.cardLight)
+        .padding(.leading, canSuggest ? 6 : 14).padding(.trailing, 6)
+        .composerBox()
             .frame(maxWidth: 660)
             .frame(maxWidth: .infinity)
             .padding(.horizontal, 22)
@@ -168,15 +180,6 @@ struct MacEditorDesk: View {
     private func send(_ text: String) {
         podcasts.say(text, to: show)
         typed = ""
-    }
-
-    private struct HoverWash: ButtonStyle {
-        @State private var hover = false
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .background(YYColor.t1.opacity(hover || configuration.isPressed ? 0.05 : 0), in: .rect(cornerRadius: 8))
-                .onHover { hover = $0 }
-        }
     }
 }
 

@@ -1,4 +1,4 @@
-//! Organising the shelf: reading status and collections (FEATURES §1).
+//! Organising the shelf: reading status and collections.
 //!
 //! Registers: `book/<id>` · `finished` (marked read), `collection/<id>` · `name` / `icon` /
 //! `order` / `usedAt` / `deleted`, and `member/<collection>/<book>` · `in`. Membership is one

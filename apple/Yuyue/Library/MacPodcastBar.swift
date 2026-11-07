@@ -2,7 +2,7 @@ import SwiftUI
 import YuyueCore
 #if os(macOS)
 
-/// 播客's 播放条 (docs/design/播客.html · Mac): along the bottom of the window. Left, back a 条,
+/// 播客's 播放条: along the bottom of the window. Left, back a 条,
 /// play, on a 条; in the middle a card with the episode — its cover, title, which 条 and who's
 /// speaking, and a thin bar cut where each 条 starts (hover for its topic, click to go there);
 /// right, speed, the sleep timer, 文稿 (the episode's window) and letting it go.

@@ -1,4 +1,4 @@
-//! 编码和目录 (FEATURES §1): reading a TXT in another encoding, or cutting it into chapters by
+//! 编码和目录: reading a TXT in another encoding, or cutting it into chapters by
 //! another rule. The page tries a choice on the original file without touching the book; applying
 //! it re-imports the book.
 //!

@@ -33,7 +33,7 @@ struct PhoneSources: View {
         .navigationDestination(item: $editing) { PhoneSourceForm(library: library, source: $0) }
     }
 
-    /// `.v-r2`: the tile, the name, what kind and where.
+    /// The tile, the name, what kind and where.
     private func row(_ source: RemoteSource) -> some View {
         HStack(spacing: YYUI.s(10)) {
             Image(systemName: "server.rack")
@@ -149,7 +149,7 @@ struct PhoneSourceForm: View {
     }
 }
 
-/// 远程书库 (prototype): the catalogue's ways in as chips at the top, then its books — each with
+/// 远程书库: the catalogue's ways in as chips at the top, then its books — each with
 /// a download button, a ring while it comes, or 在书架.
 struct PhoneRemoteBrowser: View {
     let library: Library
@@ -214,7 +214,7 @@ struct PhoneRemoteBrowser: View {
         .task { if feed == nil { await load() } }
     }
 
-    /// `.v-chips`: the start page's ways in — 最新, 作者, 系列 — one at a time.
+    /// The start page's ways in — 最新, 作者, 系列 — one at a time.
     private var chipRow: some View {
         ScrollView(.horizontal) {
             HStack(spacing: YYUI.s(6)) {
@@ -243,7 +243,7 @@ struct PhoneRemoteBrowser: View {
         .padding(.top, YYUI.s(8))
     }
 
-    /// `.v-lib-ol`: one white card, a row a line.
+    /// One white card, a row a line.
     private func list(_ feed: RemoteFeed) -> some View {
         LazyVStack(spacing: 0) {
             ForEach(Array(feed.entries.enumerated()), id: \.element.id) { i, entry in
@@ -309,7 +309,6 @@ struct PhoneRemoteBrowser: View {
 
     @ViewBuilder private func action(_ entry: RemoteEntry) -> some View {
         if let fraction = library.sources.downloading[RemoteSources.key(source, entry)] {
-            // `.v-ring`
             ZStack {
                 Circle().stroke(YYColor.inset, lineWidth: YYUI.s(3))
                 Circle().trim(from: 0, to: max(0.03, fraction)).stroke(tint.accent, style: StrokeStyle(lineWidth: YYUI.s(3)))
@@ -320,7 +319,6 @@ struct PhoneRemoteBrowser: View {
             .animation(.linear(duration: 0.25), value: fraction)
             .accessibilityLabel("正在下载 \(Int(fraction * 100))%")
         } else if library.sources.has(entry, from: source, in: library) {
-            // `.v-have`
             HStack(spacing: YYUI.s(2)) {
                 Image(systemName: "checkmark").font(YYUI.font(9, .semibold))
                 Text("在书架")
@@ -328,7 +326,6 @@ struct PhoneRemoteBrowser: View {
             .font(YYUI.font(10))
             .foregroundStyle(YYColor.t3)
         } else {
-            // `.v-get`
             Button {
                 Task {
                     do { try await library.sources.take(entry, from: source, into: library) } catch is CancellationError {} catch {

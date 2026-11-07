@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 今天回顾 (prototype 每日回顾 / 回顾完成): five old highlights a day, one at a time, each asking
+/// 今天回顾: five old highlights a day, one at a time, each asking
 /// one thing: 留下, or 不要了. 留下 comes back in a while; 不要了 only stops it coming back. When
 /// the five are done it says so and stops: no streaks, no "come back tomorrow".
 @Observable

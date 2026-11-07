@@ -2,7 +2,7 @@ import SwiftUI
 import YuyueCore
 #if os(macOS)
 
-/// 单集 (docs/design/播客.html · Mac · 单集): at a desk, what one wants to know is "what are they
+/// 单集: at a desk, what one wants to know is "what are they
 /// on now, and what does the article say". Left, the 节目单: every 条 with the time it starts,
 /// heard ones in ink, the one playing in the theme's colour; click one to listen from there.
 /// Right, one 条 in full: its topic, the articles (看原文 opens each), what the hosts say in it

@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 有声书 open (prototype v0.30 C3, C4, C6): the cover, the chapter, the scrubber with the
+/// 有声书 open: the cover, the chapter, the scrubber with the
 /// 书签 on it, and the controls. On a Mac the chapters and 书签 sit in a column on the right; on
 /// the phone they come up from the bottom.
 struct AudiobookScreen: View {
@@ -75,7 +75,7 @@ struct AudiobookScreen: View {
 
     // MARK: Parts
 
-    /// 书架上有同一本电子书: 合成 lays the recording against it (v0.30 C3 / C6).
+    /// 书架上有同一本电子书: 合成 lays the recording against it.
     @ViewBuilder private var pairCard: some View {
         if let ebook = library.ebook(for: player.summary) {
             HStack(spacing: 10) {

@@ -3,7 +3,7 @@ import AuthenticationServices
 import SwiftUI
 import YuyueCore
 
-/// 设置 · 同步 (prototype f111): the state and each device's last sync on top, the three ways in
+/// 设置 · 同步: the state and each device's last sync on top, the three ways in
 /// the middle, what goes along below.
 struct SyncSettings: View {
     let library: Library
@@ -175,7 +175,6 @@ struct SyncSettings: View {
     }
 
     private func device(_ d: DeviceInfo) -> some View {
-        // `.v-ms-dv`
         HStack(spacing: 8) {
             Image(systemName: Self.symbol(d.platform))
                 .font(.yy(size: 14))
@@ -228,7 +227,6 @@ struct SyncSettings: View {
         let on = sync.method == m
         let later = m == .googleDrive && GoogleAuth.clientID == nil
         return Button { pick(m) } label: {
-            // `.v-ms-way`
             VStack(alignment: .leading, spacing: 2) {
                 HStack(alignment: .top) {
                     Image(systemName: symbol)

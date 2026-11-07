@@ -79,7 +79,7 @@ private fun TwoLines(title: String, detail: String?, modifier: Modifier = Modifi
 
 // MARK: 外文阅读
 
-/** 外文阅读 (prototype 外文阅读设置), as on iPhone: saying a word aloud, 难词注释, the 生词 marks,
+/** 外文阅读, as on iPhone: saying a word aloud, 难词注释, the 生词 marks,
  *  and translation. */
 @Composable
 fun ForeignPage(core: uniffi.yuyue_core.YuyueCore) {
@@ -159,7 +159,7 @@ private val GLOSS_LEVELS = listOf(2 to "四级", 3 to "六级", 4 to "考研", 5
 
 // MARK: 引擎
 
-/** 引擎 (prototype 引擎), as on iPhone: who answers as 书伴, which voice reads, what translates.
+/** 引擎, as on iPhone: who answers as 书伴, which voice reads, what translates.
  *  All free, no membership; the phone's own, or the reader's own key. */
 @Composable
 fun EnginesPage(open: (MePage) -> Unit) {
@@ -231,7 +231,6 @@ fun StoragePage(library: Library) {
         t("其他") to maxOf(0, (u?.total ?: 0) - bookBytes - (u?.deletedBytes ?: 0)))
     val shades = listOf(1f, 0.5f, 0.25f)
     YYPage {
-        // `.v-sy-use`
         Column(Modifier.padding(top = YY.s(10), bottom = YY.s(14)).fillMaxWidth().background(YY.c.card, RoundedCornerShape(YY.s(16))).padding(horizontal = YY.s(14), vertical = YY.s(13))) {
             Text(t("语阅一共用了"), style = YY.font(10.5f), color = YY.c.t3)
             Row(verticalAlignment = Alignment.Bottom) {
@@ -320,7 +319,7 @@ private fun MDictList(core: uniffi.yuyue_core.YuyueCore) {
         }
     }
     var menuFor by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }
-    /** U3: 往上挪 / 往下挪 — a word is looked up in this order. */
+    /** 往上挪 / 往下挪 — a word is looked up in this order. */
     fun move(id: String, step: Int) {
         val ids = list.map { it.id }.toMutableList()
         val i = ids.indexOf(id)

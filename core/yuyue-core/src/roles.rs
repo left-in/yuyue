@@ -1,4 +1,4 @@
-//! 分角色 (听书开发方案 §5.1): the cast page — who has spoken so far — and the voice each of them
+//! 分角色: the cast page — who has spoken so far — and the voice each of them
 //! reads with. By default nobody has a voice of their own: everyone is read by the narrator's,
 //! so a book sounds as it always did until the reader chooses otherwise. What's chosen is kept
 //! per book in the store, so it syncs.

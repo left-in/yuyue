@@ -56,7 +56,7 @@ final class ReaderModel {
     var settingsShown = false
     /// 替换规则, from 更多 or the menu bar.
     var rulesShown = false
-    /// 气泡模式 (docs/design/听书-气泡与有声书.html): the dialogue as bubbles, kept per book.
+    /// 气泡模式: the dialogue as bubbles, kept per book.
     var bubbles = false {
         didSet {
             guard bubbles != oldValue else { return }
@@ -850,7 +850,7 @@ enum ImmersivePrefs {
     private static func flag(_ key: String, _ otherwise: Bool = true) -> Bool { UserDefaults.standard.object(forKey: key) as? Bool ?? otherwise }
     /// A hairline at the very bottom for how far through the book.
     static var keepsLine: Bool { flag(lineKey) }
-    /// Off at first (prototype 沉浸设置): a highlight is the reader's own and stays unless asked.
+    /// Off at first: a highlight is the reader's own and stays unless asked.
     static var hidesMarks: Bool { flag(marksKey, false) }
     static var stillPages: Bool { flag(stillKey) }
     static var hidesStatusBar: Bool { flag(statusKey) }

@@ -64,7 +64,7 @@ fun ShelfChooser(library: Library, filter: ShelfFilter, choose: (ShelfFilter) ->
     var naming by remember { mutableStateOf(false) }
     var renaming by remember { mutableStateOf<uniffi.yuyue_core.BookCollection?>(null) }
     var menuFor by remember { mutableStateOf<String?>(null) }
-    /** U3: the collection whose icon is being picked. */
+    /** The collection whose icon is being picked. */
     var iconFor by remember { mutableStateOf<uniffi.yuyue_core.BookCollection?>(null) }
     ModalBottomSheet(dismiss, sheetState = rememberModalBottomSheetState(), containerColor = YY.c.bg) {
         Column(Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 28.dp)) {

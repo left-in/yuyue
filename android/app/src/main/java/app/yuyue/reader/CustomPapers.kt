@@ -235,7 +235,7 @@ fun PaperRow(model: ReaderModel, edit: (CustomPaper) -> Unit) {
     }
 }
 
-/** A paper as a small tile with 文 in its ink (`.v-rd-paper i`), its texture on it. */
+/** A paper as a small tile with 文 in its ink, its texture on it. */
 @Composable
 private fun PaperTile(tokens: YYPaper, texture: PaperTexture, name: String, on: Boolean, modifier: Modifier, height: Int = 44) {
     Column(
@@ -287,7 +287,7 @@ private fun TextureLayer(texture: PaperTexture, dark: Boolean, modifier: Modifie
     }
 }
 
-/** 调纸, as docs/design/自己调纸页.html: 白天 or 夜里, six made colours for it, 微调 within bounds
+/** 调纸: 白天 or 夜里, six made colours for it, 微调 within bounds
  *  that stay restful (色调、浓淡、深浅), a texture, and the text: picked for the colour or one of
  *  four inks. Everything it can reach reads well, so there is nothing to warn about. No name to
  *  type: the core names a new paper after the colour it is closest to. The page behind changes as

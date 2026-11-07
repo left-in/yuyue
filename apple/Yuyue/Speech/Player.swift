@@ -7,7 +7,7 @@ import UIKit
 import AppKit
 #endif
 
-/// Reads a book aloud one sentence at a time, for every voice alike (TECH.md: 统一播放器).
+/// Reads a book aloud one sentence at a time, for every voice alike.
 ///
 /// A sentence is rendered to audio before it plays, so its length is known exactly and the
 /// reader's ink line keeps pace with the voice. Two sentences are kept rendered ahead, so

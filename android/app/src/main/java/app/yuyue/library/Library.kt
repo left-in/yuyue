@@ -232,10 +232,6 @@ class Library(private val context: Context) {
         }
     }
 
-    fun dismissToast() {
-        toast = null
-    }
-
     fun undo() {
         val t = toast ?: return
         toast = null
@@ -319,7 +315,7 @@ class Library(private val context: Context) {
         }
     }
 
-    /** A recording read and waiting on 导入有声书 (prototype v0.30 C1): its name, author, cover
+    /** A recording read and waiting on 导入有声书: its name, author, cover
      *  and the order of its files can be changed before it goes onto the shelf. Its files sit in
      *  `scratch` till then. */
     data class PendingRecording(val audio: uniffi.yuyue_core.AudioImport, val scratch: File, val names: List<String>)
@@ -410,7 +406,7 @@ class Library(private val context: Context) {
         /** How long a note stays. */
         /** How long a plain note stays. */
         const val TOAST_MS = 3000L
-        /** The seconds a deletion can be undone, counted down on its banner (Telegram's 5). */
+        /** The seconds a deletion can be undone, counted down on its banner. */
         const val UNDO_MS = 5000L
         /** How long the red tick shows after the count before the banner rises away. */
         const val UNDO_SETTLE_MS = 900L

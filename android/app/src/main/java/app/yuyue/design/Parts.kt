@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.yuyue.t
 
-/** A page of the prototype's pieces on its grey ground. */
+/** A page of these pieces on its grey ground. */
 @Composable
 fun YYPage(modifier: Modifier = Modifier, contentPadding: PaddingValues = PaddingValues(0.dp), content: @Composable ColumnScope.() -> Unit) {
     Column(
@@ -61,7 +61,7 @@ fun YYPage(modifier: Modifier = Modifier, contentPadding: PaddingValues = Paddin
     )
 }
 
-/** `.v-lb`: a heading over a card, a grey note on its right. */
+/** A heading over a card, a grey note on its right. */
 @Composable
 fun YYLabel(title: String, trailing: String? = null) {
     Row(
@@ -74,7 +74,7 @@ fun YYLabel(title: String, trailing: String? = null) {
     }
 }
 
-/** `.v-note`: a grey line under a card. */
+/** A grey line under a card. */
 @Composable
 fun YYNote(text: String, color: Color = YY.c.t3) {
     Text(
@@ -117,7 +117,7 @@ class GroupScope {
     }
 }
 
-/** `.v-card`: a white card on its own. */
+/** A white card on its own. */
 fun Modifier.yyCard(dark: Boolean, card: Color, line: Color, radius: Dp = YY.s(16)): Modifier =
     this
         .shadow(if (dark) 0.dp else 2.dp, RoundedCornerShape(radius), ambientColor = Color(0x14332E29), spotColor = Color(0x14332E29))
@@ -159,7 +159,7 @@ fun YYRow(
     }
 }
 
-/** `.v-in`: a field with its name in a fixed column on the left. */
+/** A field with its name in a fixed column on the left. */
 @Composable
 fun YYField(label: String, labelWidth: Float = 58f, field: @Composable () -> Unit) {
     Row(Modifier.fillMaxWidth().heightIn(min = YY.s(38)), verticalAlignment = Alignment.CenterVertically) {
@@ -169,7 +169,7 @@ fun YYField(label: String, labelWidth: Float = 58f, field: @Composable () -> Uni
     }
 }
 
-/** `.v-seg`: choices on an inset track, the chosen one lifted on a white chip. */
+/** Choices on an inset track, the chosen one lifted on a white chip. */
 @Composable
 fun <T> YYSegments(items: List<Pair<T, String>>, selection: T, onSelect: (T) -> Unit, small: Boolean = false, modifier: Modifier = Modifier) {
     Row(
@@ -208,7 +208,7 @@ fun <T> YYSegments(items: List<Pair<T, String>>, selection: T, onSelect: (T) -> 
 enum class ButtonKind { Main, Raised, Soft, Plain, Danger }
 enum class ButtonSize { Small, Regular, Large }
 
-/** `.v-btn`: the app's capsule buttons. */
+/** The app's capsule buttons. */
 @Composable
 fun YYButton(
     title: String,
@@ -258,7 +258,7 @@ fun YYButton(
     }
 }
 
-/** `.v-tag`: a small grey label. */
+/** A small grey label. */
 @Composable
 fun YYTag(text: String, icon: ImageVector? = null) {
     Row(
@@ -271,7 +271,7 @@ fun YYTag(text: String, icon: ImageVector? = null) {
     }
 }
 
-/** `.v-sh`: a sheet's own title with × on the right. */
+/** A sheet's own title with × on the right. */
 @Composable
 fun YYSheetHeader(title: String, subtitle: String? = null, close: () -> Unit) {
     Row(
@@ -292,7 +292,7 @@ fun YYSheetHeader(title: String, subtitle: String? = null, close: () -> Unit) {
 /** A thin progress bar in the tint. */
 @Composable
 fun ProgressLine(value: Double, height: Dp = 3.dp, modifier: Modifier = Modifier) {
-    // M3: a new value grows to its length instead of jumping there.
+    // A new value grows to its length instead of jumping there.
     val shown by androidx.compose.animation.core.animateFloatAsState(value.coerceIn(0.0, 1.0).toFloat(), YYMotion.standard(), label = "progress")
     BoxWithConstraints(modifier.fillMaxWidth().height(height).clip(CircleShape).background(YY.c.inset)) {
         Box(Modifier.width(maxWidth * shown).height(height).clip(CircleShape).background(YY.tint.fill))

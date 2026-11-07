@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 同步冲突 (prototype 28): a thought changed on two devices apart. Both are laid side by side —
+/// 同步冲突: a thought changed on two devices apart. Both are laid side by side —
 /// which device, when, the words that differ tinted — and nothing is overwritten until one is
 /// chosen: 留这份, 两份都留, or 用较新的.
 struct NoteConflictsSheet: View {
@@ -96,7 +96,7 @@ struct NoteConflictsSheet: View {
         return s
     }
 
-    /// `.v-cf-side`: the device, when it was written, 较新 on the newer, 留这份, and the thought.
+    /// The device, when it was written, 较新 on the newer, 留这份, and the thought.
     private func side(_ s: ConflictSide, _ text: AttributedString, newer: Bool, choice: ConflictChoice) -> some View {
         VStack(alignment: .leading, spacing: YYUI.s(10)) {
             HStack(spacing: YYUI.s(8)) {
@@ -180,7 +180,7 @@ struct NoteConflictsSheet: View {
     }
 }
 
-/// `.v-cf-bar`: N 处笔记两边不一样, under the sync status, until each is chosen.
+/// N 处笔记两边不一样, under the sync status, until each is chosen.
 struct ConflictsBanner: View {
     let library: Library
     /// Below it, when it shows.

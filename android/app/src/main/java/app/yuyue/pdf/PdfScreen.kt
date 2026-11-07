@@ -84,7 +84,7 @@ import java.io.File
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
-/** A PDF open for reading (FEATURES §3.5), as on Apple: shown as it is printed; where the reader
+/** A PDF open for reading, as on Apple: shown as it is printed; where the reader
  *  is, is a page (section 0, the page standing where a book has its sentence). Its words, where
  *  the system can read them (Android 15 on), are cut into sentences by the core and read aloud
  *  page by page. */

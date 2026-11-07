@@ -173,7 +173,7 @@ fun ShelfScreen(library: Library, openWifi: () -> Unit, openRemote: () -> Unit, 
                     item(span = { GridItemSpan(maxLineSpan) }) { Empty(library, collection != null) { picker.launch(importTypes) } }
                 } else {
                     items(shown, key = { it.id }) { book ->
-                        // M2: sorted, filtered, brought in or taken out, each book moves to its place.
+                        // Sorted, filtered, brought in or taken out, each book moves to its place.
                         Box(Modifier.animateItem(fadeInSpec = app.yuyue.design.YYMotion.standard(), placementSpec = app.yuyue.design.YYMotion.place, fadeOutSpec = app.yuyue.design.YYMotion.exit())) {
                         Cell(
                             library, book, showProgress, selecting, book.id in selected,
@@ -335,7 +335,7 @@ private fun Kinds(kind: Kind, onKind: (Kind) -> Unit, sort: ShelfSort, onSort: (
     Row(Modifier.fillMaxWidth().padding(top = 22.dp, bottom = 0.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         for (k in Kind.entries) {
             val on = k == kind
-            // M1: the chosen one darkens over a moment instead of at once.
+            // The chosen one darkens over a moment instead of at once.
             val fill by androidx.compose.animation.animateColorAsState(if (on) tint.black else YY.c.inset, app.yuyue.design.YYMotion.standard(), label = "kind")
             val ink by androidx.compose.animation.animateColorAsState(if (on) tint.onBlack else YY.c.t1, app.yuyue.design.YYMotion.standard(), label = "kindText")
             val press = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
@@ -364,7 +364,7 @@ private fun Kinds(kind: Kind, onKind: (Kind) -> Unit, sort: ShelfSort, onSort: (
     }
 }
 
-/** `.v-lib-wel` (prototype 第一次打开): what this is, then the three ways to put books in. */
+/** What this is, then the three ways to put books in. */
 @Composable
 private fun Welcome(onFiles: () -> Unit, onWifi: () -> Unit, onRemote: () -> Unit) {
     Column(Modifier.padding(top = YY.s(14))) {
@@ -422,7 +422,7 @@ private fun Cell(
     var menu by remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
     val tint = YY.tint
-    // M7: the cell gives a little while pressed.
+    // The cell gives a little while pressed.
     val press = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
     Box {
         Column(

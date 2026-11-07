@@ -98,7 +98,7 @@ enum CollectionIcon {
         return guesses.first { keys, _ in keys.contains { name.contains($0) } }?.1
     }
 
-    /// 换图标 (U3): the same icons a name can bring, each with what it's for.
+    /// 换图标: the same icons a name can bring, each with what it's for.
     static let choices: [(symbol: String, name: String)] = [
         (fallback, String(localized: "书")),
         ("moon", String(localized: "睡前")),
@@ -260,7 +260,7 @@ extension Library {
     }
 }
 
-/// `.v-aud`: the headphones on a cover with a recording.
+/// The headphones on a cover with a recording.
 struct AudioBadge: View {
     var body: some View {
         Image(systemName: "headphones")

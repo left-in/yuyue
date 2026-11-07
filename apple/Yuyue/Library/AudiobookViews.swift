@@ -42,7 +42,7 @@ private struct AudiobookSheet: View {
     }
 }
 
-/// Where the work is done, as the prototype says it: `在这台 Mac 上处理`.
+/// Where the work is done: `在这台 Mac 上处理`.
 private enum ThisDevice {
     #if os(macOS)
     static let name = "Mac"
@@ -111,7 +111,7 @@ private extension View {
     }
 }
 
-/// `.v-btn.t`: a button that is only its words.
+/// A button that is only its words.
 private struct TextButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -135,7 +135,7 @@ private func clock(_ seconds: Double) -> String {
 
 // MARK: 找到配对
 
-/// `.v-al-pair`: the recording and the e-book side by side, where it'll be made, and 开始合成.
+/// The recording and the e-book side by side, where it'll be made, and 开始合成.
 private struct AudiobookPair: View {
     let library: Library
     let audiobook: Audiobook
@@ -263,7 +263,7 @@ private struct AudiobookPair: View {
         .padding(.horizontal, YYUI.s(8))
     }
 
-    /// `.v-al-opt`. Only this device can do it — the recording stays where it was brought in —
+    /// Only this device can do it — the recording stays where it was brought in —
     /// so on a phone the Mac card says how to use it instead of being picked.
     @ViewBuilder private var places: some View {
         #if os(macOS)
@@ -600,7 +600,7 @@ private struct AudiobookPage: View {
         .frame(height: YYUI.s(38))
     }
 
-    /// `.v-al-st`: ✓ done, a turning arc for now, an empty ring to come.
+    /// ✓ done, a turning arc for now, an empty ring to come.
     @ViewBuilder private func stepMark(_ state: Chapter) -> some View {
         let size = YYUI.s(18)
         switch state {
@@ -625,7 +625,7 @@ private struct AudiobookPage: View {
         }
     }
 
-    /// `.v-al-grid`: a square for each chapter, and what the colours mean.
+    /// A square for each chapter, and what the colours mean.
     private func grid(_ states: [Chapter]) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: YYUI.s(4)), count: 12), spacing: YYUI.s(5)) {
@@ -745,7 +745,7 @@ private struct AudiobookPage: View {
         (t.sections.firstIndex { $0.section == section } ?? 0) + 1
     }
 
-    /// `.v-al-is`: where, why, and what can be done.
+    /// Where, why, and what can be done.
     private func card(_ issue: Issue, _ t: Timings) -> some View {
         let chapter = chapterNumber(issue.section, t)
         let s = t.sentences[issue.at]
@@ -826,7 +826,7 @@ private struct AudiobookPage: View {
 
     // MARK: Both
 
-    /// `.v-nav`: back on the left, the title in the middle, and what else can be done on the right.
+    /// Back on the left, the title in the middle, and what else can be done on the right.
     private func nav(icon: String, title: String?, subtitle: String?, running: Bool) -> some View {
         HStack(spacing: YYUI.s(10)) {
             RoundButton(icon: icon, label: String(localized: "收起")) { books.dismiss() }
@@ -861,7 +861,7 @@ private struct AudiobookPage: View {
         .frame(minHeight: YYUI.s(40))
     }
 
-    /// `.v-al-foot`: the big button over a fade at the bottom.
+    /// The big button over a fade at the bottom.
     private func foot(_ title: String, icon: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: YYUI.s(5)) {
@@ -896,7 +896,7 @@ private struct AudiobookPage: View {
 
 // MARK: 微调
 
-/// `.v-al-fine`: one sentence's start against the sound around it — drag the handle to where it
+/// One sentence's start against the sound around it — drag the handle to where it
 /// begins, ±0.1 秒, 试听这句; with 跟着挪 the rest of the chapter moves with it.
 struct TimingAdjust: View {
     let library: Library
@@ -966,7 +966,7 @@ struct TimingAdjust: View {
 
     private var chapter: Int { (timings.sections.firstIndex { $0.section == sentence.section } ?? 0) + 1 }
 
-    /// The sentence among its neighbours, as the page shows them: `.v-al-sn`.
+    /// The sentence among its neighbours, as the page shows them.
     private var words: some View {
         let list = texts[sentence.section] ?? []
         let i = Int(sentence.sentence)
@@ -1000,7 +1000,7 @@ struct TimingAdjust: View {
                 let start = sentence.start, end = sentence.end
                 let old = before[at]
                 ZStack(alignment: .topLeading) {
-                    // .v-al-reg: the sentence.
+                    // The sentence.
                     RoundedRectangle(cornerRadius: 4).fill(tint.accentSoft)
                         .frame(width: max(0, x(end) - x(start)), height: YYUI.s(56) + 8)
                         .offset(x: x(start), y: -4)
@@ -1017,10 +1017,10 @@ struct TimingAdjust: View {
                         }
                     }
                     .frame(height: YYUI.s(56))
-                    // .v-al-end: where it ends.
+                    // Where it ends.
                     Rectangle().fill(tint.accent.opacity(0.55)).frame(width: 1, height: YYUI.s(56) + 8).offset(x: x(end), y: -4)
                     if let old, abs(old - start) >= 0.05 {
-                        // .v-al-gh and .v-al-mv: where it was, and how far it moved.
+                        // Where it was, and how far it moved.
                         Path { p in p.move(to: .zero); p.addLine(to: CGPoint(x: 0, y: YYUI.s(56) + 10)) }
                             .stroke(YYColor.t3, style: StrokeStyle(lineWidth: 1.5, dash: [3, 3]))
                             .frame(width: 2, height: YYUI.s(56) + 10)
@@ -1062,7 +1062,7 @@ struct TimingAdjust: View {
         .accessibilityAdjustableAction { d in move(to: sentence.start + (d == .increment ? 0.1 : -0.1)) }
     }
 
-    /// `.v-al-mv`: an arrow from where it was.
+    /// An arrow from where it was.
     private var arrow: some View {
         ZStack(alignment: .trailing) {
             Rectangle().fill(YYColor.t3).frame(height: 1).padding(.leading, 3).padding(.trailing, 8)
@@ -1070,7 +1070,7 @@ struct TimingAdjust: View {
         }
     }
 
-    /// `.v-al-hd`: the line at the start, a knob on top, and the time beside it.
+    /// The line at the start, a knob on top, and the time beside it.
     private var handle: some View {
         ZStack(alignment: .topLeading) {
             RoundedRectangle(cornerRadius: 1).fill(tint.accent)
@@ -1110,7 +1110,7 @@ struct TimingAdjust: View {
         return (s >= 3600 ? String(format: "%d:%02d:%02d", s / 3600, s / 60 % 60, s % 60) : String(format: "%d:%02d", s / 60, s % 60)) + ".\(tenths % 10)"
     }
 
-    /// `.v-al-nud`: −0.1 秒, 试听这句, +0.1 秒 at 1 : 1.5 : 1.
+    /// −0.1 秒, 试听这句, +0.1 秒 at 1 : 1.5 : 1.
     private var nudges: some View {
         GeometryReader { g in
             let unit = (g.size.width - YYUI.s(16)) / 3.5

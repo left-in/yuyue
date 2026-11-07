@@ -8,7 +8,7 @@ import YuyueCore
 struct PhoneShelf: View {
     @Bindable var library: Library
     @State private var filter = ShelfFilter.all
-    /// M1: the chosen kind's dark capsule slides to the next one.
+    /// The chosen kind's dark capsule slides to the next one.
     @Namespace private var kindSelection
     @AppStorage("shelf.sort") private var sortName = "recent"
     @State private var importerShown = false
@@ -179,7 +179,7 @@ struct PhoneShelf: View {
                     cell(book).transition(.scale(scale: 0.9).combined(with: .opacity))
                 }
             }
-            // M2: sorted or filtered another way, each book moves to its new place.
+            // Sorted or filtered another way, each book moves to its new place.
             .animation(YYMotion.layout, value: shown.map(\.id))
             .padding(.horizontal, inset)
             .measuringGridArea($gridArea)
@@ -385,7 +385,7 @@ struct PhoneShelf: View {
         }
     }
 
-    /// `.v-lib-wel` (prototype 第一次打开): what this is and where things are kept, then the
+    /// What this is and where things are kept, then the
     /// three ways to put books in. Narrower than 420 pt (iPhone Duo closed, beside its side bar)
     /// the three tiles would cut their names short, so they stack as rows instead.
     private var welcome: some View {
@@ -497,7 +497,7 @@ struct PhoneShelf: View {
         }
     }
 
-    /// `.v-lib-imp > span`: a tile, then the name and a grey line.
+    /// A tile, then the name and a grey line.
     private func tile(_ symbol: String, _ title: String, _ detail: String, _ action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: YYUI.s(10)) {
@@ -859,7 +859,7 @@ struct ShelfChooser: View {
             .environment(\.editMode, $editMode)
             .toolbar(.hidden, for: .navigationBar)
             .safeAreaInset(edge: .top, spacing: 0) {
-                // `.v-sh`: the title, 编辑 at the right.
+                // The title, 编辑 at the right.
                 HStack {
                     Text("看哪些书").font(YYUI.font(14, .bold))
                     Spacer()

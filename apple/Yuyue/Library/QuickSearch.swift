@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 搜索 · 问 ⌘K (prototype f95): what was typed, looked for everywhere at once. Book names and
+/// 搜索 · 问 ⌘K: what was typed, looked for everywhere at once. Book names and
 /// chapters, the books' own sentences, highlights and thoughts; the first row always hands the
 /// words to 书伴 instead.
 @Observable

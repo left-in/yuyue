@@ -109,8 +109,8 @@
 	</dict>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>电脑浏览器给语阅传书时，要经过你的 Wi‑Fi 连到这台设备。</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>有声书和电子书对齐时，要在这台设备上把录音转成文字，不上传。</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>克隆声音时，录一小段你念书的声音。录音存在这台设备上，克隆时会传到你在设置里接的 ElevenLabs 账号。</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

@@ -47,7 +47,7 @@ import kotlinx.coroutines.withContext
 import uniffi.yuyue_core.TxtChoice
 import uniffi.yuyue_core.TxtLayout
 
-/** 编码和目录 (prototype R12), as on Apple, for a TXT: which encoding it is read in, with the first
+/** 编码和目录, as on Apple, for a TXT: which encoding it is read in, with the first
  *  lines to see whether they read, and the rule that finds its chapters, with what it found. A
  *  chapter far longer than the others is pointed out. 完成 builds the book again the chosen way. */
 @OptIn(ExperimentalMaterial3Api::class)

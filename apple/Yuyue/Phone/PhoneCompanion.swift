@@ -2,7 +2,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 书伴 on the phone (prototype 与书对话): the same talk as the Mac's panel, in a sheet over the
+/// 书伴 on the phone: the same talk as the Mac's panel, in a sheet over the
 /// page. Half height to keep the page in sight; a 出处 tag turns the page underneath.
 struct PhoneCompanion: View {
     @Bindable var model: ReaderModel

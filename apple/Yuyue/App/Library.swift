@@ -16,7 +16,7 @@ final class Library {
     var shelfBooks: [BookSummary] { books.filter { $0.format != .podcast } }
     private(set) var collections: [BookCollection] = []
     private(set) var importing = 0
-    /// 正在导入 (prototype 38): on the Mac, each file being brought in, one row each, until
+    /// 正在导入: on the Mac, each file being brought in, one row each, until
     /// they've settled and the card folds away.
     private(set) var imports: [ImportFile] = []
     @ObservationIgnored private var importsStarted = Date()
@@ -344,7 +344,7 @@ final class Library {
 
     /// How long a plain note stays.
     static let toastSeconds = 3.0
-    /// The seconds a deletion can be undone, counted down on its banner (Telegram's 5).
+    /// The seconds a deletion can be undone, counted down on its banner.
     static let undoSeconds = 5.0
     /// Until a note goes: a banner counts its seconds, shows the red tick a moment, then rises away.
     static func lifetime(of toast: Toast) -> Double { toast.undo == nil ? toastSeconds : undoSeconds + 1.2 }
@@ -409,10 +409,6 @@ final class Library {
             alert = Self.message(for: error)
         }
         NotificationCenter.default.post(name: .notesChanged, object: nil)
-    }
-
-    func dismissToast() {
-        toast = nil
     }
 
     func undo() {
@@ -531,7 +527,7 @@ final class Library {
         return (books, rest)
     }
 
-    /// A recording read and waiting on 导入有声书 (prototype v0.30 C1): its name, author, cover and
+    /// A recording read and waiting on 导入有声书: its name, author, cover and
     /// the order of its files can be changed before it goes onto the shelf.
     struct PendingRecording: Identifiable {
         let id = UUID()

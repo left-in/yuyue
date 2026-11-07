@@ -101,7 +101,7 @@ fun ReaderModel.within(c: TocChapter): Double {
     return minOf(1.0, done / total)
 }
 
-/** 目录 (prototype R4): the book on top, then 目录 · 书签 · 笔记. The chapter being read sits in
+/** 目录: the book on top, then 目录 · 书签 · 笔记. The chapter being read sits in
  *  the middle in the accent, with a line for how far into it; the ones read are faded. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,7 +161,7 @@ private fun Chapters(model: ReaderModel, chapters: List<TocChapter>, current: In
     }
 }
 
-/** `.v-rd-ch`: 第几回, the name, the minutes; this one in the accent, its name whole, a line under. */
+/** 第几回, the name, the minutes; this one in the accent, its name whole, a line under. */
 @Composable
 private fun ChapterRow(model: ReaderModel, c: TocChapter, current: Int?, go: () -> Unit) {
     val now = c.id == current

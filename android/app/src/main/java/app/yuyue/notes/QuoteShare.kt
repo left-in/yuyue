@@ -63,7 +63,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-/** 分享书摘 (prototype N8 · N9), as on Apple: one highlighted sentence on a card, with a little
+/** 分享书摘, as on Apple: one highlighted sentence on a card, with a little
  *  cover and where it comes from, a small 语阅 in the corner, and the thought if wanted. */
 class QuoteShare(val text: String, val note: String?, val title: String, val author: String?, val chapter: String?, val coverPath: String?)
 

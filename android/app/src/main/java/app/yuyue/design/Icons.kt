@@ -90,7 +90,6 @@ object Icons {
     val list = AutoMirrored.Rounded.List
     val more = Rounded.MoreHoriz
     val pause = Rounded.Pause
-    val person = Rounded.Person
     val play = Rounded.PlayArrow
     val previous = Rounded.SkipPrevious
     val next = Rounded.SkipNext

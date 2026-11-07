@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// A note marker tapped: what it points to, shown in place (prototype R7).
+/// A note marker tapped: what it points to, shown in place.
 struct OpenNote: Equatable {
     let note: Footnote
     /// The marker's own text, "1".

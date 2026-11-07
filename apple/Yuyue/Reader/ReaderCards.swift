@@ -130,7 +130,6 @@ struct SelectionCard: View {
             .padding(.horizontal, Self.touch ? 4 : 6)
             .padding(.vertical, Self.touch ? 6 : 9)
         }
-        // `.v-mr-sc`
         .frame(width: Self.touch ? 340 : 332)
         .yyFloatCard(.rect(cornerRadius: YYRadius.block), shadow: scheme == .dark ? YYShadow.floatDark : YYShadow.floatLight)
     }

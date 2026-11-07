@@ -11,7 +11,7 @@ import app.yuyue.design.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/** 监听一个文件夹, as on iPhone (and the prototype's Android page): books put in it are taken in
+/** 监听一个文件夹, as on iPhone: books put in it are taken in
  *  the next time 语阅 comes to the front. Each file is taken once — by name, size and date — so
  *  one deleted from the shelf stays deleted. */
 class WatchedFolder(private val context: Context) {

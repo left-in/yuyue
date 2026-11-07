@@ -3,7 +3,7 @@ import AVFoundation
 import Foundation
 import YuyueCore
 
-/// 强制对齐 (听书开发方案 §4.2): Meta's MMS alignment model, 8-bit, as Core ML. It turns a
+/// 强制对齐: Meta's MMS alignment model, 8-bit, as Core ML. It turns a
 /// recording into how likely each letter is every 20 ms; the core lays the book's words along
 /// that. It works on every system the app runs on, unlike the transcriber it replaces.
 ///

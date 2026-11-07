@@ -5,7 +5,7 @@ import YuyueCore
 
 /// 设置 (⌘,): the pages down a sidebar on the left, the page in the middle, and on the right what
 /// was last changed, each change undoable, with a sample of the page where there's something to
-/// see (docs/design/设置-三栏前后对比.html). Changes take at once; there is no 应用 button.
+/// see. Changes take at once; there is no 应用 button.
 struct MacSettings: View {
     let library: Library
     @AppStorage("settings.page") private var page = SettingsPage.general
@@ -271,9 +271,9 @@ private struct SettingsTitlebar: NSViewRepresentable {
 // MARK: - Traffic lights
 
 extension View {
-    /// Puts the window's close, minimise and zoom buttons where the prototype draws them: the
+    /// Puts the window's close, minimise and zoom buttons where the design has them: the
     /// close button's middle `close` from the window's top-left corner, the others after it at the
-    /// system's spacing (`.v-lights`). AppKit lays them out again whenever it likes, so they are
+    /// system's spacing. AppKit lays them out again whenever it likes, so they are
     /// put back on every window update.
     func trafficLights(_ close: CGPoint, hidden: Bool = false) -> some View {
         background(TrafficLights(close: close, hidden: hidden))
@@ -379,7 +379,6 @@ struct SettingsCard<Content: View>: View {
                 }
             }
         }
-        // `.v-ms-box`
         .background(YYColor.card, in: .rect(cornerRadius: 12))
         .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(scheme == .dark ? Color(yy: YYRGBA(255, 255, 255, 0.06)) : YYColor.line, lineWidth: 0.5))
         .shadow(color: scheme == .dark ? .clear : Color(yy: YYRGBA(51, 46, 41, 0.04)), radius: 1, y: 1)
@@ -390,7 +389,7 @@ struct SettingsCard<Content: View>: View {
 struct SettingsRow<Trailing: View>: View {
     let title: String
     var detail: String?
-    /// `.v-ms-rs`: a list of switches, 38 high.
+    /// A list of switches, 38 high.
     var compact = false
     @ViewBuilder let trailing: Trailing
 
@@ -402,7 +401,7 @@ struct SettingsRow<Trailing: View>: View {
     }
 
     var body: some View {
-        // `.v-ms-row`: 12.5 over 10.5, at least 46 high.
+        // 12.5 over 10.5, at least 46 high.
         HStack(alignment: .center, spacing: 18) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.yy(size: 12.5, weight: .medium)).foregroundStyle(YYColor.t1)
@@ -454,7 +453,6 @@ struct SettingsHeading: View {
     init(_ text: String) { self.text = text }
 
     var body: some View {
-        // `.v-ms-gl`
         Text(text)
             .font(.yy(size: 11.5, weight: .semibold))
             .foregroundStyle(YYColor.t2)
@@ -787,7 +785,7 @@ struct SettingsNote: View {
     }
 }
 
-/// 数据快照 and 导出阅读记录, as on iPhone (prototype 29): what goes in and how big, 生成快照,
+/// 数据快照 and 导出阅读记录, as on iPhone: what goes in and how big, 生成快照,
 /// 导入快照…, and the ones made before.
 private struct DataSettings: View {
     let library: Library

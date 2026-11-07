@@ -3,7 +3,7 @@ import SwiftUI
 import AppKit
 #endif
 
-/// What 设置 · 书伴 shows, the same on Mac and iPhone (after nanobot's webui, where the provider is
+/// What 设置 · 书伴 shows, the same on Mac and iPhone (the provider is
 /// a menu and the model its own row): the service answering, its model with the ones it lists,
 /// and 测试一下.
 @MainActor @Observable
@@ -62,7 +62,7 @@ final class CompanionChoice {
     }
 }
 
-/// 添加服务商, 管理服务商 and one service's form, in one sheet. 添加 is nanobot's picker: what's on
+/// 添加服务商, 管理服务商 and one service's form, in one sheet. 添加 is a picker: what's on
 /// offer, searchable, grouped by how it's reached, with one of your own at the bottom; picking
 /// one opens its form, ‹ goes back. A service added answers from then on.
 struct CompanionProviderSheet: View {
@@ -116,7 +116,7 @@ struct CompanionProviderSheet: View {
         }
     }
 
-    /// After 添加, 保存 or 移除: back to 管理服务商 when that's where it started, as nanobot does.
+    /// After 添加, 保存 or 移除: back to 管理服务商 when that's where it started.
     private func done() {
         if case .manage = start {
             picked = nil
@@ -255,7 +255,7 @@ struct CompanionProviderSheet: View {
     }
 }
 
-/// A row to pick: no box, the inset grey under it on hover and press, as nanobot's options.
+/// A row to pick: no box, the inset grey under it on hover and press.
 private struct PickRow: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View { Row(configuration: configuration) }
 
@@ -321,7 +321,7 @@ struct ProviderLogo: View {
     }
 }
 
-/// One service's key and address, as nanobot's form has them (the model is chosen in 设置 · 书伴).
+/// One service's key and address (the model is chosen in 设置 · 书伴).
 /// A key saved before shows as "sk-…3f9a" with 更换, so opening the form never wipes it.
 /// OpenRouter signs in instead; a key can still be pasted.
 private struct ProviderForm: View {

@@ -439,7 +439,7 @@ final class ReaderPager: PlatformView {
 
     // MARK: 气泡模式
 
-    /// The book's dialogue as bubbles (docs/design/听书-气泡与有声书.html).
+    /// The book's dialogue as bubbles.
     var bubbles = false {
         didSet { if bubbles != oldValue { slots.forEach(sendBubbles) } }
     }
@@ -709,7 +709,7 @@ final class ReaderPager: PlatformView {
         let book = false
         #endif
         let columns: UInt8 = book || (prefersTwoColumns && !chat && width >= 880 && mode == .paginated) ? 2 : 1
-        // About 30 characters to a line at most (`.v-mac-col`: 460 wide at 15); wider pages get
+        // About 30 characters to a line at most (460 wide at 15); wider pages get
         // wider margins instead.
         let measure = fontSize * 31
         #if os(iOS)

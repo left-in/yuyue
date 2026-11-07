@@ -2,7 +2,6 @@
 //   /app/*          reader/dist/*
 //   /book/<id>/*    reader/test/fixtures/<id>/*   (or <site>/book/<id>/* with --site <dir>)
 //   /demo/*         reader/demo/*
-//   /proto          ../prototype-v0.28.html (for side-by-side comparison)
 // Section documents accept the settings core bakes into <html> as query parameters, e.g.
 //   /book/beiying/s/0.html?paper=kami&fs=20&cols=2&paging=snap
 // and any request accepts ?delay=<ms> to answer late (late image loads).
@@ -69,7 +68,6 @@ function resolve(urlPath, site) {
   if (p.startsWith('/app/')) return path.join(ROOT, 'dist', p.slice(5));
   if (p.startsWith('/demo/')) return path.join(ROOT, 'demo', p.slice(6));
   if (p === '/demo') return path.join(ROOT, 'demo', 'index.html');
-  if (p === '/proto') return path.resolve(ROOT, '..', 'prototype-v0.28.html');
   const m = /^\/book\/([^/]+)\/(.+)$/.exec(p);
   if (m) return site ? path.join(site, 'book', m[1], m[2]) : path.join(ROOT, 'test', 'fixtures', m[1], m[2]);
   return null;
@@ -107,7 +105,7 @@ function index(site) {
     b.sections.map((s) => `<li><a href="/book/${b.book}/s/${s.n}.html">${b.book} / ${s.n}</a> ${s.title}</li>`),
   );
   return `<!doctype html><meta charset="utf-8"><title>yuyue reader dev</title>
-<body style="font:14px -apple-system,sans-serif;margin:24px"><p><a href="/demo/">demo</a> · <a href="/proto">prototype</a></p><ul>${items.join('')}</ul>`;
+<body style="font:14px -apple-system,sans-serif;margin:24px"><p><a href="/demo/">demo</a></p><ul>${items.join('')}</ul>`;
 }
 
 export function createServer({ site } = {}) {

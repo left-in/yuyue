@@ -60,7 +60,7 @@ import app.yuyue.shelf.Field
 import app.yuyue.t
 import kotlinx.coroutines.launch
 
-/** 书伴 settings, as on iPhone's 引擎 · 书伴 (after nanobot's webui): the service is a menu (those
+/** 书伴 settings, as on iPhone's 引擎 · 书伴: the service is a menu (those
  *  added, then 配置… and 添加服务商…), the model its own row with the ones the service lists, then
  *  测试一下; 管理服务商 lists what was added. */
 @Composable
@@ -201,7 +201,7 @@ fun ProviderLogo(p: CompanionProvider, size: Dp = 18.dp) {
     }
 }
 
-/** 添加服务商, 管理服务商 and one service's form, in one sheet. 添加 is nanobot's picker: what's on
+/** 添加服务商, 管理服务商 and one service's form, in one sheet. 添加 is a picker: what's on
  *  offer, searchable, grouped by how it's reached, with one of your own at the bottom. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -209,7 +209,7 @@ private fun ProviderSheet(start: SheetStart, close: () -> Unit) {
     var adding by remember { mutableStateOf(start == SheetStart.Add) }
     var picked by remember { mutableStateOf((start as? SheetStart.Edit)?.provider) }
     var version by remember { mutableIntStateOf(0) }
-    // After 添加, 保存 or 移除: back to 管理服务商 when that's where it started, as nanobot does.
+    // After 添加, 保存 or 移除: back to 管理服务商 when that's where it started.
     val done: () -> Unit = { if (start == SheetStart.Manage) { picked = null; adding = false; version++ } else close() }
     ModalBottomSheet(close, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = YY.c.bg) {
         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 28.dp)) {
@@ -313,7 +313,7 @@ private fun Manage(version: Int, close: () -> Unit, add: () -> Unit, open: (Comp
     YYButton(t("添加服务商"), ButtonKind.Raised, ButtonSize.Large, wide = true, icon = Icons.add, onClick = add)
 }
 
-/** One service's key and address, as nanobot's form has them (the model is chosen in 设置 · 书伴).
+/** One service's key and address (the model is chosen in 设置 · 书伴).
  *  A key saved before shows as "sk-…3f9a" with 更换, so opening the form never wipes it.
  *  OpenRouter signs in instead; a key can still be pasted. */
 @Composable

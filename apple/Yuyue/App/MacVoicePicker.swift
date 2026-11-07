@@ -2,7 +2,7 @@
 import SwiftUI
 import AVFoundation
 
-/// 设置 · 朗读 (prototypes/drafts/设置-换声音-置顶.html): first where the voices come from, a row
+/// 设置 · 朗读: first where the voices come from, a row
 /// for this Mac and each cloud; one opened, its voices as voice messages that each say the line
 /// you sent. Clicking only plays; 选择 (on hover, or in the right column) makes it read that kind
 /// of book. The one reading is pinned at the top.
@@ -159,7 +159,7 @@ nonisolated struct SVGShape: Shape {
     }
 }
 
-/// The marks of this page, as the prototype draws them.
+/// The marks of this page.
 enum VoiceGlyph {
     static let pin = "M9.6 1.9l4.5 4.5-1.2.5-2.7 2.7.4 3.1-1.1 1.1-2.9-2.9-3.7 3.7-.7-.7 3.7-3.7L3 7.3l1.1-1.1 3.1.4 2.7-2.7z"
     static let pinHead = "M9.6 1.9l4.5 4.5-1.2.5-2.7 2.7.4 3.1-1.1 1.1-6.8-6.8L4.8 6l3.1.4 2.7-2.7z"
@@ -208,7 +208,7 @@ private struct PlayGlyph: View {
 
 /// A CSS shadow with a negative spread: narrower than what casts it, so it shows only below.
 /// `.shadow` can't do that; it glows on every side.
-private extension View {
+extension View {
     /// A hairline outside the edge, as `box-shadow: 0 0 0 .5px` draws it: strokeBorder would take
     /// half a point off everything it goes round.
     func ring(_ color: Color, radius: CGFloat) -> some View {
@@ -591,15 +591,7 @@ private struct VoiceComposer: View {
     var body: some View {
         let empty = draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         HStack(spacing: 8) {
-            Button { linesOpen.toggle() } label: {
-                SVGShape(d: VoiceGlyph.quote).fill(linesOpen ? YYColor.t1 : YYColor.t2)
-                    .frame(width: 14, height: 14)
-                    .frame(width: 28, height: 28)
-                    .background(linesOpen ? YYColor.inset : .clear, in: .circle)
-                    .contentShape(.circle)
-            }
-            .buttonStyle(.plain)
-            .help(Text("换一句现成的"))
+            ReadyLinesToggle(open: $linesOpen, help: Text("换一句现成的"))
             TextField("", text: $draft, prompt: Text(book == .zh ? "想听他们念什么，写一句，或粘贴书里的一段" : "Type a line for them to read")
                 .font(.yy(size: 12)).foregroundStyle(YYColor.t3))
                 .textFieldStyle(.plain)
@@ -612,23 +604,10 @@ private struct VoiceComposer: View {
                 .offset(y: 2)
             Text(draft.isEmpty ? String(localized: "回车发") : "\(draft.count) / \(Self.limit)")
                 .font(.yy(size: 10.5).monospacedDigit()).foregroundStyle(YYColor.t3).fixedSize()
-            Button(action: send) {
-                SVGShape(d: VoiceGlyph.send, box: 12).stroke(YYColor.card, lineWidth: 2)
-                    .frame(width: 12, height: 12)
-                    .frame(width: 28, height: 28).background(YYColor.t1, in: .circle).contentShape(.circle)
-            }
-            .buttonStyle(.plain)
-            // Not .disabled: that dims it again on top of this. send() does nothing while empty.
-            // As one: faded apart, the circle shows through the arrow.
-            .compositingGroup()
-            .opacity(empty ? 0.25 : 1)
-            .help(Text("发给大家"))
+            ComposerSendButton(ready: !empty, help: Text("发给大家"), action: send)
         }
         .padding(.leading, 6).padding(.trailing, 6)
-        .frame(height: 40)
-        .background(YYColor.card, in: .capsule)
-        .ring(YYColor.line, radius: 20)
-        .shadow(color: Color(yy: YYRGBA(51, 46, 41, 0.04)), radius: 1, y: 1)
+        .composerBox()
     }
 
     private func send() {
@@ -636,6 +615,70 @@ private struct VoiceComposer: View {
         focus.send(draft, book: book)
         draft = ""
         typing.wrappedValue = false
+    }
+}
+
+extension View {
+    /// The white capsule a composer sits in.
+    func composerBox() -> some View {
+        frame(height: 40)
+            .background(YYColor.card, in: .capsule)
+            .ring(YYColor.line, radius: 20)
+            .shadow(color: Color(yy: YYRGBA(51, 46, 41, 0.04)), radius: 1, y: 1)
+    }
+}
+
+/// “ at the start of a box: opens the ready lines over it.
+struct ReadyLinesToggle: View {
+    @Binding var open: Bool
+    let help: Text
+
+    var body: some View {
+        Button { open.toggle() } label: {
+            SVGShape(d: VoiceGlyph.quote).fill(open ? YYColor.t1 : YYColor.t2)
+                .frame(width: 14, height: 14)
+                .frame(width: 28, height: 28)
+                .background(open ? YYColor.inset : .clear, in: .circle)
+                .contentShape(.circle)
+        }
+        .buttonStyle(.plain)
+        .help(help)
+    }
+}
+
+/// ↑ at the end of a box.
+struct ComposerSendButton: View {
+    let ready: Bool
+    let help: Text
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            SVGShape(d: VoiceGlyph.send, box: 12).stroke(YYColor.card, lineWidth: 2)
+                .frame(width: 12, height: 12)
+                .frame(width: 28, height: 28).background(YYColor.t1, in: .circle).contentShape(.circle)
+        }
+        .buttonStyle(.plain)
+        // Not .disabled: that dims it again on top of this. `action` does nothing while it isn't ready.
+        // As one: faded apart, the circle shows through the arrow.
+        .compositingGroup()
+        .opacity(ready ? 1 : 0.25)
+        .help(help)
+    }
+}
+
+/// The card the ready lines float in. No `width`: as wide as it's given.
+struct ReadyLinesCard<Content: View>: View {
+    var width: CGFloat?
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        VStack(spacing: 0) { content }
+            .padding(5)
+            .frame(width: width)
+            .background(YYColor.card, in: .rect(cornerRadius: 12))
+            .ring(YYColor.line, radius: 12)
+            .shadow(color: Color(yy: YYRGBA(40, 36, 32, 0.16)), radius: 16, y: 12)
     }
 }
 
@@ -647,23 +690,20 @@ private struct QuickLines: View {
     private var focus: ListeningFocus { .shared }
 
     var body: some View {
-        VStack(spacing: 0) {
+        ReadyLinesCard(width: 330) {
             ForEach(book.quickLines, id: \.name) { q in
                 let using = focus.line(book) == q.line
                 QuickLine(name: using ? String(localized: "\(q.name) · 正在用") : q.name, line: q.line) { send(q.line) }
             }
             QuickLine(name: book == .zh ? String(localized: "书里的一句") : "From a book", line: book.bookLine.hint) { fill(book.bookLine.line) }
         }
-        .padding(5)
-        .frame(width: 330)
-        .background(YYColor.card, in: .rect(cornerRadius: 12))
-        .ring(YYColor.line, radius: 12)
-        .shadow(color: Color(yy: YYRGBA(40, 36, 32, 0.16)), radius: 16, y: 12)
     }
 }
 
-private struct QuickLine: View {
-    let name: String
+/// One ready line. Without a `name` it's a question or a remark that says what it is, and may take
+/// a second line rather than lose its end.
+struct QuickLine: View {
+    var name: String?
     let line: String
     let action: () -> Void
     @State private var hovering = false
@@ -671,8 +711,8 @@ private struct QuickLine: View {
     var body: some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 1) {
-                Text(name).font(.yy(size: 11, weight: .medium)).foregroundStyle(YYColor.t3)
-                Text(line).font(.custom("Songti SC", size: 12.5)).foregroundStyle(YYColor.t1).lineLimit(1)
+                if let name { Text(name).font(.yy(size: 11, weight: .medium)).foregroundStyle(YYColor.t3) }
+                Text(line).font(.custom("Songti SC", size: 12.5)).foregroundStyle(YYColor.t1).lineLimit(name == nil ? 2 : 1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 10).padding(.vertical, 7)

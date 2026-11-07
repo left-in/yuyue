@@ -2,7 +2,7 @@
 import SwiftUI
 import YuyueCore
 
-/// The phone's page (prototype 平时只有一条胶囊): only the words and one glass capsule at the
+/// The phone's page: only the words and one glass capsule at the
 /// bottom — 目录, where the reader is, ‹ 朗读 ›, Aa. A tap in the middle floats 返回, the book's
 /// name and page, 搜索, 书签 and 更多 along the top. 书内搜索 takes over both: the field on top,
 /// 第 3 / 11 处 in the capsule. 沉浸阅读 leaves only a hairline.
@@ -304,7 +304,7 @@ struct PhoneReaderChrome: View {
                 .accessibilityLabel(model.player?.spot != nil ? String(localized: "上一句") : String(localized: "上一页"))
             Button { model.togglePlay() } label: {
                 Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
-                    // M4: ▶ and ❚❚ turn into each other.
+                    // ▶ and ❚❚ turn into each other.
                     .contentTransition(.symbolEffect(.replace))
                     .animation(YYMotion.quick, value: model.isPlaying)
                     .font(.yy(size: 14, weight: .semibold))

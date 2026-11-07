@@ -92,7 +92,7 @@ enum NoteFilter: Hashable {
     }
 }
 
-/// 笔记 on the phone (prototype 笔记 · 按时间 / 按书 / 一本书的笔记 / 左滑 / 长按多选): every book's
+/// 笔记 on the phone: every book's
 /// highlights and thoughts by day, or book by book; and the 生词本. A tap goes back to the page;
 /// swipe left to share, edit or delete; 选择 to take several at once.
 struct PhoneNotes: View {
@@ -337,7 +337,7 @@ struct PhoneNotes: View {
                 }
             }
         }
-        // M6: a row taken out closes up; the rest move into its place.
+        // A row taken out closes up; the rest move into its place.
         .animation(YYMotion.layout, value: days.flatMap { $0.items.map(\.id) })
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
@@ -373,7 +373,7 @@ struct PhoneNotes: View {
                 .textCase(nil)
             }
         }
-        // M6: a row taken out closes up; the rest move into its place.
+        // A row taken out closes up; the rest move into its place.
         .animation(YYMotion.layout, value: shown.map(\.id))
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
@@ -505,7 +505,7 @@ private struct BookNotesTitle: ViewModifier {
     }
 }
 
-/// One book's notes in book order, under their chapters (prototype 一本书的笔记). The dots keep one
+/// One book's notes in book order, under their chapters. The dots keep one
 /// colour; 导出 takes this book; 回顾这本书 goes through its highlights.
 struct PhoneBookNotes: View {
     let library: Library
@@ -966,7 +966,7 @@ struct PhoneWords: View {
                         }
                     }
                 }
-                // M6: a row taken out closes up; the rest move into its place.
+                // A row taken out closes up; the rest move into its place.
                 .animation(YYMotion.layout, value: days.flatMap { $0.words.map(\.word) })
                 .listStyle(.insetGrouped)
                 .scrollContentBackground(.hidden)

@@ -5,7 +5,7 @@ import Translation
 import UniformTypeIdentifiers
 import YuyueCore
 
-/// 设置 · 外文 (prototype 外文阅读设置): looking a word up, the 生词 marks, and the system's
+/// 设置 · 外文: looking a word up, the 生词 marks, and the system's
 /// offline translation, which can be downloaded from here before the first 译.
 struct ForeignSettings: View {
     let library: Library
@@ -158,7 +158,7 @@ private struct MDictList: View {
 
     private func reload() { list = (try? core.dictionaries()) ?? [] }
 
-    /// U3: 往上挪 / 往下挪 — a word is looked up in this order.
+    /// 往上挪 / 往下挪 — a word is looked up in this order.
     private func move(_ d: DictionaryInfo, by step: Int) {
         var ids = list.map(\.id)
         guard let i = ids.firstIndex(of: d.id), ids.indices.contains(i + step) else { return }

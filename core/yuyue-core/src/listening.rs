@@ -1,4 +1,4 @@
-//! 听读书 that sync (听书开发方案 §4.3): where each sentence of an e-book is in a recording of it,
+//! 听读书 that sync: where each sentence of an e-book is in a recording of it,
 //! and which recording goes with which e-book, kept in the store so one device lays a book out
 //! and the others use it — no model to download, nothing to run again.
 //!

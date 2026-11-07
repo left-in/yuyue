@@ -8,7 +8,7 @@ import uniffi.yuyue_core.YuyueCore
 import java.io.File
 
 /**
- * 有声书 onto the shelf (prototype v0.30 C1), as on Apple: reads what the system's player can
+ * 有声书 onto the shelf, as on Apple: reads what the system's player can
  * tell of the files (how long each is, title, author, cover) and hands it to the core, which
  * copies the files in and keeps the order. The system's reader doesn't give an M4B's chapter
  * marks; the core reads them from the file.

@@ -1,4 +1,4 @@
-//! 强制对齐 (听书开发方案 §4.2): the book's words laid along a recording directly, without
+//! 强制对齐: the book's words laid along a recording directly, without
 //! first guessing what was said.
 //!
 //! The app runs the acoustic model (Meta's MMS forced-alignment model) over the recording and
@@ -459,7 +459,7 @@ pub struct FileEmissions {
     pub seconds: f64,
 }
 
-/// A whole recording, file by file, against the whole book (先粗再细, §4.2): each file is first
+/// A whole recording, file by file, against the whole book (先粗再细): each file is first
 /// placed in the book — where what the model hears in its first minute best matches — then
 /// laid against the stretch it could hold from there, so neither the search nor memory grows
 /// with the book. Files needn't come in the book's order, nor the book be read whole (a

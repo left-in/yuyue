@@ -74,7 +74,7 @@ import java.util.Locale
 
 // MARK: 同步
 
-/** 同步 (prototype 同步), as on iPhone: how it went, every device, where to meet (a WebDAV share
+/** 同步, as on iPhone: how it went, every device, where to meet (a WebDAV share
  *  on Android; iCloud is Apple's), and what goes. */
 @Composable
 fun SyncPage(sync: Sync) {
@@ -268,7 +268,7 @@ private fun L10nChinese() = app.yuyue.L10n.chinese
 private fun snapshotName(note: String? = null) =
     t("语阅快照-%@%@.yuyue", note?.let { "$it-" } ?: "", SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date()))
 
-/** 数据快照 (prototype 29), as on iPhone: what goes in and how big, 生成快照, 导入快照, and the ones
+/** 数据快照, as on iPhone: what goes in and how big, 生成快照, 导入快照, and the ones
  *  made before, to send on. The same .yuyue file moves between iPhone, Mac and Android. */
 @Composable
 fun SnapshotPage(library: Library) {

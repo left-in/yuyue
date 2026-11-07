@@ -17,7 +17,7 @@ import java.util.Locale
 import java.util.UUID
 
 /** One rendered sentence: 16-bit mono samples at `rate`. Every voice renders to this, so they
- *  all play through the same `Player` (TECH.md: 统一播放器). */
+ *  all play through the same `Player`. */
 class Speech(val samples: ShortArray, val rate: Int) {
     val seconds: Double get() = samples.size.toDouble() / rate
 }

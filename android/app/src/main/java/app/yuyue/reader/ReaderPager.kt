@@ -447,7 +447,7 @@ class ReaderPager(context: Context, private val core: YuyueCore, private val boo
 
     // MARK: 气泡模式
 
-    /** The book's dialogue as bubbles (docs/design/听书-气泡与有声书.html). */
+    /** The book's dialogue as bubbles. */
     var bubbles = false
         set(v) { if (v != field) { field = v; slots.forEach(::sendBubbles) } }
 

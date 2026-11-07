@@ -15,7 +15,7 @@ const HEADER = 'generated from design/tokens.json — do not edit (run `node des
 
 // ---------- helpers ----------
 const keys = (o) => Object.keys(o).filter((k) => !k.startsWith('$'));
-// camelCase -> kebab-case; digits stay attached (t1, fade0) except ink2 -> ink-2 as in the prototype.
+// camelCase -> kebab-case; digits stay attached (t1, fade0) except ink2 -> ink-2.
 const kebab = (s) => (s === 'ink2' ? 'ink-2' : s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase());
 const pascal = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const num = (n) => {
@@ -53,7 +53,7 @@ const SHADOWS = keys(T.shadow.light);
 const RADII = keys(T.radius);
 const MOTION = keys(T.motion);
 
-// Fine-grain noise used by the e-ink paper (prototype .paper-eink background-image).
+// Fine-grain noise used by the e-ink paper.
 const NOISE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
@@ -262,7 +262,7 @@ ${FONTS.map((f) => `        case .${f}: return .${{ sans: 'default', serif: 'ser
   L.push('');
   for (const t of TINTS) {
     const x = T.tint[t];
-    const args = [`id: ${swStr(t)}`, `name: ${swStr(x.name)}`];
+    const args = [`id: ${swStr(t)}`, `name: String(localized: ${swStr(x.name)})`];
     for (const k of TINT_KEYS) args.push(`${k}: ${swDyn(x.light[k], x.dark[k])}`);
     args.push(`paperAccentLight: Color(yy: ${swRGBA(x.paperAccent.lightPaper)})`);
     args.push(`paperAccentDark: Color(yy: ${swRGBA(x.paperAccent.darkPaper)})`);
@@ -278,7 +278,7 @@ ${FONTS.map((f) => `        case .${f}: return .${{ sans: 'default', serif: 'ser
   L.push('}');
   L.push('');
   // Papers
-  L.push(`/// Body typography defaults of a paper. Sizes are prototype pixels at 14px text: scale by fontSize / 14.
+  L.push(`/// Body typography defaults of a paper. Sizes are design pixels at 14px text: scale by fontSize / 14.
 public struct YYPaperText: Sendable, Hashable {
     public let font: YYFontFamily
     public let lineHeight: Double
@@ -327,7 +327,7 @@ public struct YYPaper: Sendable, Hashable, Identifiable {
     const c = (k) => `Color(yy: ${swRGBA(p[k])})`;
     const tx = p.text, ti = p.title, me = p.meta;
     L.push(`    public static let ${id} = YYPaper(
-        id: ${swStr(id)}, name: ${swStr(p.name)}, isDark: ${!!p.dark}, hasNoiseTexture: ${p.texture === 'noise'},
+        id: ${swStr(id)}, name: String(localized: ${swStr(p.name)}), isDark: ${!!p.dark}, hasNoiseTexture: ${p.texture === 'noise'},
         bg: ${c('bg')}, ink: ${c('ink')}, ink2: ${c('ink2')}, line: ${c('line')}, accent: ${c('accent')},
         hl: ${c('hl')}, wave: ${c('wave')}, glass: ${c('glass')}, main: ${c('main')}, onMain: ${c('onMain')},
         paperAccent: ${c('paperAccent')},
@@ -482,7 +482,7 @@ function genKotlin() {
   L.push(`    val All = listOf(${TINTS.map(pascal).join(', ')})`);
   L.push('}');
   L.push('');
-  L.push(`/** Body typography defaults of a paper. Sizes are prototype pixels at 14px text: scale by fontSize / 14. */
+  L.push(`/** Body typography defaults of a paper. Sizes are design pixels at 14px text: scale by fontSize / 14. */
 data class YYPaperText(
     val font: YYFont,
     val lineHeight: Float,

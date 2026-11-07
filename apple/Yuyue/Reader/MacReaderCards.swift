@@ -34,7 +34,7 @@ struct TypesetCard: View {
                 .id(editing.id)
             } else if more { moreSettings } else if all { allPapers } else { main }
         }
-        // `.v-mr-aa`: 304 wide in all.
+        // 304 wide in all.
         #if os(macOS)
         .frame(width: 272)
         #endif
@@ -60,7 +60,7 @@ struct TypesetCard: View {
     private var main: some View {
         VStack(alignment: .leading, spacing: 12) {
             if model.hasDialogue {
-                // 切到气泡 (B2): 正文 / 气泡, kept per book.
+                // 切到气泡: 正文 / 气泡, kept per book.
                 Segments(items: [(false, String(localized: "正文")), (true, String(localized: "气泡"))], selection: Binding(get: { model.bubbles }, set: { model.bubbles = $0 })) { on, title in
                     Label(title, systemImage: on ? "bubble.left.and.bubble.right" : "text.alignleft").labelStyle(TightLabel())
                 }
@@ -72,7 +72,6 @@ struct TypesetCard: View {
             }
             .onChange(of: model.settings.font) { if model.settings.font == .wenKai { WenKai.shared.ensure() } }
             WenKaiStatus(chosen: model.settings.font == .wenKai)
-            // `.v-mr-fs`
             HStack(spacing: 12) {
                 Text("A").font(YYUI.serif(12)).foregroundStyle(YYColor.t1)
                 Slider(value: binding(\.fontSize), in: Self.sizes, step: 1)
@@ -92,7 +91,7 @@ struct TypesetCard: View {
             .padding(.leading, 6).padding(.trailing, 4)
             .frame(height: 34)
             .background(YYColor.inset, in: .rect(cornerRadius: 12))
-            // `.v-mr-two-seg`: 1 : 1.25.
+            // 1 : 1.25.
             HStack(spacing: 8) {
                 Segments(items: Self.spacings.enumerated().map { ($0.offset, [String(localized: "行距紧"), String(localized: "行距适中"), String(localized: "行距松")][$0.offset]) },
                          selection: Binding(get: { Self.spacings.firstIndex(of: model.settings.lineHeight) ?? 1 },
@@ -113,7 +112,6 @@ struct TypesetCard: View {
                 }
                 .disabled(model.settings.mode == .scrolled)
             }
-            // `.v-mr-rows`
             VStack(spacing: 0) {
                 switchRow(String(localized: "只用于这本书"), Binding(get: { model.ownSettings }, set: { model.setOwnSettings($0) }))
                     .frame(height: 38)
@@ -270,7 +268,7 @@ struct TypesetCard: View {
                         ForEach(Papers.shared.list, id: \.id) { mine in
                             PaperTile(paper: YYPaper(custom: mine), texture: mine.texture, name: mine.name, selected: model.settings.paperChoice == mine.id) { choose(mine) }
                                 .id(mine.id)
-                                // 长按 / 右键: the prototype's menu card, 删除 in red in a group of its own.
+                                // 长按 / 右键: a menu card, 删除 in red in a group of its own.
                                 .contextMenu {
                                     Button(String(localized: "调整颜色"), systemImage: "paintpalette") { editing = mine }
                                     Button(String(localized: "重命名"), systemImage: "pencil") { newName = mine.name; renaming = mine }
@@ -314,7 +312,7 @@ struct TypesetCard: View {
         .padding(.leading, -16)
     }
     #else
-    /// 方案二 (docs/design/纸张选择.html): the five presets fill a row; 我的纸 go under them five to
+    /// 纸张选择: the five presets fill a row; 我的纸 go under them five to
     /// a row, ＋ after the last. Two rows at most, so the card keeps its height: past that the last
     /// cell is 全部, a page of every paper. The one on the page always shows, standing in for the
     /// last of the two rows if it's further on.
@@ -430,7 +428,7 @@ struct TypesetCard: View {
         .padding(.bottom, -4)
     }
 
-    /// `.v-mr-papers`: five columns.
+    /// Five columns.
     private func paperGrid(@ViewBuilder _ content: () -> some View) -> some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 5), alignment: .center, spacing: 10, content: content)
     }
@@ -445,7 +443,7 @@ struct TypesetCard: View {
     private func mineTile(_ mine: CustomPaper) -> some View {
         PaperTile(paper: YYPaper(custom: mine), texture: mine.texture, name: mine.name, selected: model.settings.paperChoice == mine.id) { choose(mine) }
             .id(mine.id)
-            // 长按 / 右键: the prototype's menu card, 删除 in red in a group of its own.
+            // 长按 / 右键: a menu card, 删除 in red in a group of its own.
             .contextMenu {
                 Button(String(localized: "调整颜色"), systemImage: "paintpalette") { editing = mine }
                 Button(String(localized: "重命名"), systemImage: "pencil") { newName = mine.name; renaming = mine }
@@ -533,7 +531,7 @@ struct TypesetCard: View {
 }
 
 /// A row of choices on an inset track, the chosen one lifted on a white chip. `small` is
-/// `.v-ms-ha .v-seg.sm`, the one beside 导出 in a shelf header.
+/// The one beside 导出 in a shelf header.
 struct Segments<T: Hashable, Label: View>: View {
     let items: [(T, String)]
     @Binding var selection: T
@@ -620,7 +618,6 @@ struct ListenCard: View {
     private static let rates: [Float] = [0.8, 1.0, 1.2, 1.5, 2.0]
 
     var body: some View {
-        // `.v-mr-lp`
         VStack(alignment: .leading, spacing: 12) {
             #if os(macOS)
             HStack(spacing: 4) {
@@ -646,7 +643,7 @@ struct ListenCard: View {
                 sleep(player)
                 HStack(spacing: 6) {
                     if castBook != nil {
-                        // 分角色: 人物声音 takes 逐句翻译's place (R1).
+                        // 分角色: 人物声音 takes 逐句翻译's place.
                         Tile(icon: "person.2", title: String(localized: "人物声音"),
                              detail: ownVoices == 0 ? String(localized: "都跟旁白") : String(localized: "\(ownVoices) 人单独设"), on: false) {
                             castShown = true
@@ -756,7 +753,6 @@ struct ListenCard: View {
     private func voice(_ player: Player) -> some View {
         let language = player.language
         let current = player.currentVoice(for: language)
-        // `.v-mr-lv`
         return HStack(spacing: 10) {
             Image(systemName: "waveform")
                 .font(.yy(size: 14, weight: .medium))
@@ -851,7 +847,6 @@ struct ListenCard: View {
     }
 
     private func speed(_ player: Player) -> some View {
-        // `.v-mr-ls`
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Text("速度").font(.yy(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t1)
@@ -892,7 +887,6 @@ struct ListenCard: View {
     }
 
     private func sleep(_ player: Player) -> some View {
-        // `.v-mr-lz` / `.v-mr-pseg`
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .firstTextBaseline) {
                 Text("睡眠定时").font(.yy(size: 11.5, weight: .semibold)).foregroundStyle(YYColor.t1)
@@ -998,7 +992,6 @@ private struct Tile: View {
 
     var body: some View {
         Button(action: action) {
-            // `.v-mr-tiles`
             HStack(spacing: 9) {
                 Image(systemName: icon).font(.yy(size: 14, weight: .medium)).frame(width: 16)
                 VStack(alignment: .leading, spacing: 1) {
@@ -1023,11 +1016,14 @@ private struct Tile: View {
 #if os(macOS)
 // MARK: - 书伴
 
-/// ✦ 书伴 (prototype f94): ask about the book without leaving the page. Answers point back at the
+/// ✦ 书伴: ask about the book without leaving the page. Answers point back at the
 /// sentences they lean on; a click on one turns the page there and marks it 出处.
 struct CompanionPanel: View {
     @Bindable var model: ReaderModel
     @State private var draft = ""
+    @State private var linesOpen = false
+    /// The quote and the box: the ready lines float just above them.
+    @State private var askHeight: CGFloat = 44
     @FocusState private var typing: Bool
     @Environment(\.openSettings) private var openSettings
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
@@ -1040,14 +1036,33 @@ struct CompanionPanel: View {
             mode.padding(.top, 12)
             Rectangle().fill(YYColor.line).frame(height: 1).padding(.top, 14)
             chat
-            if let quote = model.companionQuote { quoted(quote) }
-            suggestions
-            input.padding(.top, 10)
+            VStack(alignment: .leading, spacing: 0) {
+                if let quote = model.companionQuote { quoted(quote) }
+                input
+            }
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { askHeight = $0 }
+            .padding(.top, 10)
         }
         .padding(.horizontal, 14)
         .padding(.top, 16)
         .padding(.bottom, 14)
+        .overlay {
+            if linesOpen, !readyQuestions.isEmpty {
+                Color.clear.contentShape(.rect).onTapGesture { linesOpen = false }
+                ReadyLinesCard {
+                    ForEach(readyQuestions, id: \.self) { q in
+                        QuickLine(line: q) { linesOpen = false; send(q) }
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                .padding(.horizontal, 14)
+                .padding(.bottom, 14 + askHeight + 8)
+            }
+        }
         .onDisappear { model.pager.setSource(nil) }
+        #if DEBUG
+        .onAppear { if UserDefaults.standard.bool(forKey: "debugCompanionLines") { linesOpen = true } }
+        #endif
     }
 
     private var header: some View {
@@ -1244,26 +1259,16 @@ struct CompanionPanel: View {
         .padding(.bottom, 8)
     }
 
-    private var suggestions: some View {
-        let list = model.companionQuote != nil ? [String(localized: "这句是什么意思？"), String(localized: "为什么这么写？")]
+    private var readyQuestions: [String] {
+        model.companionQuote != nil ? [String(localized: "这句是什么意思？"), String(localized: "为什么这么写？")]
             : companion.turns.last?.answer?.next ?? [String(localized: "前面发生了什么？"), String(localized: "这一章讲了什么？")]
-        return HStack(spacing: 6) {
-            ForEach(list, id: \.self) { s in
-                Button { send(s) } label: {
-                    Text(s)
-                        .font(.yy(size: 11)).foregroundStyle(YYColor.t2)
-                        .padding(.horizontal, 11).padding(.vertical, 6)
-                        .background(YYColor.card, in: .capsule)
-                        .overlay(Capsule().strokeBorder(YYColor.line, lineWidth: 0.5))
-                }
-                .buttonStyle(.plain)
-                .disabled(companion.busy)
-            }
-        }
     }
 
     private var input: some View {
         HStack(spacing: 6) {
+            if !readyQuestions.isEmpty {
+                ReadyLinesToggle(open: $linesOpen, help: Text("挑一句现成的")).disabled(companion.busy)
+            }
             TextField("", text: $draft, prompt: Text(companion.turns.isEmpty ? String(localized: "问这本书…") : String(localized: "继续问…")), axis: .vertical)
                 .textFieldStyle(.plain)
                 .font(.yy(size: 12))
@@ -1280,7 +1285,7 @@ struct CompanionPanel: View {
             .buttonStyle(.plain)
             .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty || companion.busy)
         }
-        .padding(.leading, 14).padding(.trailing, 6).padding(.vertical, 6)
+        .padding(.leading, readyQuestions.isEmpty ? 14 : 8).padding(.trailing, 6).padding(.vertical, 6)
         .frame(minHeight: 44)
         .background(model.paperTokens.bg, in: .rect(cornerRadius: 14))
         .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(YYColor.line, lineWidth: 0.5))

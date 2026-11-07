@@ -3,7 +3,7 @@ import PhotosUI
 import SwiftUI
 import YuyueCore
 
-/// 书的信息 (prototype 书的信息), from 长按 · 编辑信息: the cover and 换封面, the name and author
+/// 书的信息, from 长按 · 编辑信息: the cover and 换封面, the name and author
 /// the shelf shows, and what belongs to this book alone — its status, its 合集, its rules, the
 /// space it takes.
 struct PhoneBookInfo: View {
@@ -132,7 +132,7 @@ struct PhoneBookInfo: View {
         }
     }
 
-    /// `.v-lib-cvw`: the cover a size smaller, 换封面 under it.
+    /// The cover a size smaller, 换封面 under it.
     private var coverPart: some View {
         VStack(spacing: YYUI.s(8)) {
             BookCover(book: current)

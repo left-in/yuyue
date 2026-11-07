@@ -3,10 +3,10 @@ import Foundation
 import FoundationModels
 #endif
 
-/// Where 书伴's answers come from (FEATURES §3.8): the model on this device, or a service the
+/// Where 书伴's answers come from: the model on this device, or a service the
 /// user added with their own key. No service of ours sits in between; keys stay in the
-/// keychain and are not synced. 添加服务商 picks from `catalog`, grouped by how it's reached as
-/// nanobot's webui groups them (登录 / API Key / 本机和局域网), or adds one of the user's own
+/// keychain and are not synced. 添加服务商 picks from `catalog`, grouped by how it's reached
+/// (登录 / API Key / 本机和局域网), or adds one of the user's own
 /// (any OpenAI-shaped address). The logos are LobeHub Icons, from shared/provider-icons.
 struct CompanionProvider: Hashable, Identifiable {
     /// How it's asked.
@@ -354,7 +354,7 @@ enum Companion {
             "model": config.model, "max_tokens": maxTokens, "system": system,
             "messages": [["role": "user", "content": prompt]], "stream": long,
         ])
-        // A long answer (播客's script) takes minutes; streamed, the line stays busy and isn't dropped.
+        // A long answer takes minutes; streamed, the line stays busy and isn't dropped.
         if long {
             return try await stream(r) { event in
                 (event["type"] as? String) == "content_block_delta" ? (event["delta"] as? [String: Any])?["text"] as? String : nil

@@ -1,4 +1,4 @@
-//! 读音: how a Chinese sentence is read, syllable by syllable (听书开发方案 §4.2). Forced
+//! 读音: how a Chinese sentence is read, syllable by syllable. Forced
 //! alignment needs it to lay the book's words along the recording; 分角色朗读 will use it to
 //! put a voice right where it misreads.
 //!

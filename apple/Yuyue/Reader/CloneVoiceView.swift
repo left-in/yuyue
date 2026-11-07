@@ -3,7 +3,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 import YuyueCore
 
-/// 克隆一个声音 (docs/design/听书-分角色与克隆声音.html, C2–C3): read a little of this book aloud
+/// 克隆一个声音: read a little of this book aloud
 /// (or bring a recording), hear what's off, name it, keep it. 存下 is the white block top right;
 /// once kept, it asks where to use it.
 struct CloneVoiceView: View {

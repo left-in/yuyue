@@ -155,7 +155,7 @@ object YYTints {
     val All = listOf(Blue, Ink)
 }
 
-/** Body typography defaults of a paper. Sizes are prototype pixels at 14px text: scale by fontSize / 14. */
+/** Body typography defaults of a paper. Sizes are design pixels at 14px text: scale by fontSize / 14. */
 data class YYPaperText(
     val font: YYFont,
     val lineHeight: Float,

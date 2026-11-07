@@ -90,7 +90,7 @@ class ReaderModel(val library: Library, val bookID: String, val pager: ReaderPag
         it.narrator = library.recordings.voice(bookID)
     }
     var listenShown by mutableStateOf(false)
-    /** 人物 (R2): the cast page. */
+    /** 人物: the cast page. */
     var castShown by mutableStateOf(false)
     private var bubblesState = mutableStateOf(runCatching { core.bookBubbles(bookID) }.getOrDefault(false))
     /** 气泡模式: the dialogue as bubbles, kept per book (synced). */

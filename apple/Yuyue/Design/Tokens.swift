@@ -201,7 +201,7 @@ public struct YYTint: Sendable, Hashable, Identifiable {
     }
 }
 
-/// Body typography defaults of a paper. Sizes are prototype pixels at 14px text: scale by fontSize / 14.
+/// Body typography defaults of a paper. Sizes are design pixels at 14px text: scale by fontSize / 14.
 public struct YYPaperText: Sendable, Hashable {
     public let font: YYFontFamily
     public let lineHeight: Double

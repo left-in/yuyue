@@ -26,7 +26,7 @@ import uniffi.yuyue_core.Position
 import uniffi.yuyue_core.YuyueCore
 
 /**
- * Reads a book aloud one sentence at a time, for every voice alike (TECH.md: 统一播放器), as on
+ * Reads a book aloud one sentence at a time, for every voice alike, as on
  * Apple. A sentence is rendered to audio before it plays, so its length is known exactly and the
  * ink line keeps pace with the voice. Two sentences are kept rendered ahead, so sentences and
  * chapters follow one another without a gap. Speed is applied while playing (pitch kept). The

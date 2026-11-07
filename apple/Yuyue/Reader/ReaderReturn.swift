@@ -1,7 +1,7 @@
 import SwiftUI
 import YuyueCore
 
-/// 进度冲突 (prototype S4): which device read on, how long ago, the words where it stopped, and
+/// 进度冲突: which device read on, how long ago, the words where it stopped, and
 /// whether to go there. Shaped like 前情提要.
 struct ElsewhereCard: View {
     let elsewhere: ReaderModel.Elsewhere
@@ -71,7 +71,7 @@ struct ElsewhereCard: View {
     private static func percent(_ f: Double) -> String { "\(Int((f * 100).rounded()))%" }
 }
 
-/// 回到原处 (prototype 找得到，也回得来): over the capsule after jumping off, until a few pages
+/// 回到原处: over the capsule after jumping off, until a few pages
 /// are read in the new place.
 /// 没把握时书页上会提示: a TXT that may have been read in the wrong encoding or cut into the
 /// wrong chapters, with the way to 编码和目录 and a way to let it be.

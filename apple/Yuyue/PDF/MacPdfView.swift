@@ -53,7 +53,7 @@ struct MacPdfView: View {
         .toolbar { toolbar }
         .toolbar(removing: .title)
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-        // `.v-mac-tb`, as in the reading window.
+        // As in the reading window.
         .trafficLights(CGPoint(x: 24, y: 29))
         .navigationTitle(model.title)
         .onAppear {
@@ -184,7 +184,7 @@ struct MacPdfView: View {
             .keyboardShortcut("[", modifiers: .command)
             Button { model.togglePlay() } label: {
                 Image(systemName: model.isPlaying ? "pause.fill" : "play.fill")
-                    // M4: ▶ and ❚❚ turn into each other.
+                    // ▶ and ❚❚ turn into each other.
                     .contentTransition(.symbolEffect(.replace))
                     .animation(YYMotion.quick, value: model.isPlaying)
                     .font(.yy(size: 14, weight: .semibold))

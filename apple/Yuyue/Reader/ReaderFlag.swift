@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// 有声书: while the narrator reads a stretch the recording doesn't line up with, an amber line
-/// beside its paragraph and a card over the page (`.v-al-hint`): 先不管, or 微调.
+/// beside its paragraph and a card over the page: 先不管, or 微调.
 struct NarrationFlag: Equatable, Identifiable {
     let issue: Issue
     /// Which of the book's stretches this is, from 1, and how many there are.
@@ -79,7 +79,6 @@ extension ReaderModel {
     #endif
 }
 
-/// `.v-float.v-al-hint`.
 struct NarrationFlagCard: View {
     let flag: NarrationFlag
     let letBe: () -> Void

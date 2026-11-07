@@ -4,7 +4,7 @@ import Observation
 import PDFKit
 import YuyueCore
 
-/// A PDF open for reading (FEATURES §3.5): shown as it is printed, by the system's own viewer.
+/// A PDF open for reading: shown as it is printed, by the system's own viewer.
 /// Where the reader is, is a page; each PDF keeps its own way of showing pages.
 ///
 /// Its text is the page's own, as the system's PDF reads it; the core cuts it into sentences

@@ -81,7 +81,7 @@ import kotlin.math.log10
 import kotlin.math.sqrt
 
 /**
- * 人物声音 (docs/design/听书-分角色与克隆声音.html, R2–R4, C1–C3): who has spoken so far and the
+ * 人物声音: who has spoken so far and the
  * voice each reads with; a character's own page; choosing a voice; cloning one. Everyone reads
  * with the narrator's until given one. Only those up to this chapter: no spoilers.
  */
@@ -362,7 +362,7 @@ private fun VoicePage(
     }
 }
 
-/** 克隆一个声音 (C2–C3): read a little of this book (or bring a recording), hear what's off, name it,
+/** 克隆一个声音: read a little of this book (or bring a recording), hear what's off, name it,
  *  keep it with the white block top right. */
 @Composable
 private fun ClonePage(model: ReaderModel, forName: String?, done: (ClonedVoice?) -> Unit) {

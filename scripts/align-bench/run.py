@@ -11,7 +11,7 @@
 - 漏了：录音里念了，算法说没有（这句听不到、不亮）。
 - 多了：录音里没念，算法却给了时间（会放一段别的话）。
 - 多出来的话放出来几秒：不在原文里的话落在某句起止里的秒数（听这句时会听到它）。
-达标线（听书开发方案第 4 节）：起点错 ≤ 3%。
+达标线：起点错 ≤ 3%。
 """
 import json
 import os
@@ -22,7 +22,7 @@ import time
 import numpy as np
 
 # 数据（下载的语料、拼好的考卷、模型）放在实验盘上，不进仓库。
-HERE = os.environ.get("YUYUE_BENCH", "/Volumes/T2214/yuyue-lab/bench")
+HERE = os.environ.get("YUYUE_BENCH", "bench")
 SCRIPTS = os.path.dirname(os.path.abspath(__file__))
 LAB = os.path.dirname(HERE)
 CASES = os.path.join(HERE, "cases")

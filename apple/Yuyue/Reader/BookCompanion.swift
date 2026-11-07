@@ -2,7 +2,7 @@ import Foundation
 import NaturalLanguage
 import YuyueCore
 
-/// 与书对话 (prototype f94): questions about the book open in this window. By default only the
+/// 与书对话: questions about the book open in this window. By default only the
 /// part already read is handed to the model, so it can't give away what comes later; 问全书
 /// lifts that. The sentences it gets are numbered, and the answer points back at them: 出处.
 @Observable

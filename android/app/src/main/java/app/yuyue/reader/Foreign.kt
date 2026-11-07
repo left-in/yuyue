@@ -158,7 +158,7 @@ object WordVoice {
     }
 }
 
-/** 点词 (prototype 外文原著): over or under the word, its headword and sound, the short meaning,
+/** 点词: over or under the word, its headword and sound, the short meaning,
  *  the phrase it was met in, then where it is from · 本书出现 N 次, and 加入生词本. */
 @Composable
 fun WordCard(model: ReaderModel, lookup: WordLookup) {

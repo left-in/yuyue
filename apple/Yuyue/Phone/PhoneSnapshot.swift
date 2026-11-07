@@ -3,7 +3,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 import YuyueCore
 
-/// 数据快照 (prototype 29): choose what goes in — the size written out as you choose — make
+/// 数据快照: choose what goes in — the size written out as you choose — make
 /// one, bring one back, export the reading record, and the ones made before, each to share.
 struct PhoneSnapshot: View {
     let library: Library
@@ -66,7 +66,7 @@ struct PhoneSnapshot: View {
             .padding(.horizontal, YYUI.s(4)).padding(.bottom, YYUI.s(6))
     }
 
-    /// `.v-dt-mk`: a switch for each kind with how many there are, then the size and 生成快照.
+    /// A switch for each kind with how many there are, then the size and 生成快照.
     private var makeCard: some View {
         let c = snapshots.counts
         return YYGroup {
@@ -107,7 +107,7 @@ struct PhoneSnapshot: View {
         }
     }
 
-    /// `.v-dt-old`: when, from where, how big, and a button to send it on.
+    /// When, from where, how big, and a button to send it on.
     private func savedRow(_ s: Snapshots.Saved) -> some View {
         HStack(spacing: YYUI.s(10)) {
             Button { open(s.url) } label: {

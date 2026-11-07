@@ -1,16 +1,16 @@
 import SwiftUI
 
 /// The note after something happened. A plain one is a small white capsule that flashes at the
-/// top (docs/design: 第三轮 Q · 3); one that can be undone is the wide glass banner instead
-/// (删除后撤销 · V6 with button B3), so the two never look alike.
+/// top; one that can be undone is the wide glass banner instead,
+/// so the two never look alike.
 struct UndoToast: View {
     let toast: Library.Toast
     let undo: () -> Void
 
-    /// 即刻's green tick for a plain note; a deletion is red.
+    /// A green tick for a plain note; a deletion is red.
     static let done = Color(red: 0x2D / 255, green: 0xBE / 255, blue: 0x60 / 255)
 
-    /// The prototype draws the phone at its own pixels (a point is 1.2 of them) and the Mac
+    /// Sizes are drawn at the phone's own pixels (a point is 1.2 of them) and the Mac
     /// window at its real size, so the Mac's banner and capsule are a fifth smaller.
     #if os(macOS)
     static let k: CGFloat = 1
@@ -97,7 +97,7 @@ private struct UndoBanner: View {
             }
             .lineLimit(1)
             .frame(maxWidth: .infinity, alignment: .leading)
-            // B3: a round glass button with only the arrow; it fades as the tick comes.
+            // A round glass button with only the arrow; it fades as the tick comes.
             Button(action: undo) {
                 Image(systemName: "arrow.uturn.backward")
                     .font(.yy(size: 12.5 * k, weight: .semibold))
@@ -117,7 +117,7 @@ private struct UndoBanner: View {
         .padding(.leading, 13 * k)
         .padding(.trailing, 10 * k)
         .padding(.vertical, 11 * k)
-        // Liquid Glass, or the prototype's glass: near-white over a blur of the page.
+        // Liquid Glass, or our own glass: near-white over a blur of the page.
         .yyGlass(RoundedRectangle(cornerRadius: 20 * k), fill: YYColor.glass, line: YYColor.line, material: .ultraThinMaterial,
                  shadow: 0.16, radius: 18, y: 8, liquid: !eink)
         .frame(maxWidth: UndoToast.bannerWidth)
@@ -150,7 +150,7 @@ private struct CountdownRing: View {
                     .transition(.scale(scale: 0.4).combined(with: .opacity))
             } else {
                 Circle().stroke(YYColor.danger.opacity(0.18), lineWidth: 2.2 * k)
-                // Drains anticlockwise from the top, as Telegram's does.
+                // Drains anticlockwise from the top.
                 Circle().trim(from: 1 - left, to: 1)
                     .stroke(YYColor.danger, style: StrokeStyle(lineWidth: 2.2 * k, lineCap: .round))
                     .rotationEffect(.degrees(-90))

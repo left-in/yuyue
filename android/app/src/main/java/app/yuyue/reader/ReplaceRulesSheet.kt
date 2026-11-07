@@ -55,7 +55,7 @@ import uniffi.yuyue_core.ReplaceRule
 import uniffi.yuyue_core.RulePreview
 import uniffi.yuyue_core.YuyueCore
 
-/** 替换规则 (prototype), as on Apple: what this book's words are changed into — on the page and
+/** 替换规则, as on Apple: what this book's words are changed into — on the page and
  *  in the voice, or only in the voice. Rules for this book, or for every book; each can be
  *  turned off, changed, or taken away; common ones can be picked from a list. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +65,7 @@ fun ReplaceRulesSheet(core: YuyueCore, bookID: String, changed: () -> Unit, dism
     var version by remember { mutableIntStateOf(0) }
     var editing by remember { mutableStateOf<ReplaceRule?>(null) }
     var picking by remember { mutableStateOf(false) }
-    /** U3: the rule just deleted, for 撤销 a few seconds. */
+    /** The rule just deleted, for 撤销 a few seconds. */
     var removed by remember { mutableStateOf<ReplaceRule?>(null) }
     LaunchedEffect(removed) { if (removed != null) { delay(5000); removed = null } }
     val rules = remember(forBook, version) {

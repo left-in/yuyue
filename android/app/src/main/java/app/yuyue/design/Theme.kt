@@ -37,14 +37,14 @@ object YY {
     val dark: Boolean
         @Composable @ReadOnlyComposable get() = LocalDark.current
 
-    /** The prototype draws the phone at its own pixels; points are those times 1.2 (as on iPhone). */
+    /** Sizes are design pixels; points are those times 1.2 (as on iPhone). */
     const val K = 1.2f
 
     fun s(px: Float): Dp = (px * K).dp
     fun s(px: Int): Dp = (px * K).dp
     fun sp(px: Float): TextUnit = (px * K).sp
 
-    /** The prototype's type: `YYUI.font(px, weight)`. */
+    /** Type: `YYUI.font(px, weight)`. */
     fun font(px: Float, weight: FontWeight = FontWeight.Normal, family: FontFamily = FontFamily.Default): TextStyle =
         TextStyle(fontSize = sp(px), fontWeight = weight, fontFamily = family)
 

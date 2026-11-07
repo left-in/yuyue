@@ -1,13 +1,13 @@
 import AVFoundation
 import Foundation
 
-/// 克隆声音 (docs/design/听书-分角色与克隆声音.html, C1–C4): a voice made from a short recording
+/// 克隆声音: a voice made from a short recording
 /// of someone reading. The recording and what it says stay on this device, in Application
 /// Support/clones/<id>; nothing about it syncs. A book that gives one of its characters a cloned
 /// voice reads them with the narrator's on a device that doesn't have it.
 ///
 /// What turns the recording into speech is behind `CloneEngine`, to be swapped for a model on
-/// the device later (听书开发方案 §5.2). For now that's the reader's own ElevenLabs, when they
+/// the device later. For now that's the reader's own ElevenLabs, when they
 /// have a key there; without one the voice is kept and waits, and the narrator reads instead.
 nonisolated struct ClonedVoice: Voice {
     nonisolated struct Meta: Codable, Sendable {
@@ -145,7 +145,7 @@ enum CloneEngine {
     }
 }
 
-/// 检查录音 (C3): what can be told from the samples alone. It never refuses a recording; it says
+/// 检查录音: what can be told from the samples alone. It never refuses a recording; it says
 /// what's off and how to do better.
 nonisolated struct SampleCheck: Sendable {
     enum Level: Sendable { case ok, warn }

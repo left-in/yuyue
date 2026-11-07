@@ -1,5 +1,5 @@
 //! The library database: an operation log that devices exchange to stay in step, with no
-//! server in between (TECH.md §六).
+//! server in between.
 //!
 //! All state is a set of registers, one per (entity, field): `book/<id>` · `title`,
 //! `progress/<book>/<device>` · `position`, `settings/reader` · `fontSize`. Every write is an

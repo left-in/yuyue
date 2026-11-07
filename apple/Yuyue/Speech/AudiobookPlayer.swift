@@ -7,7 +7,7 @@ import UIKit
 import AppKit
 #endif
 
-/// 有声书 listened to on its own (prototype v0.30 C3–C6): the recording's files one after
+/// 有声书 listened to on its own: the recording's files one after
 /// another, by time. A position is a chapter and the milliseconds into it, saved like any book's,
 /// so progress, 书签 and 听了多久 follow the book to other devices.
 ///
