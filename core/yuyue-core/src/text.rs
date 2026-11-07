@@ -24,6 +24,11 @@ pub fn is_wide(c: char) -> bool {
 }
 
 /// Curly quotes, ellipsis, dash, middle dot: full width next to CJK, narrow in Latin text.
+/// Columns a line takes: a wide character is two.
+pub fn width(s: &str) -> usize {
+    s.chars().map(|c| if is_wide(c) { 2 } else { 1 }).sum()
+}
+
 fn is_ambiguous_punct(c: char) -> bool {
     matches!(c, '“' | '”' | '‘' | '’' | '…' | '—' | '·')
 }

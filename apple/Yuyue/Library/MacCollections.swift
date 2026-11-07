@@ -32,6 +32,7 @@ struct CollectionWall: View {
     @State private var name = ""
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+    @AppStorage(EInk.key) private var eink = false
 
     enum Sort: String, CaseIterable {
         case recent, name, count, own
@@ -66,11 +67,12 @@ struct CollectionWall: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
+            // The same head as 生词本 · 笔记 · 播客: 56 high, down 8, 28 on the right.
             header
-                .frame(height: 60)
-                .padding(.top, 4)
+                .frame(height: 56)
+                .padding(.top, 8)
                 .padding(.leading, 22 + leading)
-                .padding(.trailing, 26)
+                .padding(.trailing, 28)
             if library.collections.isEmpty {
                 VStack(spacing: 10) {
                     Image(systemName: "square.stack").font(.yy(size: 28, weight: .light)).foregroundStyle(YYColor.t3)
@@ -80,12 +82,21 @@ struct CollectionWall: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ScrollView {
+                    HStack {
+                        Text("\(library.collections.count) 个")
+                            .font(.yy(size: 12.5, weight: .semibold))
+                            .foregroundStyle(YYColor.t1)
+                        Spacer()
+                        sortMenu
+                    }
+                    .padding(.horizontal, 28)
+                    .padding(.top, 10)
+                    .padding(.bottom, 14)
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 128, maximum: 160), spacing: 22, alignment: .top)], alignment: .leading, spacing: 26) {
                         ForEach(shown, id: \.id) { stack($0) }
                     }
                     .padding(.leading, 26)
                     .padding(.trailing, 26)
-                    .padding(.top, 10)
                     .padding(.bottom, 40)
                 }
             }
@@ -100,47 +111,52 @@ struct CollectionWall: View {
         }
     }
 
+    /// The shelf's 最近读过 ⇅: grey words, a menu.
+    private var sortMenu: some View {
+        Menu {
+            Picker("排序", selection: $sort) {
+                ForEach(Sort.allCases, id: \.self) { Text($0.title).tag($0) }
+            }
+            .pickerStyle(.inline)
+            .labelsHidden()
+        } label: {
+            HStack(spacing: 4) {
+                Text(sort.title)
+                Image(systemName: "chevron.up.chevron.down").font(.yy(size: 9, weight: .semibold))
+            }
+            .font(.yy(size: 11.5))
+            .foregroundStyle(YYColor.t2)
+            .contentShape(.rect)
+        }
+        .menuStyle(.button)
+        .buttonStyle(.plain)
+        .menuIndicator(.hidden)
+        .fixedSize()
+    }
+
     private var header: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 10) {
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
             Text("全部合集")
                 .font(.yy(size: 22, weight: .bold))
                 .foregroundStyle(YYColor.t1)
-            Text("\(library.collections.count) 个")
-                .font(.yy(size: 12)).foregroundStyle(YYColor.t3)
             Spacer()
-            Menu {
-                Picker("排序", selection: $sort) {
-                    ForEach(Sort.allCases, id: \.self) { Text($0.title).tag($0) }
-                }
-                .pickerStyle(.inline)
-                .labelsHidden()
-            } label: {
-                HStack(spacing: 4) {
-                    Text(sort.title)
-                    Image(systemName: "chevron.up.chevron.down").font(.yy(size: 9, weight: .semibold))
-                }
-                .font(.yy(size: 11.5))
-                .foregroundStyle(YYColor.t2)
-                .contentShape(.rect)
-            }
-            .menuStyle(.button)
-            .buttonStyle(.plain)
-            .menuIndicator(.hidden)
-            .fixedSize()
+            // The same as 导入 on the shelf.
             Button {
                 name = ""
                 naming = Naming(collection: nil)
             } label: {
-                Text("新建合集")
-                    .font(.yy(size: 12, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 14)
-                    .frame(height: 28)
-                    .background(tint.fill, in: .capsule)
-                    .contentShape(.capsule)
+                HStack(spacing: 5) {
+                    Image(systemName: "plus").font(.yy(size: 11, weight: .semibold))
+                    Text("新建合集")
+                }
+                .font(.yy(size: 12, weight: .medium))
+                .foregroundStyle(YYColor.t1)
+                .padding(.horizontal, 12)
+                .frame(height: 28)
+                .yyGlass(Capsule(), fill: YYColor.card, line: YYColor.line, shadow: 0, interactive: true, liquid: !eink)
+                .contentShape(.capsule)
             }
             .buttonStyle(.plain)
-            .alignmentGuide(.firstTextBaseline) { $0[VerticalAlignment.center] + 4 }
         }
     }
 

@@ -57,7 +57,7 @@ struct SyncSettings: View {
                         Label(googleProblem, systemImage: "exclamationmark.circle").font(.yy(size: 11.5)).foregroundStyle(YYColor.danger)
                     }
                 }
-                .padding(.leading, 8)
+                .padding(.leading, 16)
             }
             SettingsHeading(String(localized: "同步这些"))
             SettingsCard {
@@ -73,7 +73,7 @@ struct SyncSettings: View {
             }
             Label("不用注册账号，数据只在你的设备和你自己的网盘之间走", systemImage: "lock")
                 .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
-                .padding(.leading, 8)
+                .padding(.leading, 16)
             Spacer(minLength: 0)
         }
         .onAppear {

@@ -30,7 +30,7 @@ use crate::txt;
 
 /// Bumped whenever an import would come out differently; books from older versions are
 /// re-imported from their original file.
-pub const FORMAT_VERSION: u32 = 1;
+pub const FORMAT_VERSION: u32 = 2;
 
 #[derive(Serialize, Deserialize, Clone, Copy, Debug, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]

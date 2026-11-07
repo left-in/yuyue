@@ -255,6 +255,17 @@ final class Podcasts {
         write(show)
     }
 
+    #if DEBUG
+    func debugShowWriting(_ show: String) {
+        var p = Progress(step: .summarize)
+        p.done = 1
+        p.total = 3
+        p.picked = ["SQLite 做消息队列靠不靠谱", "Rust 1.91 的增量编译", "少数派作者的效率工具清单"]
+        writing[show] = p
+        tasks[show] = Task { try? await Task.sleep(for: .seconds(3600)) }
+    }
+    #endif
+
     func cancel(_ show: String) {
         tasks[show]?.cancel()
         tasks[show] = nil

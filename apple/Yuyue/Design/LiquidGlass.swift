@@ -134,7 +134,9 @@ struct GlassTool: View {
         Button(action: action) {
             Group {
                 if let symbol {
-                    Image(systemName: symbol).font(.yy(size: 13, weight: .medium))
+                    // A label, not a bare image: in the window's toolbar the capsule becomes one
+                    // item, and only a button's own title survives as what VoiceOver reads.
+                    Label(title, systemImage: symbol).labelStyle(.iconOnly).font(.yy(size: 13, weight: .medium))
                         // M4: a tool whose icon changes (朗读 ⇄ 暂停) turns one into the other.
                         .contentTransition(.symbolEffect(.replace))
                         .animation(YYMotion.quick, value: symbol)

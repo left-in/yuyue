@@ -93,17 +93,69 @@ enum Voices {
     @MainActor static func preview(_ voice: any Voice, text: String, failed: @escaping (String) -> Void = { _ in }) {
         if let v = voice as? SystemVoice { return SystemVoice.preview(v, text: text) }
         previewing?.cancel()
+        PreviewState.shared.began(voice.id, seconds: nil)
         previewing = Task {
             do {
-                guard let speech = try await voice.render(text, language: ""), !Task.isCancelled else { return }
-                Previewer.shared.play(speech)
+                guard let speech = try await voice.render(text, language: ""), !Task.isCancelled else {
+                    PreviewState.shared.ended(voice.id)
+                    return
+                }
+                Previewer.shared.play(speech, id: voice.id)
             } catch {
+                PreviewState.shared.ended(voice.id)
                 failed(error.localizedDescription)
             }
         }
     }
 
+    /// Stops whatever 试听 is saying.
+    @MainActor static func stopPreview() {
+        previewing?.cancel()
+        SystemVoice.stopPreview()
+        Previewer.shared.stop()
+        PreviewState.shared.ended(nil)
+    }
+
     @MainActor private static var previewing: Task<Void, Never>?
+}
+
+/// Which voice 试听 is saying something with, and how far through it is: for the voice the page
+/// shows as playing. `progress` is nil while a cloud voice is still being fetched.
+@MainActor @Observable
+final class PreviewState {
+    static let shared = PreviewState()
+
+    private(set) var voiceID: String?
+    private(set) var started: Date?
+    /// How long the sentence takes; nil until it's known (a system voice says it as it goes).
+    private(set) var seconds: Double?
+
+    func began(_ id: String, seconds: Double?) {
+        voiceID = id
+        started = seconds == nil ? nil : .now
+        self.seconds = seconds
+    }
+
+    /// Known only once it starts sounding.
+    func sounding(_ id: String, seconds: Double) {
+        guard voiceID == id else { return }
+        started = .now
+        self.seconds = seconds
+    }
+
+    /// nil: whatever is playing; otherwise only if it's still that one.
+    func ended(_ id: String?) {
+        guard id == nil || voiceID == id else { return }
+        voiceID = nil
+        started = nil
+        seconds = nil
+    }
+
+    /// 0…1 at `date`, or nil while it hasn't started sounding.
+    func progress(at date: Date) -> Double? {
+        guard let started, let seconds, seconds > 0 else { return nil }
+        return min(1, date.timeIntervalSince(started) / seconds)
+    }
 }
 
 /// Plays one rendered sentence, for 试听 with a cloud voice.
@@ -117,10 +169,26 @@ enum Voices {
         engine.connect(node, to: engine.mainMixerNode, format: Speech.format)
     }
 
-    func play(_ speech: Speech) {
+    func play(_ speech: Speech, id: String) {
         node.stop()
         if !engine.isRunning { try? engine.start() }
-        node.scheduleBuffer(speech.buffer)
+        generation += 1
+        let mine = generation
+        node.scheduleBuffer(speech.buffer, completionCallbackType: .dataPlayedBack) { _ in
+            Task { @MainActor in
+                guard Previewer.shared.generation == mine else { return }
+                PreviewState.shared.ended(id)
+            }
+        }
         node.play()
+        PreviewState.shared.sounding(id, seconds: speech.seconds)
     }
+
+    func stop() {
+        generation += 1
+        node.stop()
+    }
+
+    /// Bumped for every sentence, so a stopped one's callback doesn't end the next.
+    private var generation = 0
 }

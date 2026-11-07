@@ -4,7 +4,7 @@
 
 - 要做什么：[FEATURES.md](FEATURES.md)
 - 怎么做：[TECH.md](TECH.md)
-- 设计：`design-language-v0.21-confirmed.html`、`prototype-v0.28.html`
+- 设计：`prototype-v0.28.html`；定稿的 `design-language-v0.21-confirmed.html`、`prototype-v0.29.html` 在本地 `prototypes/baseline/`（不进 git）
 
 ## 目录
 

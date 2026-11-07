@@ -20,6 +20,7 @@ final class MacMenuBar: NSObject, NSMenuDelegate {
         self.library = library
         super.init()
         follow()
+        followPlaying()
     }
 
     /// Shown while some show is written here at set times, or an episode is playing.
@@ -30,10 +31,7 @@ final class MacMenuBar: NSObject, NSMenuDelegate {
         }
         if on, item == nil {
             let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-            let image = NSImage(named: "radio")
-            image?.isTemplate = true
-            image?.size = NSSize(width: 16, height: 16)
-            item.button?.image = image
+            item.button?.image = MenuBarIcon.still
             item.button?.toolTip = String(localized: "语阅 · 播客")
             let menu = NSMenu()
             menu.delegate = self
@@ -42,6 +40,36 @@ final class MacMenuBar: NSObject, NSMenuDelegate {
         } else if !on, let item {
             NSStatusBar.system.removeStatusItem(item)
             self.item = nil
+        }
+        animate()
+    }
+
+    /// The three lines in the 门 move while a voice is playing, and stand still when it stops.
+    private var frames: Timer?
+    private var playing = false
+    private func followPlaying() {
+        playing = withObservationTracking { library.nowPlaying?.isPlaying == true } onChange: { [weak self] in
+            Task { @MainActor in self?.followPlaying() }
+        }
+        animate()
+    }
+
+    private func animate() {
+        let moving = playing && item != nil && !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        if moving, frames == nil {
+            let start = Date()
+            let timer = Timer(timeInterval: 1.0 / 12, repeats: true) { [weak self] _ in
+                Task { @MainActor in
+                    self?.item?.button?.image = MenuBarIcon.frame(at: Date().timeIntervalSince(start))
+                }
+            }
+            // .common: keeps moving while the menu is open.
+            RunLoop.main.add(timer, forMode: .common)
+            frames = timer
+        } else if !moving, let timer = frames {
+            timer.invalidate()
+            frames = nil
+            item?.button?.image = MenuBarIcon.still
         }
     }
 
@@ -134,6 +162,52 @@ final class MacMenuBar: NSObject, NSMenuDelegate {
         let run: () -> Void
         init(_ run: @escaping () -> Void) { self.run = run }
         @objc func go() { run() }
+    }
+}
+
+/// 门里出声: 阅's 门 (ResourceHanRounded Medium) with three lines of voice inside, short, long,
+/// middle. `menubar` is the whole still icon; `menubar-door` is the 门 alone, with the lines drawn
+/// over it here, a little longer and shorter each frame, so they move like a voice speaking.
+enum MenuBarIcon {
+    private static let size = NSSize(width: 18, height: 18)
+
+    static let still: NSImage? = {
+        let image = NSImage(named: "menubar")
+        image?.isTemplate = true
+        image?.size = size
+        return image
+    }()
+
+    private static let door = NSImage(named: "menubar-door")
+
+    /// x in points, half the still length, how long one rise and fall takes, where it starts.
+    /// From menubar.svg: 1000 units over 18 pt, lines centred 0.59 down, 64 units wide.
+    private static let lines: [(x: CGFloat, half: CGFloat, period: Double, phase: Double)] = [
+        (5.94, 1.44, 0.62, 0.0), (9.04, 3.6, 0.9, 1.9), (12.13, 2.34, 0.74, 3.7),
+    ]
+    private static let middle: CGFloat = 18 * 0.59
+    private static let width: CGFloat = 18 * 0.064
+
+    /// The icon `t` seconds into playing.
+    static func frame(at t: TimeInterval) -> NSImage {
+        let image = NSImage(size: size, flipped: true) { rect in
+            door?.draw(in: rect)
+            NSColor.black.setStroke()
+            for l in lines {
+                // Between about half and a little over the still length.
+                let k = 0.8 + 0.32 * sin(2 * .pi * t / l.period + l.phase)
+                let half = max(l.half * k, 0.5)
+                let path = NSBezierPath()
+                path.move(to: NSPoint(x: l.x, y: middle - half))
+                path.line(to: NSPoint(x: l.x, y: middle + half))
+                path.lineWidth = width
+                path.lineCapStyle = .round
+                path.stroke()
+            }
+            return true
+        }
+        image.isTemplate = true
+        return image
     }
 }
 

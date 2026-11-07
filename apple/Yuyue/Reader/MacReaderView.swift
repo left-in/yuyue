@@ -191,6 +191,17 @@ struct MacReaderView: View {
             if d.bool(forKey: "debugTypeset") { Task { try? await Task.sleep(for: .seconds(1.5)); typesetShown = true } }
             if d.bool(forKey: "debugRules") { Task { try? await Task.sleep(for: .seconds(1.5)); model.rulesShown = true } }
             if d.bool(forKey: "debugTxt") { Task { try? await Task.sleep(for: .seconds(1.5)); model.txtShown = true } }
+            // `-debugReaderQuick 1`: the book window's ⌘K. `-debugListenOnly 1`: listen only, hide the original text.
+            if d.bool(forKey: "debugReaderQuick") { Task { try? await Task.sleep(for: .seconds(1)); model.quickSearchShown = true } }
+            if d.bool(forKey: "debugListenOnly") { Task { try? await Task.sleep(for: .seconds(1.5)); model.listenOnly = true } }
+            // `-debugThought 1`: the thought sheet for the first note (use with -debugSeed).
+            if d.bool(forKey: "debugThought") { Task { try? await Task.sleep(for: .seconds(2)); thought = model.marks.first } }
+            // `-debugAlign 1`: the feedback card pops up, and then alignment check opens too.
+            if d.bool(forKey: "debugAlign"), let i = model.flagIssues.first {
+                Task { try? await Task.sleep(for: .seconds(1.5))
+                    model.showFlag(NarrationFlag(issue: i, number: 1, total: model.flagIssues.count))
+                    if let target = model.flagTarget { openWindow(id: "align", value: target) } }
+            }
             if d.object(forKey: "debugSection") != nil { Task { try? await Task.sleep(for: .seconds(1)); model.jump(section: UInt32(d.integer(forKey: "debugSection")), sentence: 0) } }
             #endif
             model.pager.menuItems = { menuItems() }
@@ -419,6 +430,8 @@ struct MacReaderView: View {
         .frame(height: 32)
         .yyGlass(Capsule(), fill: paper.glass, line: paper.line, shadow: paper.isDark ? 0.3 : 0.06, radius: 7,
                  interactive: true, liquid: !paper.isEink)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("阅读工具")
     }
 
     private func tool(_ title: String, _ symbol: String?, help: String, on: Bool, action: @escaping () -> Void) -> some View {
@@ -810,15 +823,19 @@ private struct PanelTabs<T: Hashable>: View {
     var body: some View {
         HStack(spacing: 2) {
             ForEach(items, id: \.0) { value, title in
+                let on = selection == value
+                let ink: Color = on ? YYColor.t1 : YYColor.t2
+                let chip: Color = on ? YYColor.card : .clear
+                let shade: Double = on ? 0.06 : 0
                 Button { selection = value } label: {
                     Text(title)
-                        .font(.yy(size: 11.5, weight: selection == value ? .semibold : .regular))
-                        .foregroundStyle(selection == value ? YYColor.t1 : YYColor.t2)
+                        .font(.yy(size: 11.5, weight: on ? .semibold : .regular))
+                        .foregroundStyle(ink)
                         .monospacedDigit()
                         .frame(maxWidth: .infinity)
                         .frame(height: 26)
-                        .background(selection == value ? YYColor.card : .clear, in: .rect(cornerRadius: 8))
-                        .shadow(color: .black.opacity(selection == value ? 0.06 : 0), radius: 1.5, y: 0.5)
+                        .background(chip, in: .rect(cornerRadius: 8))
+                        .shadow(color: .black.opacity(shade), radius: 1.5, y: 0.5)
                         .contentShape(.rect)
                 }
                 .buttonStyle(.plain)
@@ -863,7 +880,9 @@ private struct TocPanel: View {
         let read = model.times.values.reduce(0) { $0 + Int($1.readSeconds) }
         let listen = model.times.values.reduce(0) { $0 + Int($1.listenSeconds) }
         let chapterCount = chapters.count
-        let unit = chapters.compactMap { ChapterTitle($0.title).number?.last }.first.map(String.init) ?? String(localized: "章")
+        // A book without a table of contents is listed by 节 (第 1 节…), and counted the same way.
+        let unit = model.detail?.toc.isEmpty == true ? String(localized: "节")
+            : chapters.compactMap { ChapterTitle($0.title).number?.last }.first.map(String.init) ?? String(localized: "章")
         // `.v-mr-bk` / `.v-mr-bp`
         return VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 11) {

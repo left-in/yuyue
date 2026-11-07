@@ -35,6 +35,7 @@ pub struct Normalized {
 
 pub fn normalize(mut body: Element, ctx: &Context) -> Normalized {
     sanitize(&mut body, ctx);
+    join_wrapped_lines(&mut body);
     let mut st = WrapState { sentences: Vec::new(), style: punct::style_for(ctx.lang) };
     wrap_container(&mut body, &mut st);
     let mut stats = Stats::default();
@@ -99,6 +100,75 @@ fn has_text_before(root: &Element, path: &[usize]) -> bool {
         }
     }
     false
+}
+
+// ---------------------------------------------------------------------------------------------
+// Hard-wrapped books
+
+/// Some Chinese EPUBs are a scanned text with every printed line in a `<p>` of its own (紅樓夢
+/// 第十九到四十四回 in fixtures/books). Sentences and quotes then run across “paragraphs”, and the
+/// page has a gap after each line. A run of lines is put back into paragraphs where the signs are
+/// plain: mostly Chinese, lines of one long width, and most of them stopping mid-sentence. Poems
+/// (short lines) and books of short paragraphs (they end in punctuation) don't look like that.
+fn join_wrapped_lines(el: &mut Element) {
+    for c in &mut el.children {
+        if let Node::Element(e) = c
+            && !is_excluded(e)
+        {
+            join_wrapped_lines(e);
+        }
+    }
+    let lines: Vec<String> = el.child_elements().filter(|e| is_line(e)).map(|e| e.text_content().trim().to_string()).filter(|t| !t.is_empty()).collect();
+    if lines.len() < 20 {
+        return;
+    }
+    let chars: usize = lines.iter().map(|l| l.chars().count()).sum();
+    let wide: usize = lines.iter().map(|l| l.chars().filter(|c| text::is_cjk(*c)).count()).sum();
+    let open = lines.iter().filter(|l| !ends_a_sentence(l)).count();
+    let mut widths: Vec<usize> = lines.iter().map(|l| text::width(l)).collect();
+    widths.sort_unstable();
+    let usual = widths[widths.len() / 2];
+    if wide * 2 < chars || open * 2 < lines.len() || usual < 30 {
+        return;
+    }
+    let mut out: Vec<Node> = Vec::with_capacity(el.children.len());
+    // The line last put in `out`, on its own: `out`'s last may already be several joined.
+    let mut last = String::new();
+    for child in std::mem::take(&mut el.children) {
+        // The white space between two lines goes when they join.
+        if let Node::Text(t) = &child
+            && t.trim().is_empty()
+        {
+            continue;
+        }
+        let Node::Element(mut next) = child else {
+            out.push(child);
+            last.clear();
+            continue;
+        };
+        let line = if is_line(&next) { next.text_content().trim().to_string() } else { String::new() };
+        // A line as long as the others ran on to the next, whatever it ended with.
+        let runs_on = !last.is_empty() && (!ends_a_sentence(&last) || text::width(&last) * 10 >= usual * 8);
+        if runs_on
+            && !line.is_empty()
+            && let Some(Node::Element(prev)) = out.last_mut()
+        {
+            prev.children.append(&mut next.children);
+        } else {
+            out.push(Node::Element(next));
+        }
+        last = line;
+    }
+    el.children = out;
+}
+
+/// A `<p>` that's only words.
+fn is_line(e: &Element) -> bool {
+    e.is("p") && !contains_block(e) && !e.has_class("yy-footnote") && e.find_path(&|x| is_excluded(x)).is_none()
+}
+
+fn ends_a_sentence(line: &str) -> bool {
+    line.chars().next_back().is_some_and(|c| "。．！？!?…”\"」』：；）)".contains(c))
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -480,6 +550,30 @@ mod tests {
             }
         };
         normalize(body, &Context { lang, resource: &resource, link: &link })
+    }
+
+    #[test]
+    fn puts_hard_wrapped_lines_back_into_paragraphs() {
+        // Twenty-odd lines of one width, stopping mid-sentence; the last of each paragraph is short.
+        let line = "这是一本扫描来的书每一行都是一个段落所以句子断在半路上";
+        let mut html = String::new();
+        for _ in 0..3 {
+            for _ in 0..8 {
+                html += &format!("<p>{line}</p>");
+            }
+            html += "<p>到这里才完。</p>";
+        }
+        let n = run(&html, "zh-CN");
+        let paragraphs = n.content.iter().filter(|c| matches!(c, Node::Element(e) if e.is("p"))).count();
+        assert_eq!(paragraphs, 3);
+    }
+
+    #[test]
+    fn leaves_poems_and_short_paragraphs_alone() {
+        let poem = "<p>轻轻的我走了</p><p>正如我轻轻的来</p>".repeat(15);
+        assert_eq!(run(&poem, "zh-CN").content.iter().filter(|c| matches!(c, Node::Element(_))).count(), 30);
+        let talk = "<p>这一段不长，但它是一个完整的段落，句子说完了才结束。</p>".repeat(30);
+        assert_eq!(run(&talk, "zh-CN").content.iter().filter(|c| matches!(c, Node::Element(_))).count(), 30);
     }
 
     #[test]

@@ -31,7 +31,6 @@ struct MacShowPage: View {
     private var top: some View {
         HStack(alignment: .top, spacing: 24) {
             VStack(alignment: .leading, spacing: 8) {
-                Text(show.name).font(.yy(size: 26, weight: .bold)).foregroundStyle(YYColor.t1)
                 if !show.brief.isEmpty {
                     // What the reader asked the editor for, in the hand it was written in (配一档节目).
                     Text(show.brief).font(.custom("Kaiti SC", size: 14)).foregroundStyle(YYColor.t2)

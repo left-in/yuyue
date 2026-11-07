@@ -49,8 +49,8 @@ enum NoteExport {
 
         var errorDescription: String? {
             switch self {
-            case .notSetUp(let t): String(localized: "还没设置 \(t.title)：在设置 · 数据 · 笔记导出里填好")
-            case .badToken(let t): String(localized: "\(t.title) 的令牌不对，去设置 · 数据 · 笔记导出里重新填")
+            case .notSetUp(let t): String(localized: "还没设置 \(t.title)：在设置 · 笔记导出里填好")
+            case .badToken(let t): String(localized: "\(t.title) 的令牌不对，去设置 · 笔记导出里重新填")
             case .notShared: String(localized: "Notion 页面还没共享给语阅：在那个页面右上角 ⋯ › 连接，选你建的集成")
             case .limited(let t): String(localized: "\(t.title) 说今天发得太多了，明天再发剩下的")
             case .server(let t, let code, let message): message.map { String(localized: "\(t.title) 回了 \(code)：\($0)") } ?? String(localized: "\(t.title) 回了 \(code)")
@@ -64,6 +64,82 @@ enum NoteExport {
     nonisolated static let notionKey = "export.notion.token"
     static let notionPageKey = "export.notion.page"
     static let obsidianKey = "export.obsidian.folder"
+
+    /// Whether a target that is set up shows in 发到 (设置 · 笔记导出's switch); on until turned off.
+    static func onKey(_ t: Target) -> String { "export.\(t.rawValue).on" }
+    static func isOn(_ t: Target) -> Bool { UserDefaults.standard.object(forKey: onKey(t)) as? Bool ?? true }
+    static func setOn(_ t: Target, _ on: Bool) { UserDefaults.standard.set(on, forKey: onKey(t)) }
+
+    /// The targets 发到 offers: set up and switched on.
+    static var offered: [Target] { Target.allCases.filter { isSetUp($0) && isOn($0) } }
+
+    /// What went out last time, for 设置 to say: when, the book, how many highlights.
+    struct LastSent: Codable {
+        let date: Date
+        let book: String
+        let books: Int
+        let count: Int
+    }
+
+    private static func lastKey(_ t: Target) -> String { "export.\(t.rawValue).last" }
+
+    static func lastSent(_ t: Target) -> LastSent? {
+        UserDefaults.standard.data(forKey: lastKey(t)).flatMap { try? JSONDecoder().decode(LastSent.self, from: $0) }
+    }
+
+    static func noteSent(_ t: Target, books: [Book], count: Int) {
+        guard let first = books.first else { return }
+        let last = LastSent(date: .now, book: first.title, books: books.count, count: count)
+        UserDefaults.standard.set(try? JSONEncoder().encode(last), forKey: lastKey(t))
+    }
+
+    /// The Notion page's title, found when the connection was checked.
+    static let notionTitleKey = "export.notion.pageTitle"
+
+    /// Forgets a target: its token or link leaves the keychain; what was sent is kept, so
+    /// connecting again doesn't send everything twice.
+    static func disconnect(_ t: Target) {
+        switch t {
+        case .obsidian:
+            UserDefaults.standard.removeObject(forKey: obsidianKey)
+        case .notion:
+            Keychain.delete(notionKey)
+            UserDefaults.standard.removeObject(forKey: notionPageKey)
+            UserDefaults.standard.removeObject(forKey: notionTitleKey)
+        case .flomo:
+            Keychain.delete(flomoKey)
+        }
+        UserDefaults.standard.removeObject(forKey: lastKey(t))
+    }
+
+    /// A flomo API link: https://flomoapp.com/iwh/….
+    static func isFlomoLink(_ text: String) -> Bool {
+        let t = text.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        return t.hasPrefix("https://flomoapp.com/iwh/") && t.count > "https://flomoapp.com/iwh/".count + 4
+    }
+
+    /// A Notion integration's token: ntn_… (or the older secret_…).
+    static func isNotionToken(_ text: String) -> Bool {
+        let t = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return (t.hasPrefix("ntn_") || t.hasPrefix("secret_")) && t.count >= 20
+    }
+
+    /// Asks Notion whether the token works (the integration's name) and whether the page is
+    /// shared with it (the page's title). Saves nothing.
+    static func checkNotion(token: String, page: String) async throws -> (bot: String, title: String) {
+        let me = try await notionCall("users/me", method: "GET", token: token, body: nil)
+        let bot = me["name"] as? String ?? String(localized: "你的集成")
+        let p: [String: Any]
+        do {
+            p = try await notionCall("pages/\(page)", method: "GET", token: token, body: nil)
+        } catch Failure.server(_, 404, _) {
+            throw Failure.notShared
+        }
+        let props = p["properties"] as? [String: Any] ?? [:]
+        let title = props.values.compactMap { ($0 as? [String: Any])?["title"] as? [[String: Any]] }.first?
+            .compactMap { $0["plain_text"] as? String }.joined() ?? ""
+        return (bot, title.isEmpty ? String(localized: "那一页") : title)
+    }
 
     static func isSetUp(_ t: Target) -> Bool {
         switch t {
@@ -247,13 +323,13 @@ enum NoteExport {
         return ["object": "block", "type": type, type: ["rich_text": pieces]]
     }
 
-    private static func notionCall(_ path: String, method: String, token: String, body: [String: Any]) async throws -> [String: Any] {
+    private static func notionCall(_ path: String, method: String, token: String, body: [String: Any]?) async throws -> [String: Any] {
         var request = URLRequest(url: URL(string: "https://api.notion.com/v1/\(path)")!)
         request.httpMethod = method
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.setValue("2022-06-28", forHTTPHeaderField: "Notion-Version")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        if let body { request.httpBody = try JSONSerialization.data(withJSONObject: body) }
         let (data, response) = try await URLSession.shared.data(for: request)
         let code = (response as? HTTPURLResponse)?.statusCode ?? 0
         let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]

@@ -30,3 +30,6 @@ android/app/build
 android/keystore.properties
 *.jks
 *.keystore
+.alma-snapshots
+/prototypes/
+/build/window-catalog/

@@ -33,9 +33,12 @@ extension ReaderModel {
         guard let detail else { return [] }
         var items = detail.toc
         if items.isEmpty {
+            // Counted among the ones listed, so they go 1, 2, 3 — not the sections' own places.
+            var n = 0
             items = detail.sections.enumerated().compactMap { i, s in
                 guard s.linear, s.kind == .text, !s.continued else { return nil }
-                return TocItem(title: s.title ?? String(localized: "第 \(i + 1) 节"), depth: 0, section: UInt32(i), anchor: nil)
+                n += 1
+                return TocItem(title: s.title ?? String(localized: "第 \(n) 节"), depth: 0, section: UInt32(i), anchor: nil)
             }
         }
         return items.enumerated().map { i, item in

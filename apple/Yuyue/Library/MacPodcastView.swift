@@ -74,6 +74,12 @@ struct MacPodcastView: View {
             #if DEBUG
             switch UserDefaults.standard.string(forKey: "debugPodcast") {
             case "desk": desk = podcasts.shows.first?.id
+            // `writing`: 编辑部 with a run under way, on its second 条; nothing is really written.
+            case "writing":
+                if let s = podcasts.shows.first(where: { !$0.sources.isEmpty }) {
+                    podcasts.debugShowWriting(s.id)
+                    desk = s.id
+                }
             case "show": showPage = podcasts.shows.first?.id
             case "episode": opened = podcasts.latest.first?.book
             // `play`: the newest episode in the 播放条, as its play button would.
@@ -96,40 +102,38 @@ struct MacPodcastView: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Text(desk != nil ? String(localized: "编辑部") : opened != nil ? String(localized: "单集") : showPage != nil ? String(localized: "节目") : String(localized: "播客"))
-                .font(.yy(size: 22, weight: .bold)).foregroundStyle(YYColor.t1)
-                .padding(.leading, headerInset)
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                if desk != nil || opened != nil || showPage != nil {
+                    // Back one step: 编辑部 → 单集 or 节目 → 播客.
+                    SquareBackButton(help: backTitle) { back() }
+                        .keyboardShortcut("[", modifiers: .command)
+                        // On the title's middle, without making the line taller than 播客's.
+                        .padding(.vertical, -6)
+                        .alignmentGuide(.firstTextBaseline) { $0[VerticalAlignment.center] + 7 }
+                }
+                Text(pageTitle)
+                    .font(.yy(size: 22, weight: .bold)).foregroundStyle(YYColor.t1).lineLimit(1)
+            }
+            .padding(.leading, headerInset)
             if let id = desk, let show = podcasts.shows.first(where: { $0.id == id }) {
                 Text(podcasts.writing[id].map { "\(show.name) · \($0.line)" } ?? show.name)
                     .font(.yy(size: 12)).foregroundStyle(YYColor.t2).lineLimit(1)
-            } else if opened != nil || showPage != nil {
-                EmptyView()
-            } else {
-                let unheard = podcasts.latest.filter { !$0.heard }
-                if !unheard.isEmpty {
-                    Text("\(unheard.count) 集没听").font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)
-                    // 连着听: the radio way — every one not heard, one after another.
-                    let minutes = unheard.reduce(0) { n, e in n + Int(library.books.first { $0.id == e.book }?.listenMinutes ?? 0) }
-                    PodcastGlassButton(title: unheard.count > 1 ? String(localized: "连着听 · 约 \(max(1, minutes)) 分钟") : String(localized: "听"),
-                                       symbol: "play.fill", kind: library.upNext.isEmpty ? .plain : .playing) {
-                        library.playUnheard()
-                    }
-                    .alignmentGuide(.firstTextBaseline) { $0[VerticalAlignment.center] + 4 }
-                    .help("没听的几集一集接一集放完，老的在前")
-                }
             }
             Spacer()
-            if let id = desk, podcasts.isWriting(id) {
-                PodcastGlassButton(title: String(localized: "停下"), symbol: "pause.fill") { podcasts.cancel(id) }
-            }
-            if desk != nil || opened != nil || showPage != nil {
-                // Back one step: 编辑部 → 单集 or 节目 → 播客.
-                PodcastGlassButton(title: backTitle, symbol: "chevron.left") { back() }
-                    .keyboardShortcut("[", modifiers: .command)
-            } else {
+            if desk == nil, opened == nil, showPage == nil {
                 PodcastGlassButton(title: String(localized: "配一档节目"), symbol: "plus", flat: true) { making = ShowDraftEdit(id: nil, draft: Podcasts.templates()[0]) }
+            } else {
+                // Holds the line to 播客's height, so the title stays where it was going in.
+                PodcastGlassButton(title: " ") {}.hidden()
             }
         }
+    }
+
+    private var pageTitle: String {
+        if desk != nil { return String(localized: "编辑部") }
+        if opened != nil { return String(localized: "单集") }
+        if let id = showPage, let show = podcasts.shows.first(where: { $0.id == id }) { return show.name }
+        return String(localized: "播客")
     }
 
     private var backTitle: String {
@@ -147,6 +151,7 @@ struct MacPodcastView: View {
     private var covers: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .top, spacing: 18) {
+                radioCover
                 ForEach(podcasts.shows, id: \.id) { show in
                     let fresh = podcasts.episodes(of: show.id).count { !$0.heard }
                     VStack(alignment: .leading, spacing: 6) {
@@ -180,6 +185,31 @@ struct MacPodcastView: View {
                 }
             }
             .padding(.top, 8)
+        }
+    }
+
+    /// 连着听, the radio way: every episode not heard, one after another. First among the shows,
+    /// laid out as a cover is: its name at the top, what it does at the bottom.
+    @ViewBuilder private var radioCover: some View {
+        let unheard = podcasts.latest.filter { !$0.heard }
+        if !unheard.isEmpty {
+            let running = !library.upNext.isEmpty
+            let books = running ? library.upNext : unheard.map(\.book)
+            let minutes = books.reduce(0) { n, id in n + Int(library.books.first { $0.id == id }?.listenMinutes ?? 0) }
+            let line = running ? String(localized: "后面还有 \(library.upNext.count) 集") : String(localized: "\(unheard.count) 集没听")
+            let length = String(localized: "约 \(max(1, minutes)) 分钟")
+            Button { library.playUnheard() } label: {
+                VStack(alignment: .leading, spacing: 6) {
+                    RadioCover(running: running, size: 92)
+                    Text(line).font(.yy(size: 12, weight: .semibold)).foregroundStyle(YYColor.t1).lineLimit(1).monospacedDigit()
+                    Text(length).font(.yy(size: 11)).foregroundStyle(YYColor.t3).lineLimit(1).monospacedDigit()
+                }
+                .frame(width: 92, alignment: .leading)
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .help("没听的几集一集接一集放完，老的在前")
+            .accessibilityLabel(String(localized: "连着听，\(line)，\(length)"))
         }
     }
 

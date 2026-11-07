@@ -86,8 +86,13 @@ struct CompanionProviderSheet: View {
     var body: some View {
         Group {
             if let picked {
+                #if os(macOS)
+                MacProviderForm(provider: picked, adding: adding, back: back, close: { dismiss() }, done: done)
+                    .id(picked.id)
+                #else
                 ProviderForm(provider: picked, adding: adding, back: back, close: { dismiss() }, done: done)
                     .id(picked.id)
+                #endif
             } else if adding {
                 picker
             } else {
@@ -270,7 +275,7 @@ private struct PickRow: ButtonStyle {
 }
 
 /// The sheet's title, with ‹ when there's somewhere to go back to, and the service's logo in a form.
-private struct SheetTitle: View {
+struct SheetTitle: View {
     let title: String
     var logo: CompanionProvider?
     let back: (() -> Void)?

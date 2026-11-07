@@ -119,6 +119,14 @@ struct ReplaceRulesView: View {
             }
         }
         .sheet(isPresented: $commonShown) { common }
+        #if DEBUG
+        .task {
+            // `-debugRuleEdit 1`: 打开编辑器添一条新规则;`-debugRulesCommon 1`: 从常用规则里挑。
+            let d = UserDefaults.standard
+            if d.bool(forKey: "debugRuleEdit") { editing = Editing(rule: blank) }
+            if d.bool(forKey: "debugRulesCommon") { commonShown = true }
+        }
+        #endif
         .alert("没能改好", isPresented: Binding(get: { failure != nil }, set: { if !$0 { failure = nil } })) {
             Button("好") { failure = nil }
         } message: {

@@ -77,8 +77,12 @@ function quoteRange(l: BubbleLine): { a: { node: Text; offset: number }; b: { no
   } else {
     endS = l.last;
     const last = sentenceText(l.last);
+    // The first close: what's after it is narration, or the next line (core's `lines` goes on there).
     let k = -1;
-    for (const c of CLOSE) k = Math.max(k, last.lastIndexOf(c));
+    for (const c of CLOSE) {
+      const i = last.indexOf(c);
+      if (i >= 0 && (k < 0 || i < k)) k = i;
+    }
     to = k >= 0 ? k + 1 : last.length;
   }
   const a = place(l.first, from);

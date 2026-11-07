@@ -76,6 +76,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Started by macOS as a login item (开机时打开语阅): no window, only the menu bar.
     func applicationDidFinishLaunching(_ notification: Notification) {
+        DebugShots.run()
         guard LoginItem.launchedAtLogin else { return }
         DispatchQueue.main.async {
             for w in NSApp.windows where w.identifier?.rawValue.hasPrefix("library") == true { w.close() }

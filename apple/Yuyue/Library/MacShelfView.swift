@@ -200,6 +200,10 @@ struct MacShelfView: View {
             if let q = UserDefaults.standard.string(forKey: "debugQuick") { quick = q }
             // `-debugDrop 3` shows what dragging three files in looks like.
             if UserDefaults.standard.object(forKey: "debugDrop") != nil { dropCount = UserDefaults.standard.integer(forKey: "debugDrop") }
+            // `-debugAlign 1`: 对齐检查 on the first audiobook's first stretch.
+            if UserDefaults.standard.bool(forKey: "debugAlign"), let a = library.audiobooks.all.first {
+                openWindow(id: "align", value: AlignTarget(audiobook: a.id, at: 0))
+            }
         }
         .overlay(alignment: .topTrailing) {
             if let id = debugPicking {

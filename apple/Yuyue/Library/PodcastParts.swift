@@ -268,6 +268,38 @@ struct EqualizerBars: View {
     }
 }
 
+/// 连着听 among the shows' covers: the same shape and layout, on the page's own white.
+struct RadioCover: View {
+    let running: Bool
+    let size: CGFloat
+    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
+    private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: size * 0.17)
+        shape
+            .fill(YYColor.card)
+            .overlay(shape.strokeBorder(YYColor.line, lineWidth: 0.5))
+            .frame(width: size, height: size)
+            .overlay(alignment: .topLeading) {
+                Text("连着听").font(.custom("Songti SC", size: size * 0.14).weight(.semibold)).tracking(size * 0.01)
+                    .foregroundStyle(YYColor.t1.opacity(0.92)).lineLimit(1)
+                    .padding(.top, size * 0.1).padding(.leading, size * 0.11)
+            }
+            .overlay(alignment: .bottomTrailing) {
+                Group {
+                    if running {
+                        EqualizerBars().frame(width: size * 0.15, height: size * 0.15).foregroundStyle(tint.accent)
+                    } else {
+                        Image(systemName: "play.fill").font(.system(size: size * 0.15)).foregroundStyle(YYColor.t1)
+                    }
+                }
+                .padding(size * 0.12)
+            }
+            .accessibilityHidden(true)
+    }
+}
+
 /// 节目封面: made from the show's name, square, the radio mark in the corner (`.v-sqc.pc`).
 struct ShowCover: View {
     let name: String

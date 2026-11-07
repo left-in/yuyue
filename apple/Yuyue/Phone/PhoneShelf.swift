@@ -924,7 +924,6 @@ struct ShelfChooser: View {
             .padding(.horizontal, -YYUI.s(12))
     }
 }
-#endif
 
 private extension View {
     /// The grid's area in global coordinates, before its own sides.
@@ -932,3 +931,4 @@ private extension View {
         onGeometryChange(for: CGRect.self, of: { $0.frame(in: .global) }) { area.wrappedValue = $0 }
     }
 }
+#endif

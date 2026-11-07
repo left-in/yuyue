@@ -10,7 +10,7 @@ use encoding_rs::Encoding;
 use regex::Regex;
 
 use crate::dom::{Element, Node};
-use crate::text::{guess_language, is_cjk, is_wide};
+use crate::text::{guess_language, is_cjk, is_wide, width};
 
 pub struct TextBook {
     pub title: Option<String>,
@@ -196,10 +196,6 @@ fn trim(line: &str) -> &str {
 
 fn indent(line: &str) -> usize {
     line.chars().take_while(|c| c.is_whitespace()).map(|c| if c == '\u{3000}' { 2 } else { 1 }).sum()
-}
-
-fn width(s: &str) -> usize {
-    s.chars().map(|c| if is_wide(c) { 2 } else { 1 }).sum()
 }
 
 /// How the lines of a file are laid out.

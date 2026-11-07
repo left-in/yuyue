@@ -20,7 +20,7 @@ final class NoteSender {
 
     func send(_ books: [NoteExport.Book], to target: NoteExport.Target) {
         guard NoteExport.isSetUp(target) else {
-            tell("exclamationmark.circle", String(localized: "还没设置 \(target.title)"), String(localized: "在设置 · 数据 · 笔记导出里填好"))
+            tell("exclamationmark.circle", String(localized: "还没设置 \(target.title)"), String(localized: "在设置 · 笔记导出里填好"))
             return
         }
         sending = target
@@ -28,6 +28,7 @@ final class NoteSender {
             defer { sending = nil }
             do {
                 let n = try await NoteExport.send(books, to: target)
+                NoteExport.noteSent(target, books: books, count: n)
                 tell("checkmark.circle", String(localized: "发到了 \(target.title)"), n == 0 ? String(localized: "没有新的划线") : String(localized: "\(n) 条划线"))
             } catch {
                 tell("exclamationmark.circle", String(localized: "没发出去"), Self.message(error))
@@ -75,7 +76,13 @@ struct NoteSendItems: View {
     var book: BookSummary?
 
     var body: some View {
-        ForEach(NoteExport.Target.allCases) { t in
+        let offered = NoteExport.offered
+        if offered.isEmpty {
+            // Nothing connected (or every one switched off): say where that's done.
+            Button(String(localized: "在设置 · 笔记导出里连 Obsidian、Notion 或 flomo")) {}
+                .disabled(true)
+        }
+        ForEach(offered) { t in
             Button {
                 sender.send(books(), to: t)
             } label: {

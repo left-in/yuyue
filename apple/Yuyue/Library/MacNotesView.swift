@@ -106,6 +106,11 @@ struct MacNotesView: View {
             Self.debugShown = true
             reviewing = deck
         }
+        // `-debugQuote 1`: the share book excerpt sheet of the first note with a thought (use with -debugSeed).
+        if UserDefaults.standard.bool(forKey: "debugQuote"),
+           let n = notes.first(where: { $0.marks.contains { $0.note != nil } }), let mark = n.marks.first(where: { $0.note != nil }) {
+            sharing = Self.quote(n, mark)
+        }
         // A sheet can't be captured from outside: draw it to a picture instead.
         if let name = UserDefaults.standard.string(forKey: "debugReviewShot"), let deck, !Self.debugShown {
             Self.debugShown = true
@@ -208,22 +213,28 @@ struct MacNotesView: View {
     private func chip(_ value: Only, _ name: String?, _ count: Int, dot: MarkStyle? = nil) -> some View {
         let on = only == value
         return Button { only = on && value != .all ? .all : value } label: {
-            HStack(spacing: 4) {
+            HStack(spacing: 5) {
                 if let dot {
                     if dot == .wave {
                         Image(systemName: "scribble").font(.yy(size: 11, weight: .bold)).foregroundStyle(YYColor.hlR)
                     } else {
-                        Circle().fill(dot.dot).frame(width: 10, height: 10)
+                        Circle()
+                            .fill(dot.dot)
+                            .frame(width: 9, height: 9)
+                            .overlay(Circle().strokeBorder(on ? YYColor.card : Color.black.opacity(0.08), lineWidth: on ? 1.5 : 0.5))
                     }
                 }
                 if let name { Text(name) }
                 Text(count.formatted()).monospacedDigit()
-                    .foregroundStyle(on ? AnyShapeStyle(tint.onBlack.opacity(0.55)) : AnyShapeStyle(YYColor.t3))
+                    .foregroundStyle(on ? AnyShapeStyle(YYColor.t2) : AnyShapeStyle(YYColor.t3))
             }
             .font(.yy(size: 11, weight: on ? .semibold : .regular))
-            .foregroundStyle(on ? tint.onBlack : YYColor.t2)
+            .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
             .padding(.horizontal, 11).frame(height: 26)
-            .background(on ? AnyShapeStyle(tint.black) : AnyShapeStyle(YYColor.card), in: .capsule)
+            .background(on ? YYColor.t1.opacity(0.09) : YYColor.card, in: .capsule)
+            .overlay(
+                Capsule().strokeBorder(on ? YYColor.t1.opacity(0.14) : Color.clear, lineWidth: 0.5)
+            )
             .yyShadow(on ? [] : scheme == .dark ? YYShadow.ringDark : YYShadow.ringLight)
         }
         .buttonStyle(.plain)

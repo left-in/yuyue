@@ -48,6 +48,8 @@ class Recordings(private val context: Context, private val library: Library) {
 
     private fun folder(ebook: String) = File(dir, ebook)
 
+    private val cache = mutableMapOf<String, Map<Pair<Int, Int>, Timing>>()
+
     init {
         adopt()
     }
@@ -192,8 +194,6 @@ class Recordings(private val context: Context, private val library: Library) {
             }
         }
     }
-
-    private val cache = mutableMapOf<String, Map<Pair<Int, Int>, Timing>>()
 
     /** Where each sentence of `ebook` is in its recording, when it's been laid out. */
     fun timings(ebook: String): Map<Pair<Int, Int>, Timing>? = cache[ebook] ?: run {

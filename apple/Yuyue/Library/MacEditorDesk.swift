@@ -132,19 +132,37 @@ struct MacEditorDesk: View {
 
     private static let suggested = [String(localized: "多讲一点第一条"), String(localized: "不要最后一条"), String(localized: "短一点")]
 
+    /// While it writes: what it's doing in place of the prompt, 停下 at the right end.
     private var input: some View {
-        TextField(String(localized: "跟编辑说…"), text: $typed)
-            .textFieldStyle(.plain)
-            .font(.yy(size: 13))
-            .focused($focused)
-            .onSubmit { send(typed) }
-            .padding(.horizontal, 16)
-            .frame(height: 44)
-            .background(YYColor.card, in: .rect(cornerRadius: 14))
-            .yyShadow(YYShadow.cardLight)
+        HStack(spacing: 6) {
+            TextField(prompt, text: $typed)
+                .textFieldStyle(.plain)
+                .font(.yy(size: 13))
+                .focused($focused)
+                .onSubmit { send(typed) }
+            if podcasts.isWriting(show.id) {
+                Button { podcasts.cancel(show.id) } label: {
+                    RoundedRectangle(cornerRadius: 2.5).fill(YYColor.t2).frame(width: 10, height: 10)
+                        .frame(width: 28, height: 28).contentShape(.rect)
+                }
+                .buttonStyle(HoverSquareStyle())
+                .help(String(localized: "停下"))
+                .accessibilityLabel(String(localized: "停下"))
+            }
+        }
+        .padding(.leading, 16).padding(.trailing, 8)
+        .frame(height: 44)
+        .background(YYColor.card, in: .rect(cornerRadius: 14))
+        .yyShadow(YYShadow.cardLight)
             .frame(maxWidth: 660)
             .frame(maxWidth: .infinity)
             .padding(.horizontal, 22)
+    }
+
+    private var prompt: String {
+        guard let progress else { return String(localized: "跟编辑说…") }
+        let line = progress.line.trimmingCharacters(in: CharacterSet(charactersIn: "…"))
+        return String(localized: "\(line)，有话随时说…")
     }
 
     private func send(_ text: String) {

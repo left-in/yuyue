@@ -3,45 +3,69 @@ import YuyueCore
 
 #if os(macOS)
 
-/// 设置 (⌘,): pages with icons along the top, each a grouped form. Changes take at once; there is
-/// no 应用 button (prototype 设置 · 外观).
+/// 设置 (⌘,): the pages down a sidebar on the left, the page in the middle, and on the right what
+/// was last changed, each change undoable, with a sample of the page where there's something to
+/// see (docs/design/设置-三栏前后对比.html). Changes take at once; there is no 应用 button.
 struct MacSettings: View {
     let library: Library
     @AppStorage("settings.page") private var page = SettingsPage.general
+
     @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
-
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
-    @State private var pageHeight: CGFloat = 300
 
-    /// Below the tabs: at most 560, less on a small screen.
-    private var maxPageHeight: CGFloat {
-        min(560, (NSScreen.main?.visibleFrame.height ?? 800) - 200)
+    /// One height for every page, so switching pages doesn't move the window; less on a small screen.
+    private var height: CGFloat {
+        min(640, (NSScreen.main?.visibleFrame.height ?? 800) - 140)
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            SettingsTabs(page: $page, tint: tint)
-            // The window fits a short page whole; a long one stops at a height that fits the
-            // screen and scrolls, as 系统设置 does.
-            ScrollView {
-                content(page)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .onGeometryChange(for: CGFloat.self, of: \.size.height) { pageHeight = $0 }
+        HStack(spacing: 0) {
+            SettingsSidebar(page: $page, tint: tint)
+                .ignoresSafeArea(.container, edges: .top)
+            VStack(spacing: 0) {
+                if page == .listening, ListeningFocus.shared.source != nil {
+                    // One source's voices: no page title, and it scrolls only its own list.
+                    ListeningPage()
+                        .padding(.leading, 24)
+                        .padding(.trailing, 18)
+                        .padding(.top, 24)
+                        .padding(.bottom, 12)
+                        .ignoresSafeArea(.container, edges: .top)
+                } else {
+                    SettingsPageHeader(page: page)
+                    ScrollView {
+                        content(page)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    // The scroller keeps clear of the line by the right column.
+                    .padding(.trailing, 6)
+                    // Rows slide under the header softly instead of being cut at its edge.
+                    .mask {
+                        VStack(spacing: 0) {
+                            LinearGradient(colors: [.black.opacity(0), .black], startPoint: .top, endPoint: .bottom).frame(height: 14)
+                            Rectangle()
+                        }
+                    }
+                    // A new page starts at its top.
+                    .id(page)
+                }
             }
-            .scrollBounceBehavior(.basedOnSize)
-            .frame(height: min(pageHeight, maxPageHeight))
-            .background(YYColor.bg)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(YYColor.bg.ignoresSafeArea())
+            SettingsInspector(page: page, library: library)
+                .ignoresSafeArea(.container, edges: .top)
         }
-        // `.v-ms-stb`: the title bar and the tabs are one header, one colour, no line between.
+        // The title bar is see-through over the three columns; no toolbar, no title in it.
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-        // The page's name sits in the middle (`SettingsTitlebar`), not on the left.
         .toolbar(removing: .title)
-        .frame(width: 780)
+        .frame(width: 980, height: height)
         .tint(tint.accent)
         .navigationTitle(page.title)
-        .background(SettingsTitlebar(title: page.title))
-        // `.v-ms-stb .v-lights`: 16 in, 14 down.
+        .background(SettingsTitlebar())
+        // At the top of the sidebar, as in the shelf window.
         .trafficLights(CGPoint(x: 22, y: 20))
+        .onAppear { SettingsLog.shared.library = library }
+        .background(SettingsUndoKey())
     }
 
     @ViewBuilder private func content(_ p: SettingsPage) -> some View {
@@ -50,24 +74,28 @@ struct MacSettings: View {
             case .general: GeneralSettings()
             case .appearance: AppearanceSettings()
             case .reading: ReadingSettings(library: library)
-            case .podcasts: MacPodcastSettingsNote().frame(minHeight: 200)
-            case .listening: ListeningSettings()
+            case .listening: ListeningPage()
             case .foreign: ForeignSettings(library: library)
             case .companion: CompanionSettings(library: library)
+            case .notes: NoteExportSettings()
             case .sync: SyncSettings(library: library)
             case .storage: StorageSettings(library: library)
             case .data: DataSettings(library: library)
             }
         }
-        .padding(.horizontal, 28)
-        .padding(.vertical, 18)
+        .padding(.leading, 24)
+        .padding(.trailing, 18)
+        .padding(.top, 10)
+        .padding(.bottom, 24)
         .frame(maxWidth: .infinity, alignment: .top)
-        .background(YYColor.bg)
+        // Two kinds of button in 设置: the one solid main action a page may have sets its own
+        // style; every other action is words, no fill, no border.
+        .buttonStyle(SettingsActionStyle())
     }
 }
 
 enum SettingsPage: String, CaseIterable, Identifiable {
-    case general, appearance, reading, podcasts, listening, foreign, companion, sync, storage, data
+    case general, appearance, reading, foreign, listening, companion, sync, notes, storage, data
 
     var id: String { rawValue }
 
@@ -76,115 +104,144 @@ enum SettingsPage: String, CaseIterable, Identifiable {
         case .general: String(localized: "通用")
         case .appearance: String(localized: "外观")
         case .reading: String(localized: "阅读")
-        case .podcasts: String(localized: "播客")
-        case .listening: String(localized: "朗读")
         case .foreign: String(localized: "外文")
+        case .listening: String(localized: "朗读")
         case .companion: String(localized: "书伴")
         case .sync: String(localized: "同步")
+        case .notes: String(localized: "笔记导出")
         case .storage: String(localized: "存储")
         case .data: String(localized: "数据")
         }
     }
 
+    /// Under the page's name in its header: what the page is for, in a line.
+    var summary: String {
+        switch self {
+        case .general: String(localized: "打开、睡眠和导入")
+        case .appearance: String(localized: "书架、设置这些窗口；书页的纸在“阅读”里")
+        case .reading: String(localized: "新打开的书用这些；单本书在 Aa 里另调")
+        case .foreign: String(localized: "点词、难词注释、生词和翻译")
+        case .listening: String(localized: "听书、点词和播客主持人的声音")
+        case .companion: String(localized: "书伴和写播客稿用的模型")
+        case .sync: String(localized: "进度、笔记和设置在你的设备之间同步")
+        case .notes: String(localized: "笔记 › 导出 › 发到 的去处")
+        case .storage: String(localized: "语阅在这台 Mac 上占的地方")
+        case .data: String(localized: "快照和阅读记录，换设备时带走")
+        }
+    }
+
+    /// The small grey line over a group of pages in the sidebar; 通用 and 外观 stand alone at the top.
+    var group: String? {
+        switch self {
+        case .general, .appearance: nil
+        case .reading, .foreign, .listening: String(localized: "读和听")
+        case .companion, .sync, .notes: String(localized: "连接")
+        case .storage, .data: String(localized: "这台 Mac")
+        }
+    }
+
+    /// One set: SF Symbols, all line drawings of one weight.
     var symbol: String {
         switch self {
         case .general: "slider.horizontal.3"
         case .appearance: "sun.max"
-        // 阅读 as in the shelf's sidebar.
-        case .reading: ProtoIcon.book.rawValue
-        case .podcasts: "asset.radio"
-        case .listening: "headphones"
+        case .reading: "book"
         case .foreign: "character.book.closed"
-        case .companion: "sparkle"
+        case .listening: "headphones"
+        case .companion: "text.bubble"
         case .sync: "arrow.triangle.2.circlepath"
-        case .storage: "cylinder.split.1x2"
+        case .notes: "square.and.arrow.up"
+        case .storage: "internaldrive"
         case .data: "shippingbox"
         }
     }
 }
 
-/// `.v-ms-tabs`: the pages along the top. The chosen one on a grey pad, its icon in the theme
-/// colour, as the prototype draws it.
-struct SettingsTabs: View {
-    @Binding var page: SettingsPage
-    let tint: YYTint
-    /// The title bar's height (32 from macOS 26, 28 before): the tabs start 33 below the window's
-    /// top edge. Read from the layout it went round and round, the tabs moving the bar.
-    private var titlebar: CGFloat {
-        if #available(macOS 26, *) { 32 } else { 28 }
-    }
-
-    /// `.v-ms-stb`: card 55% over the page, a little lighter than it; the title bar is this too.
-    static let header = NSColor(name: nil) { look in
-        look.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
-            ? NSColor(srgbRed: 22 / 255, green: 23 / 255, blue: 24.6 / 255, alpha: 1)
-            : NSColor(srgbRed: 251 / 255, green: 250.5 / 255, blue: 249.6 / 255, alpha: 1)
-    }
+/// The page's name and what it's for, fixed over the page as it scrolls.
+private struct SettingsPageHeader: View {
+    let page: SettingsPage
 
     var body: some View {
-        HStack(spacing: 4) {
-            ForEach(SettingsPage.allCases) { tab($0) }
+        VStack(alignment: .leading, spacing: 2) {
+            Text(page.title).font(.yy(size: 16, weight: .semibold)).foregroundStyle(YYColor.t1)
+            Text(page.summary).font(.yy(size: 11.5)).foregroundStyle(YYColor.t2).lineLimit(1)
         }
-        // `.v-ms-tabs` start 33 down; the bar is 88 in all.
-        .padding(.top, max(0, 33 - titlebar))
-        .padding(.bottom, 7)
-        .frame(maxWidth: .infinity)
-        .background(Color(nsColor: Self.header).ignoresSafeArea(.container, edges: .top))
-        .overlay(alignment: .bottom) { Rectangle().fill(YYColor.line).frame(height: 0.5) }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        // Level with the first row of the sidebar, clear of the title bar.
+        .padding(.leading, 24 + 16)
+        .padding(.trailing, 24)
+        .padding(.top, 4)
+        .padding(.bottom, 6)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
     }
-
-    private func tab(_ p: SettingsPage) -> some View {
-        let on = page == p
-        return Button {
-            page = p
-        } label: {
-            VStack(spacing: 4) {
-                Group {
-                    if let drawn = ProtoIcon(rawValue: p.symbol) {
-                        // The sidebar's drawing, its line grown with it from 14 to 18.
-                        drawn.shape
-                            .stroke(style: StrokeStyle(lineWidth: drawn.line * 18 / 14, lineCap: .round, lineJoin: .round))
-                            .frame(width: 18, height: 18)
-                    } else if p.symbol.hasPrefix("asset.") {
-                        Image(String(p.symbol.dropFirst(6))).resizable().renderingMode(.template).scaledToFit()
-                            .frame(width: 18, height: 18)
-                    } else {
-                        Image(systemName: p.symbol).font(.yy(size: 16))
-                    }
-                }
-                .frame(height: 19)
-                .foregroundStyle(on ? tint.accent : YYColor.t2)
-                Text(p.title)
-                    .font(.yy(size: 11, weight: on ? .semibold : .regular))
-                    .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
-            }
-            .frame(width: 64, height: 48)
-            .background { if on { RoundedRectangle(cornerRadius: 9).fill(YYColor.inset) } }
-            .contentShape(.rect)
-        }
-        .buttonStyle(.plain)
-    }
-
 }
 
-/// `.v-ms-stb`: the title bar and the tabs are one header, no line between them, the page's name
-/// in the middle of the title bar (`.v-ms-stt`; macOS 26 would put it on the left). SwiftUI puts
-/// its own title and toolbar back whenever it likes, and a toolbar is taller than the title bar
-/// and washes out the tabs under it, so every window update takes them off again.
-private struct SettingsTitlebar: NSViewRepresentable {
-    let title: String
+/// Every action but a page's main one: words in ink, red for one that throws something away,
+/// faint while it can't be used.
+struct SettingsActionStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Label(configuration: configuration)
+    }
 
+    private struct Label: View {
+        let configuration: Configuration
+        @Environment(\.isEnabled) private var enabled
+
+        var body: some View {
+            configuration.label
+                .font(.yy(size: 12.5, weight: .medium))
+                .foregroundStyle(configuration.role == .destructive ? YYColor.danger : YYColor.t1)
+                .opacity(!enabled ? 0.35 : configuration.isPressed ? 0.55 : 1)
+                .contentShape(.rect)
+        }
+    }
+}
+
+/// ⌘Z in 设置 takes back the last change in 最近改过, unless a text field is being typed in, where
+/// it undoes the typing as usual.
+private struct SettingsUndoKey: NSViewRepresentable {
     final class Host: NSView {
-        let label = NSTextField(labelWithString: "")
+        nonisolated(unsafe) private var monitor: Any?
+
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            monitor.map(NSEvent.removeMonitor)
+            monitor = nil
+            guard window != nil else { return }
+            monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+                guard event.modifierFlags.intersection(.deviceIndependentFlagsMask) == .command,
+                      event.charactersIgnoringModifiers == "z" else { return event }
+                let handled = MainActor.assumeIsolated { () -> Bool in
+                    guard let window = self?.window, event.window === window,
+                          !(window.firstResponder is NSText),
+                          let last = SettingsLog.shared.entries.first(where: { $0.undo != nil && $0.undone != true }) else { return false }
+                    SettingsLog.shared.undo(last)
+                    return true
+                }
+                return handled ? nil : event
+            }
+        }
+
+        deinit { monitor.map(NSEvent.removeMonitor) }
+    }
+
+    func makeNSView(context: Context) -> Host { Host() }
+    func updateNSView(_ host: Host, context: Context) {}
+}
+
+/// The title bar is drawn over the three columns, see-through, with no line under it and no title
+/// in it (the sidebar says which page this is). SwiftUI puts its own title and toolbar back
+/// whenever it likes, and a toolbar is taller than the title bar, so every window update takes
+/// them off again.
+private struct SettingsTitlebar: NSViewRepresentable {
+    final class Host: NSView {
         nonisolated(unsafe) private var observer: NSObjectProtocol?
 
         override func viewDidMoveToWindow() {
             super.viewDidMoveToWindow()
             observer.map(NotificationCenter.default.removeObserver)
             guard let window else { return }
-            label.font = .systemFont(ofSize: 12.5, weight: .semibold)
-            label.textColor = .labelColor
-            label.translatesAutoresizingMaskIntoConstraints = false
             tidy(window)
             observer = NotificationCenter.default.addObserver(forName: NSWindow.didUpdateNotification, object: window, queue: .main) { [weak self] note in
                 guard let window = note.object as? NSWindow else { return }
@@ -198,23 +255,15 @@ private struct SettingsTitlebar: NSViewRepresentable {
             if window.toolbar != nil { window.toolbar = nil }
             if window.titleVisibility != .hidden { window.titleVisibility = .hidden }
             if !window.titlebarAppearsTransparent { window.titlebarAppearsTransparent = true }
-            // The header is drawn under the title bar, so the two are one colour with no line.
             if !window.styleMask.contains(.fullSizeContentView) { window.styleMask.insert(.fullSizeContentView) }
             if window.titlebarSeparatorStyle != .none { window.titlebarSeparatorStyle = .none }
-            window.backgroundColor = SettingsTabs.header
-            guard label.superview == nil, let close = window.standardWindowButton(.closeButton), let bar = close.superview else { return }
-            bar.addSubview(label)
-            NSLayoutConstraint.activate([
-                label.centerXAnchor.constraint(equalTo: bar.centerXAnchor),
-                label.centerYAnchor.constraint(equalTo: close.centerYAnchor),
-            ])
+            window.backgroundColor = SettingsSidebar.header
         }
     }
 
     func makeNSView(context: Context) -> Host { Host() }
 
     func updateNSView(_ host: Host, context: Context) {
-        host.label.stringValue = title
         host.window.map(host.tidy)
     }
 }
@@ -364,6 +413,8 @@ struct SettingsRow<Trailing: View>: View {
             }
             Spacer(minLength: 12)
             trailing
+                // A switch on the right says what it switches to VoiceOver: the row's title.
+                .environment(\.settingsRowTitle, title)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, compact ? 8 : 10)
@@ -378,11 +429,17 @@ extension SettingsRow where Trailing == EmptyView {
 }
 
 /// A switch in the theme colour.
+extension EnvironmentValues {
+    /// The title of the settings row a control sits in.
+    @Entry var settingsRowTitle = ""
+}
+
 struct SettingsSwitch: View {
     @Binding var isOn: Bool
+    @Environment(\.settingsRowTitle) private var title
 
     var body: some View {
-        Toggle("", isOn: $isOn)
+        Toggle(title, isOn: $isOn)
             .labelsHidden()
             .toggleStyle(.switch)
             // `.sw2` is 30 × 18: the small switch.
@@ -401,9 +458,9 @@ struct SettingsHeading: View {
         Text(text)
             .font(.yy(size: 11.5, weight: .semibold))
             .foregroundStyle(YYColor.t2)
-            .padding(.leading, 4)
-            .padding(.top, 2)
-            .padding(.bottom, -5)
+            .padding(.leading, 16)
+            .padding(.top, 6)
+            .padding(.bottom, -6)
     }
 }
 
@@ -419,13 +476,16 @@ private struct GeneralSettings: View {
                 SettingsRow(String(localized: "打开语阅时接着读上次那本"), detail: String(localized: "关掉就只打开书架")) {
                     SettingsSwitch(isOn: $reopenLast)
                 }
+                LoginItemRow()
                 SettingsRow(String(localized: "听书时 Mac 不睡着"), detail: String(localized: "合上盖子照样会停")) {
                     SettingsSwitch(isOn: $keepAwake)
                 }
             }
             SettingsHeading(String(localized: "导入"))
             SettingsCard {
-                SettingsRow(String(localized: "把书拖进书架窗口就导入"), detail: String(localized: "EPUB、PDF、MOBI、AZW3、TXT；会拷一份进语阅，原文件挪走、删掉都不影响"))
+                SettingsRow(String(localized: "把书拖进书架窗口就导入"), detail: String(localized: "拷一份进语阅，原文件挪走、删掉都不影响")) {
+                    Text(verbatim: "EPUB PDF MOBI AZW3 TXT").font(.yy(size: 11, design: .monospaced)).foregroundStyle(YYColor.t3)
+                }
             }
             Spacer(minLength: 0)
         }
@@ -436,23 +496,19 @@ private struct GeneralSettings: View {
 
 private struct AppearanceSettings: View {
     @AppStorage(AppAppearance.key) private var mode = AppAppearance.system
-    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
     @AppStorage("shelf.coverSize") private var coverSize = 100.0
     @AppStorage("shelf.showProgress") private var showProgress = true
     @AppStorage(LiquidGlass.key) private var liquid = true
-    @State private var sample = true
 
+    @AppStorage("appearance.tint") private var tintID = YYTint.blue.id
     private var tint: YYTint { YYTint.all.first { $0.id == tintID } ?? .blue }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             SettingsCard {
+                // What 界面 covers is the page header's line; the card only chooses.
                 HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text("界面").font(.yy(size: 13, weight: .medium)).foregroundStyle(YYColor.t1)
-                        Text("书架、设置这些窗口；书页的纸色在读书窗口的 Aa 里另外选")
-                            .font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
-                    }
+                    Text("界面").font(.yy(size: 12.5, weight: .medium)).foregroundStyle(YYColor.t1)
                     Spacer()
                     HStack(spacing: 10) {
                         ForEach(AppAppearance.allCases) { m in modeChoice(m) }
@@ -468,38 +524,13 @@ private struct AppearanceSettings: View {
                             Text("墨蓝是默认").font(.yy(size: 11.5)).foregroundStyle(YYColor.t2)
                         }
                         Spacer()
-                        HStack(spacing: 14) {
-                            ForEach(YYTint.all) { t in tintChoice(t) }
-                        }
+                        HStack(spacing: 14) { ForEach(YYTint.all) { t in tintChoice(t) } }
                     }
                     Text("按钮、开关、进度和选中都用这个颜色")
                         .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 .padding(16)
-                SettingsRow(String(localized: "看看效果")) {
-                    HStack(spacing: 14) {
-                        Text("接着读")
-                            .font(.yy(size: 12, weight: .semibold))
-                            .foregroundStyle(tint.onBlack)
-                            .padding(.horizontal, 13).frame(height: 26)
-                            .background(tint.black, in: .capsule)
-                        HStack(spacing: 8) {
-                            ZStack(alignment: .leading) {
-                                Capsule().fill(YYColor.inset)
-                                Capsule().fill(tint.fill).frame(width: 44)
-                            }
-                            .frame(width: 72, height: 3)
-                            Text("62%").font(.yy(size: 11)).monospacedDigit().foregroundStyle(YYColor.t3)
-                        }
-                        Toggle("", isOn: $sample).labelsHidden().toggleStyle(.switch).controlSize(.small).tint(tint.fill)
-                        Text("全部")
-                            .font(.yy(size: 12, weight: .semibold))
-                            .foregroundStyle(tint.onBlack)
-                            .padding(.horizontal, 11).frame(height: 26)
-                            .background(tint.black, in: .capsule)
-                    }
-                }
             }
             SettingsCard {
                 SettingsRow(String(localized: "书架封面大小"), detail: String(localized: "窗口越宽，一排放得越多")) {
@@ -517,7 +548,7 @@ private struct AppearanceSettings: View {
             }
             if LiquidGlass.supported {
                 SettingsCard {
-                    SettingsRow(String(localized: "液态玻璃效果"), detail: String(localized: "读书窗口的工具胶囊和阅读胶囊、提示条这些浮着的东西用系统的液态玻璃；关掉照原型画：毛玻璃，选中的垫一层浅色")) {
+                    SettingsRow(String(localized: "液态玻璃效果"), detail: String(localized: "浮着的胶囊和提示条用系统的玻璃；关掉是毛玻璃")) {
                         SettingsSwitch(isOn: $liquid)
                     }
                 }
@@ -538,6 +569,8 @@ private struct AppearanceSettings: View {
                 Text(m.title)
                     .font(.yy(size: 11.5, weight: on ? .semibold : .regular))
                     .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
+                    // 跟随系统 on one line, not broken in two under its picture.
+                    .fixedSize()
             }
         }
         .buttonStyle(.plain)
@@ -547,17 +580,13 @@ private struct AppearanceSettings: View {
         let on = tintID == t.id
         return Button { tintID = t.id } label: {
             VStack(spacing: 6) {
-                Circle()
-                    .fill(Color(t.black.resolve(in: EnvironmentValues().with(\.colorScheme, .light))))
-                    .frame(width: 26, height: 26)
-                    .padding(3)
+                Circle().fill(Color(t.black.resolve(in: EnvironmentValues().with(\.colorScheme, .light))))
+                    .frame(width: 26, height: 26).padding(3)
                     .overlay(Circle().strokeBorder(on ? t.black : .clear, lineWidth: 2))
-                Text(t.name)
-                    .font(.yy(size: 11.5, weight: on ? .semibold : .regular))
+                Text(t.name).font(.yy(size: 11.5, weight: on ? .semibold : .regular))
                     .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
             }
-        }
-        .buttonStyle(.plain)
+        }.buttonStyle(.plain)
     }
 }
 
@@ -630,27 +659,33 @@ private struct ReadingSettings: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             SettingsCard {
-                SettingsRow(String(localized: "纸色"), detail: String(localized: "新打开的书用这个；单本书在 Aa 里另选")) {
-                    HStack(spacing: 8) {
-                        ForEach(YYPaper.all) { paper in
-                            dot(paper, selected: settings.paperChoice == paper.id) { change { $0.paper = Paper(id: paper.id) ?? .plain; $0.customPaper = nil } }
+                // The papers and fonts as tiles, so each is seen before it's chosen.
+                tiles(String(localized: "纸色"), detail: String(localized: "新打开的书用这个；单本书在 Aa 里另选"), columns: YYPaper.all.count) {
+                    ForEach(YYPaper.all) { paper in
+                        SettingsPaperTile(paper: paper, texture: paper.hasNoiseTexture ? .grain : .none, name: paper.name, selected: settings.paperChoice == paper.id) {
+                            change { $0.paper = Paper(id: paper.id) ?? .plain; $0.customPaper = nil }
                         }
-                        // 我的纸 are made in the book's Aa.
-                        ForEach(Papers.shared.list, id: \.id) { mine in
-                            dot(YYPaper(custom: mine), selected: settings.paperChoice == mine.id) {
-                                let preset = paperColors(paper: mine).preset
-                                change { $0.customPaper = mine.id; $0.paper = preset }
-                            }
+                    }
+                    // 我的纸 are made in the book's Aa.
+                    ForEach(Papers.shared.list, id: \.id) { mine in
+                        SettingsPaperTile(paper: YYPaper(custom: mine), texture: mine.texture, name: mine.name, selected: settings.paperChoice == mine.id) {
+                            let preset = paperColors(paper: mine).preset
+                            change { $0.customPaper = mine.id; $0.paper = preset }
                         }
                     }
                 }
-                SettingsRow(String(localized: "字体")) {
-                    VStack(alignment: .trailing, spacing: 6) {
-                        YYSegments(items: [(ReaderFont?.none, String(localized: "系统")), (.some(.serif), String(localized: "宋体")), (.some(.kai), String(localized: "楷体")), (.some(.wenKai), String(localized: "霞鹜文楷"))],
-                                   selection: Binding(get: { settings.font }, set: { v in change { $0.font = v }; if v == .wenKai { WenKai.shared.ensure() } }), small: true)
-                            .frame(minWidth: 260).fixedSize()
-                        WenKaiStatus(chosen: settings.font == .wenKai)
+                VStack(alignment: .leading, spacing: 8) {
+                    tiles(String(localized: "字体"), columns: 4) {
+                        ForEach([ReaderFont?.none, .serif, .kai, .wenKai], id: \.self) { font in
+                            SettingsFontTile(font: font, selected: settings.font == font) {
+                                change { $0.font = font }
+                                if font == .wenKai { WenKai.shared.ensure() }
+                            }
+                        }
                     }
+                    WenKaiStatus(chosen: settings.font == .wenKai)
+                        .padding(.horizontal, 16)
+                        .padding(.top, -6)
                 }
                 SettingsRow(String(localized: "字号")) {
                     HStack(spacing: 10) {
@@ -704,234 +739,51 @@ private struct ReadingSettings: View {
             Spacer(minLength: 0)
         }
         .onAppear { settings = (try? library.core.readerSettings()) ?? .standard }
+        // 撤销 in 最近改过 writes the old value back.
+        .onReceive(NotificationCenter.default.publisher(for: .readerSettingsChanged)) { _ in
+            settings = (try? library.core.readerSettings()) ?? settings
+        }
+    }
+
+    /// A titled row of tiles in the card: what it is on top, the choices filling the width.
+    private func tiles<Content: View>(_ title: String, detail: String? = nil, columns: Int, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.yy(size: 12.5, weight: .medium)).foregroundStyle(YYColor.t1)
+                if let detail { Text(detail).font(.yy(size: 10.5)).foregroundStyle(YYColor.t3) }
+            }
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: columns), spacing: 8) { content() }
+        }
+        .padding(16)
     }
 
     private func change(_ edit: (inout ReaderSettings) -> Void) {
         var new = settings
         edit(&new)
         guard new != settings else { return }
+        SettingsLog.shared.reader(from: settings, to: new)
         settings = new
         try? library.core.setReaderSettings(settings: new)
         NotificationCenter.default.post(name: .readerSettingsChanged, object: nil)
     }
-
-    private func dot(_ paper: YYPaper, selected: Bool, pick: @escaping () -> Void) -> some View {
-        Button(action: pick) {
-            Circle().fill(paper.bg)
-                .frame(width: 22, height: 22)
-                .overlay(Circle().strokeBorder(YYColor.line))
-                .padding(2.5)
-                .overlay(Circle().strokeBorder(selected ? YYTint.standard.accent : .clear, lineWidth: 2))
-        }
-        .buttonStyle(.plain)
-        .help(paper.name)
-    }
 }
 
-// MARK: - 朗读
-
-private struct ListeningSettings: View {
-    @AppStorage("player.rate") private var rate = 1.0
-
-    private static let languages = [("zh", String(localized: "中文"), String(localized: "从前有一座山，山里有一座庙。")),
-                                    ("en", String(localized: "英文"), "It was the best of times, it was the worst of times.")]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SettingsCard {
-                SettingsRow(String(localized: "语速"), detail: String(localized: "读书窗口里调的也是这一个")) {
-                    HStack(spacing: 10) {
-                        Slider(value: Binding(get: { rate == 0 ? 1 : rate }, set: { rate = ($0 * 10).rounded() / 10 }),
-                               in: 0.8 ... 2.0)
-                            .frame(width: 180)
-                        Text(String(format: "%.1f×", rate == 0 ? 1 : rate)).monospacedDigit()
-                            .foregroundStyle(YYColor.t2).frame(width: 36, alignment: .trailing)
-                    }
-                }
-            }
-            SettingsHeading(String(localized: "声音"))
-            SettingsCard {
-                ForEach(Self.languages, id: \.0) { tag, name, sample in
-                    VoiceRow(tag: tag, name: name, sample: sample)
-                }
-            }
-            Text("系统声音在这台 Mac 上合成，不联网。想要更自然的声音：系统设置 › 辅助功能 › 朗读内容 › 系统声音 › 管理声音，下载“高级”的那几个")
-                .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
-                .padding(.horizontal, 8)
-            SettingsHeading(String(localized: "云端声音"))
-            SettingsCard {
-                ForEach(CloudVoice.Provider.allCases) { CloudVoiceRow(provider: $0) }
-            }
-            Text("填你自己的 Key，费用直接走你的账号，语阅不经手。读过的句子存在这台 Mac 上，再听不花钱，断网也能听；听书时会把这一章提前合成好。")
-                .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
-                .padding(.horizontal, 8)
-            Spacer(minLength: 0)
-        }
-    }
-}
-
-/// 云端声音: one provider's key (and Azure's region); 连接 checks it and fetches the voices.
-private struct CloudVoiceRow: View {
-    let provider: CloudVoice.Provider
-    @State private var key = ""
-    @AppStorage(CloudVoice.Provider.regionName) private var region = ""
-    @State private var checking = false
-    @State private var outcome: String?
-    @State private var failed = false
-    /// A key is kept: an empty field then offers to take it away.
-    @State private var saved = false
-
-    var body: some View {
-        SettingsRow(provider.title, detail: outcome ?? provider.help) {
-            HStack(spacing: 8) {
-                if provider == .azure {
-                    TextField("", text: $region, prompt: Text(verbatim: "eastasia"))
-                        .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
-                        .frame(width: 90)
-                }
-                SecureField("", text: $key, prompt: Text(provider.keyHint))
-                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
-                    .frame(width: provider == .azure ? 130 : 200)
-                Button {
-                    connect()
-                } label: {
-                    if checking { ProgressView().controlSize(.small) } else { Text(key.isEmpty && saved ? String(localized: "清掉") : String(localized: "连接")) }
-                }
-                .disabled(checking || (key.isEmpty && !saved))
-                // Squeezed by a long detail on the left, it was cut to a sliver.
-                .fixedSize()
-            }
-            .fixedSize()
-        }
-        .foregroundStyle(failed ? YYColor.danger : YYColor.t1)
-        .onAppear {
-            key = Keychain.read(provider.keyName) ?? ""
-            saved = !key.isEmpty
-        }
-    }
-
-    private func connect() {
-        let k = key.trimmingCharacters(in: .whitespacesAndNewlines)
-        region = region.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard !k.isEmpty else {
-            Keychain.delete(provider.keyName)
-            saved = false
-            outcome = nil
-            return
-        }
-        Keychain.write(provider.keyName, k)
-        saved = true
-        checking = true
-        Task {
-            defer { checking = false }
-            do {
-                let n = try await CloudVoice.refresh(provider)
-                failed = false
-                outcome = String(localized: "已连上 · \(n) 个声音")
-            } catch {
-                failed = true
-                outcome = error.localizedDescription
-            }
-        }
-    }
-}
-
-private struct VoiceRow: View {
-    let tag: String
-    let name: String
-    let sample: String
-    @State private var chosen: String?
-
-    private var key: String { "player.voice." + tag }
-
-    var body: some View {
-        let voices = Voices.all(for: tag)
-        let current = voices.first { $0.id == chosen } ?? SystemVoice.best(for: tag) ?? voices.first
-        SettingsRow(name, detail: current.map(Voices.title) ?? String(localized: "这台 Mac 上没有这种语言的声音")) {
-            HStack(spacing: 8) {
-                if let current {
-                    Button("试听") { Voices.preview(current, text: sample) }
-                }
-                Menu("换声音") {
-                    ForEach(voices, id: \.id) { v in
-                        Button {
-                            chosen = v.id
-                            UserDefaults.standard.set(v.id, forKey: key)
-                        } label: {
-                            if v.id == current?.id {
-                                Label(Voices.title(v), systemImage: "checkmark")
-                            } else {
-                                Text(Voices.title(v))
-                            }
-                        }
-                    }
-                }
-                .fixedSize()
-                .disabled(voices.isEmpty)
-            }
-        }
-        .onAppear { chosen = UserDefaults.standard.string(forKey: key) }
-    }
-}
+// MARK: - 朗读: MacVoicePicker.swift
 
 // MARK: - 书伴
 
 // MARK: - 数据
 
-/// 笔记导出: where 笔记 › 导出 › 发到 sends. Obsidian is a folder (the vault, or one in it);
-/// Notion an integration's token and the page the books go under; flomo its API link.
-private struct NoteExportSettings: View {
-    @State private var folder = NoteExport.obsidianFolder
-    @State private var notionToken = Keychain.read(NoteExport.notionKey) ?? ""
-    @AppStorage(NoteExport.notionPageKey) private var notionPage = ""
-    @State private var flomo = Keychain.read(NoteExport.flomoKey) ?? ""
+/// A line under a card, on the cards' one left edge: what to know, never something to click.
+struct SettingsNote: View {
+    let text: String
+    init(_ text: String) { self.text = text }
 
     var body: some View {
-        SettingsHeading(String(localized: "笔记导出"))
-        SettingsCard {
-            SettingsRow("Obsidian", detail: String(localized: "每本书一篇笔记，写进你选的文件夹；再发一次就更新那一篇")) {
-                HStack(spacing: 8) {
-                    if let folder {
-                        Text(folder.lastPathComponent).font(.yy(size: 12)).foregroundStyle(YYColor.t2).lineLimit(1)
-                    }
-                    Button(folder == nil ? String(localized: "选文件夹…") : String(localized: "换一个…")) { pick() }
-                }
-            }
-            SettingsRow("Notion", detail: String(localized: "在 notion.so/my-integrations 建一个集成，把令牌填在这里；再把要放书的页面共享给它，页面链接填在下面")) {
-                SecureField("", text: $notionToken, prompt: Text(verbatim: "ntn_…"))
-                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
-                    .frame(width: 240)
-                    .onChange(of: notionToken) { save(NoteExport.notionKey, notionToken) }
-            }
-            SettingsRow(String(localized: "Notion 页面"), detail: notionPage.isEmpty || NoteExport.pageID(from: notionPage) != nil ? nil : String(localized: "这不像一个 Notion 页面链接")) {
-                TextField("", text: $notionPage, prompt: Text(verbatim: "https://www.notion.so/…"))
-                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
-                    .frame(width: 240)
-            }
-            SettingsRow("flomo", detail: String(localized: "flomo 网页版 › 设置 › API，拷那条以 https://flomoapp.com/iwh/ 开头的链接；每条划线成一条笔记")) {
-                SecureField("", text: $flomo, prompt: Text(verbatim: "https://flomoapp.com/iwh/…"))
-                    .textFieldStyle(.roundedBorder).font(.yy(size: 12, design: .monospaced))
-                    .frame(width: 240)
-                    .onChange(of: flomo) { save(NoteExport.flomoKey, flomo) }
-            }
-        }
-    }
-
-    private func save(_ key: String, _ value: String) {
-        let v = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        if v.isEmpty { Keychain.delete(key) } else { Keychain.write(key, v) }
-    }
-
-    private func pick() {
-        let panel = NSOpenPanel()
-        panel.canChooseDirectories = true
-        panel.canChooseFiles = false
-        panel.canCreateDirectories = true
-        panel.prompt = String(localized: "用这个文件夹")
-        panel.message = String(localized: "选 Obsidian 库，或库里的一个文件夹")
-        guard panel.runModal() == .OK, let url = panel.url else { return }
-        NoteExport.setObsidianFolder(url)
-        folder = NoteExport.obsidianFolder
+        Text(text)
+            .font(.yy(size: 11)).lineSpacing(2).foregroundStyle(YYColor.t3)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.horizontal, 16)
     }
 }
 
@@ -988,7 +840,6 @@ private struct DataSettings: View {
                     Button("导出…") { exporting = true }
                 }
             }
-            NoteExportSettings()
             if !snapshots.saved.isEmpty {
                 SettingsHeading(String(localized: "以前的快照"))
                 SettingsCard {
@@ -997,7 +848,7 @@ private struct DataSettings: View {
                                     detail: ([Snapshots.from(s.about)] + (s.about.parts.files ? [String(localized: "含书文件")] : []) + [Snapshots.size(s.about.bytes)]).joined(separator: " · ")) {
                             HStack(spacing: 8) {
                                 Button("导入…") { open(s.url) }
-                                ShareLink(item: s.url) { Image(systemName: "square.and.arrow.up") }
+                                ShareLink(item: s.url) { Image(systemName: "square.and.arrow.up").font(.yy(size: 12)) }
                                     .help("分享")
                             }
                         }
@@ -1009,30 +860,18 @@ private struct DataSettings: View {
                     }
                 }
             }
-            HStack(alignment: .firstTextBaseline, spacing: 5) {
-                Image(systemName: "info.circle")
-                Text("快照是一个 .yuyue 文件，拷到别的设备上打开就能导入，iPhone、Android 和 Mac 之间都通用。")
-                Button("在访达中显示") {
-                    try? FileManager.default.createDirectory(at: snapshots.folder, withIntermediateDirectories: true)
-                    NSWorkspace.shared.activateFileViewerSelecting([snapshots.folder])
-                }
-                .buttonStyle(.link)
-            }
-            .font(.yy(size: 11)).foregroundStyle(YYColor.t3)
-            .padding(.leading, 8)
+            SettingsNote(String(localized: "快照是一个 .yuyue 文件，拷到别的设备上打开就能导入，iPhone、Android 和 Mac 之间都通用。"))
             Spacer(minLength: 0)
         }
         .task { await snapshots.load() }
-        .sheet(isPresented: $exporting) { ReadingExportSheet(library: library) }
-        .sheet(item: $importing) { SnapshotImportSheet(snapshots: snapshots, url: $0.url, info: $0.info) }
+        // The sheets keep their own buttons, not 设置's words.
+        .sheet(isPresented: $exporting) { ReadingExportSheet(library: library).buttonStyle(.automatic) }
+        .sheet(item: $importing) { SnapshotImportSheet(snapshots: snapshots, url: $0.url, info: $0.info).buttonStyle(.automatic) }
     }
 
     private func part(_ title: String, count: String?, _ key: WritableKeyPath<SnapshotParts, Bool>) -> some View {
-        SettingsRow(title) {
-            HStack(spacing: 12) {
-                if let count { Text(count).font(.yy(size: 12).monospacedDigit()).foregroundStyle(YYColor.t3) }
-                SettingsSwitch(isOn: Binding { snapshots.parts[keyPath: key] } set: { snapshots.parts[keyPath: key] = $0 })
-            }
+        SettingsRow(title, detail: count) {
+            SettingsSwitch(isOn: Binding { snapshots.parts[keyPath: key] } set: { snapshots.parts[keyPath: key] = $0 })
         }
     }
 
@@ -1079,9 +918,21 @@ private struct StorageSettings: View {
                 .padding(16)
                 SettingsRow(String(localized: "已删除的书 · \(usage?.deleted.count ?? 0) 本 · \(Self.size(usage?.deletedBytes ?? 0))"),
                             detail: String(localized: "删掉的书留 30 天，可以撤销；过了就自动清掉")) {
-                    Button("现在清掉") { purge() }
-                        .foregroundStyle(YYColor.danger)
+                    Button("现在清掉", role: .destructive) { purge() }
                         .disabled((usage?.deleted.isEmpty ?? true) || cleaning)
+                }
+                if modelBytes > 0 {
+                    SettingsRow(String(localized: "有声书对齐模型"), detail: String(localized: "合成有声书时用；删掉后下次合成会再下载一次（约 270 MB）")) {
+                        HStack(spacing: 10) {
+                            Text(Self.size(modelBytes))
+                                .font(.yy(size: 12)).monospacedDigit().foregroundStyle(YYColor.t2)
+                            Button("删掉") {
+                                try? FileManager.default.removeItem(at: Aligner.folder(library.dataDir))
+                                Task { await measure() }
+                            }
+                            .disabled(library.audiobooks.job != nil)
+                        }
+                    }
                 }
                 SettingsRow(String(localized: "书伴存下的回答"), detail: String(localized: "同一本书、读到同一章问同样的问题，直接用存下的，不再花钱")) {
                     HStack(spacing: 10) {
@@ -1094,9 +945,7 @@ private struct StorageSettings: View {
                         .disabled(companionBytes == 0)
                     }
                 }
-                SettingsRow(String(localized: "书库放在"), detail: library.dataDir.path(percentEncoded: false)) {
-                    Button("在访达中显示") { NSWorkspace.shared.activateFileViewerSelecting([library.dataDir]) }
-                }
+                KeepHeardRow()
             }
             if let usage, !usage.books.isEmpty {
                 SettingsHeading(String(localized: "每本书 · 从大到小"))
@@ -1115,6 +964,20 @@ private struct StorageSettings: View {
     }
 
     @State private var companionBytes: Int64 = 0
+    /// The alignment model and the 有声书 recordings, told apart from 其他.
+    @State private var modelBytes: Int64 = 0
+    @State private var audioBytes: Int64 = 0
+
+    /// Everything under `dir`, folders and all.
+    nonisolated private static func tree(_ dir: URL) -> Int64 {
+        guard let e = FileManager.default.enumerator(at: dir, includingPropertiesForKeys: [.totalFileAllocatedSizeKey, .isRegularFileKey]) else { return 0 }
+        var total: Int64 = 0
+        for case let url as URL in e {
+            let v = try? url.resourceValues(forKeys: [.totalFileAllocatedSizeKey, .isRegularFileKey])
+            if v?.isRegularFile == true { total += Int64(v?.totalFileAllocatedSize ?? 0) }
+        }
+        return total
+    }
     private var companionDir: URL { library.dataDir.appending(path: "companion", directoryHint: .isDirectory) }
 
     private static func bytes(in dir: URL) -> Int64 {
@@ -1124,8 +987,11 @@ private struct StorageSettings: View {
 
     private func bar(_ u: StorageUsage) -> some View {
         let parts: [(String, Int64, Color)] = [(String(localized: "书文件"), u.bookBytes, YYTint.standard.fill),
+                                               (String(localized: "有声书录音"), audioBytes, YYTint.standard.fill.opacity(0.55)),
+                                               (String(localized: "对齐模型"), modelBytes, YYColor.t3),
                                                (String(localized: "已删除"), u.deletedBytes, YYColor.danger.opacity(0.7)),
-                                               (String(localized: "其他"), max(0, u.total - u.bookBytes - u.deletedBytes), YYColor.tint)]
+                                               (String(localized: "其他"), max(0, u.total - u.bookBytes - u.deletedBytes - audioBytes - modelBytes), YYColor.tint)]
+            .filter { $0.1 > 0 || $0.0 == String(localized: "书文件") }
         return VStack(alignment: .leading, spacing: 8) {
             GeometryReader { g in
                 HStack(spacing: 2) {
@@ -1153,6 +1019,11 @@ private struct StorageSettings: View {
         let dir = library.dataDir
         let active = Dictionary(library.books.map { ($0.id, $0.title) }, uniquingKeysWith: { a, _ in a })
         usage = await StorageUsage.measure(dir: dir, active: active)
+        let (model, audio) = await Task.detached {
+            (Self.tree(Aligner.folder(dir)), Self.tree(dir.appending(path: "audiobooks", directoryHint: .isDirectory)))
+        }.value
+        modelBytes = model
+        audioBytes = audio
     }
 
     private func purge() {

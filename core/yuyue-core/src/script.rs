@@ -158,9 +158,12 @@ fn verb_at_end(clause: &str) -> Option<usize> {
 pub fn lines(cast: &Cast, sentences: &[String]) -> Vec<Line> {
     let mut out = Vec::new();
     let mut i = 0;
+    // Where to go on in sentence `i`: a quote that ran on into it ended there.
+    let mut resume = 0;
     while i < sentences.len() {
         let s = &sentences[i];
-        let mut from = 0;
+        let mut from = std::mem::take(&mut resume);
+        let mut next = i + 1;
         while let Some(rel) = s[from..].find(OPEN) {
             let open = from + rel;
             let body = open + s[open..].chars().next().unwrap().len_utf8();
@@ -169,21 +172,27 @@ pub fn lines(cast: &Cast, sentences: &[String]) -> Vec<Line> {
                 Some(c) => (i, Some(body + c)),
                 None => (sentences[i + 1..].iter().position(|t| t.contains(CLOSE)).map(|k| i + 1 + k).unwrap_or(i), None),
             };
-            let before = &s[..open];
+            // Only what's since the last quote: the words before it say who speaks.
+            let before = &s[from..open];
             let after = close.map(|c| &s[c + s[c..].chars().next().unwrap().len_utf8()..]).unwrap_or("");
             let (who, how) = if latin(s) { speaker_en(cast, before, after) } else { speaker(cast, sentences, i, before, out.last()) };
             let start = s[..body].chars().count() as u32;
             let end = close.map(|c| s[..c].chars().count() as u32).unwrap_or(s.chars().count() as u32);
             out.push(Line { first: i as u32, last: last as u32, start, end, who, how });
-            match close {
-                Some(c) => from = c + s[c..].chars().next().unwrap().len_utf8(),
-                None => break,
+            if let Some(c) = close {
+                from = c + s[c..].chars().next().unwrap().len_utf8();
+                continue;
             }
+            // Ran on: the sentence it ends in may hold narration and the next quote.
             if last != i {
-                break;
+                let t = &sentences[last];
+                let c = t.find(CLOSE).unwrap();
+                resume = c + t[c..].chars().next().unwrap().len_utf8();
+                next = last;
             }
+            break;
         }
-        i = out.last().filter(|l| l.first as usize == i).map(|l| l.last as usize + 1).unwrap_or(i + 1).max(i + 1);
+        i = next;
     }
     out
 }
@@ -436,6 +445,14 @@ impl YuyueCore {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_quote_after_one_that_ran_on_is_its_own_line() {
+        let cast = Cast { names: vec!["寶玉".into(), "賈母".into()] };
+        let s: Vec<String> = ["寶玉道：“這話不對．", "你別說了。”賈母道：“怎么了？”"].iter().map(|t| t.to_string()).collect();
+        let got = lines(&cast, &s);
+        assert_eq!(got.iter().map(|l| (l.first, l.last, l.who.as_deref())).collect::<Vec<_>>(), vec![(0, 1, Some("寶玉")), (1, 1, Some("賈母"))]);
+    }
 
     /// The rules against the answers for 红楼梦 第八回 (fixtures/speakers): a name given is the
     /// right one; how many are left grey is printed, to watch it come down.

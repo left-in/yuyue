@@ -46,7 +46,6 @@ struct ForeignSettings: View {
                 .disabled(!gloss || glossVocab)
                 SettingsRow(String(localized: "只标生词本里的词")) { SettingsSwitch(isOn: $glossVocab) }
                     .disabled(!gloss)
-                glossPreview
             }
             .onChange(of: "\(gloss)\(level)\(glossVocab)") { NotificationCenter.default.post(name: .vocabChanged, object: nil) }
             SettingsHeading(String(localized: "生词"))
@@ -65,7 +64,7 @@ struct ForeignSettings: View {
             if let failed {
                 Label(failed, systemImage: "exclamationmark.circle")
                     .font(.yy(size: 11)).foregroundStyle(YYColor.danger)
-                    .padding(.leading, 8)
+                    .padding(.leading, 16)
             }
             Spacer(minLength: 0)
         }
@@ -82,26 +81,6 @@ struct ForeignSettings: View {
             download = nil
             await check()
         }
-    }
-
-    /// A line marked at the level chosen, with the meanings the list really gives.
-    private var glossPreview: some View {
-        let words: [(String, String?, UInt8)] = [("an ", nil, 0), ("amiable", "亲切的", 4), (" young man of ", nil, 0), ("tolerable", "可容忍的", 5),
-                                                 (" fortune, ", nil, 0), ("eager", String(localized: "热心的"), 2), (" to ", nil, 0), ("ascertain", String(localized: "确定"), 3), (" her views…", nil, 0)]
-        return HStack(alignment: .lastTextBaseline, spacing: 0) {
-            Text("预览").font(.yy(size: 10.5)).foregroundStyle(YYColor.t3).padding(.trailing, 10)
-            ForEach(Array(words.enumerated()), id: \.offset) { _, w in
-                let shown = gloss && !glossVocab && w.1 != nil && w.2 >= level
-                VStack(spacing: 1) {
-                    Text(shown ? w.1! : " ").font(.yy(size: 9)).foregroundStyle(YYColor.t2)
-                    Text(w.0).font(.custom("Georgia", size: 13.5)).foregroundStyle(YYColor.t1)
-                }
-                .fixedSize()
-            }
-            Spacer(minLength: 0)
-        }
-        .padding(.horizontal, 16).padding(.vertical, 10)
-        .animation(.snappy(duration: 0.2), value: level)
     }
 
     @ViewBuilder private var translationState: some View {

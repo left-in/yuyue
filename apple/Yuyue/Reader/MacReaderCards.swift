@@ -544,14 +544,20 @@ struct Segments<T: Hashable, Label: View>: View {
         HStack(spacing: 2) {
             ForEach(items, id: \.0) { value, title in
                 let on = selection == value
+                let ink: Color = on ? YYColor.t1 : YYColor.t2
+                let chip: Color = on ? YYColor.card : .clear
+                let shade: Double = on ? 0.07 : 0
+                let size: CGFloat = small ? 11 : 12
+                let height: CGFloat = small ? 24 : 30
+                let corner: CGFloat = small ? 7 : 9
                 Button { selection = value } label: {
                     label(value, title)
-                        .font(.yy(size: small ? 11 : 12, weight: on ? .semibold : .regular))
-                        .foregroundStyle(on ? YYColor.t1 : YYColor.t2)
+                        .font(.yy(size: size, weight: on ? .semibold : .regular))
+                        .foregroundStyle(ink)
                         .frame(maxWidth: .infinity)
-                        .frame(height: small ? 24 : 30)
-                        .background(on ? YYColor.card : .clear, in: .rect(cornerRadius: small ? 7 : 9))
-                        .shadow(color: .black.opacity(on ? 0.07 : 0), radius: 1.5, y: 0.5)
+                        .frame(height: height)
+                        .background(chip, in: .rect(cornerRadius: corner))
+                        .shadow(color: .black.opacity(shade), radius: 1.5, y: 0.5)
                         .contentShape(.rect)
                 }
                 .buttonStyle(.plain)
